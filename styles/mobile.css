@@ -1,0 +1,461 @@
+/* styles/mobile.css - Complete Mobile Optimizations */
+
+/* Base mobile optimizations */
+@media (max-width: 640px) {
+  /* ===== TOUCH TARGETS ===== */
+  /* Increase all touch targets to minimum 48px (Apple's recommendation) */
+  button,
+  .btn,
+  .clickable,
+  [role="button"],
+  a:not(.text-link),
+  .language-button,
+  .nav-item,
+  .tab-button,
+  .quick-question-chip,
+  .voice-toggle-button,
+  .payment-button,
+  .recommendation-item {
+    min-height: 48px;
+    min-width: 48px;
+    padding: 12px 16px !important;
+  }
+
+  /* Remove hover effects on mobile (they cause flickering) */
+  .hover\:scale-105:hover,
+  .hover\:shadow-lg:hover,
+  .hover\:bg-green-100:hover {
+    transform: none !important;
+    box-shadow: none !important;
+  }
+
+  /* Active state feedback instead */
+  button:active,
+  .clickable:active {
+    transform: scale(0.97);
+    opacity: 0.9;
+    transition: transform 0.1s ease;
+  }
+
+  /* ===== SPACING ===== */
+  .gap-1 { gap: 6px !important; }
+  .gap-2 { gap: 10px !important; }
+  .gap-3 { gap: 14px !important; }
+  .gap-4 { gap: 18px !important; }
+  .gap-6 { gap: 22px !important; }
+
+  .p-4 { padding: 16px !important; }
+  .p-5 { padding: 18px !important; }
+  .p-6 { padding: 20px !important; }
+
+  .px-4 { padding-left: 16px !important; padding-right: 16px !important; }
+  .py-3 { padding-top: 14px !important; padding-bottom: 14px !important; }
+  .py-4 { padding-top: 16px !important; padding-bottom: 16px !important; }
+
+  /* ===== TYPOGRAPHY ===== */
+  body {
+    font-size: 16px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, .text-3xl {
+    font-size: 26px !important;
+    line-height: 1.3;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+
+  h2, .text-2xl {
+    font-size: 22px !important;
+    line-height: 1.3;
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+
+  h3, .text-xl {
+    font-size: 20px !important;
+    line-height: 1.4;
+    font-weight: 600;
+  }
+
+  h4, .text-lg {
+    font-size: 18px !important;
+    line-height: 1.4;
+  }
+
+  p, .text-base, li {
+    font-size: 16px !important;
+    line-height: 1.5;
+  }
+
+  .text-sm {
+    font-size: 14px !important;
+  }
+
+  .text-xs {
+    font-size: 12px !important;
+  }
+
+  /* Prevent text overflow */
+  h1, h2, h3, p, button span, .card-title {
+    word-break: break-word;
+    hyphens: auto;
+  }
+
+  /* ===== FORMS ===== */
+  input,
+  select,
+  textarea {
+    min-height: 50px !important;
+    font-size: 16px !important; /* Prevents iOS zoom on focus */
+    padding: 12px 16px !important;
+    border-radius: 14px !important;
+    border-width: 2px !important;
+  }
+
+  input::placeholder {
+    font-size: 15px;
+    opacity: 0.7;
+  }
+
+  /* Better radio/checkbox targets */
+  input[type="radio"],
+  input[type="checkbox"] {
+    transform: scale(1.3);
+    margin: 10px;
+    min-height: 24px;
+    min-width: 24px;
+  }
+
+  /* ===== LAYOUT ===== */
+  .grid {
+    gap: 14px !important;
+  }
+
+  .grid-cols-2,
+  .grid-cols-3,
+  .grid-cols-4 {
+    grid-template-columns: 1fr !important;
+  }
+
+  .flex-row {
+    flex-direction: column !important;
+  }
+
+  .flex-row .flex-1 {
+    width: 100% !important;
+  }
+
+  /* Allow wrapping on mobile */
+  .flex-nowrap {
+    flex-wrap: wrap !important;
+  }
+
+  /* ===== CARDS ===== */
+  .card,
+  .rounded-xl,
+  .rounded-2xl,
+  .bg-white,
+  .bg-gradient-to-r {
+    padding: 18px !important;
+    margin-bottom: 12px;
+  }
+
+  .shadow-lg {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
+  }
+
+  /* ===== LANGUAGE BAR ===== */
+  .language-bar .flex-wrap {
+    gap: 8px !important;
+  }
+
+  .language-bar button {
+    min-width: calc(50% - 4px) !important;
+    font-size: 14px !important;
+    padding: 12px 8px !important;
+    margin: 0 !important;
+  }
+
+  .language-bar .gap-2 {
+    gap: 6px !important;
+  }
+
+  /* ===== VOICE TOGGLE ===== */
+  .voice-toggle-container {
+    padding: 14px !important;
+  }
+
+  .voice-toggle-button {
+    min-height: 48px;
+  }
+
+  /* ===== MESSAGES AREA ===== */
+  .message-bubble {
+    max-width: 90% !important;
+    padding: 14px !important;
+  }
+
+  .max-w-\[80\%\] {
+    max-width: 90% !important;
+  }
+
+  /* ===== QUICK QUESTION CHIPS ===== */
+  .quick-question-chip,
+  .flex-wrap.gap-2 button {
+    min-width: auto !important;
+    padding: 10px 14px !important;
+    font-size: 14px !important;
+    white-space: normal !important;
+    height: auto !important;
+    min-height: 44px;
+  }
+
+  /* ===== RECOMMENDATIONS ===== */
+  .recommendation-item {
+    padding: 16px !important;
+  }
+
+  .recommendation-number {
+    width: 36px !important;
+    height: 36px !important;
+    font-size: 16px !important;
+  }
+
+  .space-y-4 {
+    gap: 16px !important;
+  }
+
+  /* ===== PAYMENT MODAL ===== */
+  .payment-modal {
+    width: 95% !important;
+    margin: 12px !important;
+    padding: 20px !important;
+    max-height: 90vh !important;
+    overflow-y: auto !important;
+  }
+
+  .payment-modal input {
+    font-size: 16px !important;
+  }
+
+  /* ===== FERTILIZER PLAN ===== */
+  .border-l-4 {
+    padding-left: 14px !important;
+  }
+
+  /* ===== PROGRESS BARS ===== */
+  .h-2 {
+    height: 6px !important;
+  }
+
+  /* ===== HEADER ===== */
+  header .flex.items-center {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  header .ml-2 {
+    margin-left: 0 !important;
+  }
+
+  /* ===== BOTTOM NAVIGATION ===== */
+  .bottom-nav {
+    padding-bottom: env(safe-area-inset-bottom, 16px) !important;
+  }
+
+  /* ===== SCROLLING ===== */
+  .overflow-y-auto {
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+  }
+
+  /* ===== IMAGES ===== */
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .size-12 {
+    width: 44px !important;
+    height: 44px !important;
+  }
+
+  /* ===== TABLES ===== */
+  table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  /* ===== FARM SESSION CARDS ===== */
+  .farm-session-card {
+    padding: 16px !important;
+  }
+
+  .farm-session-card .grid-cols-2 {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px !important;
+  }
+}
+
+/* ===== LANDSCAPE MODE OPTIMIZATION ===== */
+@media (max-width: 896px) and (orientation: landscape) {
+  .min-h-screen {
+    min-height: auto;
+    padding: 16px 0;
+  }
+
+  .flex-col {
+    gap: 12px !important;
+  }
+
+  /* Show more content in landscape */
+  .grid-cols-2,
+  .grid-cols-3 {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  /* Reduce padding in landscape */
+  .p-4, .p-5, .p-6 {
+    padding: 12px !important;
+  }
+
+  /* Hide less important elements in landscape */
+  .landscape-hide {
+    display: none !important;
+  }
+}
+
+/* ===== VERY SMALL SCREENS (UNDER 360px) ===== */
+@media (max-width: 360px) {
+  .language-bar button {
+    min-width: 100% !important;
+    width: 100% !important;
+  }
+
+  .grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  h1, .text-3xl {
+    font-size: 22px !important;
+  }
+
+  h2, .text-2xl {
+    font-size: 20px !important;
+  }
+
+  .text-sm {
+    font-size: 13px !important;
+  }
+
+  .px-4 {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+}
+
+/* ===== TABLETS (641px - 1024px) ===== */
+@media (min-width: 641px) and (max-width: 1024px) {
+  .grid-cols-3 {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  .grid-cols-4 {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+
+  .text-3xl {
+    font-size: 28px !important;
+  }
+}
+
+/* ===== DARK MODE SUPPORT (Optional) ===== */
+@media (prefers-color-scheme: dark) {
+  @media (max-width: 640px) {
+    body {
+      background-color: #111827;
+      color: #f3f4f6;
+    }
+
+    .bg-white,
+    .bg-white\/80,
+    .bg-gray-50 {
+      background-color: #1f2937 !important;
+    }
+
+    .text-gray-800,
+    .text-gray-700,
+    .text-gray-600 {
+      color: #f3f4f6 !important;
+    }
+
+    .border-gray-200,
+    .border-gray-300 {
+      border-color: #374151 !important;
+    }
+
+    .shadow-lg {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3) !important;
+    }
+  }
+}
+
+/* ===== SAFE AREA INSETS FOR MODERN PHONES ===== */
+@supports (padding: max(0px)) {
+  .safe-bottom {
+    padding-bottom: max(16px, env(safe-area-inset-bottom, 16px));
+  }
+
+  .safe-top {
+    padding-top: max(16px, env(safe-area-inset-top, 16px));
+  }
+
+  .safe-left {
+    padding-left: max(16px, env(safe-area-inset-left, 16px));
+  }
+
+  .safe-right {
+    padding-right: max(16px, env(safe-area-inset-right, 16px));
+  }
+
+  /* For notched phones */
+  .notch-padding {
+    padding-top: constant(safe-area-inset-top);
+    padding-top: env(safe-area-inset-top);
+  }
+}
+
+/* ===== UTILITY CLASSES FOR MOBILE ===== */
+.mobile-only {
+  display: none;
+}
+
+@media (max-width: 640px) {
+  .mobile-only {
+    display: block;
+  }
+
+  .desktop-only {
+    display: none;
+  }
+}
+
+/* Prevent zoom on input focus for iOS */
+@supports (-webkit-touch-callout: none) {
+  input, select, textarea {
+    font-size: 16px !important;
+  }
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Better touch feedback */
+* {
+  -webkit-tap-highlight-color: rgba(16, 185, 129, 0.2);
+}
