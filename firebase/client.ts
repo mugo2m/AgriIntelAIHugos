@@ -26,15 +26,26 @@ import { getFirestore } from "firebase/firestore";
   //appId: "1:170860596112:web:c2fed1be25b3b4017ac115",
   //measurementId: "G-JPF2L3H08N"
 //};
+//const firebaseConfig = {
+  //apiKey: "AIzaSyBWezc2M6Xf6NjVxeZRniRw3NI1yGYoXvU",
+  //authDomain: "muuu-83639.firebaseapp.com",
+  //projectId: "muuu-83639",
+  //storageBucket: "muuu-83639.firebasestorage.app",
+  //messagingSenderId: "930919430662",
+  //appId: "1:930919430662:web:34d6601bc8b411e5f06187",
+ //measurementId: "G-83EMBQ3XCJ"
+//};
 const firebaseConfig = {
-  apiKey: "AIzaSyDymmvqyH4UAyy7GCkqSujO5aZBLM1OdJ0",
-  authDomain: "agriculturehugo.firebaseapp.com",
-  projectId: "agriculturehugo",
-  storageBucket: "agriculturehugo.firebasestorage.app",
-  messagingSenderId: "311517721134",
-  appId: "1:311517721134:web:70c17935a7f6447fc9a5bf",
-  measurementId: "G-8ZBCPYBGXM"
+  apiKey: "AIzaSyCTOjbCIof0D9C6p6uoIeLOpx0YvTtNY7Y",
+  authDomain: "muiiti.firebaseapp.com",
+  projectId: "muiiti",
+  storageBucket: "muiiti.firebasestorage.app",
+  messagingSenderId: "725849593046",
+  appId: "1:725849593046:web:51ffd342ff53035e946577",
+  measurementId: "G-FDYGKMQ9M4"
 };
+
+
 // Initialize Firebase
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 
