@@ -1,0 +1,353 @@
+model Supplier {
+
+  id Int @id @default(autoincrement())
+
+  farmId Int
+  farm Farm @relation(fields: [farmId], references: [id])
+
+  businessPartnerId Int @unique
+
+  businessPartner BusinessPartner
+    @relation(fields: [businessPartnerId], references: [id])
+
+  name String
+
+  contactPerson String?
+  phone String?
+  email String?
+  address String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  expenses Expense[]
+  purchaseRequests PurchaseRequest[]
+  purchaseOrders PurchaseOrder[]
+  supplierEvaluations SupplierEvaluation[]
+  procurementContracts ProcurementContract[]
+}
+model Customer {
+
+  id Int @id @default(autoincrement())
+
+  farmId Int
+  farm Farm @relation(fields: [farmId], references: [id])
+
+  businessPartnerId Int @unique
+
+  businessPartner BusinessPartner
+    @relation(fields: [businessPartnerId], references: [id])
+
+  customerType CustomerType
+
+  name String
+
+  phone String?
+  email String?
+  address String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  orders SalesOrder[]
+  status CustomerStatus @default(ACTIVE)
+
+  interactions CustomerInteraction[]
+  feedback CustomerFeedback[]
+  opportunities SalesOpportunity[]
+  loyaltyPrograms LoyaltyProgram[]
+}
+model SupplyChainPartner {
+  id Int @id @default(autoincrement())
+
+  name String
+
+  contactPerson String?
+
+  phone String?
+
+  email String?
+
+  address String?
+
+  country String?
+
+  certification String?
+
+  notes String?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model CustomerInteraction {
+  id Int @id @default(autoincrement())
+
+  customerId Int
+  customer   Customer @relation(fields: [customerId], references: [id])
+
+  userId Int?
+  user   User? @relation(fields: [userId], references: [id])
+
+  interactionType InteractionType
+
+  subject String?
+
+  notes String?
+
+  interactionDate DateTime
+
+  followUpDate DateTime?
+
+  createdAt DateTime @default(now())
+}
+
+model CustomerFeedback {
+  id Int @id @default(autoincrement())
+
+  customerId Int
+  customer   Customer @relation(fields: [customerId], references: [id])
+
+  rating Int
+
+  feedback String?
+
+  recommendation Boolean?
+
+  submittedAt DateTime
+
+  createdAt DateTime @default(now())
+}
+
+model LoyaltyProgram {
+  id Int @id @default(autoincrement())
+
+  customerId Int
+  customer   Customer @relation(fields: [customerId], references: [id])
+
+  points Int @default(0)
+
+  totalPurchases Float @default(0)
+
+  membershipLevel String?
+
+  joinedAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model SharedResource {
+  id Int @id @default(autoincrement())
+
+  cooperativeId Int
+  cooperative   Cooperative @relation(fields: [cooperativeId], references: [id])
+
+  resourceName String
+
+  resourceType String
+
+  quantity Float?
+
+  unit String?
+
+  availability Boolean @default(true)
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model GovernmentProgram {
+  id Int @id @default(autoincrement())
+
+  programName String
+
+  programType GovernmentProgramType
+
+  description String?
+
+  provider String
+
+  budget Float?
+
+  startDate DateTime
+
+  endDate DateTime?
+
+  status ProgramStatus @default(OPEN)
+
+  applications GovernmentApplication[]
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model GovernmentApplication {
+  id Int @id @default(autoincrement())
+
+  farmerId Int
+  farmer   Farmer @relation(fields: [farmerId], references: [id])
+
+  programId Int
+  program   GovernmentProgram @relation(fields: [programId], references: [id])
+
+  applicationNumber String @unique
+
+  applicationDate DateTime
+
+  status ApplicationStatus @default(DRAFT)
+
+  requestedAmount Float?
+
+  approvedAmount Float?
+
+  remarks String?
+
+  documents Document[]
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model InsuranceCompany {
+  id Int @id @default(autoincrement())
+
+  companyName String
+
+  phone String?
+
+  email String?
+
+  website String?
+
+  address String?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  policies InsurancePolicy[]
+}
+
+model InsuranceClaim {
+  id Int @id @default(autoincrement())
+
+  policyId Int
+  policy   InsurancePolicy @relation(fields: [policyId], references: [id])
+
+  farmerId Int
+  farmer   Farmer @relation(fields: [farmerId], references: [id])
+
+  claimNumber String @unique
+
+  incidentDate DateTime
+
+  reportedDate DateTime
+
+  estimatedLoss Float?
+
+  approvedAmount Float?
+
+  claimStatus ClaimStatus @default(REPORTED)
+
+  description String?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model Buyer {
+
+  id Int @id @default(autoincrement())
+
+  buyerName String
+
+  buyerType BuyerType
+
+  county String?
+
+  country String?
+
+  phone String?
+
+  email String?
+
+  transactions CommodityTransaction[]
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+}
+
+model BusinessPartner {
+
+  id Int @id @default(autoincrement())
+
+  partnerCode String @unique
+
+  partnerType BusinessPartnerType
+
+  name String
+
+  registrationNumber String?
+
+  taxNumber String?
+
+  phone String?
+
+  alternativePhone String?
+
+  email String?
+
+  website String?
+
+  address String?
+
+  postalCode String?
+
+  countryId Int?
+  country Country? @relation(fields: [countryId], references: [id])
+
+  countyId Int?
+  county County? @relation(fields: [countyId], references: [id])
+
+  subCountyId Int?
+  subCounty SubCounty? @relation(fields: [subCountyId], references: [id])
+
+  wardId Int?
+  ward Ward? @relation(fields: [wardId], references: [id])
+
+  villageId Int?
+  village Village? @relation(fields: [villageId], references: [id])
+
+  latitude Float?
+
+  longitude Float?
+
+  contactPerson String?
+
+  contactPosition String?
+
+  isActive Boolean @default(true)
+
+  notes String?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  buyers Buyer[]
+
+  suppliers Supplier[]
+
+  customers Customer[]
+
+  commodityTransactions CommodityTransaction[]
+
+}
+

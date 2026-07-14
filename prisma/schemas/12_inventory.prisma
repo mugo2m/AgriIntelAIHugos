@@ -1,0 +1,154 @@
+model StorageFacility {
+  id Int @id @default(autoincrement())
+
+  farmId Int
+  farm   Farm @relation(fields: [farmId], references: [id])
+
+  name String
+
+  type StorageType
+
+  capacity Float?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  inventoryItems       InventoryItem[]
+  zones                WarehouseZone[]
+  movements            WarehouseMovement[]
+  warehouseInspections WarehouseInspection[]
+}
+
+model InventoryItem {
+  id Int @id @default(autoincrement())
+
+  storageFacilityId Int
+  storageFacility   StorageFacility @relation(fields: [storageFacilityId], references: [id])
+
+  name String
+
+  category InventoryCategory
+
+  quantity Float
+
+  unit InventoryUnit
+
+  reorderLevel Float?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  stockMovements StockMovement[]
+
+  @@unique([storageFacilityId, name])
+}
+
+model StockMovement {
+  id Int @id @default(autoincrement())
+
+  inventoryItemId Int
+  inventoryItem   InventoryItem @relation(fields: [inventoryItemId], references: [id])
+
+  movementType StockMovementType
+
+  quantity Float
+
+  movementDate DateTime
+
+  remarks String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ProductBatch {
+  id Int @id @default(autoincrement())
+
+  batchNumber String @unique
+
+  productId Int
+  product   Product @relation(fields: [productId], references: [id])
+
+  quantity Float
+
+  unit String
+
+  productionDate DateTime
+
+  expiryDate DateTime?
+
+  status BatchStatus @default(ACTIVE)
+
+  qrCode String?
+
+  barcode String?
+
+  traceabilityEvents TraceabilityEvent[]
+
+  createdAt DateTime @default(now())
+
+  updatedAt          DateTime            @updatedAt
+  warehouseMovements WarehouseMovement[]
+}
+
+model WarehouseZone {
+  id Int @id @default(autoincrement())
+
+  storageFacilityId Int
+  storageFacility   StorageFacility @relation(fields: [storageFacilityId], references: [id])
+
+  name String
+
+  zoneType WarehouseZoneType
+
+  capacity Float?
+
+  currentUtilization Float?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model WarehouseMovement {
+  id Int @id @default(autoincrement())
+
+  storageFacilityId Int
+  storageFacility   StorageFacility @relation(fields: [storageFacilityId], references: [id])
+
+  batchId Int?
+  batch   ProductBatch? @relation(fields: [batchId], references: [id])
+
+  shipmentId Int?
+  shipment   Shipment? @relation(fields: [shipmentId], references: [id])
+
+  movementType WarehouseMovementType
+
+  quantity Float
+
+  movementDate DateTime
+
+  remarks String?
+
+  createdAt DateTime @default(now())
+}
+
+model WarehouseInspection {
+  id Int @id @default(autoincrement())
+
+  storageFacilityId Int
+  storageFacility   StorageFacility @relation(fields: [storageFacilityId], references: [id])
+
+  inspectionDate DateTime
+
+  inspectorName String
+
+  findings String?
+
+  recommendations String?
+
+  nextInspection DateTime?
+
+  createdAt DateTime @default(now())
+}
+

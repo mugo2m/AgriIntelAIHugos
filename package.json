@@ -6,7 +6,16 @@
     "dev": "next dev --webpack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "build-schema": "node prisma/build-schema.js",
+    "extract-schema": "node prisma/schema-extractor.js",
+    "analyze-schema": "node prisma/schema-analyzer.js",
+    "lint": "next lint",
+    "prisma:generate": "npm run build-schema && prisma generate",
+    "prisma:validate": "npm run build-schema && prisma validate",
+    "prisma:migrate": "npm run build-schema && prisma migrate dev",
+    "prisma:studio": "npm run build-schema && prisma studio",
+    "prisma:format": "npm run build-schema && prisma format",
+    "prisma:seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
     "@google/genai": "^1.40.0",

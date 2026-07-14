@@ -1,0 +1,283 @@
+model CropCategory {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  crops Crop[]
+}
+
+model Crop {
+  id Int @id @default(autoincrement())
+
+  name           String
+  scientificName String?
+  description    String?
+
+  categoryId Int
+  category   CropCategory @relation(fields: [categoryId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  varieties              CropVariety[]
+  recommendations        AIRecommendation[]
+  knowledgeArticles      KnowledgeArticle[]
+  productionPlans        CropProductionPlan[]
+  commodityInventories   CommodityInventory[]
+  commodityMovements     CommodityMovement[]
+  commodityPrices        CommodityPriceHistory[]
+  productionCosts        ProductionCost[]
+  revenueBreakdowns      RevenueBreakdown[]
+  profitabilityAnalyses  ProfitabilityAnalysis[]
+  commoditySalesAnalyses CommoditySalesAnalysis[]
+  agriculturalKPIs       AgriculturalKPI[]
+
+  @@unique([categoryId, name])
+  commodityTransactions CommodityTransaction[]
+}
+
+model CropVariety {
+  id Int @id @default(autoincrement())
+
+  cropId Int
+  crop   Crop @relation(fields: [cropId], references: [id])
+
+  varietyName String
+
+  maturityDays  Int?
+  expectedYield Float?
+
+  droughtTolerance  String?
+  diseaseResistance String?
+
+  farmId Int?
+  farm   Farm? @relation(fields: [farmId], references: [id])
+
+  plantings Planting[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([cropId, varietyName])
+}
+
+model FertilizerType {
+  id Int @id @default(autoincrement())
+
+  name        String  @unique
+  category    String?
+  description String?
+
+  nitrogen   Float?
+  phosphorus Float?
+  potassium  Float?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  recommendations FertilizerRecommendation[]
+}
+
+model FertilizerRecommendation {
+  id Int @id @default(autoincrement())
+
+  soilTestId Int
+  soilTest   SoilTest @relation(fields: [soilTestId], references: [id])
+
+  fertilizerTypeId Int
+  fertilizerType   FertilizerType @relation(fields: [fertilizerTypeId], references: [id])
+
+  recommendedRate Float?
+  unit            String?
+
+  recommendationReason String?
+
+  applications FertilizerApplication[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model FertilizerApplication {
+  id Int @id @default(autoincrement())
+
+  recommendationId Int
+  recommendation   FertilizerRecommendation @relation(fields: [recommendationId], references: [id])
+
+  applicationDate DateTime
+
+  quantityApplied Float?
+
+  unit String?
+
+  method String?
+
+  notes String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model PestCategory {
+  id Int @id @default(autoincrement())
+
+  name        String  @unique
+  description String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  pests Pest[]
+}
+
+model Pest {
+  id Int @id @default(autoincrement())
+
+  name           String
+  scientificName String?
+  description    String?
+
+  categoryId Int
+  category   PestCategory @relation(fields: [categoryId], references: [id])
+
+  lifecycle String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  outbreaks PestOutbreak[]
+
+  @@unique([categoryId, name])
+}
+
+model Disease {
+  id Int @id @default(autoincrement())
+
+  name String @unique
+
+  scientificName String?
+
+  cropAffected String?
+
+  symptoms String?
+
+  causes String?
+
+  prevention String?
+
+  treatment String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  outbreaks PestOutbreak[]
+}
+
+model PestOutbreak {
+  id Int @id @default(autoincrement())
+
+  farmId Int
+  farm   Farm @relation(fields: [farmId], references: [id])
+
+  pestId Int?
+  pest   Pest? @relation(fields: [pestId], references: [id])
+
+  diseaseId Int?
+  disease   Disease? @relation(fields: [diseaseId], references: [id])
+
+  reportDate DateTime
+
+  severity SeverityLevel?
+
+  affectedArea Float?
+
+  notes String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model CropProductionPlan {
+  id Int @id @default(autoincrement())
+
+  farmId Int
+  farm   Farm @relation(fields: [farmId], references: [id])
+
+  fieldId Int?
+  field   Field? @relation(fields: [fieldId], references: [id])
+
+  cropId Int
+  crop   Crop @relation(fields: [cropId], references: [id])
+
+  seasonId Int
+  season   Season @relation(fields: [seasonId], references: [id])
+
+  year Int
+
+  targetAcres Float
+
+  targetYieldPerAcre Float
+
+  targetProductionKg Float
+
+  expectedPricePerKg Float
+
+  expectedRevenue Float
+
+  expectedExpenses Float
+
+  expectedProfit Float
+
+  plannedPlantingDate DateTime?
+
+  plannedHarvestDate DateTime?
+
+  remarks String?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  performances CropProductionPerformance[]
+}
+
+model CropProductionPerformance {
+  id Int @id @default(autoincrement())
+
+  productionPlanId Int
+
+  productionPlan CropProductionPlan @relation(fields: [productionPlanId], references: [id])
+
+  actualAcres Float
+
+  actualYieldPerAcre Float
+
+  actualProductionKg Float
+
+  averagePricePerKg Float
+
+  actualRevenue Float
+
+  actualExpenses Float
+
+  actualProfit Float
+
+  achievementPercentage Float?
+
+  productionVariance Float?
+
+  revenueVariance Float?
+
+  profitVariance Float?
+
+  status PerformanceStatus
+
+  remarks String?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+

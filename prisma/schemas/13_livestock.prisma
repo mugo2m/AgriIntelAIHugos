@@ -1,0 +1,346 @@
+model Breed {
+  id Int @id @default(autoincrement())
+
+  category LivestockCategory
+
+  name String
+
+  scientificName String?
+
+  originCountry String?
+
+  purpose String?
+
+  averageWeight Float?
+
+  averageMilkYield Float?
+
+  averageEggProduction Int?
+
+  growthRate String?
+
+  climateSuitability String?
+
+  description String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  livestock Livestock[]
+
+  @@unique([category, name])
+}
+
+model Livestock {
+  id Int @id @default(autoincrement())
+
+  farmId Int
+  farm   Farm @relation(fields: [farmId], references: [id])
+
+  tagNumber String @unique
+
+  category LivestockCategory
+
+  breedId Int?
+  breed   Breed? @relation(fields: [breedId], references: [id])
+
+  sex AnimalSex
+
+  dateOfBirth DateTime?
+
+  acquisitionDate DateTime?
+
+  weight Float?
+
+  healthStatus HealthStatus
+
+  status AnimalStatus
+
+  createdAt         DateTime              @default(now())
+  updatedAt         DateTime              @updatedAt
+  feedingSchedules  FeedingSchedule[]
+  feedRecords       FeedRecord[]
+  vaccinations      Vaccination[]
+  treatments        Treatment[]
+  productionRecords LivestockProduction[]
+  breedingAsMale    Breeding[]            @relation("MaleBreeding")
+  breedingAsFemale  Breeding[]            @relation("FemaleBreeding")
+  documents         Document[]
+  births            Birth[]
+  healthRecords     AnimalHealthRecord[]
+  eggIncubations    EggIncubation[]
+  recommendations   AIRecommendation[]
+  sensorReadings    SensorReading[]
+  knowledgeArticles KnowledgeArticle[]
+}
+
+model Vaccination {
+  id Int @id @default(autoincrement())
+
+  livestockId Int
+  livestock   Livestock @relation(fields: [livestockId], references: [id])
+
+  vaccineName String
+
+  vaccinationDate DateTime
+
+  nextDueDate DateTime?
+
+  status VaccinationStatus
+
+  veterinarian String?
+
+  notes String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Treatment {
+  id Int @id @default(autoincrement())
+
+  livestockId Int
+  livestock   Livestock @relation(fields: [livestockId], references: [id])
+
+  diagnosis String
+
+  medication String?
+
+  treatmentDate DateTime
+
+  veterinarian String?
+
+  cost Float?
+
+  notes         String?
+  prescriptions Prescription[]
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+}
+
+model Feed {
+  id Int @id @default(autoincrement())
+
+  name String
+
+  category FeedCategory
+
+  manufacturer String?
+
+  proteinPercentage Float?
+
+  energyValue Float?
+
+  description String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  feedingSchedules FeedingSchedule[]
+  feedRecords      FeedRecord[]
+}
+
+model FeedingSchedule {
+  id Int @id @default(autoincrement())
+
+  livestockId Int
+  livestock   Livestock @relation(fields: [livestockId], references: [id])
+
+  feedId Int
+  feed   Feed @relation(fields: [feedId], references: [id])
+
+  frequency FeedingFrequency
+
+  quantity Float
+
+  unit FeedUnit
+
+  startDate DateTime
+
+  endDate DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model FeedRecord {
+  id Int @id @default(autoincrement())
+
+  livestockId Int
+  livestock   Livestock @relation(fields: [livestockId], references: [id])
+
+  feedId Int
+  feed   Feed @relation(fields: [feedId], references: [id])
+
+  feedingDate DateTime
+
+  quantity Float
+
+  unit FeedUnit
+
+  remarks String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Breeding {
+  id Int @id @default(autoincrement())
+
+  maleId Int?
+  male   Livestock? @relation("MaleBreeding", fields: [maleId], references: [id])
+
+  femaleId Int
+  female   Livestock @relation("FemaleBreeding", fields: [femaleId], references: [id])
+
+  method BreedingMethod
+
+  breedingDate DateTime
+
+  expectedBirthDate DateTime?
+
+  pregnancyStatus PregnancyStatus
+
+  notes String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  births Birth[]
+}
+
+model Birth {
+  id Int @id @default(autoincrement())
+
+  breedingId Int
+  breeding   Breeding @relation(fields: [breedingId], references: [id])
+
+  motherId Int
+  mother   Livestock @relation(fields: [motherId], references: [id])
+
+  birthDate DateTime
+
+  birthType BirthType
+
+  offspringCount Int
+
+  offspringStatus OffspringStatus
+
+  remarks String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model EggIncubation {
+  id Int @id @default(autoincrement())
+
+  livestockId Int
+  livestock   Livestock @relation(fields: [livestockId], references: [id])
+
+  incubationStart DateTime
+
+  expectedHatchDate DateTime
+
+  eggsSet Int
+
+  eggsHatched Int?
+
+  hatchStatus HatchStatus
+
+  remarks String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model AnimalHealthRecord {
+  id Int @id @default(autoincrement())
+
+  livestockId Int
+  livestock   Livestock @relation(fields: [livestockId], references: [id])
+
+  recordType HealthRecordType
+
+  examinationDate DateTime
+
+  diagnosis String?
+
+  symptoms String?
+
+  temperature Float?
+
+  weight Float?
+
+  heartRate Int?
+
+  respiratoryRate Int?
+
+  conditionStatus HealthConditionStatus
+
+  veterinarian String?
+
+  remarks String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  labTests LabTest[]
+}
+
+model LabTest {
+  id Int @id @default(autoincrement())
+
+  healthRecordId Int
+  healthRecord   AnimalHealthRecord @relation(fields: [healthRecordId], references: [id])
+
+  testType LabTestType
+
+  result String?
+
+  laboratory String?
+
+  testDate DateTime
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Prescription {
+  id Int @id @default(autoincrement())
+
+  treatmentId Int
+  treatment   Treatment @relation(fields: [treatmentId], references: [id])
+
+  medication String
+
+  dosage String
+
+  durationDays Int?
+
+  instructions String?
+
+  status PrescriptionStatus
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model DecisionFeedback {
+  id Int @id @default(autoincrement())
+
+  decisionId Int
+  decision   AIDecision @relation(fields: [decisionId], references: [id])
+
+  userId Int?
+  user   User? @relation(fields: [userId], references: [id])
+
+  rating Int?
+
+  accepted Boolean?
+
+  comments String?
+
+  createdAt DateTime @default(now())
+}
+

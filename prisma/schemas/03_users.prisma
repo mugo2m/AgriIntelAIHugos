@@ -1,0 +1,106 @@
+model Role {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  description String?
+  createdAt   DateTime @default(now())
+
+  users User[]
+}
+
+model User {
+  id       Int    @id @default(autoincrement())
+  name     String
+  email    String @unique
+  password String
+
+  roleId                Int
+  role                  Role                   @relation(fields: [roleId], references: [id])
+  uploadedDocuments     Document[]             @relation("UserUploadedDocuments")
+  notifications         Notification[]
+  notificationTemplates NotificationTemplate[]
+  assignedTasks         Task[]
+  createdTasks          Task[]                 @relation("TaskCreator")
+  calendarEvents        CalendarEvent[]
+  createdAt             DateTime               @default(now())
+  farmer                Farmer?
+  knowledgeArticles     KnowledgeArticle[]
+  conductedAudits       FarmAudit[]
+  correctiveActions     CorrectiveAction[]
+  dashboards            Dashboard[]
+  reports               Report[]
+  predictions           AIModelPrediction[]
+  traceabilityEvents    TraceabilityEvent[]
+  purchaseRequests      PurchaseRequest[]
+  approvedPurchases     PurchaseOrder[]
+  customerInteractions  CustomerInteraction[]
+
+  salesOpportunities SalesOpportunity[]
+  organizedMeetings  CooperativeMeeting[]
+  apiKeys            ApiKey[]
+  userPreferences    UserPreference[]
+  importJobs         ImportJob[]
+  migrationJobs      MigrationJob[]
+  exportJobs         ExportJob[]
+  backupsCreated     BackupJob[]
+  restoresPerformed  RestoreJob[]
+  subscription       Subscription?
+
+  payments Payment[]
+
+  invoices     Invoice[]
+  usageMetrics UsageMetric[]
+  tenantId     Int?
+
+  tenant Tenant? @relation(fields: [tenantId], references: [id])
+
+  tenantMemberships TenantMembership[]
+  devices           UserDevice[]
+
+  syncLogs    SyncLog[]
+  aiDecisions AIDecision[]
+
+  decisionFeedback DecisionFeedback[]
+}
+
+model UserPreference {
+  id Int @id @default(autoincrement())
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
+
+  preferenceKey String
+
+  preferenceValue String
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, preferenceKey])
+}
+
+model UserDevice {
+  id Int @id @default(autoincrement())
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
+
+  deviceName String
+
+  platform DevicePlatform
+
+  deviceIdentifier String @unique
+
+  appVersion String?
+
+  lastSync DateTime?
+
+  active Boolean @default(true)
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  syncLogs SyncLog[]
+}
+

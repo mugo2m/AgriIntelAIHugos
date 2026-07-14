@@ -1,0 +1,277 @@
+model Dashboard {
+  id Int @id @default(autoincrement())
+
+  name String
+
+  description String?
+
+  dashboardType DashboardType
+
+  period DashboardPeriod @default(MONTH)
+
+  userId Int?
+  user   User? @relation(fields: [userId], references: [id])
+
+  farmId Int?
+  farm   Farm? @relation(fields: [farmId], references: [id])
+
+  isDefault Boolean @default(false)
+
+  widgets DashboardWidget[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model DashboardWidget {
+  id Int @id @default(autoincrement())
+
+  dashboardId Int
+  dashboard   Dashboard @relation(fields: [dashboardId], references: [id])
+
+  title String
+
+  widgetType WidgetType
+
+  kpiType KPIType?
+
+  positionX Int?
+
+  positionY Int?
+
+  width Int?
+
+  height Int?
+
+  configuration Json?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model KPIRecord {
+  id Int @id @default(autoincrement())
+
+  farmId Int?
+  farm   Farm? @relation(fields: [farmId], references: [id])
+
+  kpiType KPIType
+
+  period DashboardPeriod
+
+  value Float
+
+  recordedAt DateTime
+
+  notes String?
+
+  createdAt DateTime @default(now())
+}
+
+model AnalyticsSnapshot {
+  id Int @id @default(autoincrement())
+
+  farmId Int?
+  farm   Farm? @relation(fields: [farmId], references: [id])
+
+  snapshotDate DateTime
+
+  totalRevenue Float?
+
+  totalExpenses Float?
+
+  netProfit Float?
+
+  cropYield Float?
+
+  livestockProduction Float?
+
+  inventoryValue Float?
+
+  aiHealthScore Float?
+
+  createdAt DateTime @default(now())
+}
+
+model CarbonEmission {
+  id Int @id @default(autoincrement())
+
+  farmId Int
+  farm   Farm @relation(fields: [farmId], references: [id])
+
+  source CarbonSource
+
+  emissionDate DateTime
+
+  quantity Float
+
+  unit String
+
+  carbonEquivalent Float
+
+  remarks String?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model WasteManagementRecord {
+  id Int @id @default(autoincrement())
+
+  farmId Int
+  farm   Farm @relation(fields: [farmId], references: [id])
+
+  wasteType String
+
+  quantity Float
+
+  disposalMethod String
+
+  disposalDate DateTime
+
+  remarks String?
+
+  createdAt DateTime @default(now())
+}
+
+model UsageMetric {
+  id Int @id @default(autoincrement())
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
+
+  metricName String
+
+  metricValue Float
+
+  recordedAt DateTime
+
+  createdAt DateTime @default(now())
+}
+
+model RevenueBreakdown {
+  id Int @id @default(autoincrement())
+
+  farmId Int
+  farm   Farm @relation(fields: [farmId], references: [id])
+
+  cropId Int
+  crop   Crop @relation(fields: [cropId], references: [id])
+
+  seasonId Int
+  season   Season @relation(fields: [seasonId], references: [id])
+
+  year Int
+
+  localSalesKg Float @default(0)
+
+  localRevenue Float @default(0)
+
+  countySalesKg Float @default(0)
+
+  countyRevenue Float @default(0)
+
+  outsideCountySalesKg Float @default(0)
+
+  outsideCountyRevenue Float @default(0)
+
+  exportSalesKg Float @default(0)
+
+  exportRevenue Float @default(0)
+
+  institutionalSalesKg Float @default(0)
+
+  institutionalRevenue Float @default(0)
+
+  processingRevenue Float @default(0)
+
+  totalRevenue Float
+
+  averagePricePerKg Float?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model ProfitabilityAnalysis {
+  id Int @id @default(autoincrement())
+
+  farmId Int
+  farm   Farm @relation(fields: [farmId], references: [id])
+
+  cropId Int
+  crop   Crop @relation(fields: [cropId], references: [id])
+
+  seasonId Int
+  season   Season @relation(fields: [seasonId], references: [id])
+
+  year Int
+
+  totalCost Float
+
+  totalRevenue Float
+
+  grossProfit Float
+
+  netProfit Float
+
+  roi Float?
+
+  profitMargin Float?
+
+  revenuePerAcre Float?
+
+  profitPerAcre Float?
+
+  revenuePerKg Float?
+
+  profitPerKg Float?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model AgriculturalKPI {
+  id Int @id @default(autoincrement())
+
+  farmId Int?
+  farm   Farm? @relation(fields: [farmId], references: [id])
+
+  cropId Int?
+  crop   Crop? @relation(fields: [cropId], references: [id])
+
+  seasonId Int?
+  season   Season? @relation(fields: [seasonId], references: [id])
+
+  year Int
+
+  productionKg Float?
+
+  targetProductionKg Float?
+
+  achievementPercentage Float?
+
+  revenue Float?
+
+  expenses Float?
+
+  profit Float?
+
+  roi Float?
+
+  averageYieldPerAcre Float?
+
+  averagePricePerKg Float?
+
+  foodSecurityScore Float?
+
+  sustainabilityScore Float?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+

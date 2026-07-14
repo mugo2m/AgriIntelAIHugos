@@ -1,0 +1,99 @@
+model PurchaseRequest {
+  id Int @id @default(autoincrement())
+
+  requestNumber String @unique
+
+  supplierId Int?
+  supplier   Supplier? @relation(fields: [supplierId], references: [id])
+
+  requestedById Int?
+  requestedBy   User? @relation(fields: [requestedById], references: [id])
+
+  status ProcurementStatus @default(DRAFT)
+
+  priority PurchasePriority @default(NORMAL)
+
+  expectedDelivery DateTime?
+
+  remarks String?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  orders PurchaseOrder[]
+}
+
+model PurchaseOrder {
+  id Int @id @default(autoincrement())
+
+  orderNumber String @unique
+
+  purchaseRequestId Int?
+  purchaseRequest   PurchaseRequest? @relation(fields: [purchaseRequestId], references: [id])
+
+  supplierId Int
+  supplier   Supplier @relation(fields: [supplierId], references: [id])
+
+  approvedById Int?
+  approvedBy   User? @relation(fields: [approvedById], references: [id])
+
+  status ProcurementStatus @default(APPROVED)
+
+  totalAmount Float
+
+  orderDate DateTime
+
+  expectedDelivery DateTime?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model SupplierEvaluation {
+  id Int @id @default(autoincrement())
+
+  supplierId Int
+  supplier   Supplier @relation(fields: [supplierId], references: [id])
+
+  rating SupplierRating
+
+  deliveryScore Float?
+
+  qualityScore Float?
+
+  pricingScore Float?
+
+  communicationScore Float?
+
+  comments String?
+
+  evaluatedAt DateTime
+
+  createdAt DateTime @default(now())
+}
+
+model ProcurementContract {
+  id Int @id @default(autoincrement())
+
+  supplierId Int
+  supplier   Supplier @relation(fields: [supplierId], references: [id])
+
+  contractNumber String @unique
+
+  startDate DateTime
+
+  endDate DateTime?
+
+  value Float?
+
+  terms String?
+
+  active Boolean @default(true)
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+

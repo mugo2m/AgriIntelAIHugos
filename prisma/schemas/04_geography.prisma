@@ -1,0 +1,64 @@
+model Country {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  code      String?  @unique
+  createdAt DateTime @default(now())
+
+  counties County[]
+}
+
+model County {
+  id        Int      @id @default(autoincrement())
+  name      String
+  code      String?  @unique
+  createdAt DateTime @default(now())
+
+  countryId Int
+  country   Country @relation(fields: [countryId], references: [id])
+
+  subCounties SubCounty[]
+  farmers     Farmer[]
+
+  @@unique([countryId, name])
+}
+
+model SubCounty {
+  id        Int      @id @default(autoincrement())
+  name      String
+  createdAt DateTime @default(now())
+
+  countyId Int
+  county   County @relation(fields: [countyId], references: [id])
+
+  wards   Ward[]
+  farmers Farmer[]
+
+  @@unique([countyId, name])
+}
+
+model Ward {
+  id        Int      @id @default(autoincrement())
+  name      String
+  createdAt DateTime @default(now())
+
+  subCountyId Int
+  subCounty   SubCounty @relation(fields: [subCountyId], references: [id])
+
+  villages Village[]
+  farmers  Farmer[]
+
+  @@unique([subCountyId, name])
+}
+
+model Village {
+  id        Int      @id @default(autoincrement())
+  name      String
+  createdAt DateTime @default(now())
+
+  wardId  Int
+  ward    Ward     @relation(fields: [wardId], references: [id])
+  farmers Farmer[]
+
+  @@unique([wardId, name])
+}
+

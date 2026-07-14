@@ -1,0 +1,32 @@
+model CommodityPriceHistory {
+  id Int @id @default(autoincrement())
+
+  cropId Int
+  crop   Crop @relation(fields: [cropId], references: [id])
+
+  county String
+
+  market String
+
+  seasonId Int
+  season   Season @relation(fields: [seasonId], references: [id])
+
+  year Int
+
+  farmGatePrice Float?
+
+  cooperativePrice Float?
+
+  wholesalePrice Float?
+
+  retailPrice Float?
+
+  exportPrice Float?
+
+  averagePrice Float?
+
+  priceDate DateTime
+
+  createdAt DateTime @default(now())
+}
+

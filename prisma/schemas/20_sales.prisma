@@ -1,0 +1,410 @@
+model Product {
+  id Int @id @default(autoincrement())
+
+  farmId Int
+  farm   Farm @relation(fields: [farmId], references: [id])
+
+  name String
+
+  category ProductCategory
+
+  harvestId Int?
+  harvest   Harvest? @relation(fields: [harvestId], references: [id])
+
+  livestockProductionId Int?
+  livestockProduction   LivestockProduction? @relation(fields: [livestockProductionId], references: [id])
+
+  availableQuantity Float
+
+  unit SalesUnit
+
+  unitPrice Float
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  orderItems     SalesOrderItem[]
+  productBatches ProductBatch[]
+}
+
+model SalesOrder {
+  id Int @id @default(autoincrement())
+
+  farmId Int
+  farm   Farm @relation(fields: [farmId], references: [id])
+
+  customerId Int
+  customer   Customer @relation(fields: [customerId], references: [id])
+
+  orderDate DateTime
+
+  status OrderStatus
+
+  totalAmount Float
+
+  notes String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  items SalesOrderItem[]
+
+  deliveries Delivery[]
+  shipments  Shipment[]
+}
+
+model SalesOrderItem {
+  id Int @id @default(autoincrement())
+
+  orderId Int
+  order   SalesOrder @relation(fields: [orderId], references: [id])
+
+  productId Int
+  product   Product @relation(fields: [productId], references: [id])
+
+  quantity Float
+
+  unitPrice Float
+
+  subtotal Float
+}
+
+model Delivery {
+  id Int @id @default(autoincrement())
+
+  farmId Int
+  farm   Farm @relation(fields: [farmId], references: [id])
+
+  orderId Int
+  order   SalesOrder @relation(fields: [orderId], references: [id])
+
+  deliveryDate DateTime?
+
+  deliveryAddress String?
+
+  deliveryStatus DeliveryStatus
+
+  transporter String?
+
+  trackingNumber String?
+
+  remarks String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model SalesOpportunity {
+  id Int @id @default(autoincrement())
+
+  customerId Int
+  customer   Customer @relation(fields: [customerId], references: [id])
+
+  assignedToId Int?
+  assignedTo   User? @relation(fields: [assignedToId], references: [id])
+
+  title String
+
+  estimatedValue Float?
+
+  probability Float?
+
+  stage OpportunityStage @default(NEW)
+
+  expectedCloseDate DateTime?
+
+  notes String?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model CommodityInventory {
+  id Int @id @default(autoincrement())
+
+  farmId Int?
+  farm   Farm? @relation(fields: [farmId], references: [id])
+
+  cropId Int
+  crop   Crop @relation(fields: [cropId], references: [id])
+
+  seasonId Int
+  season   Season @relation(fields: [seasonId], references: [id])
+
+  year Int
+
+  openingStockKg Float @default(0)
+
+  productionKg Float @default(0)
+
+  importedKg Float @default(0)
+
+  totalAvailableKg Float @default(0)
+
+  closingStockKg Float @default(0)
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  balance               CommodityBalance?
+  commodityConsumptions CommodityConsumption[]
+}
+
+model CommodityMovement {
+  id Int @id @default(autoincrement())
+
+  cropId Int
+  crop   Crop @relation(fields: [cropId], references: [id])
+
+  quantityKg Float
+
+  sourceCounty String
+
+  sourceSubCounty String?
+
+  sourceWard String?
+
+  destinationCounty String
+
+  destinationSubCounty String?
+
+  destinationWard String?
+
+  movementType CommodityMovementType
+
+  buyerName String?
+
+  sellerName String?
+
+  transporter String?
+
+  vehicleRegistration String?
+
+  transportCost Float?
+
+  pricePerKg Float?
+
+  movementDate DateTime
+
+  remarks String?
+
+  createdAt DateTime @default(now())
+}
+
+model CommodityConsumption {
+  id Int @id @default(autoincrement())
+
+  inventoryId Int
+
+  inventory              CommodityInventory @relation(fields: [inventoryId], references: [id])
+  householdConsumptionKg Float              @default(0)
+
+  livestockFeedKg Float @default(0)
+
+  seedReservedKg Float @default(0)
+
+  processingKg Float @default(0)
+
+  postHarvestLossKg Float @default(0)
+
+  donatedKg Float @default(0)
+
+  otherUsageKg Float @default(0)
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model CommodityBalance {
+  id Int @id @default(autoincrement())
+
+  inventoryId Int @unique
+
+  inventory CommodityInventory @relation(fields: [inventoryId], references: [id])
+
+  exportsKg Float @default(0)
+
+  localSalesKg Float @default(0)
+
+  outsideCountySalesKg Float @default(0)
+
+  totalConsumedKg Float @default(0)
+
+  surplusKg Float?
+
+  deficitKg Float?
+
+  foodSecurityStatus FoodSecurityStatus
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model CommoditySalesAnalysis {
+  id Int @id @default(autoincrement())
+
+  cropId Int
+  crop   Crop @relation(fields: [cropId], references: [id])
+
+  seasonId Int
+  season   Season @relation(fields: [seasonId], references: [id])
+
+  year Int
+
+  quantitySoldKg Float
+
+  averageSellingPrice Float
+
+  highestPrice Float
+
+  lowestPrice Float
+
+  numberOfTransactions Int
+
+  totalRevenue Float
+
+  createdAt DateTime @default(now())
+}
+
+model SalesChannel {
+
+  id Int @id @default(autoincrement())
+
+  name String @unique
+
+  description String?
+
+  isRevenueChannel Boolean @default(true)
+
+  commoditySales CommoditySale[]
+
+  transactions CommodityTransaction[]
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+}
+
+model CommodityTransaction {
+
+  id Int @id @default(autoincrement())
+
+  farmId Int?
+  farm Farm? @relation(fields: [farmId], references: [id])
+
+  cropId Int
+  crop Crop @relation(fields: [cropId], references: [id])
+
+  seasonId Int
+  season Season @relation(fields: [seasonId], references: [id])
+
+  year Int
+
+  transactionType CommodityTransactionType
+
+  salesChannelId Int?
+  salesChannel SalesChannel? @relation(fields: [salesChannelId], references: [id])
+
+  buyerId Int?
+  buyer Buyer? @relation(fields: [buyerId], references: [id])
+
+  quantityKg Float
+
+  pricePerKg Float?
+
+  totalAmount Float?
+
+  // Source Location
+
+  sourceCountryId Int?
+  sourceCountry Country? @relation("SourceCountry", fields: [sourceCountryId], references: [id])
+
+  sourceCountyId Int?
+  sourceCounty County? @relation("SourceCounty", fields: [sourceCountyId], references: [id])
+
+  sourceSubCountyId Int?
+  sourceSubCounty SubCounty? @relation("SourceSubCounty", fields: [sourceSubCountyId], references: [id])
+
+  sourceWardId Int?
+  sourceWard Ward? @relation("SourceWard", fields: [sourceWardId], references: [id])
+
+  // Destination Location
+
+  destinationCountryId Int?
+  destinationCountry Country? @relation("DestinationCountry", fields: [destinationCountryId], references: [id])
+
+  destinationCountyId Int?
+  destinationCounty County? @relation("DestinationCounty", fields: [destinationCountyId], references: [id])
+
+  destinationSubCountyId Int?
+  destinationSubCounty SubCounty? @relation("DestinationSubCounty", fields: [destinationSubCountyId], references: [id])
+
+  destinationWardId Int?
+  destinationWard Ward? @relation("DestinationWard", fields: [destinationWardId], references: [id])
+
+  transactionDate DateTime
+
+  referenceNumber String?
+
+  remarks String?
+
+  // Link to detailed sale (only for SALE transactions)
+
+  commoditySale CommoditySale?
+businessPartners BusinessPartner[]
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model CommoditySale {
+
+  id Int @id @default(autoincrement())
+
+  transactionId Int @unique
+  transaction CommodityTransaction @relation(fields: [transactionId], references: [id])
+
+  invoiceNumber String?
+
+  receiptNumber String?
+
+  paymentMethod PaymentMethod?
+
+  paymentStatus PaymentStatus?
+
+  quantityKg Float
+
+  pricePerKg Float
+
+  discount Float? @default(0)
+
+  tax Float? @default(0)
+
+  totalAmount Float
+
+  amountPaid Float? @default(0)
+
+  balance Float? @default(0)
+
+  saleDate DateTime
+
+  deliveryDate DateTime?
+
+  vehicleNumber String?
+
+  driverName String?
+
+  destinationAddress String?
+
+  notes String?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+

@@ -1,0 +1,132 @@
+model Farmer {
+  id Int @id @default(autoincrement())
+
+  userId Int  @unique
+  user   User @relation(fields: [userId], references: [id])
+
+  nationalId  String?   @unique
+  phone       String
+  gender      String?
+  dateOfBirth DateTime?
+
+  countyId Int
+  county   County @relation(fields: [countyId], references: [id])
+
+  subCountyId Int
+  subCounty   SubCounty @relation(fields: [subCountyId], references: [id])
+
+  wardId Int
+  ward   Ward @relation(fields: [wardId], references: [id])
+
+  villageId Int?
+  village   Village? @relation(fields: [villageId], references: [id])
+
+  farmingExperience Int?
+  educationLevel    String?
+  recommendations   AIRecommendation[]
+
+  createdAt              DateTime                @default(now())
+  updatedAt              DateTime                @updatedAt
+  documents              Document[]
+  farms                  Farm[]
+  notifications          Notification[]
+  articleBookmarks       ArticleBookmark[]
+  articleRatings         ArticleRating[]
+  memberships            CooperativeMembership[]
+  governmentApplications GovernmentApplication[]
+  extensionVisits        ExtensionVisit[]
+  insurancePolicies      InsurancePolicy[]
+  insuranceClaims        InsuranceClaim[]
+}
+
+model Cooperative {
+  id Int @id @default(autoincrement())
+
+  name String
+
+  registrationNumber String? @unique
+
+  cooperativeType CooperativeType
+
+  description String?
+
+  address String?
+
+  phone String?
+
+  email String?
+
+  establishedDate DateTime?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  memberships CooperativeMembership[]
+
+  meetings        CooperativeMeeting[]
+  sharedResources SharedResource[]
+}
+
+model CooperativeMembership {
+  id Int @id @default(autoincrement())
+
+  cooperativeId Int
+  cooperative   Cooperative @relation(fields: [cooperativeId], references: [id])
+
+  farmerId Int
+  farmer   Farmer @relation(fields: [farmerId], references: [id])
+
+  memberRole MemberRole @default(MEMBER)
+
+  membershipStatus MembershipStatus @default(PENDING)
+
+  joinedAt DateTime
+
+  leftAt DateTime?
+
+  createdAt DateTime @default(now())
+}
+
+model CooperativeMeeting {
+  id Int @id @default(autoincrement())
+
+  cooperativeId Int
+  cooperative   Cooperative @relation(fields: [cooperativeId], references: [id])
+
+  organizerId Int?
+  organizer   User? @relation(fields: [organizerId], references: [id])
+
+  title String
+
+  agenda String?
+
+  meetingDate DateTime
+
+  venue String?
+
+  minutes String?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model TenantMembership {
+  id Int @id @default(autoincrement())
+
+  tenantId Int
+  tenant   Tenant @relation(fields: [tenantId], references: [id])
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
+
+  role UserTenantRole
+
+  active Boolean @default(true)
+
+  joinedAt DateTime @default(now())
+
+  @@unique([tenantId, userId])
+}
+

@@ -1,0 +1,289 @@
+model Document {
+  id Int @id @default(autoincrement())
+
+  title String
+
+  description String?
+
+  fileName String
+
+  originalFileName String?
+
+  fileExtension String?
+
+  mimeType String?
+
+  fileSize Float?
+
+  fileUrl String
+
+  storageProvider FileStorageProvider
+
+  ownerType DocumentOwnerType
+
+  category DocumentCategory
+
+  status DocumentStatus @default(ACTIVE)
+
+  farmerId Int?
+  farmer   Farmer? @relation(fields: [farmerId], references: [id])
+
+  farmId Int?
+  farm   Farm? @relation(fields: [farmId], references: [id])
+
+  livestockId Int?
+  livestock   Livestock? @relation(fields: [livestockId], references: [id])
+
+  equipmentId Int?
+  equipment   Equipment? @relation(fields: [equipmentId], references: [id])
+
+  uploadedBy     Int?
+  uploadedByUser User? @relation("UserUploadedDocuments", fields: [uploadedBy], references: [id])
+
+  version Int @default(1)
+
+  createdAt DateTime @default(now())
+
+  updatedAt               DateTime               @updatedAt
+  governmentApplicationId Int?
+  governmentApplication   GovernmentApplication? @relation(fields: [governmentApplicationId], references: [id])
+}
+
+model Task {
+  id Int @id @default(autoincrement())
+
+  title String
+
+  description String?
+
+  category TaskCategory
+
+  priority TaskPriority @default(MEDIUM)
+
+  status TaskStatus @default(PENDING)
+
+  farmId Int?
+  farm   Farm? @relation(fields: [farmId], references: [id])
+
+  employeeId Int?
+  employee   Employee? @relation(fields: [employeeId], references: [id])
+
+  assignedUserId Int?
+  assignedUser   User? @relation(fields: [assignedUserId], references: [id])
+
+  createdById Int?
+  createdBy   User? @relation("TaskCreator", fields: [createdById], references: [id])
+
+  startDate DateTime?
+
+  dueDate DateTime?
+
+  completedDate DateTime?
+
+  estimatedHours Float?
+
+  actualHours Float?
+
+  recurrence RecurrenceType @default(NONE)
+
+  calendarEvents CalendarEvent[]
+
+  createdAt DateTime @default(now())
+
+  updatedAt     DateTime       @updatedAt
+  notifications Notification[]
+}
+
+model RenewableEnergySystem {
+  id Int @id @default(autoincrement())
+
+  farmId Int
+  farm   Farm @relation(fields: [farmId], references: [id])
+
+  systemType String
+
+  capacity Float?
+
+  installationDate DateTime?
+
+  energyGenerated Float?
+
+  unit String?
+
+  supplier String?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model SystemSetting {
+  id Int @id @default(autoincrement())
+
+  category SettingCategory
+
+  settingKey String @unique
+
+  settingValue String
+
+  dataType SettingDataType
+
+  description String?
+
+  editable Boolean @default(true)
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model LocalizationSetting {
+  id Int @id @default(autoincrement())
+
+  languageCode String
+
+  countryCode String?
+
+  currencyCode String
+
+  timezone String
+
+  dateFormat String
+
+  numberFormat String?
+
+  active Boolean @default(true)
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model BackupJob {
+  id Int @id @default(autoincrement())
+
+  backupName String
+
+  backupType BackupType
+
+  storage BackupStorage
+
+  status BackupStatus @default(PENDING)
+
+  filePath String?
+
+  fileSize Float?
+
+  checksum String?
+
+  compressed Boolean @default(true)
+
+  encrypted Boolean @default(true)
+
+  createdById Int?
+  createdBy   User? @relation(fields: [createdById], references: [id])
+
+  startedAt DateTime?
+
+  completedAt DateTime?
+
+  expiresAt DateTime?
+
+  createdAt   DateTime     @default(now())
+  restoreJobs RestoreJob[]
+}
+
+model RestoreJob {
+  id Int @id @default(autoincrement())
+
+  backupId Int
+  backup   BackupJob @relation(fields: [backupId], references: [id])
+
+  restoredById Int?
+  restoredBy   User? @relation(fields: [restoredById], references: [id])
+
+  status BackupStatus @default(PENDING)
+
+  restorePoint DateTime?
+
+  notes String?
+
+  startedAt DateTime?
+
+  completedAt DateTime?
+
+  createdAt DateTime @default(now())
+}
+
+model RecoveryTest {
+  id Int @id @default(autoincrement())
+
+  planId Int
+  plan   DisasterRecoveryPlan @relation(fields: [planId], references: [id])
+
+  testDate DateTime
+
+  status RecoveryTestStatus
+
+  duration Float?
+
+  findings String?
+
+  recommendations String?
+
+  createdAt DateTime @default(now())
+}
+
+model BackupRetentionPolicy {
+  id Int @id @default(autoincrement())
+
+  policyName String
+
+  retentionDays Int
+
+  backupType BackupType
+
+  automaticDeletion Boolean @default(true)
+
+  active Boolean @default(true)
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model ConflictResolution {
+  id Int @id @default(autoincrement())
+
+  syncLogId Int
+  syncLog   SyncLog @relation(fields: [syncLogId], references: [id])
+
+  localVersion String?
+
+  serverVersion String?
+
+  resolvedVersion String?
+
+  resolved Boolean @default(false)
+
+  resolvedAt DateTime?
+
+  createdAt DateTime @default(now())
+}
+
+model OfflineConfiguration {
+  id Int @id @default(autoincrement())
+
+  syncIntervalMinutes Int @default(15)
+
+  maxRetries Int @default(5)
+
+  automaticSync Boolean @default(true)
+
+  conflictStrategy String?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+

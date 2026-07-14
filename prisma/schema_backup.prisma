@@ -1,0 +1,6188 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum SeverityLevel {
+  LOW
+  MODERATE
+  HIGH
+  CRITICAL
+}
+
+enum PlantingSeason {
+  LONG_RAINS
+  SHORT_RAINS
+  IRRIGATED
+  GREENHOUSE
+  DRY_SEASON
+}
+
+enum PlantingStatus {
+  PLANNED
+  PLANTED
+  GERMINATED
+  VEGETATIVE
+  FLOWERING
+  FRUITING
+  MATURITY
+  HARVESTED
+  FAILED
+}
+
+enum HarvestQuality {
+  EXCELLENT
+  GOOD
+  FAIR
+  POOR
+}
+
+enum SeedUnit {
+  GRAMS
+  KILOGRAMS
+  TONNES
+  SEEDS
+  BAGS
+}
+
+enum HarvestUnit {
+  GRAMS
+  KILOGRAMS
+  TONNES
+  BAGS
+  CRATES
+  PIECES
+  LITRES
+}
+
+enum IrrigationMethod {
+  DRIP
+  SPRINKLER
+  FLOOD
+  FURROW
+  PIVOT
+  RAIN_GUN
+  MANUAL
+}
+
+enum WaterSourceType {
+  RIVER
+  BOREHOLE
+  WELL
+  DAM
+  LAKE
+  RAINWATER
+  MUNICIPAL
+}
+
+enum IrrigationStatus {
+  PLANNED
+  ACTIVE
+  COMPLETED
+  CANCELLED
+}
+
+enum IrrigationResult {
+  SUCCESS
+  PARTIAL
+  FAILED
+  POSTPONED
+}
+
+enum EquipmentCategory {
+  TRACTOR
+  HARVESTER
+  IRRIGATION
+  SPRAYER
+  PLANTER
+  TILLAGE
+  TRANSPORT
+  OTHER
+}
+
+enum EquipmentStatus {
+  ACTIVE
+  UNDER_MAINTENANCE
+  OUT_OF_SERVICE
+  RETIRED
+}
+
+enum InventoryCategory {
+  SEED
+  FERTILIZER
+  PESTICIDE
+  HERBICIDE
+  FUNGICIDE
+  EQUIPMENT
+  FUEL
+  OTHER
+}
+
+enum StockMovementType {
+  STOCK_IN
+  STOCK_OUT
+  ADJUSTMENT
+}
+
+enum StorageType {
+  WAREHOUSE
+  SILO
+  COLD_ROOM
+  CHEMICAL_STORE
+  FUEL_TANK
+  OTHER
+}
+
+enum InventoryUnit {
+  GRAMS
+  KILOGRAMS
+  TONNES
+  LITRES
+  MILLILITRES
+  BAGS
+  BOTTLES
+  PACKETS
+  PIECES
+}
+
+enum ExpenseCategory {
+  SEED
+  FERTILIZER
+  PESTICIDE
+  HERBICIDE
+  FUNGICIDE
+  LABOR
+  EQUIPMENT
+  FUEL
+  IRRIGATION
+  TRANSPORT
+  MAINTENANCE
+  UTILITIES
+  RENT
+  OTHER
+}
+
+enum IncomeCategory {
+  CROP_SALES
+  LIVESTOCK_SALES
+  CONSULTANCY
+  GOVERNMENT_SUPPORT
+  INSURANCE
+  GRANT
+  OTHER
+}
+
+enum PaymentMethod {
+  CASH
+  MPESA
+  BANK_TRANSFER
+  CREDIT_CARD
+  DEBIT_CARD
+  CHEQUE
+  MOBILE_MONEY
+  OTHER
+}
+
+enum InvoiceStatus {
+  PENDING
+  PARTIALLY_PAID
+  PAID
+  CANCELLED
+}
+
+enum BudgetStatus {
+  DRAFT
+  ACTIVE
+  COMPLETED
+  CANCELLED
+}
+
+enum LivestockCategory {
+  CATTLE
+  GOAT
+  SHEEP
+  PIG
+  POULTRY
+  RABBIT
+  FISH
+  CAMEL
+  BEE
+  OTHER
+}
+
+enum AnimalSex {
+  MALE
+  FEMALE
+}
+
+enum AnimalStatus {
+  ACTIVE
+  SOLD
+  DEAD
+  SLAUGHTERED
+  LOST
+}
+
+enum HealthStatus {
+  HEALTHY
+  SICK
+  UNDER_TREATMENT
+  RECOVERED
+  QUARANTINED
+}
+
+enum VaccinationStatus {
+  SCHEDULED
+  COMPLETED
+  MISSED
+}
+
+enum ProductionType {
+  MILK
+  EGGS
+  MEAT
+  WOOL
+  HONEY
+  FISH
+  MANURE
+  OTHER
+}
+
+enum ProductionUnit {
+  LITRES
+  MILLILITRES
+  KILOGRAMS
+  GRAMS
+  TONNES
+  PIECES
+  TRAYS
+  DOZENS
+}
+
+enum ProductionQuality {
+  EXCELLENT
+  GOOD
+  FAIR
+  POOR
+}
+
+enum FeedCategory {
+  HAY
+  SILAGE
+  CONCENTRATE
+  GRAIN
+  PELLETS
+  MINERAL
+  SUPPLEMENT
+  PASTURE
+  HOME_MADE_FEED
+  OTHER
+}
+
+enum FeedingFrequency {
+  ONCE_DAILY
+  TWICE_DAILY
+  THREE_TIMES_DAILY
+  WEEKLY
+  CUSTOM
+}
+
+enum FeedUnit {
+  GRAMS
+  KILOGRAMS
+  TONNES
+  LITRES
+  MILLILITRES
+  BALES
+  BAGS
+}
+
+enum BreedingMethod {
+  NATURAL
+  ARTIFICIAL_INSEMINATION
+  EMBRYO_TRANSFER
+}
+
+enum PregnancyStatus {
+  NOT_PREGNANT
+  PREGNANT
+  CALVED
+  ABORTED
+  UNKNOWN
+}
+
+enum BirthType {
+  SINGLE
+  TWINS
+  TRIPLETS
+  MULTIPLE
+}
+
+enum OffspringStatus {
+  ALIVE
+  STILLBORN
+  DIED
+}
+
+enum HatchStatus {
+  INCUBATING
+  HATCHED
+  FAILED
+}
+
+enum HealthRecordType {
+  ROUTINE_CHECKUP
+  EMERGENCY
+  VACCINATION
+  DEWORMING
+  SURGERY
+  LAB_TEST
+  TREATMENT
+}
+
+enum LabTestType {
+  BLOOD
+  FECAL
+  URINE
+  MILK
+  TISSUE
+  PCR
+  OTHER
+}
+
+enum PrescriptionStatus {
+  PRESCRIBED
+  DISPENSED
+  COMPLETED
+  CANCELLED
+}
+
+enum HealthConditionStatus {
+  ACTIVE
+  RECOVERED
+  CHRONIC
+  FATAL
+}
+
+enum EmployeeRole {
+  FARM_MANAGER
+  SUPERVISOR
+  VETERINARY_OFFICER
+  AGRONOMIST
+  MACHINE_OPERATOR
+  IRRIGATION_OPERATOR
+  STORE_KEEPER
+  ACCOUNTANT
+  SECURITY_GUARD
+  CASUAL_WORKER
+  OTHER
+}
+
+enum EmploymentType {
+  PERMANENT
+  CONTRACT
+  CASUAL
+  SEASONAL
+  INTERN
+}
+
+enum AttendanceStatus {
+  PRESENT
+  ABSENT
+  LEAVE
+  SICK
+  HOLIDAY
+}
+
+enum PayrollStatus {
+  PENDING
+  APPROVED
+  PAID
+  CANCELLED
+}
+
+enum MaintenanceType {
+  PREVENTIVE
+  CORRECTIVE
+  EMERGENCY
+  INSPECTION
+  CALIBRATION
+}
+
+enum MaintenanceStatus {
+  SCHEDULED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+  OVERDUE
+}
+
+enum FuelType {
+  DIESEL
+  PETROL
+  ELECTRIC
+  HYBRID
+  SOLAR
+  OTHER
+}
+
+enum CustomerType {
+  INDIVIDUAL
+  COMPANY
+  COOPERATIVE
+  PROCESSOR
+  WHOLESALER
+  RETAILER
+  GOVERNMENT
+  NGO
+  EXPORTER
+}
+
+enum OrderStatus {
+  DRAFT
+  PENDING
+  CONFIRMED
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
+enum DeliveryStatus {
+  PENDING
+  IN_TRANSIT
+  DELIVERED
+  FAILED
+}
+
+enum ProductCategory {
+  CROP
+  LIVESTOCK
+  LIVESTOCK_PRODUCT
+  INPUT
+  EQUIPMENT
+  OTHER
+}
+
+enum SalesUnit {
+  GRAMS
+  KILOGRAMS
+  TONNES
+  MILLILITRES
+  LITRES
+  PIECES
+  DOZENS
+  TRAYS
+  BAGS
+  BALES
+  CRATES
+}
+
+enum RecommendationType {
+  CROP
+  SOIL
+  FERTILIZER
+  IRRIGATION
+  WEATHER
+  PEST
+  DISEASE
+  HARVEST
+  LIVESTOCK
+  FEED
+  BREEDING
+  VACCINATION
+  FINANCIAL
+  MARKET
+  GENERAL
+}
+
+enum RecommendationPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum RecommendationStatus {
+  PENDING
+  VIEWED
+  ACCEPTED
+  REJECTED
+  IMPLEMENTED
+  EXPIRED
+}
+
+enum PredictionType {
+  YIELD
+  WEATHER
+  MARKET_PRICE
+  PEST_RISK
+  DISEASE_RISK
+  SOIL_HEALTH
+  IRRIGATION_DEMAND
+  LIVESTOCK_PRODUCTIVITY
+}
+
+enum AIModelType {
+  MACHINE_LEARNING
+  DEEP_LEARNING
+  LLM
+  RULE_BASED
+  HYBRID
+}
+
+enum SensorType {
+  SOIL_MOISTURE
+  SOIL_TEMPERATURE
+  SOIL_PH
+  SOIL_EC
+  AIR_TEMPERATURE
+  AIR_HUMIDITY
+  RAINFALL
+  WIND_SPEED
+  WIND_DIRECTION
+  SOLAR_RADIATION
+  WATER_LEVEL
+  WATER_FLOW
+  GPS
+  LIVESTOCK_BODY_TEMPERATURE
+  LIVESTOCK_HEART_RATE
+  LIVESTOCK_ACTIVITY
+  GREENHOUSE_TEMPERATURE
+  GREENHOUSE_HUMIDITY
+  GREENHOUSE_CO2
+  OTHER
+}
+
+enum SensorStatus {
+  ACTIVE
+  INACTIVE
+  MAINTENANCE
+  FAULTY
+  OFFLINE
+}
+
+enum ReadingStatus {
+  NORMAL
+  WARNING
+  CRITICAL
+}
+
+enum DeviceType {
+  SENSOR
+  GATEWAY
+  WEATHER_STATION
+  IRRIGATION_CONTROLLER
+  DRONE
+  CAMERA
+  GPS_TRACKER
+  RFID_READER
+  OTHER
+}
+
+enum GeometryType {
+  POINT
+  LINESTRING
+  POLYGON
+  MULTIPOLYGON
+}
+
+enum SatelliteProvider {
+  SENTINEL_2
+  LANDSAT_8
+  LANDSAT_9
+  PLANET
+  MAXAR
+  DRONE
+  OTHER
+}
+
+enum ImageryType {
+  RGB
+  MULTISPECTRAL
+  THERMAL
+  NDVI
+  EVI
+  SAVI
+  NDWI
+  SOIL_MOISTURE
+}
+
+enum FieldStatus {
+  ACTIVE
+  FALLOW
+  PREPARATION
+  PLANTED
+  HARVESTED
+}
+
+enum MapLayerType {
+  FARM_BOUNDARY
+  FIELD_BOUNDARY
+  SOIL
+  WEATHER
+  IRRIGATION
+  PEST
+  DISEASE
+  SATELLITE
+  ELEVATION
+}
+
+enum DocumentOwnerType {
+  FARMER
+  FARM
+  LIVESTOCK
+  EQUIPMENT
+  EMPLOYEE
+  FINANCIAL
+  SOIL_TEST
+  HARVEST
+  AI_REPORT
+  OTHER
+}
+
+enum DocumentCategory {
+  IDENTIFICATION
+  CERTIFICATE
+  LICENSE
+  CONTRACT
+  RECEIPT
+  INVOICE
+  REPORT
+  IMAGE
+  VIDEO
+  AUDIO
+  PDF
+  OTHER
+}
+
+enum DocumentStatus {
+  ACTIVE
+  ARCHIVED
+  DELETED
+}
+
+enum FileStorageProvider {
+  LOCAL
+  FIREBASE
+  AWS_S3
+  AZURE_BLOB
+  GOOGLE_CLOUD
+}
+
+enum NotificationChannel {
+  IN_APP
+  EMAIL
+  SMS
+  WHATSAPP
+  PUSH_NOTIFICATION
+}
+
+enum NotificationPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum NotificationStatus {
+  PENDING
+  SENT
+  DELIVERED
+  READ
+  FAILED
+  CANCELLED
+}
+
+enum NotificationType {
+  WEATHER_ALERT
+  PEST_ALERT
+  DISEASE_ALERT
+  IRRIGATION_REMINDER
+  HARVEST_REMINDER
+  SOIL_ALERT
+  AI_RECOMMENDATION
+  MARKET_PRICE
+  PAYMENT_REMINDER
+  INVENTORY_ALERT
+  MACHINERY_ALERT
+  VACCINATION_REMINDER
+  BREEDING_REMINDER
+  TASK_ASSIGNMENT
+  GENERAL
+}
+
+enum TaskCategory {
+  GENERAL
+  CROP
+  LIVESTOCK
+  IRRIGATION
+  SOIL
+  FERTILIZER
+  PEST_CONTROL
+  HARVEST
+  MACHINERY
+  INVENTORY
+  MAINTENANCE
+  EMPLOYEE
+  FINANCIAL
+}
+
+enum TaskPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum TaskStatus {
+  PENDING
+  ASSIGNED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+  OVERDUE
+}
+
+enum RecurrenceType {
+  NONE
+  DAILY
+  WEEKLY
+  MONTHLY
+  YEARLY
+}
+
+enum KnowledgeCategory {
+  CROP_PRODUCTION
+  LIVESTOCK_MANAGEMENT
+  POULTRY
+  DAIRY
+  PIG_FARMING
+  GOAT_FARMING
+  SHEEP_FARMING
+  SOIL_MANAGEMENT
+  FERTILIZER
+  IRRIGATION
+  WEATHER
+  PEST_CONTROL
+  DISEASE_MANAGEMENT
+  MACHINERY
+  FARM_BUSINESS
+  FINANCIAL_MANAGEMENT
+  MARKETING
+  FOOD_SAFETY
+  CLIMATE_SMART_AGRICULTURE
+  AGROFORESTRY
+  GENERAL
+}
+
+enum ArticleStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum MediaType {
+  IMAGE
+  VIDEO
+  AUDIO
+  PDF
+  DOCUMENT
+  LINK
+}
+
+enum ExtensionSource {
+  INTERNAL
+  GOVERNMENT
+  UNIVERSITY
+  NGO
+  RESEARCH_INSTITUTE
+  PRIVATE_COMPANY
+}
+
+enum CertificationType {
+  GLOBAL_GAP
+  ORGANIC
+  FAIRTRADE
+  RAINFOREST_ALLIANCE
+  ISO_22000
+  HACCP
+  GMP
+  GOVERNMENT
+  PRIVATE
+  OTHER
+}
+
+enum CertificationStatus {
+  PENDING
+  ACTIVE
+  EXPIRED
+  SUSPENDED
+  REVOKED
+}
+
+enum AuditType {
+  INTERNAL
+  EXTERNAL
+  GOVERNMENT
+  CERTIFICATION
+  CUSTOMER
+}
+
+enum AuditStatus {
+  PLANNED
+  IN_PROGRESS
+  COMPLETED
+  FAILED
+  CANCELLED
+}
+
+enum ComplianceStatus {
+  COMPLIANT
+  PARTIALLY_COMPLIANT
+  NON_COMPLIANT
+}
+
+enum CorrectiveActionStatus {
+  OPEN
+  IN_PROGRESS
+  COMPLETED
+  VERIFIED
+  CLOSED
+}
+
+enum DashboardType {
+  FARMER
+  FARM_MANAGER
+  AGRONOMIST
+  VETERINARIAN
+  ACCOUNTANT
+  ADMIN
+  EXECUTIVE
+}
+
+enum WidgetType {
+  KPI
+  LINE_CHART
+  BAR_CHART
+  PIE_CHART
+  TABLE
+  MAP
+  CALENDAR
+  GAUGE
+}
+
+enum KPIType {
+  CROP_YIELD
+  LIVESTOCK_PRODUCTION
+  SOIL_HEALTH
+  WEATHER
+  REVENUE
+  EXPENSE
+  PROFIT
+  INVENTORY
+  MARKET_PRICE
+  WATER_USAGE
+  AI_INSIGHT
+}
+
+enum DashboardPeriod {
+  TODAY
+  WEEK
+  MONTH
+  QUARTER
+  YEAR
+  CUSTOM
+}
+
+enum ReportType {
+  FARM
+  CROP
+  LIVESTOCK
+  FINANCIAL
+  SOIL
+  WEATHER
+  IRRIGATION
+  INVENTORY
+  MARKETPLACE
+  EMPLOYEE
+  AI
+  CUSTOM
+}
+
+enum ReportFormat {
+  PDF
+  EXCEL
+  CSV
+  WORD
+}
+
+enum ReportStatus {
+  PENDING
+  GENERATING
+  COMPLETED
+  FAILED
+}
+
+enum PredictionStatus {
+  PENDING
+  RUNNING
+  COMPLETED
+  FAILED
+}
+
+enum PredictionModelType {
+  LINEAR_REGRESSION
+  RANDOM_FOREST
+  XGBOOST
+  LIGHTGBM
+  LSTM
+  CNN
+  TRANSFORMER
+  ARIMA
+  PROPHET
+  CUSTOM
+}
+
+enum ForecastPeriod {
+  DAILY
+  WEEKLY
+  MONTHLY
+  QUARTERLY
+  YEARLY
+}
+
+enum TraceabilityEventType {
+  HARVEST
+  PROCESSING
+  PACKAGING
+  STORAGE
+  TRANSPORT
+  DELIVERY
+  SALE
+  EXPORT
+  IMPORT
+  INSPECTION
+}
+
+enum ShipmentStatus {
+  PENDING
+  PREPARING
+  IN_TRANSIT
+  DELIVERED
+  CANCELLED
+  RETURNED
+}
+
+enum BatchStatus {
+  ACTIVE
+  SOLD
+  EXPIRED
+  RECALLED
+}
+
+enum WarehouseZoneType {
+  RECEIVING
+  STORAGE
+  COLD_STORAGE
+  PACKAGING
+  SHIPPING
+  QUARANTINE
+}
+
+enum WarehouseMovementType {
+  INBOUND
+  OUTBOUND
+  TRANSFER
+  RETURN
+  ADJUSTMENT
+}
+
+enum LogisticsPriority {
+  LOW
+  NORMAL
+  HIGH
+  URGENT
+}
+
+enum ProcurementStatus {
+  DRAFT
+  PENDING_APPROVAL
+  APPROVED
+  ORDERED
+  PARTIALLY_RECEIVED
+  COMPLETED
+  CANCELLED
+}
+
+enum PurchasePriority {
+  LOW
+  NORMAL
+  HIGH
+  URGENT
+}
+
+enum SupplierRating {
+  EXCELLENT
+  GOOD
+  FAIR
+  POOR
+}
+
+enum CustomerStatus {
+  LEAD
+  ACTIVE
+  INACTIVE
+  VIP
+  BLACKLISTED
+}
+
+enum InteractionType {
+  PHONE_CALL
+  EMAIL
+  SMS
+  WHATSAPP
+  MEETING
+  FARM_VISIT
+  SUPPORT
+}
+
+enum OpportunityStage {
+  NEW
+  QUALIFIED
+  PROPOSAL
+  NEGOTIATION
+  WON
+  LOST
+}
+
+enum CooperativeType {
+  PRODUCER
+  MARKETING
+  DAIRY
+  POULTRY
+  LIVESTOCK
+  SAVINGS
+  MULTIPURPOSE
+}
+
+enum MembershipStatus {
+  PENDING
+  ACTIVE
+  SUSPENDED
+  TERMINATED
+}
+
+enum MemberRole {
+  MEMBER
+  CHAIRPERSON
+  SECRETARY
+  TREASURER
+  COMMITTEE_MEMBER
+}
+
+enum GovernmentProgramType {
+  SUBSIDY
+  GRANT
+  LOAN
+  TRAINING
+  INSURANCE_SUPPORT
+  INPUT_SUPPORT
+  IRRIGATION_PROJECT
+  RESEARCH
+  OTHER
+}
+
+enum ProgramStatus {
+  UPCOMING
+  OPEN
+  CLOSED
+  SUSPENDED
+  COMPLETED
+}
+
+enum ApplicationStatus {
+  DRAFT
+  SUBMITTED
+  UNDER_REVIEW
+  APPROVED
+  REJECTED
+  DISBURSED
+}
+
+enum InsuranceType {
+  CROP
+  LIVESTOCK
+  FARM_PROPERTY
+  EQUIPMENT
+  GREENHOUSE
+  WEATHER_INDEX
+}
+
+enum PolicyStatus {
+  DRAFT
+  ACTIVE
+  EXPIRED
+  CANCELLED
+  CLAIMED
+}
+
+enum ClaimStatus {
+  REPORTED
+  UNDER_REVIEW
+  APPROVED
+  REJECTED
+  PAID
+}
+
+enum CarbonSource {
+  FUEL
+  ELECTRICITY
+  FERTILIZER
+  LIVESTOCK
+  TRANSPORT
+  MACHINERY
+  WASTE
+  IRRIGATION
+  OTHER
+}
+
+enum SustainabilityProjectStatus {
+  PLANNED
+  ACTIVE
+  COMPLETED
+  CANCELLED
+}
+
+enum SustainabilityCategory {
+  CARBON_REDUCTION
+  WATER_CONSERVATION
+  SOIL_HEALTH
+  BIODIVERSITY
+  RENEWABLE_ENERGY
+  WASTE_MANAGEMENT
+}
+
+enum IntegrationType {
+  WEATHER_API
+  PAYMENT_GATEWAY
+  SMS_PROVIDER
+  EMAIL_PROVIDER
+  ERP_SYSTEM
+  ACCOUNTING_SYSTEM
+  SATELLITE_PROVIDER
+  GOVERNMENT_API
+  AI_PROVIDER
+  IOT_PROVIDER
+  MAP_PROVIDER
+  STORAGE_PROVIDER
+}
+
+enum IntegrationStatus {
+  ACTIVE
+  INACTIVE
+  ERROR
+  TESTING
+}
+
+enum APILogStatus {
+  SUCCESS
+  FAILED
+  TIMEOUT
+  PENDING
+}
+
+enum SettingCategory {
+  GENERAL
+  SECURITY
+  AI
+  WEATHER
+  EMAIL
+  SMS
+  PAYMENT
+  STORAGE
+  NOTIFICATION
+  LOCALIZATION
+  SYSTEM
+}
+
+enum SettingDataType {
+  STRING
+  INTEGER
+  FLOAT
+  BOOLEAN
+  JSON
+}
+
+enum FeatureStatus {
+  ENABLED
+  DISABLED
+  BETA
+}
+
+enum ImportSource {
+  CSV
+  EXCEL
+  JSON
+  XML
+  DATABASE
+  API
+}
+
+enum ImportStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  CANCELLED
+}
+
+enum MigrationStatus {
+  PENDING
+  RUNNING
+  SUCCESS
+  FAILED
+  ROLLED_BACK
+}
+
+enum ValidationSeverity {
+  INFO
+  WARNING
+  ERROR
+}
+
+enum BackupType {
+  FULL
+  INCREMENTAL
+  DIFFERENTIAL
+}
+
+enum BackupStatus {
+  PENDING
+  RUNNING
+  COMPLETED
+  FAILED
+  RESTORED
+}
+
+enum BackupStorage {
+  LOCAL
+  AWS_S3
+  AZURE_BLOB
+  GOOGLE_CLOUD
+  FIREBASE_STORAGE
+}
+
+enum RecoveryTestStatus {
+  PASSED
+  FAILED
+  WARNING
+}
+
+enum SubscriptionPlanType {
+  FREE
+  BASIC
+  PROFESSIONAL
+  ENTERPRISE
+  CUSTOM
+}
+
+enum SubscriptionStatus {
+  TRIAL
+  ACTIVE
+  SUSPENDED
+  EXPIRED
+  CANCELLED
+}
+
+enum BillingCycle {
+  MONTHLY
+  QUARTERLY
+  YEARLY
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+  CANCELLED
+}
+
+enum TenantStatus {
+  ACTIVE
+  SUSPENDED
+  TRIAL
+  EXPIRED
+}
+
+enum TenantType {
+  INDIVIDUAL
+  COMPANY
+  COOPERATIVE
+  NGO
+  GOVERNMENT
+  UNIVERSITY
+}
+
+enum UserTenantRole {
+  OWNER
+  ADMIN
+  MANAGER
+  STAFF
+  VIEWER
+}
+
+enum SyncStatus {
+  PENDING
+  SYNCING
+  SYNCED
+  FAILED
+  CONFLICT
+}
+
+enum SyncOperation {
+  CREATE
+  UPDATE
+  DELETE
+}
+
+enum DevicePlatform {
+  ANDROID
+  IOS
+  WEB
+  DESKTOP
+}
+
+enum DecisionCategory {
+  CROP
+  LIVESTOCK
+  WEATHER
+  SOIL
+  IRRIGATION
+  FERTILIZER
+  PEST
+  DISEASE
+  MARKET
+  FINANCE
+  INVENTORY
+  ENERGY
+}
+
+enum DecisionStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  IMPLEMENTED
+}
+
+enum AIModelSource {
+  OPENAI
+  GEMINI
+  CLAUDE
+  LLAMA
+  MISTRAL
+  GROK
+  CUSTOM
+}
+
+enum PerformanceStatus {
+  PLANNED
+
+  IN_PROGRESS
+
+  COMPLETED
+
+  EXCEEDED_TARGET
+
+  BELOW_TARGET
+
+  FAILED
+}
+
+enum SeasonType {
+  LONG_RAINS
+  SHORT_RAINS
+  DRY_SEASON
+  IRRIGATED
+}
+
+enum CommodityMovementType {
+  IMPORT
+  EXPORT
+  LOCAL_TRANSFER
+  SALE
+  PURCHASE
+  DONATION
+}
+
+enum FoodSecurityStatus {
+  SURPLUS
+  BALANCED
+  DEFICIT
+  CRITICAL
+}
+enum CommodityTransactionType {
+  HARVEST
+  PURCHASE
+  SALE
+  IMPORT
+  EXPORT
+  TRANSFER
+  HOUSEHOLD_CONSUMPTION
+  LIVESTOCK_FEED
+  SEED_RESERVE
+  PROCESSING
+  STORAGE
+  DONATION
+  LOSS
+  RETURN
+  ADJUSTMENT
+}
+enum BuyerType {
+
+  INDIVIDUAL
+
+  RETAILER
+
+  WHOLESALER
+
+  COOPERATIVE
+
+  PROCESSOR
+
+  EXPORTER
+
+  GOVERNMENT
+
+  NGO
+
+  SCHOOL
+
+  SUPERMARKET
+
+  DISTRIBUTOR
+
+}
+enum BusinessPartnerType {
+  FARMER
+  CUSTOMER
+  BUYER
+  SUPPLIER
+  COOPERATIVE
+  AGRO_DEALER
+  PROCESSOR
+  EXPORTER
+  IMPORTER
+  RETAILER
+  WHOLESALER
+  GOVERNMENT
+  NGO
+  SACCO
+  BANK
+  INSURANCE
+  TRANSPORTER
+  LOGISTICS
+  EXTENSION_OFFICER
+  RESEARCH_INSTITUTION
+  UNIVERSITY
+}
+model Role {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  description String?
+  createdAt   DateTime @default(now())
+
+  users User[]
+}
+
+model User {
+  id       Int    @id @default(autoincrement())
+  name     String
+  email    String @unique
+  password String
+
+  roleId                Int
+  role                  Role                   @relation(fields: [roleId], references: [id])
+  uploadedDocuments     Document[]             @relation("UserUploadedDocuments")
+  notifications         Notification[]
+  notificationTemplates NotificationTemplate[]
+  assignedTasks         Task[]
+  createdTasks          Task[]                 @relation("TaskCreator")
+  calendarEvents        CalendarEvent[]
+  createdAt             DateTime               @default(now())
+  farmer                Farmer?
+  knowledgeArticles     KnowledgeArticle[]
+  conductedAudits       FarmAudit[]
+  correctiveActions     CorrectiveAction[]
+  dashboards            Dashboard[]
+  reports               Report[]
+  predictions           AIModelPrediction[]
+  traceabilityEvents    TraceabilityEvent[]
+  purchaseRequests      PurchaseRequest[]
+  approvedPurchases     PurchaseOrder[]
+  customerInteractions  CustomerInteraction[]
+
+  salesOpportunities SalesOpportunity[]
+  organizedMeetings  CooperativeMeeting[]
+  apiKeys            ApiKey[]
+  userPreferences    UserPreference[]
+  importJobs         ImportJob[]
+  migrationJobs      MigrationJob[]
+  exportJobs         ExportJob[]
+  backupsCreated     BackupJob[]
+  restoresPerformed  RestoreJob[]
+  subscription       Subscription?
+
+  payments Payment[]
+
+  invoices     Invoice[]
+  usageMetrics UsageMetric[]
+  tenantId     Int?
+
+  tenant Tenant? @relation(fields: [tenantId], references: [id])
+
+  tenantMemberships TenantMembership[]
+  devices           UserDevice[]
+
+  syncLogs    SyncLog[]
+  aiDecisions AIDecision[]
+
+  decisionFeedback DecisionFeedback[]
+}
+
+model Country {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  code      String?  @unique
+  createdAt DateTime @default(now())
+
+  counties County[]
+}
+
+model County {
+  id        Int      @id @default(autoincrement())
+  name      String
+  code      String?  @unique
+  createdAt DateTime @default(now())
+
+  countryId Int
+  country   Country @relation(fields: [countryId], references: [id])
+
+  subCounties SubCounty[]
+  farmers     Farmer[]
+
+  @@unique([countryId, name])
+}
+
+model SubCounty {
+  id        Int      @id @default(autoincrement())
+  name      String
+  createdAt DateTime @default(now())
+
+  countyId Int
+  county   County @relation(fields: [countyId], references: [id])
+
+  wards   Ward[]
+  farmers Farmer[]
+
+  @@unique([countyId, name])
+}
+
+model Ward {
+  id        Int      @id @default(autoincrement())
+  name      String
+  createdAt DateTime @default(now())
+
+  subCountyId Int
+  subCounty   SubCounty @relation(fields: [subCountyId], references: [id])
+
+  villages Village[]
+  farmers  Farmer[]
+
+  @@unique([subCountyId, name])
+}
+
+model Village {
+  id        Int      @id @default(autoincrement())
+  name      String
+  createdAt DateTime @default(now())
+
+  wardId  Int
+  ward    Ward     @relation(fields: [wardId], references: [id])
+  farmers Farmer[]
+
+  @@unique([wardId, name])
+}
+
+model Farmer {
+  id Int @id @default(autoincrement())
+
+  userId Int  @unique
+  user   User @relation(fields: [userId], references: [id])
+
+  nationalId  String?   @unique
+  phone       String
+  gender      String?
+  dateOfBirth DateTime?
+
+  countyId Int
+  county   County @relation(fields: [countyId], references: [id])
+
+  subCountyId Int
+  subCounty   SubCounty @relation(fields: [subCountyId], references: [id])
+
+  wardId Int
+  ward   Ward @relation(fields: [wardId], references: [id])
+
+  villageId Int?
+  village   Village? @relation(fields: [villageId], references: [id])
+
+  farmingExperience Int?
+  educationLevel    String?
+  recommendations   AIRecommendation[]
+
+  createdAt              DateTime                @default(now())
+  updatedAt              DateTime                @updatedAt
+  documents              Document[]
+  farms                  Farm[]
+  notifications          Notification[]
+  articleBookmarks       ArticleBookmark[]
+  articleRatings         ArticleRating[]
+  memberships            CooperativeMembership[]
+  governmentApplications GovernmentApplication[]
+  extensionVisits        ExtensionVisit[]
+  insurancePolicies      InsurancePolicy[]
+  insuranceClaims        InsuranceClaim[]
+}
+
+model Farm {
+  id Int @id @default(autoincrement())
+
+  farmerId Int
+  farmer   Farmer @relation(fields: [farmerId], references: [id])
+
+  farmName String
+  acreage  Float
+
+  latitude  Float?
+  longitude Float?
+
+  ownershipType String?
+
+  soilTypeId Int?
+  soilType   SoilType? @relation(fields: [soilTypeId], references: [id])
+
+  weatherStationId Int?
+  weatherStation   WeatherStation? @relation(fields: [weatherStationId], references: [id])
+
+  waterSourceId Int?
+  waterSource   WaterSource? @relation(fields: [waterSourceId], references: [id])
+
+  soilTests           SoilTest[]
+  crops               CropVariety[]
+  outbreaks           PestOutbreak[]
+  plantings           Planting[]
+  customers           Customer[]
+  products            Product[]
+  salesOrders         SalesOrder[]
+  deliveries          Delivery[]
+  irrigationSchedules IrrigationSchedule[]
+
+  equipment              Equipment[]
+  storageFacilities      StorageFacility[]
+  expenses               Expense[]
+  incomes                Income[]
+  budgets                Budget[]
+  suppliers              Supplier[]
+  buyers                 Buyer[]
+  livestock              Livestock[]
+  employees              Employee[]
+  recommendations        AIRecommendation[]
+  predictions            AIModelPrediction[]
+  iotDevices             IoTDevice[]
+  sensorReadings         SensorReading[]
+  fields                 Field[]
+  satelliteImages        SatelliteImage[]
+  mapLayers              MapLayer[]
+  documents              Document[]
+  notifications          Notification[]
+  tasks                  Task[]
+  certifications         FarmCertification[]
+  audits                 FarmAudit[]
+  calendarEvents         CalendarEvent[]
+  dashboards             Dashboard[]
+  createdAt              DateTime                @default(now())
+  updatedAt              DateTime                @updatedAt
+  kpirecords             KPIRecord[]
+  analyticsSnapshots     AnalyticsSnapshot[]
+  reports                Report[]
+  shipments              Shipment[]
+  traceabilityEvents     TraceabilityEvent[]
+  riskAssessments        FarmRiskAssessment[]
+  carbonRecords          CarbonEmission[]
+  sustainabilityProjects SustainabilityProject[]
+  waterUsageRecords      WaterUsage[]
+  renewableEnergySystems RenewableEnergySystem[]
+  wasteManagementRecords WasteManagementRecord[]
+  tenantId               Int?
+
+  tenant                Tenant?                 @relation(fields: [tenantId], references: [id])
+  aiDecisions           AIDecision[]
+  productionPlans       CropProductionPlan[]
+  commodityInventories  CommodityInventory[]
+  productionCosts       ProductionCost[]
+  revenueBreakdowns     RevenueBreakdown[]
+  profitabilityAnalyses ProfitabilityAnalysis[]
+  agriculturalKPIs      AgriculturalKPI[]
+  commodityTransactions CommodityTransaction[]
+  countryId Int?
+country Country? @relation(fields:[countryId], references:[id])
+
+countyId Int?
+county County? @relation(fields:[countyId], references:[id])
+
+subCountyId Int?
+subCounty SubCounty? @relation(fields:[subCountyId], references:[id])
+
+wardId Int?
+ward Ward? @relation(fields:[wardId], references:[id])
+
+villageId Int?
+village Village? @relation(fields:[villageId], references:[id])
+}
+
+model CropCategory {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  crops Crop[]
+}
+
+model Crop {
+  id Int @id @default(autoincrement())
+
+  name           String
+  scientificName String?
+  description    String?
+
+  categoryId Int
+  category   CropCategory @relation(fields: [categoryId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  varieties              CropVariety[]
+  recommendations        AIRecommendation[]
+  knowledgeArticles      KnowledgeArticle[]
+  productionPlans        CropProductionPlan[]
+  commodityInventories   CommodityInventory[]
+  commodityMovements     CommodityMovement[]
+  commodityPrices        CommodityPriceHistory[]
+  productionCosts        ProductionCost[]
+  revenueBreakdowns      RevenueBreakdown[]
+  profitabilityAnalyses  ProfitabilityAnalysis[]
+  commoditySalesAnalyses CommoditySalesAnalysis[]
+  agriculturalKPIs       AgriculturalKPI[]
+
+  @@unique([categoryId, name])
+  commodityTransactions CommodityTransaction[]
+}
+
+model CropVariety {
+  id Int @id @default(autoincrement())
+
+  cropId Int
+  crop   Crop @relation(fields: [cropId], references: [id])
+
+  varietyName String
+
+  maturityDays  Int?
+  expectedYield Float?
+
+  droughtTolerance  String?
+  diseaseResistance String?
+
+  farmId Int?
+  farm   Farm? @relation(fields: [farmId], references: [id])
+
+  plantings Planting[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([cropId, varietyName])
+}
+
+model SoilType {
+  id Int @id @default(autoincrement())
+
+  name        String  @unique
+  description String?
+
+  phMin Float?
+  phMax Float?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  farms Farm[]
+}
+
+model SoilTest {
+  id Int @id @default(autoincrement())
+
+  farmId Int
+  farm   Farm @relation(fields: [farmId], references: [id])
+
+  testDate DateTime
+
+  ph Float?
+
+  organicMatter Float?
+
+  nitrogen          Float?
+  phosphorus        Float?
+  potassium         Float?
+  calcium           Float?
+  magnesium         Float?
+  laboratory        String?
+  recommendations   FertilizerRecommendation[]
+  aiRecommendations AIRecommendation[]
+  createdAt         DateTime                   @default(now())
+  updatedAt         DateTime                   @updatedAt
+}
+
+model FertilizerType {
+  id Int @id @default(autoincrement())
+
+  name        String  @unique
+  category    String?
+  description String?
+
+  nitrogen   Float?
+  phosphorus Float?
+  potassium  Float?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  recommendations FertilizerRecommendation[]
+}
+
+model FertilizerRecommendation {
+  id Int @id @default(autoincrement())
+
+  soilTestId Int
+  soilTest   SoilTest @relation(fields: [soilTestId], references: [id])
+
+  fertilizerTypeId Int
+  fertilizerType   FertilizerType @relation(fields: [fertilizerTypeId], references: [id])
+
+  recommendedRate Float?
+  unit            String?
+
+  recommendationReason String?
+
+  applications FertilizerApplication[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model FertilizerApplication {
+  id Int @id @default(autoincrement())
+
+  recommendationId Int
+  recommendation   FertilizerRecommendation @relation(fields: [recommendationId], references: [id])
+
+  applicationDate DateTime
+
+  quantityApplied Float?
+
+  unit String?
+
+  method String?
+
+  notes String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model WeatherStation {
+  id Int @id @default(autoincrement())
+
+  name     String
+  provider String?
+
+  latitude  Float?
+  longitude Float?
+  elevation Float?
+
+  farms      Farm[]
+  records    WeatherRecord[]
+  iotDevices IoTDevice[]
+  createdAt  DateTime        @default(now())
+  updatedAt  DateTime        @updatedAt
+}
+
+model WeatherRecord {
+  id Int @id @default(autoincrement())
+
+  stationId Int
+  station   WeatherStation @relation(fields: [stationId], references: [id])
+
+  recordDate DateTime
+
+  temperature Float?
+  rainfall    Float?
+  humidity    Float?
+  windSpeed   Float?
+
+  solarRadiation     Float?
+  evapotranspiration Float?
+  predictions        AIModelPrediction[]
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+}
+
+model PestCategory {
+  id Int @id @default(autoincrement())
+
+  name        String  @unique
+  description String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  pests Pest[]
+}
+
+model Pest {
+  id Int @id @default(autoincrement())
+
+  name           String
+  scientificName String?
+  description    String?
+
+  categoryId Int
+  category   PestCategory @relation(fields: [categoryId], references: [id])
+
+  lifecycle String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  outbreaks PestOutbreak[]
+
+  @@unique([categoryId, name])
+}
+
+model Disease {
+  id Int @id @default(autoincrement())
+
+  name String @unique
+
+  scientificName String?
+
+  cropAffected String?
+
+  symptoms String?
+
+  causes String?
+
+  prevention String?
+
+  treatment String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  outbreaks PestOutbreak[]
+}
+
+model PestOutbreak {
+  id Int @id @default(autoincrement())
+
+  farmId Int
+  farm   Farm @relation(fields: [farmId], references: [id])
+
+  pestId Int?
+  pest   Pest? @relation(fields: [pestId], references: [id])
+
+  diseaseId Int?
+  disease   Disease? @relation(fields: [diseaseId], references: [id])
+
+  reportDate DateTime
+
+  severity SeverityLevel?
+
+  affectedArea Float?
+
+  notes String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Planting {
+  id Int @id @default(autoincrement())
+
+  farmId Int
+  farm   Farm @relation(fields: [farmId], references: [id])
+
+  cropVarietyId Int
+  cropVariety   CropVariety @relation(fields: [cropVarietyId], references: [id])
+
+  season PlantingSeason
+
+  plantingDate DateTime
+
+  expectedHarvestDate DateTime?
+
+  areaPlanted Float?
+
+  seedQuantity Float?
+  seedUnit     SeedUnit?
+
+  status              PlantingStatus
+  irrigationSchedules IrrigationSchedule[]
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+  workAssignments     WorkAssignment[]
+  harvests            Harvest[]
+  fieldId             Int?
+  field               Field?               @relation(fields: [fieldId], references: [id])
+}
+
+model Harvest {
+  id Int @id @default(autoincrement())
+
+  plantingId Int
+  planting   Planting @relation(fields: [plantingId], references: [id])
+
+  harvestDate DateTime
+
+  quantity Float
+  unit     HarvestUnit
+
+  quality HarvestQuality
+
+  moistureContent Float?
+  sellingPrice    Float?
+
+  notes           String?
+  incomes         Income[]
+  workAssignments WorkAssignment[]
+  productItems    Product[]
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+}
+
+model WaterSource {
+  id Int @id @default(autoincrement())
+
+  name String
+
+  sourceType WaterSourceType
+
+  location String?
+
+  capacity Float?
+
+  farms Farm[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model IrrigationSchedule {
+  id Int @id @default(autoincrement())
+
+  farmId Int
+  farm   Farm @relation(fields: [farmId], references: [id])
+
+  plantingId Int?
+  planting   Planting? @relation(fields: [plantingId], references: [id])
+
+  method IrrigationMethod
+
+  status IrrigationStatus
+
+  scheduledDate DateTime
+
+  durationMinutes Int?
+
+  waterVolume Float?
+
+  notes String?
+
+  irrigationEvents IrrigationEvent[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model IrrigationEvent {
+  id Int @id @default(autoincrement())
+
+  scheduleId Int
+  schedule   IrrigationSchedule @relation(fields: [scheduleId], references: [id])
+
+  irrigationDate DateTime
+
+  actualWaterVolume Float?
+
+  durationMinutes Int?
+  result          IrrigationResult?
+  remarks         String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Equipment {
+  id Int @id @default(autoincrement())
+
+  farmId Int
+  farm   Farm @relation(fields: [farmId], references: [id])
+
+  name String
+
+  category EquipmentCategory
+
+  status EquipmentStatus
+
+  manufacturer String?
+
+  model String?
+
+  serialNumber String? @unique
+
+  purchaseDate DateTime?
+
+  purchasePrice Float?
+  fuelType      FuelType?
+
+  maintenanceRecords   MaintenanceRecord[]
+  documents            Document[]
+  maintenanceSchedules MaintenanceSchedule[]
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
+}
+
+model StorageFacility {
+  id Int @id @default(autoincrement())
+
+  farmId Int
+  farm   Farm @relation(fields: [farmId], references: [id])
+
+  name String
+
+  type StorageType
+
+  capacity Float?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  inventoryItems       InventoryItem[]
+  zones                WarehouseZone[]
+  movements            WarehouseMovement[]
+  warehouseInspections WarehouseInspection[]
+}
+
+model InventoryItem {
+  id Int @id @default(autoincrement())
+
+  storageFacilityId Int
+  storageFacility   StorageFacility @relation(fields: [storageFacilityId], references: [id])
+
+  name String
+
+  category InventoryCategory
+
+  quantity Float
+
+  unit InventoryUnit
+
+  reorderLevel Float?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  stockMovements StockMovement[]
+
+  @@unique([storageFacilityId, name])
+}
+
+model StockMovement {
+  id Int @id @default(autoincrement())
+
+  inventoryItemId Int
+  inventoryItem   InventoryItem @relation(fields: [inventoryItemId], references: [id])
+
+  movementType StockMovementType
+
+  quantity Float
+
+  movementDate DateTime
+
+  remarks String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+model Supplier {
+
+  id Int @id @default(autoincrement())
+
+  farmId Int
+  farm Farm @relation(fields: [farmId], references: [id])
+
+  businessPartnerId Int @unique
+
+  businessPartner BusinessPartner
+    @relation(fields: [businessPartnerId], references: [id])
+
+  name String
+
+  contactPerson String?
+  phone String?
+  email String?
+  address String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  expenses Expense[]
+  purchaseRequests PurchaseRequest[]
+  purchaseOrders PurchaseOrder[]
+  supplierEvaluations SupplierEvaluation[]
+  procurementContracts ProcurementContract[]
+}
+
+
+model Expense {
+  id Int @id @default(autoincrement())
+
+  farmId Int
+  farm   Farm @relation(fields: [farmId], references: [id])
+
+  supplierId Int?
+  supplier   Supplier? @relation(fields: [supplierId], references: [id])
+
+  category ExpenseCategory
+
+  description String?
+
+  amount Float
+
+  paymentMethod PaymentMethod
+
+  expenseDate DateTime
+
+  receiptNumber String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Income {
+  id Int @id @default(autoincrement())
+
+  farmId Int
+  farm   Farm @relation(fields: [farmId], references: [id])
+
+  buyerId Int?
+  buyer   Buyer? @relation(fields: [buyerId], references: [id])
+
+  harvestId Int?
+  harvest   Harvest? @relation(fields: [harvestId], references: [id])
+
+  category IncomeCategory
+
+  amount Float
+
+  paymentMethod PaymentMethod
+
+  incomeDate DateTime
+
+  receiptNumber String?
+
+  notes String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Budget {
+  id Int @id @default(autoincrement())
+
+  farmId Int
+  farm   Farm @relation(fields: [farmId], references: [id])
+
+  title String
+
+  financialYear Int
+
+  estimatedIncome Float
+
+  estimatedExpense Float
+
+  status BudgetStatus
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Invoice {
+  id Int @id @default(autoincrement())
+
+  invoiceNumber String @unique
+
+  amount Float
+
+  issueDate DateTime
+
+  dueDate DateTime?
+
+  status InvoiceStatus
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  payments Payment[]
+  user     User?     @relation(fields: [userId], references: [id])
+  userId   Int?
+}
+
+model Payment {
+  id Int @id @default(autoincrement())
+
+  invoiceId Int
+  invoice   Invoice @relation(fields: [invoiceId], references: [id])
+
+  amount Float
+
+  paymentMethod PaymentMethod
+
+  paymentDate DateTime
+
+  transactionReference String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User?    @relation(fields: [userId], references: [id])
+  userId    Int?
+}
+
+model Breed {
+  id Int @id @default(autoincrement())
+
+  category LivestockCategory
+
+  name String
+
+  scientificName String?
+
+  originCountry String?
+
+  purpose String?
+
+  averageWeight Float?
+
+  averageMilkYield Float?
+
+  averageEggProduction Int?
+
+  growthRate String?
+
+  climateSuitability String?
+
+  description String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  livestock Livestock[]
+
+  @@unique([category, name])
+}
+
+model Livestock {
+  id Int @id @default(autoincrement())
+
+  farmId Int
+  farm   Farm @relation(fields: [farmId], references: [id])
+
+  tagNumber String @unique
+
+  category LivestockCategory
+
+  breedId Int?
+  breed   Breed? @relation(fields: [breedId], references: [id])
+
+  sex AnimalSex
+
+  dateOfBirth DateTime?
+
+  acquisitionDate DateTime?
+
+  weight Float?
+
+  healthStatus HealthStatus
+
+  status AnimalStatus
+
+  createdAt         DateTime              @default(now())
+  updatedAt         DateTime              @updatedAt
+  feedingSchedules  FeedingSchedule[]
+  feedRecords       FeedRecord[]
+  vaccinations      Vaccination[]
+  treatments        Treatment[]
+  productionRecords LivestockProduction[]
+  breedingAsMale    Breeding[]            @relation("MaleBreeding")
+  breedingAsFemale  Breeding[]            @relation("FemaleBreeding")
+  documents         Document[]
+  births            Birth[]
+  healthRecords     AnimalHealthRecord[]
+  eggIncubations    EggIncubation[]
+  recommendations   AIRecommendation[]
+  sensorReadings    SensorReading[]
+  knowledgeArticles KnowledgeArticle[]
+}
+
+model Vaccination {
+  id Int @id @default(autoincrement())
+
+  livestockId Int
+  livestock   Livestock @relation(fields: [livestockId], references: [id])
+
+  vaccineName String
+
+  vaccinationDate DateTime
+
+  nextDueDate DateTime?
+
+  status VaccinationStatus
+
+  veterinarian String?
+
+  notes String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Treatment {
+  id Int @id @default(autoincrement())
+
+  livestockId Int
+  livestock   Livestock @relation(fields: [livestockId], references: [id])
+
+  diagnosis String
+
+  medication String?
+
+  treatmentDate DateTime
+
+  veterinarian String?
+
+  cost Float?
+
+  notes         String?
+  prescriptions Prescription[]
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+}
+
+model LivestockProduction {
+  id Int @id @default(autoincrement())
+
+  livestockId Int
+  livestock   Livestock @relation(fields: [livestockId], references: [id])
+
+  productionType ProductionType
+
+  productionDate DateTime
+
+  quantity Float
+
+  unit ProductionUnit
+
+  quality ProductionQuality?
+
+  sellingPrice Float?
+
+  remarks      String?
+  productItems Product[]
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model Feed {
+  id Int @id @default(autoincrement())
+
+  name String
+
+  category FeedCategory
+
+  manufacturer String?
+
+  proteinPercentage Float?
+
+  energyValue Float?
+
+  description String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  feedingSchedules FeedingSchedule[]
+  feedRecords      FeedRecord[]
+}
+
+model FeedingSchedule {
+  id Int @id @default(autoincrement())
+
+  livestockId Int
+  livestock   Livestock @relation(fields: [livestockId], references: [id])
+
+  feedId Int
+  feed   Feed @relation(fields: [feedId], references: [id])
+
+  frequency FeedingFrequency
+
+  quantity Float
+
+  unit FeedUnit
+
+  startDate DateTime
+
+  endDate DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model FeedRecord {
+  id Int @id @default(autoincrement())
+
+  livestockId Int
+  livestock   Livestock @relation(fields: [livestockId], references: [id])
+
+  feedId Int
+  feed   Feed @relation(fields: [feedId], references: [id])
+
+  feedingDate DateTime
+
+  quantity Float
+
+  unit FeedUnit
+
+  remarks String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Breeding {
+  id Int @id @default(autoincrement())
+
+  maleId Int?
+  male   Livestock? @relation("MaleBreeding", fields: [maleId], references: [id])
+
+  femaleId Int
+  female   Livestock @relation("FemaleBreeding", fields: [femaleId], references: [id])
+
+  method BreedingMethod
+
+  breedingDate DateTime
+
+  expectedBirthDate DateTime?
+
+  pregnancyStatus PregnancyStatus
+
+  notes String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  births Birth[]
+}
+
+model Birth {
+  id Int @id @default(autoincrement())
+
+  breedingId Int
+  breeding   Breeding @relation(fields: [breedingId], references: [id])
+
+  motherId Int
+  mother   Livestock @relation(fields: [motherId], references: [id])
+
+  birthDate DateTime
+
+  birthType BirthType
+
+  offspringCount Int
+
+  offspringStatus OffspringStatus
+
+  remarks String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model EggIncubation {
+  id Int @id @default(autoincrement())
+
+  livestockId Int
+  livestock   Livestock @relation(fields: [livestockId], references: [id])
+
+  incubationStart DateTime
+
+  expectedHatchDate DateTime
+
+  eggsSet Int
+
+  eggsHatched Int?
+
+  hatchStatus HatchStatus
+
+  remarks String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model AnimalHealthRecord {
+  id Int @id @default(autoincrement())
+
+  livestockId Int
+  livestock   Livestock @relation(fields: [livestockId], references: [id])
+
+  recordType HealthRecordType
+
+  examinationDate DateTime
+
+  diagnosis String?
+
+  symptoms String?
+
+  temperature Float?
+
+  weight Float?
+
+  heartRate Int?
+
+  respiratoryRate Int?
+
+  conditionStatus HealthConditionStatus
+
+  veterinarian String?
+
+  remarks String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  labTests LabTest[]
+}
+
+model LabTest {
+  id Int @id @default(autoincrement())
+
+  healthRecordId Int
+  healthRecord   AnimalHealthRecord @relation(fields: [healthRecordId], references: [id])
+
+  testType LabTestType
+
+  result String?
+
+  laboratory String?
+
+  testDate DateTime
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Prescription {
+  id Int @id @default(autoincrement())
+
+  treatmentId Int
+  treatment   Treatment @relation(fields: [treatmentId], references: [id])
+
+  medication String
+
+  dosage String
+
+  durationDays Int?
+
+  instructions String?
+
+  status PrescriptionStatus
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Employee {
+  id Int @id @default(autoincrement())
+
+  farmId Int
+  farm   Farm @relation(fields: [farmId], references: [id])
+
+  firstName String
+  lastName  String
+
+  nationalId String? @unique
+
+  phone String?
+
+  email String?
+
+  role EmployeeRole
+
+  employmentType EmploymentType
+
+  hireDate DateTime
+
+  salary Float?
+
+  active Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  attendance      Attendance[]
+  payrolls        Payroll[]
+  workAssignments WorkAssignment[]
+  tasks           Task[]
+}
+
+model Attendance {
+  id Int @id @default(autoincrement())
+
+  employeeId Int
+  employee   Employee @relation(fields: [employeeId], references: [id])
+
+  attendanceDate DateTime
+
+  status AttendanceStatus
+
+  hoursWorked Float?
+
+  remarks String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Payroll {
+  id Int @id @default(autoincrement())
+
+  employeeId Int
+  employee   Employee @relation(fields: [employeeId], references: [id])
+
+  payPeriodStart DateTime
+  payPeriodEnd   DateTime
+
+  grossPay Float
+
+  deductions Float?
+
+  netPay Float
+
+  paymentDate DateTime?
+
+  status PayrollStatus
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model WorkAssignment {
+  id Int @id @default(autoincrement())
+
+  employeeId Int
+  employee   Employee @relation(fields: [employeeId], references: [id])
+
+  plantingId Int?
+  planting   Planting? @relation(fields: [plantingId], references: [id])
+
+  harvestId Int?
+  harvest   Harvest? @relation(fields: [harvestId], references: [id])
+
+  task String
+
+  assignedDate DateTime
+
+  completedDate DateTime?
+
+  remarks String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model MaintenanceSchedule {
+  id Int @id @default(autoincrement())
+
+  equipmentId Int
+  equipment   Equipment @relation(fields: [equipmentId], references: [id])
+
+  maintenanceType MaintenanceType
+
+  scheduledDate DateTime
+
+  estimatedCost Float?
+
+  serviceIntervalHours Int?
+
+  serviceIntervalDays Int?
+
+  notes String?
+
+  status MaintenanceStatus
+
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  maintenanceRecords MaintenanceRecord[]
+}
+
+model MaintenanceRecord {
+  id Int @id @default(autoincrement())
+
+  equipmentId Int
+  equipment   Equipment @relation(fields: [equipmentId], references: [id])
+
+  scheduleId Int?
+  schedule   MaintenanceSchedule? @relation(fields: [scheduleId], references: [id])
+
+  maintenanceType MaintenanceType
+
+  maintenanceDate DateTime
+
+  operatingHours Int?
+
+  technician String?
+
+  partsReplaced String?
+
+  laborCost Float?
+
+  partsCost Float?
+
+  totalCost Float?
+
+  remarks String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+model Customer {
+
+  id Int @id @default(autoincrement())
+
+  farmId Int
+  farm Farm @relation(fields: [farmId], references: [id])
+
+  businessPartnerId Int @unique
+
+  businessPartner BusinessPartner
+    @relation(fields: [businessPartnerId], references: [id])
+
+  customerType CustomerType
+
+  name String
+
+  phone String?
+  email String?
+  address String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  orders SalesOrder[]
+  status CustomerStatus @default(ACTIVE)
+
+  interactions CustomerInteraction[]
+  feedback CustomerFeedback[]
+  opportunities SalesOpportunity[]
+  loyaltyPrograms LoyaltyProgram[]
+}
+
+model Product {
+  id Int @id @default(autoincrement())
+
+  farmId Int
+  farm   Farm @relation(fields: [farmId], references: [id])
+
+  name String
+
+  category ProductCategory
+
+  harvestId Int?
+  harvest   Harvest? @relation(fields: [harvestId], references: [id])
+
+  livestockProductionId Int?
+  livestockProduction   LivestockProduction? @relation(fields: [livestockProductionId], references: [id])
+
+  availableQuantity Float
+
+  unit SalesUnit
+
+  unitPrice Float
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  orderItems     SalesOrderItem[]
+  productBatches ProductBatch[]
+}
+
+model SalesOrder {
+  id Int @id @default(autoincrement())
+
+  farmId Int
+  farm   Farm @relation(fields: [farmId], references: [id])
+
+  customerId Int
+  customer   Customer @relation(fields: [customerId], references: [id])
+
+  orderDate DateTime
+
+  status OrderStatus
+
+  totalAmount Float
+
+  notes String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  items SalesOrderItem[]
+
+  deliveries Delivery[]
+  shipments  Shipment[]
+}
+
+model SalesOrderItem {
+  id Int @id @default(autoincrement())
+
+  orderId Int
+  order   SalesOrder @relation(fields: [orderId], references: [id])
+
+  productId Int
+  product   Product @relation(fields: [productId], references: [id])
+
+  quantity Float
+
+  unitPrice Float
+
+  subtotal Float
+}
+
+model Delivery {
+  id Int @id @default(autoincrement())
+
+  farmId Int
+  farm   Farm @relation(fields: [farmId], references: [id])
+
+  orderId Int
+  order   SalesOrder @relation(fields: [orderId], references: [id])
+
+  deliveryDate DateTime?
+
+  deliveryAddress String?
+
+  deliveryStatus DeliveryStatus
+
+  transporter String?
+
+  trackingNumber String?
+
+  remarks String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model AIRecommendation {
+  id Int @id @default(autoincrement())
+
+  farmId Int
+  farm   Farm @relation(fields: [farmId], references: [id])
+
+  farmerId Int?
+  farmer   Farmer? @relation(fields: [farmerId], references: [id])
+
+  cropId Int?
+  crop   Crop? @relation(fields: [cropId], references: [id])
+
+  livestockId Int?
+  livestock   Livestock? @relation(fields: [livestockId], references: [id])
+
+  soilTestId Int?
+  soilTest   SoilTest? @relation(fields: [soilTestId], references: [id])
+
+  recommendationType RecommendationType
+
+  priority RecommendationPriority
+
+  title String
+
+  recommendation String
+
+  reason String?
+
+  confidence Float?
+
+  generatedBy AIModelType
+
+  status RecommendationStatus
+
+  generatedAt DateTime @default(now())
+
+  expiresAt DateTime?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model AIModelPrediction {
+  id Int @id @default(autoincrement())
+
+  farmId Int
+  farm   Farm @relation(fields: [farmId], references: [id])
+
+  weatherRecordId Int?
+  weatherRecord   WeatherRecord? @relation(fields: [weatherRecordId], references: [id])
+
+  predictionType PredictionType
+
+  modelName String
+
+  modelVersion String?
+
+  inputSummary String?
+
+  predictedValue Float?
+
+  predictedLabel String?
+
+  confidence Float?
+
+  predictionDate DateTime
+
+  validUntil DateTime?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  user   User? @relation(fields: [userId], references: [id])
+  userId Int?
+}
+
+model IoTDevice {
+  id Int @id @default(autoincrement())
+
+  farmId Int
+  farm   Farm @relation(fields: [farmId], references: [id])
+
+  weatherStationId Int?
+  weatherStation   WeatherStation? @relation(fields: [weatherStationId], references: [id])
+
+  deviceName String
+
+  deviceCode String @unique
+
+  deviceType DeviceType
+
+  manufacturer String?
+
+  model String?
+
+  firmwareVersion String?
+
+  installationDate DateTime?
+
+  status SensorStatus
+
+  latitude  Float?
+  longitude Float?
+
+  lastCommunication DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  sensors Sensor[]
+}
+
+model Sensor {
+  id Int @id @default(autoincrement())
+
+  deviceId Int
+  device   IoTDevice @relation(fields: [deviceId], references: [id])
+
+  sensorName String
+
+  sensorType SensorType
+
+  unit String?
+
+  minimumValue Float?
+  maximumValue Float?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  readings SensorReading[]
+}
+
+model SensorReading {
+  id Int @id @default(autoincrement())
+
+  sensorId Int
+  sensor   Sensor @relation(fields: [sensorId], references: [id])
+
+  farmId Int
+  farm   Farm @relation(fields: [farmId], references: [id])
+
+  livestockId Int?
+  livestock   Livestock? @relation(fields: [livestockId], references: [id])
+
+  readingValue Float
+
+  readingTime DateTime
+
+  status ReadingStatus
+
+  batteryLevel Float?
+
+  signalStrength Float?
+
+  createdAt DateTime @default(now())
+}
+
+model Field {
+  id Int @id @default(autoincrement())
+
+  farmId Int
+  farm   Farm @relation(fields: [farmId], references: [id])
+
+  fieldName String
+
+  area Float?
+
+  geometryType GeometryType
+
+  boundaryGeoJson String
+
+  centroidLatitude Float?
+
+  centroidLongitude Float?
+
+  status FieldStatus
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  plantings Planting[]
+
+  satelliteImages SatelliteImage[]
+  productionPlans CropProductionPlan[]
+}
+
+model SatelliteImage {
+  id Int @id @default(autoincrement())
+
+  farmId Int
+  farm   Farm @relation(fields: [farmId], references: [id])
+
+  fieldId Int?
+  field   Field? @relation(fields: [fieldId], references: [id])
+
+  provider SatelliteProvider
+
+  imageryType ImageryType
+
+  acquisitionDate DateTime
+
+  imageUrl String?
+
+  cloudCoverage Float?
+
+  resolution Float?
+
+  ndvi Float?
+
+  evi Float?
+
+  soilMoistureIndex Float?
+
+  vegetationHealthIndex Float?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model MapLayer {
+  id Int @id @default(autoincrement())
+
+  farmId Int
+  farm   Farm @relation(fields: [farmId], references: [id])
+
+  layerName String
+
+  layerType MapLayerType
+
+  geoJson String
+
+  description String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Document {
+  id Int @id @default(autoincrement())
+
+  title String
+
+  description String?
+
+  fileName String
+
+  originalFileName String?
+
+  fileExtension String?
+
+  mimeType String?
+
+  fileSize Float?
+
+  fileUrl String
+
+  storageProvider FileStorageProvider
+
+  ownerType DocumentOwnerType
+
+  category DocumentCategory
+
+  status DocumentStatus @default(ACTIVE)
+
+  farmerId Int?
+  farmer   Farmer? @relation(fields: [farmerId], references: [id])
+
+  farmId Int?
+  farm   Farm? @relation(fields: [farmId], references: [id])
+
+  livestockId Int?
+  livestock   Livestock? @relation(fields: [livestockId], references: [id])
+
+  equipmentId Int?
+  equipment   Equipment? @relation(fields: [equipmentId], references: [id])
+
+  uploadedBy     Int?
+  uploadedByUser User? @relation("UserUploadedDocuments", fields: [uploadedBy], references: [id])
+
+  version Int @default(1)
+
+  createdAt DateTime @default(now())
+
+  updatedAt               DateTime               @updatedAt
+  governmentApplicationId Int?
+  governmentApplication   GovernmentApplication? @relation(fields: [governmentApplicationId], references: [id])
+}
+
+model Notification {
+  id Int @id @default(autoincrement())
+
+  title String
+
+  message String
+
+  notificationType NotificationType
+
+  channel NotificationChannel
+
+  priority NotificationPriority @default(MEDIUM)
+
+  status NotificationStatus @default(PENDING)
+
+  scheduledAt DateTime?
+
+  sentAt DateTime?
+
+  deliveredAt DateTime?
+
+  readAt DateTime?
+
+  userId Int?
+  user   User? @relation(fields: [userId], references: [id])
+
+  farmerId Int?
+  farmer   Farmer? @relation(fields: [farmerId], references: [id])
+
+  farmId Int?
+  farm   Farm? @relation(fields: [farmId], references: [id])
+
+  templateId Int?
+  template   NotificationTemplate? @relation(fields: [templateId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+  taskId    Int?
+  task      Task?    @relation(fields: [taskId], references: [id])
+}
+
+model NotificationTemplate {
+  id Int @id @default(autoincrement())
+
+  name String @unique
+
+  subject String?
+
+  title String
+
+  message String
+
+  notificationType NotificationType
+
+  channel NotificationChannel
+
+  isActive Boolean @default(true)
+
+  createdById Int?
+  createdBy   User? @relation(fields: [createdById], references: [id])
+
+  notifications Notification[]
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model Task {
+  id Int @id @default(autoincrement())
+
+  title String
+
+  description String?
+
+  category TaskCategory
+
+  priority TaskPriority @default(MEDIUM)
+
+  status TaskStatus @default(PENDING)
+
+  farmId Int?
+  farm   Farm? @relation(fields: [farmId], references: [id])
+
+  employeeId Int?
+  employee   Employee? @relation(fields: [employeeId], references: [id])
+
+  assignedUserId Int?
+  assignedUser   User? @relation(fields: [assignedUserId], references: [id])
+
+  createdById Int?
+  createdBy   User? @relation("TaskCreator", fields: [createdById], references: [id])
+
+  startDate DateTime?
+
+  dueDate DateTime?
+
+  completedDate DateTime?
+
+  estimatedHours Float?
+
+  actualHours Float?
+
+  recurrence RecurrenceType @default(NONE)
+
+  calendarEvents CalendarEvent[]
+
+  createdAt DateTime @default(now())
+
+  updatedAt     DateTime       @updatedAt
+  notifications Notification[]
+}
+
+model CalendarEvent {
+  id Int @id @default(autoincrement())
+
+  title String
+
+  description String?
+
+  startDate DateTime
+
+  endDate DateTime?
+
+  allDay Boolean @default(false)
+
+  farmId Int?
+  farm   Farm? @relation(fields: [farmId], references: [id])
+
+  userId Int?
+  user   User? @relation(fields: [userId], references: [id])
+
+  taskId Int?
+  task   Task? @relation(fields: [taskId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model KnowledgeArticle {
+  id Int @id @default(autoincrement())
+
+  title String
+
+  summary String?
+
+  content String @db.Text
+
+  category KnowledgeCategory
+
+  source ExtensionSource
+
+  status ArticleStatus @default(DRAFT)
+
+  authorId Int?
+  author   User? @relation(fields: [authorId], references: [id])
+
+  cropId Int?
+  crop   Crop? @relation(fields: [cropId], references: [id])
+
+  livestockId Int?
+  livestock   Livestock? @relation(fields: [livestockId], references: [id])
+  publishedAt DateTime?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  media KnowledgeMedia[]
+
+  ratings ArticleRating[]
+
+  bookmarks ArticleBookmark[]
+}
+
+model KnowledgeMedia {
+  id Int @id @default(autoincrement())
+
+  articleId Int
+
+  article KnowledgeArticle @relation(fields: [articleId], references: [id])
+
+  mediaType MediaType
+
+  title String?
+
+  url String
+
+  description String?
+
+  createdAt DateTime @default(now())
+}
+
+model ArticleRating {
+  id Int @id @default(autoincrement())
+
+  articleId Int
+
+  article KnowledgeArticle @relation(fields: [articleId], references: [id])
+
+  farmerId Int
+
+  farmer Farmer @relation(fields: [farmerId], references: [id])
+
+  rating Int
+
+  comment String?
+
+  createdAt DateTime @default(now())
+
+  @@unique([articleId, farmerId])
+}
+
+model ArticleBookmark {
+  id Int @id @default(autoincrement())
+
+  articleId Int
+
+  article KnowledgeArticle @relation(fields: [articleId], references: [id])
+
+  farmerId Int
+
+  farmer Farmer @relation(fields: [farmerId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  @@unique([articleId, farmerId])
+}
+
+model FarmCertification {
+  id Int @id @default(autoincrement())
+
+  farmId Int
+  farm   Farm @relation(fields: [farmId], references: [id])
+
+  certificationType CertificationType
+
+  certificateNumber String?
+
+  issuingOrganization String
+
+  issueDate DateTime
+
+  expiryDate DateTime?
+
+  status CertificationStatus
+
+  notes String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  audits FarmAudit[]
+}
+
+model FarmAudit {
+  id Int @id @default(autoincrement())
+
+  farmId Int
+  farm   Farm @relation(fields: [farmId], references: [id])
+
+  certificationId Int?
+  certification   FarmCertification? @relation(fields: [certificationId], references: [id])
+
+  auditorId Int?
+  auditor   User? @relation(fields: [auditorId], references: [id])
+
+  auditType AuditType
+
+  auditDate DateTime
+
+  status AuditStatus
+
+  compliance ComplianceStatus
+
+  overallScore Float?
+
+  remarks String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  findings AuditFinding[]
+}
+
+model AuditFinding {
+  id Int @id @default(autoincrement())
+
+  auditId Int
+  audit   FarmAudit @relation(fields: [auditId], references: [id])
+
+  title String
+
+  description String?
+
+  compliance ComplianceStatus
+
+  severity SeverityLevel
+
+  createdAt DateTime @default(now())
+
+  correctiveActions CorrectiveAction[]
+}
+
+model CorrectiveAction {
+  id Int @id @default(autoincrement())
+
+  findingId Int
+  finding   AuditFinding @relation(fields: [findingId], references: [id])
+
+  description String
+
+  assignedTo   Int?
+  assignedUser User? @relation(fields: [assignedTo], references: [id])
+
+  dueDate DateTime?
+
+  completedDate DateTime?
+
+  status CorrectiveActionStatus
+
+  verificationNotes String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Dashboard {
+  id Int @id @default(autoincrement())
+
+  name String
+
+  description String?
+
+  dashboardType DashboardType
+
+  period DashboardPeriod @default(MONTH)
+
+  userId Int?
+  user   User? @relation(fields: [userId], references: [id])
+
+  farmId Int?
+  farm   Farm? @relation(fields: [farmId], references: [id])
+
+  isDefault Boolean @default(false)
+
+  widgets DashboardWidget[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model DashboardWidget {
+  id Int @id @default(autoincrement())
+
+  dashboardId Int
+  dashboard   Dashboard @relation(fields: [dashboardId], references: [id])
+
+  title String
+
+  widgetType WidgetType
+
+  kpiType KPIType?
+
+  positionX Int?
+
+  positionY Int?
+
+  width Int?
+
+  height Int?
+
+  configuration Json?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model KPIRecord {
+  id Int @id @default(autoincrement())
+
+  farmId Int?
+  farm   Farm? @relation(fields: [farmId], references: [id])
+
+  kpiType KPIType
+
+  period DashboardPeriod
+
+  value Float
+
+  recordedAt DateTime
+
+  notes String?
+
+  createdAt DateTime @default(now())
+}
+
+model AnalyticsSnapshot {
+  id Int @id @default(autoincrement())
+
+  farmId Int?
+  farm   Farm? @relation(fields: [farmId], references: [id])
+
+  snapshotDate DateTime
+
+  totalRevenue Float?
+
+  totalExpenses Float?
+
+  netProfit Float?
+
+  cropYield Float?
+
+  livestockProduction Float?
+
+  inventoryValue Float?
+
+  aiHealthScore Float?
+
+  createdAt DateTime @default(now())
+}
+
+model Report {
+  id Int @id @default(autoincrement())
+
+  title String
+
+  description String?
+
+  reportType ReportType
+
+  format ReportFormat
+
+  status ReportStatus @default(PENDING)
+
+  requestedById Int?
+  requestedBy   User? @relation(fields: [requestedById], references: [id])
+
+  farmId Int?
+  farm   Farm? @relation(fields: [farmId], references: [id])
+
+  generatedFile String?
+
+  generatedAt DateTime?
+
+  parameters Json?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  schedules        ReportSchedule[]
+  reportExecutions ReportExecution[]
+}
+
+model ReportSchedule {
+  id Int @id @default(autoincrement())
+
+  reportId Int
+  report   Report @relation(fields: [reportId], references: [id])
+
+  frequency RecurrenceType
+
+  nextRun DateTime
+
+  lastRun DateTime?
+
+  isActive Boolean @default(true)
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model ReportExecution {
+  id Int @id @default(autoincrement())
+
+  reportId Int
+  report   Report @relation(fields: [reportId], references: [id])
+
+  executionTime DateTime
+
+  executionStatus ReportStatus
+
+  durationSeconds Float?
+
+  fileSize Float?
+
+  errorMessage String?
+
+  createdAt DateTime @default(now())
+}
+
+model ModelPerformance {
+  id Int @id @default(autoincrement())
+
+  modelType PredictionModelType
+
+  predictionType PredictionType
+
+  accuracy Float?
+
+  precision Float?
+
+  recall Float?
+
+  f1Score Float?
+
+  mae Float?
+
+  mse Float?
+
+  rmse Float?
+
+  r2Score Float?
+
+  evaluatedAt DateTime
+
+  createdAt DateTime @default(now())
+}
+
+model TrainingDataset {
+  id Int @id @default(autoincrement())
+
+  name String
+
+  description String?
+
+  version String?
+
+  recordCount Int?
+
+  source String?
+
+  storagePath String?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model ProductBatch {
+  id Int @id @default(autoincrement())
+
+  batchNumber String @unique
+
+  productId Int
+  product   Product @relation(fields: [productId], references: [id])
+
+  quantity Float
+
+  unit String
+
+  productionDate DateTime
+
+  expiryDate DateTime?
+
+  status BatchStatus @default(ACTIVE)
+
+  qrCode String?
+
+  barcode String?
+
+  traceabilityEvents TraceabilityEvent[]
+
+  createdAt DateTime @default(now())
+
+  updatedAt          DateTime            @updatedAt
+  warehouseMovements WarehouseMovement[]
+}
+
+model Shipment {
+  id Int @id @default(autoincrement())
+
+  shipmentNumber String @unique
+
+  farmId Int
+  farm   Farm @relation(fields: [farmId], references: [id])
+
+  salesOrderId Int?
+  salesOrder   SalesOrder? @relation(fields: [salesOrderId], references: [id])
+
+  origin String
+
+  destination String
+
+  carrier String?
+
+  trackingNumber String?
+
+  shipmentDate DateTime
+
+  expectedDelivery DateTime?
+
+  deliveredDate DateTime?
+
+  status ShipmentStatus @default(PENDING)
+
+  events             TraceabilityEvent[]
+  warehouseMovements WarehouseMovement[]
+  deliveryRoutes     DeliveryRoute[]
+  createdAt          DateTime            @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model TraceabilityEvent {
+  id Int @id @default(autoincrement())
+
+  eventType TraceabilityEventType
+
+  batchId Int?
+  batch   ProductBatch? @relation(fields: [batchId], references: [id])
+
+  shipmentId Int?
+  shipment   Shipment? @relation(fields: [shipmentId], references: [id])
+
+  farmId Int?
+  farm   Farm? @relation(fields: [farmId], references: [id])
+
+  location String?
+
+  eventDate DateTime
+
+  remarks String?
+
+  recordedById Int?
+  recordedBy   User? @relation(fields: [recordedById], references: [id])
+
+  createdAt DateTime @default(now())
+}
+
+model SupplyChainPartner {
+  id Int @id @default(autoincrement())
+
+  name String
+
+  contactPerson String?
+
+  phone String?
+
+  email String?
+
+  address String?
+
+  country String?
+
+  certification String?
+
+  notes String?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model WarehouseZone {
+  id Int @id @default(autoincrement())
+
+  storageFacilityId Int
+  storageFacility   StorageFacility @relation(fields: [storageFacilityId], references: [id])
+
+  name String
+
+  zoneType WarehouseZoneType
+
+  capacity Float?
+
+  currentUtilization Float?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model WarehouseMovement {
+  id Int @id @default(autoincrement())
+
+  storageFacilityId Int
+  storageFacility   StorageFacility @relation(fields: [storageFacilityId], references: [id])
+
+  batchId Int?
+  batch   ProductBatch? @relation(fields: [batchId], references: [id])
+
+  shipmentId Int?
+  shipment   Shipment? @relation(fields: [shipmentId], references: [id])
+
+  movementType WarehouseMovementType
+
+  quantity Float
+
+  movementDate DateTime
+
+  remarks String?
+
+  createdAt DateTime @default(now())
+}
+
+model DeliveryRoute {
+  id Int @id @default(autoincrement())
+
+  shipmentId Int
+  shipment   Shipment @relation(fields: [shipmentId], references: [id])
+
+  origin String
+
+  destination String
+
+  distanceKm Float?
+
+  estimatedDuration String?
+
+  priority LogisticsPriority @default(NORMAL)
+
+  driverName String?
+
+  vehicleRegistration String?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model WarehouseInspection {
+  id Int @id @default(autoincrement())
+
+  storageFacilityId Int
+  storageFacility   StorageFacility @relation(fields: [storageFacilityId], references: [id])
+
+  inspectionDate DateTime
+
+  inspectorName String
+
+  findings String?
+
+  recommendations String?
+
+  nextInspection DateTime?
+
+  createdAt DateTime @default(now())
+}
+
+model PurchaseRequest {
+  id Int @id @default(autoincrement())
+
+  requestNumber String @unique
+
+  supplierId Int?
+  supplier   Supplier? @relation(fields: [supplierId], references: [id])
+
+  requestedById Int?
+  requestedBy   User? @relation(fields: [requestedById], references: [id])
+
+  status ProcurementStatus @default(DRAFT)
+
+  priority PurchasePriority @default(NORMAL)
+
+  expectedDelivery DateTime?
+
+  remarks String?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  orders PurchaseOrder[]
+}
+
+model PurchaseOrder {
+  id Int @id @default(autoincrement())
+
+  orderNumber String @unique
+
+  purchaseRequestId Int?
+  purchaseRequest   PurchaseRequest? @relation(fields: [purchaseRequestId], references: [id])
+
+  supplierId Int
+  supplier   Supplier @relation(fields: [supplierId], references: [id])
+
+  approvedById Int?
+  approvedBy   User? @relation(fields: [approvedById], references: [id])
+
+  status ProcurementStatus @default(APPROVED)
+
+  totalAmount Float
+
+  orderDate DateTime
+
+  expectedDelivery DateTime?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model SupplierEvaluation {
+  id Int @id @default(autoincrement())
+
+  supplierId Int
+  supplier   Supplier @relation(fields: [supplierId], references: [id])
+
+  rating SupplierRating
+
+  deliveryScore Float?
+
+  qualityScore Float?
+
+  pricingScore Float?
+
+  communicationScore Float?
+
+  comments String?
+
+  evaluatedAt DateTime
+
+  createdAt DateTime @default(now())
+}
+
+model ProcurementContract {
+  id Int @id @default(autoincrement())
+
+  supplierId Int
+  supplier   Supplier @relation(fields: [supplierId], references: [id])
+
+  contractNumber String @unique
+
+  startDate DateTime
+
+  endDate DateTime?
+
+  value Float?
+
+  terms String?
+
+  active Boolean @default(true)
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model CustomerInteraction {
+  id Int @id @default(autoincrement())
+
+  customerId Int
+  customer   Customer @relation(fields: [customerId], references: [id])
+
+  userId Int?
+  user   User? @relation(fields: [userId], references: [id])
+
+  interactionType InteractionType
+
+  subject String?
+
+  notes String?
+
+  interactionDate DateTime
+
+  followUpDate DateTime?
+
+  createdAt DateTime @default(now())
+}
+
+model CustomerFeedback {
+  id Int @id @default(autoincrement())
+
+  customerId Int
+  customer   Customer @relation(fields: [customerId], references: [id])
+
+  rating Int
+
+  feedback String?
+
+  recommendation Boolean?
+
+  submittedAt DateTime
+
+  createdAt DateTime @default(now())
+}
+
+model SalesOpportunity {
+  id Int @id @default(autoincrement())
+
+  customerId Int
+  customer   Customer @relation(fields: [customerId], references: [id])
+
+  assignedToId Int?
+  assignedTo   User? @relation(fields: [assignedToId], references: [id])
+
+  title String
+
+  estimatedValue Float?
+
+  probability Float?
+
+  stage OpportunityStage @default(NEW)
+
+  expectedCloseDate DateTime?
+
+  notes String?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model LoyaltyProgram {
+  id Int @id @default(autoincrement())
+
+  customerId Int
+  customer   Customer @relation(fields: [customerId], references: [id])
+
+  points Int @default(0)
+
+  totalPurchases Float @default(0)
+
+  membershipLevel String?
+
+  joinedAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model Cooperative {
+  id Int @id @default(autoincrement())
+
+  name String
+
+  registrationNumber String? @unique
+
+  cooperativeType CooperativeType
+
+  description String?
+
+  address String?
+
+  phone String?
+
+  email String?
+
+  establishedDate DateTime?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  memberships CooperativeMembership[]
+
+  meetings        CooperativeMeeting[]
+  sharedResources SharedResource[]
+}
+
+model CooperativeMembership {
+  id Int @id @default(autoincrement())
+
+  cooperativeId Int
+  cooperative   Cooperative @relation(fields: [cooperativeId], references: [id])
+
+  farmerId Int
+  farmer   Farmer @relation(fields: [farmerId], references: [id])
+
+  memberRole MemberRole @default(MEMBER)
+
+  membershipStatus MembershipStatus @default(PENDING)
+
+  joinedAt DateTime
+
+  leftAt DateTime?
+
+  createdAt DateTime @default(now())
+}
+
+model CooperativeMeeting {
+  id Int @id @default(autoincrement())
+
+  cooperativeId Int
+  cooperative   Cooperative @relation(fields: [cooperativeId], references: [id])
+
+  organizerId Int?
+  organizer   User? @relation(fields: [organizerId], references: [id])
+
+  title String
+
+  agenda String?
+
+  meetingDate DateTime
+
+  venue String?
+
+  minutes String?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model SharedResource {
+  id Int @id @default(autoincrement())
+
+  cooperativeId Int
+  cooperative   Cooperative @relation(fields: [cooperativeId], references: [id])
+
+  resourceName String
+
+  resourceType String
+
+  quantity Float?
+
+  unit String?
+
+  availability Boolean @default(true)
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model GovernmentProgram {
+  id Int @id @default(autoincrement())
+
+  programName String
+
+  programType GovernmentProgramType
+
+  description String?
+
+  provider String
+
+  budget Float?
+
+  startDate DateTime
+
+  endDate DateTime?
+
+  status ProgramStatus @default(OPEN)
+
+  applications GovernmentApplication[]
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model GovernmentApplication {
+  id Int @id @default(autoincrement())
+
+  farmerId Int
+  farmer   Farmer @relation(fields: [farmerId], references: [id])
+
+  programId Int
+  program   GovernmentProgram @relation(fields: [programId], references: [id])
+
+  applicationNumber String @unique
+
+  applicationDate DateTime
+
+  status ApplicationStatus @default(DRAFT)
+
+  requestedAmount Float?
+
+  approvedAmount Float?
+
+  remarks String?
+
+  documents Document[]
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model ExtensionOfficer {
+  id Int @id @default(autoincrement())
+
+  fullName String
+
+  phone String?
+
+  email String?
+
+  county String?
+
+  organization String?
+
+  specialization String?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  visits ExtensionVisit[]
+}
+
+model ExtensionVisit {
+  id Int @id @default(autoincrement())
+
+  officerId Int
+  officer   ExtensionOfficer @relation(fields: [officerId], references: [id])
+
+  farmerId Int
+  farmer   Farmer @relation(fields: [farmerId], references: [id])
+
+  visitDate DateTime
+
+  purpose String
+
+  recommendations String?
+
+  nextVisit DateTime?
+
+  createdAt DateTime @default(now())
+}
+
+model InsuranceCompany {
+  id Int @id @default(autoincrement())
+
+  companyName String
+
+  phone String?
+
+  email String?
+
+  website String?
+
+  address String?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  policies InsurancePolicy[]
+}
+
+model InsurancePolicy {
+  id Int @id @default(autoincrement())
+
+  policyNumber String @unique
+
+  insuranceCompanyId Int
+  insuranceCompany   InsuranceCompany @relation(fields: [insuranceCompanyId], references: [id])
+
+  farmerId Int
+  farmer   Farmer @relation(fields: [farmerId], references: [id])
+
+  insuranceType InsuranceType
+
+  premium Float
+
+  coverageAmount Float
+
+  startDate DateTime
+
+  endDate DateTime
+
+  status PolicyStatus @default(ACTIVE)
+
+  claims InsuranceClaim[]
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model InsuranceClaim {
+  id Int @id @default(autoincrement())
+
+  policyId Int
+  policy   InsurancePolicy @relation(fields: [policyId], references: [id])
+
+  farmerId Int
+  farmer   Farmer @relation(fields: [farmerId], references: [id])
+
+  claimNumber String @unique
+
+  incidentDate DateTime
+
+  reportedDate DateTime
+
+  estimatedLoss Float?
+
+  approvedAmount Float?
+
+  claimStatus ClaimStatus @default(REPORTED)
+
+  description String?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model FarmRiskAssessment {
+  id Int @id @default(autoincrement())
+
+  farmId Int
+  farm   Farm @relation(fields: [farmId], references: [id])
+
+  assessmentDate DateTime
+
+  weatherRisk Float?
+
+  pestRisk Float?
+
+  diseaseRisk Float?
+
+  financialRisk Float?
+
+  overallRisk Float?
+
+  recommendations String?
+
+  createdAt DateTime @default(now())
+}
+
+model CarbonEmission {
+  id Int @id @default(autoincrement())
+
+  farmId Int
+  farm   Farm @relation(fields: [farmId], references: [id])
+
+  source CarbonSource
+
+  emissionDate DateTime
+
+  quantity Float
+
+  unit String
+
+  carbonEquivalent Float
+
+  remarks String?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model SustainabilityProject {
+  id Int @id @default(autoincrement())
+
+  farmId Int
+  farm   Farm @relation(fields: [farmId], references: [id])
+
+  projectName String
+
+  category SustainabilityCategory
+
+  description String?
+
+  status SustainabilityProjectStatus @default(PLANNED)
+
+  estimatedCost Float?
+
+  expectedCarbonReduction Float?
+
+  startDate DateTime?
+
+  endDate DateTime?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model WaterUsage {
+  id Int @id @default(autoincrement())
+
+  farmId Int
+  farm   Farm @relation(fields: [farmId], references: [id])
+
+  usageDate DateTime
+
+  source WaterSourceType
+
+  quantity Float
+
+  unit String
+
+  purpose String?
+
+  createdAt DateTime @default(now())
+}
+
+model RenewableEnergySystem {
+  id Int @id @default(autoincrement())
+
+  farmId Int
+  farm   Farm @relation(fields: [farmId], references: [id])
+
+  systemType String
+
+  capacity Float?
+
+  installationDate DateTime?
+
+  energyGenerated Float?
+
+  unit String?
+
+  supplier String?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model WasteManagementRecord {
+  id Int @id @default(autoincrement())
+
+  farmId Int
+  farm   Farm @relation(fields: [farmId], references: [id])
+
+  wasteType String
+
+  quantity Float
+
+  disposalMethod String
+
+  disposalDate DateTime
+
+  remarks String?
+
+  createdAt DateTime @default(now())
+}
+
+model ExternalIntegration {
+  id Int @id @default(autoincrement())
+
+  name String
+
+  integrationType IntegrationType
+
+  provider String
+
+  baseUrl String?
+
+  apiVersion String?
+
+  status IntegrationStatus @default(ACTIVE)
+
+  authenticationType String?
+
+  description String?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  apiKeys ApiKey[]
+
+  logs                   APILog[]
+  integrationCredentials IntegrationCredential[]
+}
+
+model ApiKey {
+  id Int @id @default(autoincrement())
+
+  integrationId Int
+  integration   ExternalIntegration @relation(fields: [integrationId], references: [id])
+
+  userId Int?
+  user   User? @relation(fields: [userId], references: [id])
+
+  keyName String
+
+  apiKey String
+
+  expiresAt DateTime?
+
+  active Boolean @default(true)
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model APILog {
+  id Int @id @default(autoincrement())
+
+  integrationId Int
+  integration   ExternalIntegration @relation(fields: [integrationId], references: [id])
+
+  endpoint String
+
+  requestMethod String
+
+  requestBody String?
+
+  responseBody String?
+
+  responseCode Int?
+
+  responseTime Float?
+
+  status APILogStatus
+
+  createdAt DateTime @default(now())
+}
+
+model Webhook {
+  id Int @id @default(autoincrement())
+
+  name String
+
+  endpoint String
+
+  secret String?
+
+  eventType String
+
+  active Boolean @default(true)
+
+  lastTriggered DateTime?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model IntegrationCredential {
+  id Int @id @default(autoincrement())
+
+  integrationId Int
+  integration   ExternalIntegration @relation(fields: [integrationId], references: [id])
+
+  credentialName String
+
+  credentialValue String
+
+  encrypted Boolean @default(true)
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model SystemSetting {
+  id Int @id @default(autoincrement())
+
+  category SettingCategory
+
+  settingKey String @unique
+
+  settingValue String
+
+  dataType SettingDataType
+
+  description String?
+
+  editable Boolean @default(true)
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model FeatureFlag {
+  id Int @id @default(autoincrement())
+
+  featureName String @unique
+
+  description String?
+
+  status FeatureStatus @default(ENABLED)
+
+  rolloutPercentage Float? @default(100)
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model UserPreference {
+  id Int @id @default(autoincrement())
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
+
+  preferenceKey String
+
+  preferenceValue String
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, preferenceKey])
+}
+
+model LocalizationSetting {
+  id Int @id @default(autoincrement())
+
+  languageCode String
+
+  countryCode String?
+
+  currencyCode String
+
+  timezone String
+
+  dateFormat String
+
+  numberFormat String?
+
+  active Boolean @default(true)
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model PasswordPolicy {
+  id Int @id @default(autoincrement())
+
+  minimumLength Int @default(8)
+
+  requireUppercase Boolean @default(true)
+
+  requireLowercase Boolean @default(true)
+
+  requireNumber Boolean @default(true)
+
+  requireSpecialCharacter Boolean @default(true)
+
+  passwordExpiryDays Int?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model AuditSetting {
+  id Int @id @default(autoincrement())
+
+  auditEnabled Boolean @default(true)
+
+  retentionDays Int @default(365)
+
+  logUserActivities Boolean @default(true)
+
+  logApiCalls Boolean @default(true)
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model ImportJob {
+  id Int @id @default(autoincrement())
+
+  jobName String
+
+  source ImportSource
+
+  fileName String?
+
+  totalRecords Int?
+
+  successfulRecords Int?
+
+  failedRecords Int?
+
+  status ImportStatus @default(PENDING)
+
+  initiatedById Int?
+  initiatedBy   User? @relation(fields: [initiatedById], references: [id])
+
+  startedAt DateTime?
+
+  completedAt DateTime?
+
+  createdAt DateTime @default(now())
+
+  validationLogs ImportValidationLog[]
+}
+
+model ImportValidationLog {
+  id Int @id @default(autoincrement())
+
+  importJobId Int
+  importJob   ImportJob @relation(fields: [importJobId], references: [id])
+
+  rowNumber Int?
+
+  fieldName String?
+
+  message String
+
+  severity ValidationSeverity
+
+  createdAt DateTime @default(now())
+}
+
+model MigrationJob {
+  id Int @id @default(autoincrement())
+
+  migrationName String
+
+  sourceSystem String
+
+  destinationSystem String
+
+  status MigrationStatus @default(PENDING)
+
+  totalRecords Int?
+
+  migratedRecords Int?
+
+  failedRecords Int?
+
+  initiatedById Int?
+  initiatedBy   User? @relation(fields: [initiatedById], references: [id])
+
+  startedAt DateTime?
+
+  completedAt DateTime?
+
+  createdAt DateTime @default(now())
+}
+
+model ExportJob {
+  id Int @id @default(autoincrement())
+
+  exportName String
+
+  format ImportSource
+
+  exportedById Int?
+  exportedBy   User? @relation(fields: [exportedById], references: [id])
+
+  totalRecords Int?
+
+  filePath String?
+
+  completed Boolean @default(false)
+
+  createdAt DateTime @default(now())
+
+  completedAt DateTime?
+}
+
+model ETLJob {
+  id Int @id @default(autoincrement())
+
+  jobName String
+
+  extractSource String
+
+  transformationDescription String?
+
+  loadDestination String
+
+  schedule String?
+
+  active Boolean @default(true)
+
+  lastRun DateTime?
+
+  nextRun DateTime?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model BackupJob {
+  id Int @id @default(autoincrement())
+
+  backupName String
+
+  backupType BackupType
+
+  storage BackupStorage
+
+  status BackupStatus @default(PENDING)
+
+  filePath String?
+
+  fileSize Float?
+
+  checksum String?
+
+  compressed Boolean @default(true)
+
+  encrypted Boolean @default(true)
+
+  createdById Int?
+  createdBy   User? @relation(fields: [createdById], references: [id])
+
+  startedAt DateTime?
+
+  completedAt DateTime?
+
+  expiresAt DateTime?
+
+  createdAt   DateTime     @default(now())
+  restoreJobs RestoreJob[]
+}
+
+model RestoreJob {
+  id Int @id @default(autoincrement())
+
+  backupId Int
+  backup   BackupJob @relation(fields: [backupId], references: [id])
+
+  restoredById Int?
+  restoredBy   User? @relation(fields: [restoredById], references: [id])
+
+  status BackupStatus @default(PENDING)
+
+  restorePoint DateTime?
+
+  notes String?
+
+  startedAt DateTime?
+
+  completedAt DateTime?
+
+  createdAt DateTime @default(now())
+}
+
+model DisasterRecoveryPlan {
+  id Int @id @default(autoincrement())
+
+  planName String
+
+  description String?
+
+  recoveryTimeObjective Float?
+
+  recoveryPointObjective Float?
+
+  responsibleTeam String?
+
+  documentationUrl String?
+
+  active Boolean @default(true)
+
+  createdAt DateTime @default(now())
+
+  updatedAt     DateTime       @updatedAt
+  recoveryTests RecoveryTest[]
+}
+
+model RecoveryTest {
+  id Int @id @default(autoincrement())
+
+  planId Int
+  plan   DisasterRecoveryPlan @relation(fields: [planId], references: [id])
+
+  testDate DateTime
+
+  status RecoveryTestStatus
+
+  duration Float?
+
+  findings String?
+
+  recommendations String?
+
+  createdAt DateTime @default(now())
+}
+
+model BackupRetentionPolicy {
+  id Int @id @default(autoincrement())
+
+  policyName String
+
+  retentionDays Int
+
+  backupType BackupType
+
+  automaticDeletion Boolean @default(true)
+
+  active Boolean @default(true)
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model SubscriptionPlan {
+  id Int @id @default(autoincrement())
+
+  name String @unique
+
+  description String?
+
+  planType SubscriptionPlanType
+
+  monthlyPrice Float
+
+  yearlyPrice Float?
+
+  maxFarms Int?
+
+  maxUsers Int?
+
+  maxStorageGB Float?
+
+  aiRequestsPerMonth Int?
+
+  active Boolean @default(true)
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  subscriptions Subscription[]
+}
+
+model Subscription {
+  id Int @id @default(autoincrement())
+
+  userId Int  @unique
+  user   User @relation(fields: [userId], references: [id])
+
+  planId Int
+  plan   SubscriptionPlan @relation(fields: [planId], references: [id])
+
+  status SubscriptionStatus @default(TRIAL)
+
+  billingCycle BillingCycle
+
+  startDate DateTime
+
+  endDate DateTime?
+
+  autoRenew Boolean @default(true)
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+  tenants   Tenant[]
+}
+
+model UsageMetric {
+  id Int @id @default(autoincrement())
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
+
+  metricName String
+
+  metricValue Float
+
+  recordedAt DateTime
+
+  createdAt DateTime @default(now())
+}
+
+model Tenant {
+  id Int @id @default(autoincrement())
+
+  name String
+
+  tenantCode String @unique
+
+  tenantType TenantType
+
+  status TenantStatus @default(TRIAL)
+
+  email String?
+
+  phone String?
+
+  website String?
+
+  logoUrl String?
+
+  subscriptionId Int?
+  subscription   Subscription? @relation(fields: [subscriptionId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  users User[]
+
+  tenantMemberships TenantMembership[]
+
+  farms Farm[]
+
+  settings TenantSetting[]
+
+  auditLogs TenantAuditLog[]
+}
+
+model TenantMembership {
+  id Int @id @default(autoincrement())
+
+  tenantId Int
+  tenant   Tenant @relation(fields: [tenantId], references: [id])
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
+
+  role UserTenantRole
+
+  active Boolean @default(true)
+
+  joinedAt DateTime @default(now())
+
+  @@unique([tenantId, userId])
+}
+
+model TenantSetting {
+  id Int @id @default(autoincrement())
+
+  tenantId Int
+  tenant   Tenant @relation(fields: [tenantId], references: [id])
+
+  settingKey String
+
+  settingValue String
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  @@unique([tenantId, settingKey])
+}
+
+model TenantAuditLog {
+  id Int @id @default(autoincrement())
+
+  tenantId Int
+  tenant   Tenant @relation(fields: [tenantId], references: [id])
+
+  userId Int?
+
+  action String
+
+  entity String?
+
+  entityId Int?
+
+  ipAddress String?
+
+  createdAt DateTime @default(now())
+}
+
+model UserDevice {
+  id Int @id @default(autoincrement())
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
+
+  deviceName String
+
+  platform DevicePlatform
+
+  deviceIdentifier String @unique
+
+  appVersion String?
+
+  lastSync DateTime?
+
+  active Boolean @default(true)
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  syncLogs SyncLog[]
+}
+
+model SyncLog {
+  id Int @id @default(autoincrement())
+
+  deviceId Int
+  device   UserDevice @relation(fields: [deviceId], references: [id])
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
+
+  entityName String
+
+  entityId Int?
+
+  operation SyncOperation
+
+  status SyncStatus @default(PENDING)
+
+  conflictMessage String?
+
+  startedAt DateTime?
+
+  completedAt DateTime?
+
+  createdAt           DateTime             @default(now())
+  conflictResolutions ConflictResolution[]
+}
+
+model SyncQueue {
+  id Int @id @default(autoincrement())
+
+  entityName String
+
+  entityId Int?
+
+  operation SyncOperation
+
+  payload String
+
+  status SyncStatus @default(PENDING)
+
+  retryCount Int @default(0)
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model ConflictResolution {
+  id Int @id @default(autoincrement())
+
+  syncLogId Int
+  syncLog   SyncLog @relation(fields: [syncLogId], references: [id])
+
+  localVersion String?
+
+  serverVersion String?
+
+  resolvedVersion String?
+
+  resolved Boolean @default(false)
+
+  resolvedAt DateTime?
+
+  createdAt DateTime @default(now())
+}
+
+model OfflineConfiguration {
+  id Int @id @default(autoincrement())
+
+  syncIntervalMinutes Int @default(15)
+
+  maxRetries Int @default(5)
+
+  automaticSync Boolean @default(true)
+
+  conflictStrategy String?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model AIDecision {
+  id Int @id @default(autoincrement())
+
+  title String
+
+  description String?
+
+  category DecisionCategory
+
+  modelSource AIModelSource
+
+  confidence Float
+
+  priority RecommendationPriority
+
+  status DecisionStatus @default(PENDING)
+
+  userId Int?
+  user   User? @relation(fields: [userId], references: [id])
+
+  farmId Int?
+  farm   Farm? @relation(fields: [farmId], references: [id])
+
+  recommendation String
+
+  explanation String?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  feedback DecisionFeedback[]
+
+  explainableAI ExplainableAI?
+}
+
+model DecisionFeedback {
+  id Int @id @default(autoincrement())
+
+  decisionId Int
+  decision   AIDecision @relation(fields: [decisionId], references: [id])
+
+  userId Int?
+  user   User? @relation(fields: [userId], references: [id])
+
+  rating Int?
+
+  accepted Boolean?
+
+  comments String?
+
+  createdAt DateTime @default(now())
+}
+
+model OptimizationScenario {
+  id Int @id @default(autoincrement())
+
+  scenarioName String
+
+  objective String
+
+  constraints String?
+
+  expectedBenefit String?
+
+  simulationResult String?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model ExplainableAI {
+  id Int @id @default(autoincrement())
+
+  decisionId Int        @unique
+  decision   AIDecision @relation(fields: [decisionId], references: [id])
+
+  reasoning String
+
+  importantFeatures String
+
+  confidenceExplanation String?
+
+  generatedAt DateTime @default(now())
+}
+
+model AIKnowledgeMemory {
+  id Int @id @default(autoincrement())
+
+  topic String
+
+  embeddingId String?
+
+  knowledgeSource String?
+
+  summary String
+
+  active Boolean @default(true)
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model AIModelPerformance {
+  id Int @id @default(autoincrement())
+
+  modelName String
+
+  version String?
+
+  accuracy Float?
+
+  precision Float?
+
+  recall Float?
+
+  f1Score Float?
+
+  latency Float?
+
+  evaluatedAt DateTime
+
+  createdAt DateTime @default(now())
+}
+
+model CropProductionPlan {
+  id Int @id @default(autoincrement())
+
+  farmId Int
+  farm   Farm @relation(fields: [farmId], references: [id])
+
+  fieldId Int?
+  field   Field? @relation(fields: [fieldId], references: [id])
+
+  cropId Int
+  crop   Crop @relation(fields: [cropId], references: [id])
+
+  seasonId Int
+  season   Season @relation(fields: [seasonId], references: [id])
+
+  year Int
+
+  targetAcres Float
+
+  targetYieldPerAcre Float
+
+  targetProductionKg Float
+
+  expectedPricePerKg Float
+
+  expectedRevenue Float
+
+  expectedExpenses Float
+
+  expectedProfit Float
+
+  plannedPlantingDate DateTime?
+
+  plannedHarvestDate DateTime?
+
+  remarks String?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  performances CropProductionPerformance[]
+}
+
+model CropProductionPerformance {
+  id Int @id @default(autoincrement())
+
+  productionPlanId Int
+
+  productionPlan CropProductionPlan @relation(fields: [productionPlanId], references: [id])
+
+  actualAcres Float
+
+  actualYieldPerAcre Float
+
+  actualProductionKg Float
+
+  averagePricePerKg Float
+
+  actualRevenue Float
+
+  actualExpenses Float
+
+  actualProfit Float
+
+  achievementPercentage Float?
+
+  productionVariance Float?
+
+  revenueVariance Float?
+
+  profitVariance Float?
+
+  status PerformanceStatus
+
+  remarks String?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model Season {
+  id Int @id @default(autoincrement())
+
+  name SeasonType
+
+  year Int
+
+  startDate DateTime?
+
+  endDate DateTime?
+
+  description String?
+
+  createdAt DateTime @default(now())
+
+  productionPlans        CropProductionPlan[]
+  commodityInventories   CommodityInventory[]
+  commodityPrices        CommodityPriceHistory[]
+  productionCosts        ProductionCost[]
+  revenueBreakdowns      RevenueBreakdown[]
+  profitabilityAnalyses  ProfitabilityAnalysis[]
+  commoditySalesAnalyses CommoditySalesAnalysis[]
+  agriculturalKPIs       AgriculturalKPI[]
+  commodityTransactions CommodityTransaction[]
+
+}
+
+model CommodityInventory {
+  id Int @id @default(autoincrement())
+
+  farmId Int?
+  farm   Farm? @relation(fields: [farmId], references: [id])
+
+  cropId Int
+  crop   Crop @relation(fields: [cropId], references: [id])
+
+  seasonId Int
+  season   Season @relation(fields: [seasonId], references: [id])
+
+  year Int
+
+  openingStockKg Float @default(0)
+
+  productionKg Float @default(0)
+
+  importedKg Float @default(0)
+
+  totalAvailableKg Float @default(0)
+
+  closingStockKg Float @default(0)
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  balance               CommodityBalance?
+  commodityConsumptions CommodityConsumption[]
+}
+
+model CommodityMovement {
+  id Int @id @default(autoincrement())
+
+  cropId Int
+  crop   Crop @relation(fields: [cropId], references: [id])
+
+  quantityKg Float
+
+  sourceCounty String
+
+  sourceSubCounty String?
+
+  sourceWard String?
+
+  destinationCounty String
+
+  destinationSubCounty String?
+
+  destinationWard String?
+
+  movementType CommodityMovementType
+
+  buyerName String?
+
+  sellerName String?
+
+  transporter String?
+
+  vehicleRegistration String?
+
+  transportCost Float?
+
+  pricePerKg Float?
+
+  movementDate DateTime
+
+  remarks String?
+
+  createdAt DateTime @default(now())
+}
+
+model CommodityConsumption {
+  id Int @id @default(autoincrement())
+
+  inventoryId Int
+
+  inventory              CommodityInventory @relation(fields: [inventoryId], references: [id])
+  householdConsumptionKg Float              @default(0)
+
+  livestockFeedKg Float @default(0)
+
+  seedReservedKg Float @default(0)
+
+  processingKg Float @default(0)
+
+  postHarvestLossKg Float @default(0)
+
+  donatedKg Float @default(0)
+
+  otherUsageKg Float @default(0)
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model CommodityBalance {
+  id Int @id @default(autoincrement())
+
+  inventoryId Int @unique
+
+  inventory CommodityInventory @relation(fields: [inventoryId], references: [id])
+
+  exportsKg Float @default(0)
+
+  localSalesKg Float @default(0)
+
+  outsideCountySalesKg Float @default(0)
+
+  totalConsumedKg Float @default(0)
+
+  surplusKg Float?
+
+  deficitKg Float?
+
+  foodSecurityStatus FoodSecurityStatus
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model CommodityPriceHistory {
+  id Int @id @default(autoincrement())
+
+  cropId Int
+  crop   Crop @relation(fields: [cropId], references: [id])
+
+  county String
+
+  market String
+
+  seasonId Int
+  season   Season @relation(fields: [seasonId], references: [id])
+
+  year Int
+
+  farmGatePrice Float?
+
+  cooperativePrice Float?
+
+  wholesalePrice Float?
+
+  retailPrice Float?
+
+  exportPrice Float?
+
+  averagePrice Float?
+
+  priceDate DateTime
+
+  createdAt DateTime @default(now())
+}
+
+model ProductionCost {
+  id Int @id @default(autoincrement())
+
+  farmId Int
+  farm   Farm @relation(fields: [farmId], references: [id])
+
+  cropId Int
+  crop   Crop @relation(fields: [cropId], references: [id])
+
+  seasonId Int
+  season   Season @relation(fields: [seasonId], references: [id])
+
+  year Int
+
+  areaAcres Float
+
+  seedCost Float @default(0)
+
+  fertilizerCost Float @default(0)
+
+  manureCost Float @default(0)
+
+  pesticideCost Float @default(0)
+
+  herbicideCost Float @default(0)
+
+  fungicideCost Float @default(0)
+
+  labourCost Float @default(0)
+
+  machineryCost Float @default(0)
+
+  fuelCost Float @default(0)
+
+  irrigationCost Float @default(0)
+
+  transportCost Float @default(0)
+
+  storageCost Float @default(0)
+
+  packagingCost Float @default(0)
+
+  insuranceCost Float @default(0)
+
+  marketingCost Float @default(0)
+
+  miscellaneousCost Float @default(0)
+
+  totalCost Float
+
+  costPerAcre Float?
+
+  costPerKg Float?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model RevenueBreakdown {
+  id Int @id @default(autoincrement())
+
+  farmId Int
+  farm   Farm @relation(fields: [farmId], references: [id])
+
+  cropId Int
+  crop   Crop @relation(fields: [cropId], references: [id])
+
+  seasonId Int
+  season   Season @relation(fields: [seasonId], references: [id])
+
+  year Int
+
+  localSalesKg Float @default(0)
+
+  localRevenue Float @default(0)
+
+  countySalesKg Float @default(0)
+
+  countyRevenue Float @default(0)
+
+  outsideCountySalesKg Float @default(0)
+
+  outsideCountyRevenue Float @default(0)
+
+  exportSalesKg Float @default(0)
+
+  exportRevenue Float @default(0)
+
+  institutionalSalesKg Float @default(0)
+
+  institutionalRevenue Float @default(0)
+
+  processingRevenue Float @default(0)
+
+  totalRevenue Float
+
+  averagePricePerKg Float?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model ProfitabilityAnalysis {
+  id Int @id @default(autoincrement())
+
+  farmId Int
+  farm   Farm @relation(fields: [farmId], references: [id])
+
+  cropId Int
+  crop   Crop @relation(fields: [cropId], references: [id])
+
+  seasonId Int
+  season   Season @relation(fields: [seasonId], references: [id])
+
+  year Int
+
+  totalCost Float
+
+  totalRevenue Float
+
+  grossProfit Float
+
+  netProfit Float
+
+  roi Float?
+
+  profitMargin Float?
+
+  revenuePerAcre Float?
+
+  profitPerAcre Float?
+
+  revenuePerKg Float?
+
+  profitPerKg Float?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model CommoditySalesAnalysis {
+  id Int @id @default(autoincrement())
+
+  cropId Int
+  crop   Crop @relation(fields: [cropId], references: [id])
+
+  seasonId Int
+  season   Season @relation(fields: [seasonId], references: [id])
+
+  year Int
+
+  quantitySoldKg Float
+
+  averageSellingPrice Float
+
+  highestPrice Float
+
+  lowestPrice Float
+
+  numberOfTransactions Int
+
+  totalRevenue Float
+
+  createdAt DateTime @default(now())
+}
+
+model AgriculturalKPI {
+  id Int @id @default(autoincrement())
+
+  farmId Int?
+  farm   Farm? @relation(fields: [farmId], references: [id])
+
+  cropId Int?
+  crop   Crop? @relation(fields: [cropId], references: [id])
+
+  seasonId Int?
+  season   Season? @relation(fields: [seasonId], references: [id])
+
+  year Int
+
+  productionKg Float?
+
+  targetProductionKg Float?
+
+  achievementPercentage Float?
+
+  revenue Float?
+
+  expenses Float?
+
+  profit Float?
+
+  roi Float?
+
+  averageYieldPerAcre Float?
+
+  averagePricePerKg Float?
+
+  foodSecurityScore Float?
+
+  sustainabilityScore Float?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+model SalesChannel {
+
+  id Int @id @default(autoincrement())
+
+  name String @unique
+
+  description String?
+
+  isRevenueChannel Boolean @default(true)
+
+  commoditySales CommoditySale[]
+
+  transactions CommodityTransaction[]
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+}
+model Buyer {
+
+  id Int @id @default(autoincrement())
+
+  buyerName String
+
+  buyerType BuyerType
+
+  county String?
+
+  country String?
+
+  phone String?
+
+  email String?
+
+  transactions CommodityTransaction[]
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+}
+model CommodityTransaction {
+
+  id Int @id @default(autoincrement())
+
+  farmId Int?
+  farm Farm? @relation(fields: [farmId], references: [id])
+
+  cropId Int
+  crop Crop @relation(fields: [cropId], references: [id])
+
+  seasonId Int
+  season Season @relation(fields: [seasonId], references: [id])
+
+  year Int
+
+  transactionType CommodityTransactionType
+
+  salesChannelId Int?
+  salesChannel SalesChannel? @relation(fields: [salesChannelId], references: [id])
+
+  buyerId Int?
+  buyer Buyer? @relation(fields: [buyerId], references: [id])
+
+  quantityKg Float
+
+  pricePerKg Float?
+
+  totalAmount Float?
+
+  // Source Location
+
+  sourceCountryId Int?
+  sourceCountry Country? @relation("SourceCountry", fields: [sourceCountryId], references: [id])
+
+  sourceCountyId Int?
+  sourceCounty County? @relation("SourceCounty", fields: [sourceCountyId], references: [id])
+
+  sourceSubCountyId Int?
+  sourceSubCounty SubCounty? @relation("SourceSubCounty", fields: [sourceSubCountyId], references: [id])
+
+  sourceWardId Int?
+  sourceWard Ward? @relation("SourceWard", fields: [sourceWardId], references: [id])
+
+  // Destination Location
+
+  destinationCountryId Int?
+  destinationCountry Country? @relation("DestinationCountry", fields: [destinationCountryId], references: [id])
+
+  destinationCountyId Int?
+  destinationCounty County? @relation("DestinationCounty", fields: [destinationCountyId], references: [id])
+
+  destinationSubCountyId Int?
+  destinationSubCounty SubCounty? @relation("DestinationSubCounty", fields: [destinationSubCountyId], references: [id])
+
+  destinationWardId Int?
+  destinationWard Ward? @relation("DestinationWard", fields: [destinationWardId], references: [id])
+
+  transactionDate DateTime
+
+  referenceNumber String?
+
+  remarks String?
+
+  // Link to detailed sale (only for SALE transactions)
+
+  commoditySale CommoditySale?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+model CommoditySale {
+
+  id Int @id @default(autoincrement())
+
+  transactionId Int @unique
+  transaction CommodityTransaction @relation(fields: [transactionId], references: [id])
+
+  invoiceNumber String?
+
+  receiptNumber String?
+
+  paymentMethod PaymentMethod?
+
+  paymentStatus PaymentStatus?
+
+  quantityKg Float
+
+  pricePerKg Float
+
+  discount Float? @default(0)
+
+  tax Float? @default(0)
+
+  totalAmount Float
+
+  amountPaid Float? @default(0)
+
+  balance Float? @default(0)
+
+  saleDate DateTime
+
+  deliveryDate DateTime?
+
+  vehicleNumber String?
+
+  driverName String?
+
+  destinationAddress String?
+
+  notes String?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+model BusinessPartner {
+
+  id Int @id @default(autoincrement())
+
+  partnerCode String @unique
+
+  partnerType BusinessPartnerType
+
+  name String
+
+  registrationNumber String?
+
+  taxNumber String?
+
+  phone String?
+
+  alternativePhone String?
+
+  email String?
+
+  website String?
+
+  address String?
+
+  postalCode String?
+
+  countryId Int?
+  country Country? @relation(fields: [countryId], references: [id])
+
+  countyId Int?
+  county County? @relation(fields: [countyId], references: [id])
+
+  subCountyId Int?
+  subCounty SubCounty? @relation(fields: [subCountyId], references: [id])
+
+  wardId Int?
+  ward Ward? @relation(fields: [wardId], references: [id])
+
+  villageId Int?
+  village Village? @relation(fields: [villageId], references: [id])
+
+  latitude Float?
+
+  longitude Float?
+
+  contactPerson String?
+
+  contactPosition String?
+
+  isActive Boolean @default(true)
+
+  notes String?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  buyers Buyer[]
+
+  suppliers Supplier[]
+
+  customers Customer[]
+
+
+
+}

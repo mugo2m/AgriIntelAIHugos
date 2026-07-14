@@ -1,0 +1,1488 @@
+enum SeverityLevel {
+  LOW
+  MODERATE
+  HIGH
+  CRITICAL
+}
+
+enum PlantingSeason {
+  LONG_RAINS
+  SHORT_RAINS
+  IRRIGATED
+  GREENHOUSE
+  DRY_SEASON
+}
+
+enum PlantingStatus {
+  PLANNED
+  PLANTED
+  GERMINATED
+  VEGETATIVE
+  FLOWERING
+  FRUITING
+  MATURITY
+  HARVESTED
+  FAILED
+}
+
+enum HarvestQuality {
+  EXCELLENT
+  GOOD
+  FAIR
+  POOR
+}
+
+enum SeedUnit {
+  GRAMS
+  KILOGRAMS
+  TONNES
+  SEEDS
+  BAGS
+}
+
+enum HarvestUnit {
+  GRAMS
+  KILOGRAMS
+  TONNES
+  BAGS
+  CRATES
+  PIECES
+  LITRES
+}
+
+enum IrrigationMethod {
+  DRIP
+  SPRINKLER
+  FLOOD
+  FURROW
+  PIVOT
+  RAIN_GUN
+  MANUAL
+}
+
+enum WaterSourceType {
+  RIVER
+  BOREHOLE
+  WELL
+  DAM
+  LAKE
+  RAINWATER
+  MUNICIPAL
+}
+
+enum IrrigationStatus {
+  PLANNED
+  ACTIVE
+  COMPLETED
+  CANCELLED
+}
+
+enum IrrigationResult {
+  SUCCESS
+  PARTIAL
+  FAILED
+  POSTPONED
+}
+
+enum EquipmentCategory {
+  TRACTOR
+  HARVESTER
+  IRRIGATION
+  SPRAYER
+  PLANTER
+  TILLAGE
+  TRANSPORT
+  OTHER
+}
+
+enum EquipmentStatus {
+  ACTIVE
+  UNDER_MAINTENANCE
+  OUT_OF_SERVICE
+  RETIRED
+}
+
+enum InventoryCategory {
+  SEED
+  FERTILIZER
+  PESTICIDE
+  HERBICIDE
+  FUNGICIDE
+  EQUIPMENT
+  FUEL
+  OTHER
+}
+
+enum StockMovementType {
+  STOCK_IN
+  STOCK_OUT
+  ADJUSTMENT
+}
+
+enum StorageType {
+  WAREHOUSE
+  SILO
+  COLD_ROOM
+  CHEMICAL_STORE
+  FUEL_TANK
+  OTHER
+}
+
+enum InventoryUnit {
+  GRAMS
+  KILOGRAMS
+  TONNES
+  LITRES
+  MILLILITRES
+  BAGS
+  BOTTLES
+  PACKETS
+  PIECES
+}
+
+enum ExpenseCategory {
+  SEED
+  FERTILIZER
+  PESTICIDE
+  HERBICIDE
+  FUNGICIDE
+  LABOR
+  EQUIPMENT
+  FUEL
+  IRRIGATION
+  TRANSPORT
+  MAINTENANCE
+  UTILITIES
+  RENT
+  OTHER
+}
+
+enum IncomeCategory {
+  CROP_SALES
+  LIVESTOCK_SALES
+  CONSULTANCY
+  GOVERNMENT_SUPPORT
+  INSURANCE
+  GRANT
+  OTHER
+}
+
+enum PaymentMethod {
+  CASH
+  MPESA
+  BANK_TRANSFER
+  CREDIT_CARD
+  DEBIT_CARD
+  CHEQUE
+  MOBILE_MONEY
+  OTHER
+}
+
+enum InvoiceStatus {
+  PENDING
+  PARTIALLY_PAID
+  PAID
+  CANCELLED
+}
+
+enum BudgetStatus {
+  DRAFT
+  ACTIVE
+  COMPLETED
+  CANCELLED
+}
+
+enum LivestockCategory {
+  CATTLE
+  GOAT
+  SHEEP
+  PIG
+  POULTRY
+  RABBIT
+  FISH
+  CAMEL
+  BEE
+  OTHER
+}
+
+enum AnimalSex {
+  MALE
+  FEMALE
+}
+
+enum AnimalStatus {
+  ACTIVE
+  SOLD
+  DEAD
+  SLAUGHTERED
+  LOST
+}
+
+enum HealthStatus {
+  HEALTHY
+  SICK
+  UNDER_TREATMENT
+  RECOVERED
+  QUARANTINED
+}
+
+enum VaccinationStatus {
+  SCHEDULED
+  COMPLETED
+  MISSED
+}
+
+enum ProductionType {
+  MILK
+  EGGS
+  MEAT
+  WOOL
+  HONEY
+  FISH
+  MANURE
+  OTHER
+}
+
+enum ProductionUnit {
+  LITRES
+  MILLILITRES
+  KILOGRAMS
+  GRAMS
+  TONNES
+  PIECES
+  TRAYS
+  DOZENS
+}
+
+enum ProductionQuality {
+  EXCELLENT
+  GOOD
+  FAIR
+  POOR
+}
+
+enum FeedCategory {
+  HAY
+  SILAGE
+  CONCENTRATE
+  GRAIN
+  PELLETS
+  MINERAL
+  SUPPLEMENT
+  PASTURE
+  HOME_MADE_FEED
+  OTHER
+}
+
+enum FeedingFrequency {
+  ONCE_DAILY
+  TWICE_DAILY
+  THREE_TIMES_DAILY
+  WEEKLY
+  CUSTOM
+}
+
+enum FeedUnit {
+  GRAMS
+  KILOGRAMS
+  TONNES
+  LITRES
+  MILLILITRES
+  BALES
+  BAGS
+}
+
+enum BreedingMethod {
+  NATURAL
+  ARTIFICIAL_INSEMINATION
+  EMBRYO_TRANSFER
+}
+
+enum PregnancyStatus {
+  NOT_PREGNANT
+  PREGNANT
+  CALVED
+  ABORTED
+  UNKNOWN
+}
+
+enum BirthType {
+  SINGLE
+  TWINS
+  TRIPLETS
+  MULTIPLE
+}
+
+enum OffspringStatus {
+  ALIVE
+  STILLBORN
+  DIED
+}
+
+enum HatchStatus {
+  INCUBATING
+  HATCHED
+  FAILED
+}
+
+enum HealthRecordType {
+  ROUTINE_CHECKUP
+  EMERGENCY
+  VACCINATION
+  DEWORMING
+  SURGERY
+  LAB_TEST
+  TREATMENT
+}
+
+enum LabTestType {
+  BLOOD
+  FECAL
+  URINE
+  MILK
+  TISSUE
+  PCR
+  OTHER
+}
+
+enum PrescriptionStatus {
+  PRESCRIBED
+  DISPENSED
+  COMPLETED
+  CANCELLED
+}
+
+enum HealthConditionStatus {
+  ACTIVE
+  RECOVERED
+  CHRONIC
+  FATAL
+}
+
+enum EmployeeRole {
+  FARM_MANAGER
+  SUPERVISOR
+  VETERINARY_OFFICER
+  AGRONOMIST
+  MACHINE_OPERATOR
+  IRRIGATION_OPERATOR
+  STORE_KEEPER
+  ACCOUNTANT
+  SECURITY_GUARD
+  CASUAL_WORKER
+  OTHER
+}
+
+enum EmploymentType {
+  PERMANENT
+  CONTRACT
+  CASUAL
+  SEASONAL
+  INTERN
+}
+
+enum AttendanceStatus {
+  PRESENT
+  ABSENT
+  LEAVE
+  SICK
+  HOLIDAY
+}
+
+enum PayrollStatus {
+  PENDING
+  APPROVED
+  PAID
+  CANCELLED
+}
+
+enum MaintenanceType {
+  PREVENTIVE
+  CORRECTIVE
+  EMERGENCY
+  INSPECTION
+  CALIBRATION
+}
+
+enum MaintenanceStatus {
+  SCHEDULED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+  OVERDUE
+}
+
+enum FuelType {
+  DIESEL
+  PETROL
+  ELECTRIC
+  HYBRID
+  SOLAR
+  OTHER
+}
+
+enum CustomerType {
+  INDIVIDUAL
+  COMPANY
+  COOPERATIVE
+  PROCESSOR
+  WHOLESALER
+  RETAILER
+  GOVERNMENT
+  NGO
+  EXPORTER
+}
+
+enum OrderStatus {
+  DRAFT
+  PENDING
+  CONFIRMED
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
+enum DeliveryStatus {
+  PENDING
+  IN_TRANSIT
+  DELIVERED
+  FAILED
+}
+
+enum ProductCategory {
+  CROP
+  LIVESTOCK
+  LIVESTOCK_PRODUCT
+  INPUT
+  EQUIPMENT
+  OTHER
+}
+
+enum SalesUnit {
+  GRAMS
+  KILOGRAMS
+  TONNES
+  MILLILITRES
+  LITRES
+  PIECES
+  DOZENS
+  TRAYS
+  BAGS
+  BALES
+  CRATES
+}
+
+enum RecommendationType {
+  CROP
+  SOIL
+  FERTILIZER
+  IRRIGATION
+  WEATHER
+  PEST
+  DISEASE
+  HARVEST
+  LIVESTOCK
+  FEED
+  BREEDING
+  VACCINATION
+  FINANCIAL
+  MARKET
+  GENERAL
+}
+
+enum RecommendationPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum RecommendationStatus {
+  PENDING
+  VIEWED
+  ACCEPTED
+  REJECTED
+  IMPLEMENTED
+  EXPIRED
+}
+
+enum PredictionType {
+  YIELD
+  WEATHER
+  MARKET_PRICE
+  PEST_RISK
+  DISEASE_RISK
+  SOIL_HEALTH
+  IRRIGATION_DEMAND
+  LIVESTOCK_PRODUCTIVITY
+}
+
+enum AIModelType {
+  MACHINE_LEARNING
+  DEEP_LEARNING
+  LLM
+  RULE_BASED
+  HYBRID
+}
+
+enum SensorType {
+  SOIL_MOISTURE
+  SOIL_TEMPERATURE
+  SOIL_PH
+  SOIL_EC
+  AIR_TEMPERATURE
+  AIR_HUMIDITY
+  RAINFALL
+  WIND_SPEED
+  WIND_DIRECTION
+  SOLAR_RADIATION
+  WATER_LEVEL
+  WATER_FLOW
+  GPS
+  LIVESTOCK_BODY_TEMPERATURE
+  LIVESTOCK_HEART_RATE
+  LIVESTOCK_ACTIVITY
+  GREENHOUSE_TEMPERATURE
+  GREENHOUSE_HUMIDITY
+  GREENHOUSE_CO2
+  OTHER
+}
+
+enum SensorStatus {
+  ACTIVE
+  INACTIVE
+  MAINTENANCE
+  FAULTY
+  OFFLINE
+}
+
+enum ReadingStatus {
+  NORMAL
+  WARNING
+  CRITICAL
+}
+
+enum DeviceType {
+  SENSOR
+  GATEWAY
+  WEATHER_STATION
+  IRRIGATION_CONTROLLER
+  DRONE
+  CAMERA
+  GPS_TRACKER
+  RFID_READER
+  OTHER
+}
+
+enum GeometryType {
+  POINT
+  LINESTRING
+  POLYGON
+  MULTIPOLYGON
+}
+
+enum SatelliteProvider {
+  SENTINEL_2
+  LANDSAT_8
+  LANDSAT_9
+  PLANET
+  MAXAR
+  DRONE
+  OTHER
+}
+
+enum ImageryType {
+  RGB
+  MULTISPECTRAL
+  THERMAL
+  NDVI
+  EVI
+  SAVI
+  NDWI
+  SOIL_MOISTURE
+}
+
+enum FieldStatus {
+  ACTIVE
+  FALLOW
+  PREPARATION
+  PLANTED
+  HARVESTED
+}
+
+enum MapLayerType {
+  FARM_BOUNDARY
+  FIELD_BOUNDARY
+  SOIL
+  WEATHER
+  IRRIGATION
+  PEST
+  DISEASE
+  SATELLITE
+  ELEVATION
+}
+
+enum DocumentOwnerType {
+  FARMER
+  FARM
+  LIVESTOCK
+  EQUIPMENT
+  EMPLOYEE
+  FINANCIAL
+  SOIL_TEST
+  HARVEST
+  AI_REPORT
+  OTHER
+}
+
+enum DocumentCategory {
+  IDENTIFICATION
+  CERTIFICATE
+  LICENSE
+  CONTRACT
+  RECEIPT
+  INVOICE
+  REPORT
+  IMAGE
+  VIDEO
+  AUDIO
+  PDF
+  OTHER
+}
+
+enum DocumentStatus {
+  ACTIVE
+  ARCHIVED
+  DELETED
+}
+
+enum FileStorageProvider {
+  LOCAL
+  FIREBASE
+  AWS_S3
+  AZURE_BLOB
+  GOOGLE_CLOUD
+}
+
+enum NotificationChannel {
+  IN_APP
+  EMAIL
+  SMS
+  WHATSAPP
+  PUSH_NOTIFICATION
+}
+
+enum NotificationPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum NotificationStatus {
+  PENDING
+  SENT
+  DELIVERED
+  READ
+  FAILED
+  CANCELLED
+}
+
+enum NotificationType {
+  WEATHER_ALERT
+  PEST_ALERT
+  DISEASE_ALERT
+  IRRIGATION_REMINDER
+  HARVEST_REMINDER
+  SOIL_ALERT
+  AI_RECOMMENDATION
+  MARKET_PRICE
+  PAYMENT_REMINDER
+  INVENTORY_ALERT
+  MACHINERY_ALERT
+  VACCINATION_REMINDER
+  BREEDING_REMINDER
+  TASK_ASSIGNMENT
+  GENERAL
+}
+
+enum TaskCategory {
+  GENERAL
+  CROP
+  LIVESTOCK
+  IRRIGATION
+  SOIL
+  FERTILIZER
+  PEST_CONTROL
+  HARVEST
+  MACHINERY
+  INVENTORY
+  MAINTENANCE
+  EMPLOYEE
+  FINANCIAL
+}
+
+enum TaskPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum TaskStatus {
+  PENDING
+  ASSIGNED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+  OVERDUE
+}
+
+enum RecurrenceType {
+  NONE
+  DAILY
+  WEEKLY
+  MONTHLY
+  YEARLY
+}
+
+enum KnowledgeCategory {
+  CROP_PRODUCTION
+  LIVESTOCK_MANAGEMENT
+  POULTRY
+  DAIRY
+  PIG_FARMING
+  GOAT_FARMING
+  SHEEP_FARMING
+  SOIL_MANAGEMENT
+  FERTILIZER
+  IRRIGATION
+  WEATHER
+  PEST_CONTROL
+  DISEASE_MANAGEMENT
+  MACHINERY
+  FARM_BUSINESS
+  FINANCIAL_MANAGEMENT
+  MARKETING
+  FOOD_SAFETY
+  CLIMATE_SMART_AGRICULTURE
+  AGROFORESTRY
+  GENERAL
+}
+
+enum ArticleStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum MediaType {
+  IMAGE
+  VIDEO
+  AUDIO
+  PDF
+  DOCUMENT
+  LINK
+}
+
+enum ExtensionSource {
+  INTERNAL
+  GOVERNMENT
+  UNIVERSITY
+  NGO
+  RESEARCH_INSTITUTE
+  PRIVATE_COMPANY
+}
+
+enum CertificationType {
+  GLOBAL_GAP
+  ORGANIC
+  FAIRTRADE
+  RAINFOREST_ALLIANCE
+  ISO_22000
+  HACCP
+  GMP
+  GOVERNMENT
+  PRIVATE
+  OTHER
+}
+
+enum CertificationStatus {
+  PENDING
+  ACTIVE
+  EXPIRED
+  SUSPENDED
+  REVOKED
+}
+
+enum AuditType {
+  INTERNAL
+  EXTERNAL
+  GOVERNMENT
+  CERTIFICATION
+  CUSTOMER
+}
+
+enum AuditStatus {
+  PLANNED
+  IN_PROGRESS
+  COMPLETED
+  FAILED
+  CANCELLED
+}
+
+enum ComplianceStatus {
+  COMPLIANT
+  PARTIALLY_COMPLIANT
+  NON_COMPLIANT
+}
+
+enum CorrectiveActionStatus {
+  OPEN
+  IN_PROGRESS
+  COMPLETED
+  VERIFIED
+  CLOSED
+}
+
+enum DashboardType {
+  FARMER
+  FARM_MANAGER
+  AGRONOMIST
+  VETERINARIAN
+  ACCOUNTANT
+  ADMIN
+  EXECUTIVE
+}
+
+enum WidgetType {
+  KPI
+  LINE_CHART
+  BAR_CHART
+  PIE_CHART
+  TABLE
+  MAP
+  CALENDAR
+  GAUGE
+}
+
+enum KPIType {
+  CROP_YIELD
+  LIVESTOCK_PRODUCTION
+  SOIL_HEALTH
+  WEATHER
+  REVENUE
+  EXPENSE
+  PROFIT
+  INVENTORY
+  MARKET_PRICE
+  WATER_USAGE
+  AI_INSIGHT
+}
+
+enum DashboardPeriod {
+  TODAY
+  WEEK
+  MONTH
+  QUARTER
+  YEAR
+  CUSTOM
+}
+
+enum ReportType {
+  FARM
+  CROP
+  LIVESTOCK
+  FINANCIAL
+  SOIL
+  WEATHER
+  IRRIGATION
+  INVENTORY
+  MARKETPLACE
+  EMPLOYEE
+  AI
+  CUSTOM
+}
+
+enum ReportFormat {
+  PDF
+  EXCEL
+  CSV
+  WORD
+}
+
+enum ReportStatus {
+  PENDING
+  GENERATING
+  COMPLETED
+  FAILED
+}
+
+enum PredictionStatus {
+  PENDING
+  RUNNING
+  COMPLETED
+  FAILED
+}
+
+enum PredictionModelType {
+  LINEAR_REGRESSION
+  RANDOM_FOREST
+  XGBOOST
+  LIGHTGBM
+  LSTM
+  CNN
+  TRANSFORMER
+  ARIMA
+  PROPHET
+  CUSTOM
+}
+
+enum ForecastPeriod {
+  DAILY
+  WEEKLY
+  MONTHLY
+  QUARTERLY
+  YEARLY
+}
+
+enum TraceabilityEventType {
+  HARVEST
+  PROCESSING
+  PACKAGING
+  STORAGE
+  TRANSPORT
+  DELIVERY
+  SALE
+  EXPORT
+  IMPORT
+  INSPECTION
+}
+
+enum ShipmentStatus {
+  PENDING
+  PREPARING
+  IN_TRANSIT
+  DELIVERED
+  CANCELLED
+  RETURNED
+}
+
+enum BatchStatus {
+  ACTIVE
+  SOLD
+  EXPIRED
+  RECALLED
+}
+
+enum WarehouseZoneType {
+  RECEIVING
+  STORAGE
+  COLD_STORAGE
+  PACKAGING
+  SHIPPING
+  QUARANTINE
+}
+
+enum WarehouseMovementType {
+  INBOUND
+  OUTBOUND
+  TRANSFER
+  RETURN
+  ADJUSTMENT
+}
+
+enum LogisticsPriority {
+  LOW
+  NORMAL
+  HIGH
+  URGENT
+}
+
+enum ProcurementStatus {
+  DRAFT
+  PENDING_APPROVAL
+  APPROVED
+  ORDERED
+  PARTIALLY_RECEIVED
+  COMPLETED
+  CANCELLED
+}
+
+enum PurchasePriority {
+  LOW
+  NORMAL
+  HIGH
+  URGENT
+}
+
+enum SupplierRating {
+  EXCELLENT
+  GOOD
+  FAIR
+  POOR
+}
+
+enum CustomerStatus {
+  LEAD
+  ACTIVE
+  INACTIVE
+  VIP
+  BLACKLISTED
+}
+
+enum InteractionType {
+  PHONE_CALL
+  EMAIL
+  SMS
+  WHATSAPP
+  MEETING
+  FARM_VISIT
+  SUPPORT
+}
+
+enum OpportunityStage {
+  NEW
+  QUALIFIED
+  PROPOSAL
+  NEGOTIATION
+  WON
+  LOST
+}
+
+enum CooperativeType {
+  PRODUCER
+  MARKETING
+  DAIRY
+  POULTRY
+  LIVESTOCK
+  SAVINGS
+  MULTIPURPOSE
+}
+
+enum MembershipStatus {
+  PENDING
+  ACTIVE
+  SUSPENDED
+  TERMINATED
+}
+
+enum MemberRole {
+  MEMBER
+  CHAIRPERSON
+  SECRETARY
+  TREASURER
+  COMMITTEE_MEMBER
+}
+
+enum GovernmentProgramType {
+  SUBSIDY
+  GRANT
+  LOAN
+  TRAINING
+  INSURANCE_SUPPORT
+  INPUT_SUPPORT
+  IRRIGATION_PROJECT
+  RESEARCH
+  OTHER
+}
+
+enum ProgramStatus {
+  UPCOMING
+  OPEN
+  CLOSED
+  SUSPENDED
+  COMPLETED
+}
+
+enum ApplicationStatus {
+  DRAFT
+  SUBMITTED
+  UNDER_REVIEW
+  APPROVED
+  REJECTED
+  DISBURSED
+}
+
+enum InsuranceType {
+  CROP
+  LIVESTOCK
+  FARM_PROPERTY
+  EQUIPMENT
+  GREENHOUSE
+  WEATHER_INDEX
+}
+
+enum PolicyStatus {
+  DRAFT
+  ACTIVE
+  EXPIRED
+  CANCELLED
+  CLAIMED
+}
+
+enum ClaimStatus {
+  REPORTED
+  UNDER_REVIEW
+  APPROVED
+  REJECTED
+  PAID
+}
+
+enum CarbonSource {
+  FUEL
+  ELECTRICITY
+  FERTILIZER
+  LIVESTOCK
+  TRANSPORT
+  MACHINERY
+  WASTE
+  IRRIGATION
+  OTHER
+}
+
+enum SustainabilityProjectStatus {
+  PLANNED
+  ACTIVE
+  COMPLETED
+  CANCELLED
+}
+
+enum SustainabilityCategory {
+  CARBON_REDUCTION
+  WATER_CONSERVATION
+  SOIL_HEALTH
+  BIODIVERSITY
+  RENEWABLE_ENERGY
+  WASTE_MANAGEMENT
+}
+
+enum IntegrationType {
+  WEATHER_API
+  PAYMENT_GATEWAY
+  SMS_PROVIDER
+  EMAIL_PROVIDER
+  ERP_SYSTEM
+  ACCOUNTING_SYSTEM
+  SATELLITE_PROVIDER
+  GOVERNMENT_API
+  AI_PROVIDER
+  IOT_PROVIDER
+  MAP_PROVIDER
+  STORAGE_PROVIDER
+}
+
+enum IntegrationStatus {
+  ACTIVE
+  INACTIVE
+  ERROR
+  TESTING
+}
+
+enum APILogStatus {
+  SUCCESS
+  FAILED
+  TIMEOUT
+  PENDING
+}
+
+enum SettingCategory {
+  GENERAL
+  SECURITY
+  AI
+  WEATHER
+  EMAIL
+  SMS
+  PAYMENT
+  STORAGE
+  NOTIFICATION
+  LOCALIZATION
+  SYSTEM
+}
+
+enum SettingDataType {
+  STRING
+  INTEGER
+  FLOAT
+  BOOLEAN
+  JSON
+}
+
+enum FeatureStatus {
+  ENABLED
+  DISABLED
+  BETA
+}
+
+enum ImportSource {
+  CSV
+  EXCEL
+  JSON
+  XML
+  DATABASE
+  API
+}
+
+enum ImportStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  CANCELLED
+}
+
+enum MigrationStatus {
+  PENDING
+  RUNNING
+  SUCCESS
+  FAILED
+  ROLLED_BACK
+}
+
+enum ValidationSeverity {
+  INFO
+  WARNING
+  ERROR
+}
+
+enum BackupType {
+  FULL
+  INCREMENTAL
+  DIFFERENTIAL
+}
+
+enum BackupStatus {
+  PENDING
+  RUNNING
+  COMPLETED
+  FAILED
+  RESTORED
+}
+
+enum BackupStorage {
+  LOCAL
+  AWS_S3
+  AZURE_BLOB
+  GOOGLE_CLOUD
+  FIREBASE_STORAGE
+}
+
+enum RecoveryTestStatus {
+  PASSED
+  FAILED
+  WARNING
+}
+
+enum SubscriptionPlanType {
+  FREE
+  BASIC
+  PROFESSIONAL
+  ENTERPRISE
+  CUSTOM
+}
+
+enum SubscriptionStatus {
+  TRIAL
+  ACTIVE
+  SUSPENDED
+  EXPIRED
+  CANCELLED
+}
+
+enum BillingCycle {
+  MONTHLY
+  QUARTERLY
+  YEARLY
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+  CANCELLED
+}
+
+enum TenantStatus {
+  ACTIVE
+  SUSPENDED
+  TRIAL
+  EXPIRED
+}
+
+enum TenantType {
+  INDIVIDUAL
+  COMPANY
+  COOPERATIVE
+  NGO
+  GOVERNMENT
+  UNIVERSITY
+}
+
+enum UserTenantRole {
+  OWNER
+  ADMIN
+  MANAGER
+  STAFF
+  VIEWER
+}
+
+enum SyncStatus {
+  PENDING
+  SYNCING
+  SYNCED
+  FAILED
+  CONFLICT
+}
+
+enum SyncOperation {
+  CREATE
+  UPDATE
+  DELETE
+}
+
+enum DevicePlatform {
+  ANDROID
+  IOS
+  WEB
+  DESKTOP
+}
+
+enum DecisionCategory {
+  CROP
+  LIVESTOCK
+  WEATHER
+  SOIL
+  IRRIGATION
+  FERTILIZER
+  PEST
+  DISEASE
+  MARKET
+  FINANCE
+  INVENTORY
+  ENERGY
+}
+
+enum DecisionStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  IMPLEMENTED
+}
+
+enum AIModelSource {
+  OPENAI
+  GEMINI
+  CLAUDE
+  LLAMA
+  MISTRAL
+  GROK
+  CUSTOM
+}
+
+enum PerformanceStatus {
+  PLANNED
+
+  IN_PROGRESS
+
+  COMPLETED
+
+  EXCEEDED_TARGET
+
+  BELOW_TARGET
+
+  FAILED
+}
+
+enum SeasonType {
+  LONG_RAINS
+  SHORT_RAINS
+  DRY_SEASON
+  IRRIGATED
+}
+
+enum CommodityMovementType {
+  IMPORT
+  EXPORT
+  LOCAL_TRANSFER
+  SALE
+  PURCHASE
+  DONATION
+}
+
+enum FoodSecurityStatus {
+  SURPLUS
+  BALANCED
+  DEFICIT
+  CRITICAL
+}
+
+enum CommodityTransactionType {
+  HARVEST
+  PURCHASE
+  SALE
+  IMPORT
+  EXPORT
+  TRANSFER
+  HOUSEHOLD_CONSUMPTION
+  LIVESTOCK_FEED
+  SEED_RESERVE
+  PROCESSING
+  STORAGE
+  DONATION
+  LOSS
+  RETURN
+  ADJUSTMENT
+}
+
+enum BuyerType {
+
+  INDIVIDUAL
+
+  RETAILER
+
+  WHOLESALER
+
+  COOPERATIVE
+
+  PROCESSOR
+
+  EXPORTER
+
+  GOVERNMENT
+
+  NGO
+
+  SCHOOL
+
+  SUPERMARKET
+
+  DISTRIBUTOR
+
+}
+
+enum BusinessPartnerType {
+  FARMER
+  CUSTOMER
+  BUYER
+  SUPPLIER
+  COOPERATIVE
+  AGRO_DEALER
+  PROCESSOR
+  EXPORTER
+  IMPORTER
+  RETAILER
+  WHOLESALER
+  GOVERNMENT
+  NGO
+  SACCO
+  BANK
+  INSURANCE
+  TRANSPORTER
+  LOGISTICS
+  EXTENSION_OFFICER
+  RESEARCH_INSTITUTION
+  UNIVERSITY
+}
+

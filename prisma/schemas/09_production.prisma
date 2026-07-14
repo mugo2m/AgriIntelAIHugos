@@ -1,0 +1,83 @@
+model LivestockProduction {
+  id Int @id @default(autoincrement())
+
+  livestockId Int
+  livestock   Livestock @relation(fields: [livestockId], references: [id])
+
+  productionType ProductionType
+
+  productionDate DateTime
+
+  quantity Float
+
+  unit ProductionUnit
+
+  quality ProductionQuality?
+
+  sellingPrice Float?
+
+  remarks      String?
+  productItems Product[]
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model ProductionCost {
+  id Int @id @default(autoincrement())
+
+  farmId Int
+  farm   Farm @relation(fields: [farmId], references: [id])
+
+  cropId Int
+  crop   Crop @relation(fields: [cropId], references: [id])
+
+  seasonId Int
+  season   Season @relation(fields: [seasonId], references: [id])
+
+  year Int
+
+  areaAcres Float
+
+  seedCost Float @default(0)
+
+  fertilizerCost Float @default(0)
+
+  manureCost Float @default(0)
+
+  pesticideCost Float @default(0)
+
+  herbicideCost Float @default(0)
+
+  fungicideCost Float @default(0)
+
+  labourCost Float @default(0)
+
+  machineryCost Float @default(0)
+
+  fuelCost Float @default(0)
+
+  irrigationCost Float @default(0)
+
+  transportCost Float @default(0)
+
+  storageCost Float @default(0)
+
+  packagingCost Float @default(0)
+
+  insuranceCost Float @default(0)
+
+  marketingCost Float @default(0)
+
+  miscellaneousCost Float @default(0)
+
+  totalCost Float
+
+  costPerAcre Float?
+
+  costPerKg Float?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+

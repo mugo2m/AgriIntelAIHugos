@@ -1,0 +1,150 @@
+model KnowledgeArticle {
+  id Int @id @default(autoincrement())
+
+  title String
+
+  summary String?
+
+  content String @db.Text
+
+  category KnowledgeCategory
+
+  source ExtensionSource
+
+  status ArticleStatus @default(DRAFT)
+
+  authorId Int?
+  author   User? @relation(fields: [authorId], references: [id])
+
+  cropId Int?
+  crop   Crop? @relation(fields: [cropId], references: [id])
+
+  livestockId Int?
+  livestock   Livestock? @relation(fields: [livestockId], references: [id])
+  publishedAt DateTime?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  media KnowledgeMedia[]
+
+  ratings ArticleRating[]
+
+  bookmarks ArticleBookmark[]
+}
+
+model KnowledgeMedia {
+  id Int @id @default(autoincrement())
+
+  articleId Int
+
+  article KnowledgeArticle @relation(fields: [articleId], references: [id])
+
+  mediaType MediaType
+
+  title String?
+
+  url String
+
+  description String?
+
+  createdAt DateTime @default(now())
+}
+
+model ArticleRating {
+  id Int @id @default(autoincrement())
+
+  articleId Int
+
+  article KnowledgeArticle @relation(fields: [articleId], references: [id])
+
+  farmerId Int
+
+  farmer Farmer @relation(fields: [farmerId], references: [id])
+
+  rating Int
+
+  comment String?
+
+  createdAt DateTime @default(now())
+
+  @@unique([articleId, farmerId])
+}
+
+model ArticleBookmark {
+  id Int @id @default(autoincrement())
+
+  articleId Int
+
+  article KnowledgeArticle @relation(fields: [articleId], references: [id])
+
+  farmerId Int
+
+  farmer Farmer @relation(fields: [farmerId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  @@unique([articleId, farmerId])
+}
+
+model ExtensionOfficer {
+  id Int @id @default(autoincrement())
+
+  fullName String
+
+  phone String?
+
+  email String?
+
+  county String?
+
+  organization String?
+
+  specialization String?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  visits ExtensionVisit[]
+}
+
+model ExtensionVisit {
+  id Int @id @default(autoincrement())
+
+  officerId Int
+  officer   ExtensionOfficer @relation(fields: [officerId], references: [id])
+
+  farmerId Int
+  farmer   Farmer @relation(fields: [farmerId], references: [id])
+
+  visitDate DateTime
+
+  purpose String
+
+  recommendations String?
+
+  nextVisit DateTime?
+
+  createdAt DateTime @default(now())
+}
+
+model AIKnowledgeMemory {
+  id Int @id @default(autoincrement())
+
+  topic String
+
+  embeddingId String?
+
+  knowledgeSource String?
+
+  summary String
+
+  active Boolean @default(true)
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+

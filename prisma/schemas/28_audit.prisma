@@ -1,0 +1,58 @@
+model AuditFinding {
+  id Int @id @default(autoincrement())
+
+  auditId Int
+  audit   FarmAudit @relation(fields: [auditId], references: [id])
+
+  title String
+
+  description String?
+
+  compliance ComplianceStatus
+
+  severity SeverityLevel
+
+  createdAt DateTime @default(now())
+
+  correctiveActions CorrectiveAction[]
+}
+
+model CorrectiveAction {
+  id Int @id @default(autoincrement())
+
+  findingId Int
+  finding   AuditFinding @relation(fields: [findingId], references: [id])
+
+  description String
+
+  assignedTo   Int?
+  assignedUser User? @relation(fields: [assignedTo], references: [id])
+
+  dueDate DateTime?
+
+  completedDate DateTime?
+
+  status CorrectiveActionStatus
+
+  verificationNotes String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model AuditSetting {
+  id Int @id @default(autoincrement())
+
+  auditEnabled Boolean @default(true)
+
+  retentionDays Int @default(365)
+
+  logUserActivities Boolean @default(true)
+
+  logApiCalls Boolean @default(true)
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+

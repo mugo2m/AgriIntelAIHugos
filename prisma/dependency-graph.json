@@ -1,0 +1,1124 @@
+{
+  "Role": [
+    "User"
+  ],
+  "User": [
+    "Role",
+    "Document",
+    "UserUploadedDocuments",
+    "Notification",
+    "NotificationTemplate",
+    "Task",
+    "Task",
+    "TaskCreator",
+    "CalendarEvent",
+    "Farmer",
+    "KnowledgeArticle",
+    "FarmAudit",
+    "CorrectiveAction",
+    "Dashboard",
+    "Report",
+    "AIModelPrediction",
+    "TraceabilityEvent",
+    "PurchaseRequest",
+    "PurchaseOrder",
+    "CustomerInteraction",
+    "SalesOpportunity",
+    "CooperativeMeeting",
+    "ApiKey",
+    "UserPreference",
+    "ImportJob",
+    "MigrationJob",
+    "ExportJob",
+    "BackupJob",
+    "RestoreJob",
+    "Subscription",
+    "Payment",
+    "Invoice",
+    "UsageMetric",
+    "Tenant",
+    "TenantMembership",
+    "UserDevice",
+    "SyncLog",
+    "AIDecision",
+    "DecisionFeedback"
+  ],
+  "Country": [
+    "County"
+  ],
+  "County": [
+    "Country",
+    "SubCounty",
+    "Farmer"
+  ],
+  "SubCounty": [
+    "County",
+    "Ward",
+    "Farmer"
+  ],
+  "Ward": [
+    "SubCounty",
+    "Village",
+    "Farmer"
+  ],
+  "Village": [
+    "Ward",
+    "Farmer"
+  ],
+  "Farmer": [
+    "User",
+    "County",
+    "SubCounty",
+    "Ward",
+    "Village",
+    "AIRecommendation",
+    "Document",
+    "Farm",
+    "Notification",
+    "ArticleBookmark",
+    "ArticleRating",
+    "CooperativeMembership",
+    "GovernmentApplication",
+    "ExtensionVisit",
+    "InsurancePolicy",
+    "InsuranceClaim"
+  ],
+  "Farm": [
+    "Farmer",
+    "SoilType",
+    "WeatherStation",
+    "WaterSource",
+    "SoilTest",
+    "CropVariety",
+    "PestOutbreak",
+    "Planting",
+    "Customer",
+    "Product",
+    "SalesOrder",
+    "Delivery",
+    "IrrigationSchedule",
+    "Equipment",
+    "StorageFacility",
+    "Expense",
+    "Income",
+    "Budget",
+    "Supplier",
+    "Buyer",
+    "Livestock",
+    "Employee",
+    "AIRecommendation",
+    "AIModelPrediction",
+    "IoTDevice",
+    "SensorReading",
+    "Field",
+    "SatelliteImage",
+    "MapLayer",
+    "Document",
+    "Notification",
+    "Task",
+    "FarmCertification",
+    "FarmAudit",
+    "CalendarEvent",
+    "Dashboard",
+    "KPIRecord",
+    "AnalyticsSnapshot",
+    "Report",
+    "Shipment",
+    "TraceabilityEvent",
+    "FarmRiskAssessment",
+    "CarbonEmission",
+    "SustainabilityProject",
+    "WaterUsage",
+    "RenewableEnergySystem",
+    "WasteManagementRecord",
+    "Tenant",
+    "AIDecision",
+    "CropProductionPlan",
+    "CommodityInventory",
+    "ProductionCost",
+    "RevenueBreakdown",
+    "ProfitabilityAnalysis",
+    "AgriculturalKPI",
+    "CommodityTransaction",
+    "Country",
+    "County",
+    "SubCounty",
+    "Ward",
+    "Village"
+  ],
+  "CropCategory": [
+    "Crop"
+  ],
+  "Crop": [
+    "CropCategory",
+    "CropVariety",
+    "AIRecommendation",
+    "KnowledgeArticle",
+    "CropProductionPlan",
+    "CommodityInventory",
+    "CommodityMovement",
+    "CommodityPriceHistory",
+    "ProductionCost",
+    "RevenueBreakdown",
+    "ProfitabilityAnalysis",
+    "CommoditySalesAnalysis",
+    "AgriculturalKPI",
+    "CommodityTransaction"
+  ],
+  "CropVariety": [
+    "Crop",
+    "Farm",
+    "Planting"
+  ],
+  "SoilType": [
+    "Farm"
+  ],
+  "SoilTest": [
+    "Farm",
+    "FertilizerRecommendation",
+    "AIRecommendation"
+  ],
+  "FertilizerType": [
+    "FertilizerRecommendation"
+  ],
+  "FertilizerRecommendation": [
+    "SoilTest",
+    "FertilizerType",
+    "FertilizerApplication"
+  ],
+  "FertilizerApplication": [
+    "FertilizerRecommendation"
+  ],
+  "WeatherStation": [
+    "Farm",
+    "WeatherRecord",
+    "IoTDevice"
+  ],
+  "WeatherRecord": [
+    "WeatherStation",
+    "AIModelPrediction"
+  ],
+  "PestCategory": [
+    "Pest"
+  ],
+  "Pest": [
+    "PestCategory",
+    "PestOutbreak"
+  ],
+  "Disease": [
+    "PestOutbreak"
+  ],
+  "PestOutbreak": [
+    "Farm",
+    "Pest",
+    "Disease",
+    "SeverityLevel"
+  ],
+  "Planting": [
+    "Farm",
+    "CropVariety",
+    "PlantingSeason",
+    "SeedUnit",
+    "PlantingStatus",
+    "IrrigationSchedule",
+    "WorkAssignment",
+    "Harvest",
+    "Field"
+  ],
+  "Harvest": [
+    "Planting",
+    "HarvestUnit",
+    "HarvestQuality",
+    "Income",
+    "WorkAssignment",
+    "Product"
+  ],
+  "WaterSource": [
+    "WaterSourceType",
+    "Farm"
+  ],
+  "IrrigationSchedule": [
+    "Farm",
+    "Planting",
+    "IrrigationMethod",
+    "IrrigationStatus",
+    "IrrigationEvent"
+  ],
+  "IrrigationEvent": [
+    "IrrigationSchedule",
+    "IrrigationResult"
+  ],
+  "Equipment": [
+    "Farm",
+    "EquipmentCategory",
+    "EquipmentStatus",
+    "FuelType",
+    "MaintenanceRecord",
+    "Document",
+    "MaintenanceSchedule"
+  ],
+  "StorageFacility": [
+    "Farm",
+    "StorageType",
+    "InventoryItem",
+    "WarehouseZone",
+    "WarehouseMovement",
+    "WarehouseInspection"
+  ],
+  "InventoryItem": [
+    "StorageFacility",
+    "InventoryCategory",
+    "InventoryUnit",
+    "StockMovement"
+  ],
+  "StockMovement": [
+    "InventoryItem",
+    "StockMovementType"
+  ],
+  "Supplier": [
+    "Farm",
+    "Expense",
+    "PurchaseRequest",
+    "PurchaseOrder",
+    "SupplierEvaluation",
+    "ProcurementContract"
+  ],
+  "Buyer": [
+    "BuyerType",
+    "CommodityTransaction"
+  ],
+  "Expense": [
+    "Farm",
+    "Supplier",
+    "ExpenseCategory",
+    "PaymentMethod"
+  ],
+  "Income": [
+    "Farm",
+    "Buyer",
+    "Harvest",
+    "IncomeCategory",
+    "PaymentMethod"
+  ],
+  "Budget": [
+    "Farm",
+    "BudgetStatus"
+  ],
+  "Invoice": [
+    "InvoiceStatus",
+    "Payment",
+    "User"
+  ],
+  "Payment": [
+    "Invoice",
+    "PaymentMethod",
+    "User"
+  ],
+  "Breed": [
+    "LivestockCategory",
+    "Livestock"
+  ],
+  "Livestock": [
+    "Farm",
+    "LivestockCategory",
+    "Breed",
+    "AnimalSex",
+    "HealthStatus",
+    "AnimalStatus",
+    "FeedingSchedule",
+    "FeedRecord",
+    "Vaccination",
+    "Treatment",
+    "LivestockProduction",
+    "Breeding",
+    "MaleBreeding",
+    "Breeding",
+    "FemaleBreeding",
+    "Document",
+    "Birth",
+    "AnimalHealthRecord",
+    "EggIncubation",
+    "AIRecommendation",
+    "SensorReading",
+    "KnowledgeArticle"
+  ],
+  "Vaccination": [
+    "Livestock",
+    "VaccinationStatus"
+  ],
+  "Treatment": [
+    "Livestock",
+    "Prescription"
+  ],
+  "LivestockProduction": [
+    "Livestock",
+    "ProductionType",
+    "ProductionUnit",
+    "ProductionQuality",
+    "Product"
+  ],
+  "Feed": [
+    "FeedCategory",
+    "FeedingSchedule",
+    "FeedRecord"
+  ],
+  "FeedingSchedule": [
+    "Livestock",
+    "Feed",
+    "FeedingFrequency",
+    "FeedUnit"
+  ],
+  "FeedRecord": [
+    "Livestock",
+    "Feed",
+    "FeedUnit"
+  ],
+  "Breeding": [
+    "Livestock",
+    "MaleBreeding",
+    "Livestock",
+    "FemaleBreeding",
+    "BreedingMethod",
+    "PregnancyStatus",
+    "Birth"
+  ],
+  "Birth": [
+    "Breeding",
+    "Livestock",
+    "BirthType",
+    "OffspringStatus"
+  ],
+  "EggIncubation": [
+    "Livestock",
+    "HatchStatus"
+  ],
+  "AnimalHealthRecord": [
+    "Livestock",
+    "HealthRecordType",
+    "HealthConditionStatus",
+    "LabTest"
+  ],
+  "LabTest": [
+    "AnimalHealthRecord",
+    "LabTestType"
+  ],
+  "Prescription": [
+    "Treatment",
+    "PrescriptionStatus"
+  ],
+  "Employee": [
+    "Farm",
+    "EmployeeRole",
+    "EmploymentType",
+    "Attendance",
+    "Payroll",
+    "WorkAssignment",
+    "Task"
+  ],
+  "Attendance": [
+    "Employee",
+    "AttendanceStatus"
+  ],
+  "Payroll": [
+    "Employee",
+    "PayrollStatus"
+  ],
+  "WorkAssignment": [
+    "Employee",
+    "Planting",
+    "Harvest"
+  ],
+  "MaintenanceSchedule": [
+    "Equipment",
+    "MaintenanceType",
+    "MaintenanceStatus",
+    "MaintenanceRecord"
+  ],
+  "MaintenanceRecord": [
+    "Equipment",
+    "MaintenanceSchedule",
+    "MaintenanceType"
+  ],
+  "Customer": [
+    "Farm",
+    "CustomerType",
+    "SalesOrder",
+    "CustomerStatus",
+    "ACTIVE",
+    "CustomerInteraction",
+    "CustomerFeedback",
+    "SalesOpportunity",
+    "LoyaltyProgram"
+  ],
+  "Product": [
+    "Farm",
+    "ProductCategory",
+    "Harvest",
+    "LivestockProduction",
+    "SalesUnit",
+    "SalesOrderItem",
+    "ProductBatch"
+  ],
+  "SalesOrder": [
+    "Farm",
+    "Customer",
+    "OrderStatus",
+    "SalesOrderItem",
+    "Delivery",
+    "Shipment"
+  ],
+  "SalesOrderItem": [
+    "SalesOrder",
+    "Product"
+  ],
+  "Delivery": [
+    "Farm",
+    "SalesOrder",
+    "DeliveryStatus"
+  ],
+  "AIRecommendation": [
+    "Farm",
+    "Farmer",
+    "Crop",
+    "Livestock",
+    "SoilTest",
+    "RecommendationType",
+    "RecommendationPriority",
+    "AIModelType",
+    "RecommendationStatus"
+  ],
+  "AIModelPrediction": [
+    "Farm",
+    "WeatherRecord",
+    "PredictionType",
+    "User"
+  ],
+  "IoTDevice": [
+    "Farm",
+    "WeatherStation",
+    "DeviceType",
+    "SensorStatus",
+    "Sensor"
+  ],
+  "Sensor": [
+    "IoTDevice",
+    "SensorType",
+    "SensorReading"
+  ],
+  "SensorReading": [
+    "Sensor",
+    "Farm",
+    "Livestock",
+    "ReadingStatus"
+  ],
+  "Field": [
+    "Farm",
+    "GeometryType",
+    "FieldStatus",
+    "Planting",
+    "SatelliteImage",
+    "CropProductionPlan"
+  ],
+  "SatelliteImage": [
+    "Farm",
+    "Field",
+    "SatelliteProvider",
+    "ImageryType"
+  ],
+  "MapLayer": [
+    "Farm",
+    "MapLayerType"
+  ],
+  "Document": [
+    "FileStorageProvider",
+    "DocumentOwnerType",
+    "DocumentCategory",
+    "DocumentStatus",
+    "ACTIVE",
+    "Farmer",
+    "Farm",
+    "Livestock",
+    "Equipment",
+    "User",
+    "UserUploadedDocuments",
+    "GovernmentApplication"
+  ],
+  "Notification": [
+    "NotificationType",
+    "NotificationChannel",
+    "NotificationPriority",
+    "MEDIUM",
+    "NotificationStatus",
+    "PENDING",
+    "User",
+    "Farmer",
+    "Farm",
+    "NotificationTemplate",
+    "Task"
+  ],
+  "NotificationTemplate": [
+    "NotificationType",
+    "NotificationChannel",
+    "User",
+    "Notification"
+  ],
+  "Task": [
+    "TaskCategory",
+    "TaskPriority",
+    "MEDIUM",
+    "TaskStatus",
+    "PENDING",
+    "Farm",
+    "Employee",
+    "User",
+    "User",
+    "TaskCreator",
+    "RecurrenceType",
+    "NONE",
+    "CalendarEvent",
+    "Notification"
+  ],
+  "CalendarEvent": [
+    "Farm",
+    "User",
+    "Task"
+  ],
+  "KnowledgeArticle": [
+    "Text",
+    "KnowledgeCategory",
+    "ExtensionSource",
+    "ArticleStatus",
+    "DRAFT",
+    "User",
+    "Crop",
+    "Livestock",
+    "KnowledgeMedia",
+    "ArticleRating",
+    "ArticleBookmark"
+  ],
+  "KnowledgeMedia": [
+    "KnowledgeArticle",
+    "MediaType"
+  ],
+  "ArticleRating": [
+    "KnowledgeArticle",
+    "Farmer"
+  ],
+  "ArticleBookmark": [
+    "KnowledgeArticle",
+    "Farmer"
+  ],
+  "FarmCertification": [
+    "Farm",
+    "CertificationType",
+    "CertificationStatus",
+    "FarmAudit"
+  ],
+  "FarmAudit": [
+    "Farm",
+    "FarmCertification",
+    "User",
+    "AuditType",
+    "AuditStatus",
+    "ComplianceStatus",
+    "AuditFinding"
+  ],
+  "AuditFinding": [
+    "FarmAudit",
+    "ComplianceStatus",
+    "SeverityLevel",
+    "CorrectiveAction"
+  ],
+  "CorrectiveAction": [
+    "AuditFinding",
+    "User",
+    "CorrectiveActionStatus"
+  ],
+  "Dashboard": [
+    "DashboardType",
+    "DashboardPeriod",
+    "MONTH",
+    "User",
+    "Farm",
+    "DashboardWidget"
+  ],
+  "DashboardWidget": [
+    "Dashboard",
+    "WidgetType",
+    "KPIType"
+  ],
+  "KPIRecord": [
+    "Farm",
+    "KPIType",
+    "DashboardPeriod"
+  ],
+  "AnalyticsSnapshot": [
+    "Farm"
+  ],
+  "Report": [
+    "ReportType",
+    "ReportFormat",
+    "ReportStatus",
+    "PENDING",
+    "User",
+    "Farm",
+    "ReportSchedule",
+    "ReportExecution"
+  ],
+  "ReportSchedule": [
+    "Report",
+    "RecurrenceType"
+  ],
+  "ReportExecution": [
+    "Report",
+    "ReportStatus"
+  ],
+  "ModelPerformance": [
+    "PredictionModelType",
+    "PredictionType"
+  ],
+  "TrainingDataset": [],
+  "ProductBatch": [
+    "Product",
+    "BatchStatus",
+    "ACTIVE",
+    "TraceabilityEvent",
+    "WarehouseMovement"
+  ],
+  "Shipment": [
+    "Farm",
+    "SalesOrder",
+    "ShipmentStatus",
+    "PENDING",
+    "TraceabilityEvent",
+    "WarehouseMovement",
+    "DeliveryRoute"
+  ],
+  "TraceabilityEvent": [
+    "TraceabilityEventType",
+    "ProductBatch",
+    "Shipment",
+    "Farm",
+    "User"
+  ],
+  "SupplyChainPartner": [],
+  "WarehouseZone": [
+    "StorageFacility",
+    "WarehouseZoneType"
+  ],
+  "WarehouseMovement": [
+    "StorageFacility",
+    "ProductBatch",
+    "Shipment",
+    "WarehouseMovementType"
+  ],
+  "DeliveryRoute": [
+    "Shipment",
+    "LogisticsPriority",
+    "NORMAL"
+  ],
+  "WarehouseInspection": [
+    "StorageFacility"
+  ],
+  "PurchaseRequest": [
+    "Supplier",
+    "User",
+    "ProcurementStatus",
+    "DRAFT",
+    "PurchasePriority",
+    "NORMAL",
+    "PurchaseOrder"
+  ],
+  "PurchaseOrder": [
+    "PurchaseRequest",
+    "Supplier",
+    "User",
+    "ProcurementStatus",
+    "APPROVED"
+  ],
+  "SupplierEvaluation": [
+    "Supplier",
+    "SupplierRating"
+  ],
+  "ProcurementContract": [
+    "Supplier"
+  ],
+  "CustomerInteraction": [
+    "Customer",
+    "User",
+    "InteractionType"
+  ],
+  "CustomerFeedback": [
+    "Customer"
+  ],
+  "SalesOpportunity": [
+    "Customer",
+    "User",
+    "OpportunityStage",
+    "NEW"
+  ],
+  "LoyaltyProgram": [
+    "Customer"
+  ],
+  "Cooperative": [
+    "CooperativeType",
+    "CooperativeMembership",
+    "CooperativeMeeting",
+    "SharedResource"
+  ],
+  "CooperativeMembership": [
+    "Cooperative",
+    "Farmer",
+    "MemberRole",
+    "MEMBER",
+    "MembershipStatus",
+    "PENDING"
+  ],
+  "CooperativeMeeting": [
+    "Cooperative",
+    "User"
+  ],
+  "SharedResource": [
+    "Cooperative"
+  ],
+  "GovernmentProgram": [
+    "GovernmentProgramType",
+    "ProgramStatus",
+    "OPEN",
+    "GovernmentApplication"
+  ],
+  "GovernmentApplication": [
+    "Farmer",
+    "GovernmentProgram",
+    "ApplicationStatus",
+    "DRAFT",
+    "Document"
+  ],
+  "ExtensionOfficer": [
+    "ExtensionVisit"
+  ],
+  "ExtensionVisit": [
+    "ExtensionOfficer",
+    "Farmer"
+  ],
+  "InsuranceCompany": [
+    "InsurancePolicy"
+  ],
+  "InsurancePolicy": [
+    "InsuranceCompany",
+    "Farmer",
+    "InsuranceType",
+    "PolicyStatus",
+    "ACTIVE",
+    "InsuranceClaim"
+  ],
+  "InsuranceClaim": [
+    "InsurancePolicy",
+    "Farmer",
+    "ClaimStatus",
+    "REPORTED"
+  ],
+  "FarmRiskAssessment": [
+    "Farm"
+  ],
+  "CarbonEmission": [
+    "Farm",
+    "CarbonSource"
+  ],
+  "SustainabilityProject": [
+    "Farm",
+    "SustainabilityCategory",
+    "SustainabilityProjectStatus",
+    "PLANNED"
+  ],
+  "WaterUsage": [
+    "Farm",
+    "WaterSourceType"
+  ],
+  "RenewableEnergySystem": [
+    "Farm"
+  ],
+  "WasteManagementRecord": [
+    "Farm"
+  ],
+  "ExternalIntegration": [
+    "IntegrationType",
+    "IntegrationStatus",
+    "ACTIVE",
+    "ApiKey",
+    "APILog",
+    "IntegrationCredential"
+  ],
+  "ApiKey": [
+    "ExternalIntegration",
+    "User"
+  ],
+  "APILog": [
+    "ExternalIntegration",
+    "APILogStatus"
+  ],
+  "Webhook": [],
+  "IntegrationCredential": [
+    "ExternalIntegration"
+  ],
+  "SystemSetting": [
+    "SettingCategory",
+    "SettingDataType"
+  ],
+  "FeatureFlag": [
+    "FeatureStatus",
+    "ENABLED"
+  ],
+  "UserPreference": [
+    "User"
+  ],
+  "LocalizationSetting": [],
+  "PasswordPolicy": [],
+  "AuditSetting": [],
+  "ImportJob": [
+    "ImportSource",
+    "ImportStatus",
+    "PENDING",
+    "User",
+    "ImportValidationLog"
+  ],
+  "ImportValidationLog": [
+    "ImportJob",
+    "ValidationSeverity"
+  ],
+  "MigrationJob": [
+    "MigrationStatus",
+    "PENDING",
+    "User"
+  ],
+  "ExportJob": [
+    "ImportSource",
+    "User"
+  ],
+  "ETLJob": [],
+  "BackupJob": [
+    "BackupType",
+    "BackupStorage",
+    "BackupStatus",
+    "PENDING",
+    "User",
+    "RestoreJob"
+  ],
+  "RestoreJob": [
+    "BackupJob",
+    "User",
+    "BackupStatus",
+    "PENDING"
+  ],
+  "DisasterRecoveryPlan": [
+    "RecoveryTest"
+  ],
+  "RecoveryTest": [
+    "DisasterRecoveryPlan",
+    "RecoveryTestStatus"
+  ],
+  "BackupRetentionPolicy": [
+    "BackupType"
+  ],
+  "SubscriptionPlan": [
+    "SubscriptionPlanType",
+    "Subscription"
+  ],
+  "Subscription": [
+    "User",
+    "SubscriptionPlan",
+    "SubscriptionStatus",
+    "TRIAL",
+    "BillingCycle",
+    "Tenant"
+  ],
+  "UsageMetric": [
+    "User"
+  ],
+  "Tenant": [
+    "TenantType",
+    "TenantStatus",
+    "TRIAL",
+    "Subscription",
+    "User",
+    "TenantMembership",
+    "Farm",
+    "TenantSetting",
+    "TenantAuditLog"
+  ],
+  "TenantMembership": [
+    "Tenant",
+    "User",
+    "UserTenantRole"
+  ],
+  "TenantSetting": [
+    "Tenant"
+  ],
+  "TenantAuditLog": [
+    "Tenant"
+  ],
+  "UserDevice": [
+    "User",
+    "DevicePlatform",
+    "SyncLog"
+  ],
+  "SyncLog": [
+    "UserDevice",
+    "User",
+    "SyncOperation",
+    "SyncStatus",
+    "PENDING",
+    "ConflictResolution"
+  ],
+  "SyncQueue": [
+    "SyncOperation",
+    "SyncStatus",
+    "PENDING"
+  ],
+  "ConflictResolution": [
+    "SyncLog"
+  ],
+  "OfflineConfiguration": [],
+  "AIDecision": [
+    "DecisionCategory",
+    "AIModelSource",
+    "RecommendationPriority",
+    "DecisionStatus",
+    "PENDING",
+    "User",
+    "Farm",
+    "DecisionFeedback",
+    "ExplainableAI"
+  ],
+  "DecisionFeedback": [
+    "AIDecision",
+    "User"
+  ],
+  "OptimizationScenario": [],
+  "ExplainableAI": [
+    "AIDecision"
+  ],
+  "AIKnowledgeMemory": [],
+  "AIModelPerformance": [],
+  "CropProductionPlan": [
+    "Farm",
+    "Field",
+    "Crop",
+    "Season",
+    "CropProductionPerformance"
+  ],
+  "CropProductionPerformance": [
+    "CropProductionPlan",
+    "PerformanceStatus"
+  ],
+  "Season": [
+    "SeasonType",
+    "CropProductionPlan",
+    "CommodityInventory",
+    "CommodityPriceHistory",
+    "ProductionCost",
+    "RevenueBreakdown",
+    "ProfitabilityAnalysis",
+    "CommoditySalesAnalysis",
+    "AgriculturalKPI",
+    "CommodityTransaction"
+  ],
+  "CommodityInventory": [
+    "Farm",
+    "Crop",
+    "Season",
+    "CommodityBalance",
+    "CommodityConsumption"
+  ],
+  "CommodityMovement": [
+    "Crop",
+    "CommodityMovementType"
+  ],
+  "CommodityConsumption": [
+    "CommodityInventory"
+  ],
+  "CommodityBalance": [
+    "CommodityInventory",
+    "FoodSecurityStatus"
+  ],
+  "CommodityPriceHistory": [
+    "Crop",
+    "Season"
+  ],
+  "ProductionCost": [
+    "Farm",
+    "Crop",
+    "Season"
+  ],
+  "RevenueBreakdown": [
+    "Farm",
+    "Crop",
+    "Season"
+  ],
+  "ProfitabilityAnalysis": [
+    "Farm",
+    "Crop",
+    "Season"
+  ],
+  "CommoditySalesAnalysis": [
+    "Crop",
+    "Season"
+  ],
+  "AgriculturalKPI": [
+    "Farm",
+    "Crop",
+    "Season"
+  ],
+  "SalesChannel": [
+    "CommoditySale",
+    "CommodityTransaction"
+  ],
+  "CommodityTransaction": [
+    "Farm",
+    "Crop",
+    "Season",
+    "CommodityTransactionType",
+    "SalesChannel",
+    "Buyer",
+    "Source",
+    "Location",
+    "Country",
+    "SourceCountry",
+    "County",
+    "SourceCounty",
+    "SubCounty",
+    "SourceSubCounty",
+    "Ward",
+    "SourceWard",
+    "Destination",
+    "Location",
+    "Country",
+    "DestinationCountry",
+    "County",
+    "DestinationCounty",
+    "SubCounty",
+    "DestinationSubCounty",
+    "Ward",
+    "DestinationWard",
+    "Link",
+    "SALE",
+    "CommoditySale"
+  ],
+  "CommoditySale": [
+    "CommodityTransaction",
+    "PaymentMethod",
+    "PaymentStatus"
+  ],
+  "BusinessPartner": [
+    "BusinessPartnerType",
+    "Country",
+    "County",
+    "SubCounty",
+    "Ward",
+    "Village",
+    "Buyer",
+    "Supplier",
+    "Customer",
+    "CommodityTransaction"
+  ]
+}

@@ -1,0 +1,151 @@
+model DisasterRecoveryPlan {
+  id Int @id @default(autoincrement())
+
+  planName String
+
+  description String?
+
+  recoveryTimeObjective Float?
+
+  recoveryPointObjective Float?
+
+  responsibleTeam String?
+
+  documentationUrl String?
+
+  active Boolean @default(true)
+
+  createdAt DateTime @default(now())
+
+  updatedAt     DateTime       @updatedAt
+  recoveryTests RecoveryTest[]
+}
+
+model SubscriptionPlan {
+  id Int @id @default(autoincrement())
+
+  name String @unique
+
+  description String?
+
+  planType SubscriptionPlanType
+
+  monthlyPrice Float
+
+  yearlyPrice Float?
+
+  maxFarms Int?
+
+  maxUsers Int?
+
+  maxStorageGB Float?
+
+  aiRequestsPerMonth Int?
+
+  active Boolean @default(true)
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  subscriptions Subscription[]
+}
+
+model Subscription {
+  id Int @id @default(autoincrement())
+
+  userId Int  @unique
+  user   User @relation(fields: [userId], references: [id])
+
+  planId Int
+  plan   SubscriptionPlan @relation(fields: [planId], references: [id])
+
+  status SubscriptionStatus @default(TRIAL)
+
+  billingCycle BillingCycle
+
+  startDate DateTime
+
+  endDate DateTime?
+
+  autoRenew Boolean @default(true)
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+  tenants   Tenant[]
+}
+
+model Tenant {
+  id Int @id @default(autoincrement())
+
+  name String
+
+  tenantCode String @unique
+
+  tenantType TenantType
+
+  status TenantStatus @default(TRIAL)
+
+  email String?
+
+  phone String?
+
+  website String?
+
+  logoUrl String?
+
+  subscriptionId Int?
+  subscription   Subscription? @relation(fields: [subscriptionId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  users User[]
+
+  tenantMemberships TenantMembership[]
+
+  farms Farm[]
+
+  settings TenantSetting[]
+
+  auditLogs TenantAuditLog[]
+}
+
+model TenantSetting {
+  id Int @id @default(autoincrement())
+
+  tenantId Int
+  tenant   Tenant @relation(fields: [tenantId], references: [id])
+
+  settingKey String
+
+  settingValue String
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  @@unique([tenantId, settingKey])
+}
+
+model TenantAuditLog {
+  id Int @id @default(autoincrement())
+
+  tenantId Int
+  tenant   Tenant @relation(fields: [tenantId], references: [id])
+
+  userId Int?
+
+  action String
+
+  entity String?
+
+  entityId Int?
+
+  ipAddress String?
+
+  createdAt DateTime @default(now())
+}
+

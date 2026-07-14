@@ -1,0 +1,71 @@
+model Report {
+  id Int @id @default(autoincrement())
+
+  title String
+
+  description String?
+
+  reportType ReportType
+
+  format ReportFormat
+
+  status ReportStatus @default(PENDING)
+
+  requestedById Int?
+  requestedBy   User? @relation(fields: [requestedById], references: [id])
+
+  farmId Int?
+  farm   Farm? @relation(fields: [farmId], references: [id])
+
+  generatedFile String?
+
+  generatedAt DateTime?
+
+  parameters Json?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  schedules        ReportSchedule[]
+  reportExecutions ReportExecution[]
+}
+
+model ReportSchedule {
+  id Int @id @default(autoincrement())
+
+  reportId Int
+  report   Report @relation(fields: [reportId], references: [id])
+
+  frequency RecurrenceType
+
+  nextRun DateTime
+
+  lastRun DateTime?
+
+  isActive Boolean @default(true)
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model ReportExecution {
+  id Int @id @default(autoincrement())
+
+  reportId Int
+  report   Report @relation(fields: [reportId], references: [id])
+
+  executionTime DateTime
+
+  executionStatus ReportStatus
+
+  durationSeconds Float?
+
+  fileSize Float?
+
+  errorMessage String?
+
+  createdAt DateTime @default(now())
+}
+

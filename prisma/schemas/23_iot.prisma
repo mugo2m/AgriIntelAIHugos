@@ -1,0 +1,133 @@
+model IoTDevice {
+  id Int @id @default(autoincrement())
+
+  farmId Int
+  farm   Farm @relation(fields: [farmId], references: [id])
+
+  weatherStationId Int?
+  weatherStation   WeatherStation? @relation(fields: [weatherStationId], references: [id])
+
+  deviceName String
+
+  deviceCode String @unique
+
+  deviceType DeviceType
+
+  manufacturer String?
+
+  model String?
+
+  firmwareVersion String?
+
+  installationDate DateTime?
+
+  status SensorStatus
+
+  latitude  Float?
+  longitude Float?
+
+  lastCommunication DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  sensors Sensor[]
+}
+
+model Sensor {
+  id Int @id @default(autoincrement())
+
+  deviceId Int
+  device   IoTDevice @relation(fields: [deviceId], references: [id])
+
+  sensorName String
+
+  sensorType SensorType
+
+  unit String?
+
+  minimumValue Float?
+  maximumValue Float?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  readings SensorReading[]
+}
+
+model SensorReading {
+  id Int @id @default(autoincrement())
+
+  sensorId Int
+  sensor   Sensor @relation(fields: [sensorId], references: [id])
+
+  farmId Int
+  farm   Farm @relation(fields: [farmId], references: [id])
+
+  livestockId Int?
+  livestock   Livestock? @relation(fields: [livestockId], references: [id])
+
+  readingValue Float
+
+  readingTime DateTime
+
+  status ReadingStatus
+
+  batteryLevel Float?
+
+  signalStrength Float?
+
+  createdAt DateTime @default(now())
+}
+
+model SatelliteImage {
+  id Int @id @default(autoincrement())
+
+  farmId Int
+  farm   Farm @relation(fields: [farmId], references: [id])
+
+  fieldId Int?
+  field   Field? @relation(fields: [fieldId], references: [id])
+
+  provider SatelliteProvider
+
+  imageryType ImageryType
+
+  acquisitionDate DateTime
+
+  imageUrl String?
+
+  cloudCoverage Float?
+
+  resolution Float?
+
+  ndvi Float?
+
+  evi Float?
+
+  soilMoistureIndex Float?
+
+  vegetationHealthIndex Float?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model MapLayer {
+  id Int @id @default(autoincrement())
+
+  farmId Int
+  farm   Farm @relation(fields: [farmId], references: [id])
+
+  layerName String
+
+  layerType MapLayerType
+
+  geoJson String
+
+  description String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+

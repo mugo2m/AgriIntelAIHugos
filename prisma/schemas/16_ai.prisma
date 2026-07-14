@@ -1,0 +1,300 @@
+model MaintenanceSchedule {
+  id Int @id @default(autoincrement())
+
+  equipmentId Int
+  equipment   Equipment @relation(fields: [equipmentId], references: [id])
+
+  maintenanceType MaintenanceType
+
+  scheduledDate DateTime
+
+  estimatedCost Float?
+
+  serviceIntervalHours Int?
+
+  serviceIntervalDays Int?
+
+  notes String?
+
+  status MaintenanceStatus
+
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  maintenanceRecords MaintenanceRecord[]
+}
+
+model MaintenanceRecord {
+  id Int @id @default(autoincrement())
+
+  equipmentId Int
+  equipment   Equipment @relation(fields: [equipmentId], references: [id])
+
+  scheduleId Int?
+  schedule   MaintenanceSchedule? @relation(fields: [scheduleId], references: [id])
+
+  maintenanceType MaintenanceType
+
+  maintenanceDate DateTime
+
+  operatingHours Int?
+
+  technician String?
+
+  partsReplaced String?
+
+  laborCost Float?
+
+  partsCost Float?
+
+  totalCost Float?
+
+  remarks String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model AIRecommendation {
+  id Int @id @default(autoincrement())
+
+  farmId Int
+  farm   Farm @relation(fields: [farmId], references: [id])
+
+  farmerId Int?
+  farmer   Farmer? @relation(fields: [farmerId], references: [id])
+
+  cropId Int?
+  crop   Crop? @relation(fields: [cropId], references: [id])
+
+  livestockId Int?
+  livestock   Livestock? @relation(fields: [livestockId], references: [id])
+
+  soilTestId Int?
+  soilTest   SoilTest? @relation(fields: [soilTestId], references: [id])
+
+  recommendationType RecommendationType
+
+  priority RecommendationPriority
+
+  title String
+
+  recommendation String
+
+  reason String?
+
+  confidence Float?
+
+  generatedBy AIModelType
+
+  status RecommendationStatus
+
+  generatedAt DateTime @default(now())
+
+  expiresAt DateTime?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model AIModelPrediction {
+  id Int @id @default(autoincrement())
+
+  farmId Int
+  farm   Farm @relation(fields: [farmId], references: [id])
+
+  weatherRecordId Int?
+  weatherRecord   WeatherRecord? @relation(fields: [weatherRecordId], references: [id])
+
+  predictionType PredictionType
+
+  modelName String
+
+  modelVersion String?
+
+  inputSummary String?
+
+  predictedValue Float?
+
+  predictedLabel String?
+
+  confidence Float?
+
+  predictionDate DateTime
+
+  validUntil DateTime?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  user   User? @relation(fields: [userId], references: [id])
+  userId Int?
+}
+
+model ModelPerformance {
+  id Int @id @default(autoincrement())
+
+  modelType PredictionModelType
+
+  predictionType PredictionType
+
+  accuracy Float?
+
+  precision Float?
+
+  recall Float?
+
+  f1Score Float?
+
+  mae Float?
+
+  mse Float?
+
+  rmse Float?
+
+  r2Score Float?
+
+  evaluatedAt DateTime
+
+  createdAt DateTime @default(now())
+}
+
+model TrainingDataset {
+  id Int @id @default(autoincrement())
+
+  name String
+
+  description String?
+
+  version String?
+
+  recordCount Int?
+
+  source String?
+
+  storagePath String?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model SustainabilityProject {
+  id Int @id @default(autoincrement())
+
+  farmId Int
+  farm   Farm @relation(fields: [farmId], references: [id])
+
+  projectName String
+
+  category SustainabilityCategory
+
+  description String?
+
+  status SustainabilityProjectStatus @default(PLANNED)
+
+  estimatedCost Float?
+
+  expectedCarbonReduction Float?
+
+  startDate DateTime?
+
+  endDate DateTime?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model AIDecision {
+  id Int @id @default(autoincrement())
+
+  title String
+
+  description String?
+
+  category DecisionCategory
+
+  modelSource AIModelSource
+
+  confidence Float
+
+  priority RecommendationPriority
+
+  status DecisionStatus @default(PENDING)
+
+  userId Int?
+  user   User? @relation(fields: [userId], references: [id])
+
+  farmId Int?
+  farm   Farm? @relation(fields: [farmId], references: [id])
+
+  recommendation String
+
+  explanation String?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  feedback DecisionFeedback[]
+
+  explainableAI ExplainableAI?
+}
+
+model OptimizationScenario {
+  id Int @id @default(autoincrement())
+
+  scenarioName String
+
+  objective String
+
+  constraints String?
+
+  expectedBenefit String?
+
+  simulationResult String?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model ExplainableAI {
+  id Int @id @default(autoincrement())
+
+  decisionId Int        @unique
+  decision   AIDecision @relation(fields: [decisionId], references: [id])
+
+  reasoning String
+
+  importantFeatures String
+
+  confidenceExplanation String?
+
+  generatedAt DateTime @default(now())
+}
+
+model AIModelPerformance {
+  id Int @id @default(autoincrement())
+
+  modelName String
+
+  version String?
+
+  accuracy Float?
+
+  precision Float?
+
+  recall Float?
+
+  f1Score Float?
+
+  latency Float?
+
+  evaluatedAt DateTime
+
+  createdAt DateTime @default(now())
+}
+

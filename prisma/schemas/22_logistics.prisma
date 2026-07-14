@@ -1,0 +1,86 @@
+model Shipment {
+  id Int @id @default(autoincrement())
+
+  shipmentNumber String @unique
+
+  farmId Int
+  farm   Farm @relation(fields: [farmId], references: [id])
+
+  salesOrderId Int?
+  salesOrder   SalesOrder? @relation(fields: [salesOrderId], references: [id])
+
+  origin String
+
+  destination String
+
+  carrier String?
+
+  trackingNumber String?
+
+  shipmentDate DateTime
+
+  expectedDelivery DateTime?
+
+  deliveredDate DateTime?
+
+  status ShipmentStatus @default(PENDING)
+
+  events             TraceabilityEvent[]
+  warehouseMovements WarehouseMovement[]
+  deliveryRoutes     DeliveryRoute[]
+  createdAt          DateTime            @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model TraceabilityEvent {
+  id Int @id @default(autoincrement())
+
+  eventType TraceabilityEventType
+
+  batchId Int?
+  batch   ProductBatch? @relation(fields: [batchId], references: [id])
+
+  shipmentId Int?
+  shipment   Shipment? @relation(fields: [shipmentId], references: [id])
+
+  farmId Int?
+  farm   Farm? @relation(fields: [farmId], references: [id])
+
+  location String?
+
+  eventDate DateTime
+
+  remarks String?
+
+  recordedById Int?
+  recordedBy   User? @relation(fields: [recordedById], references: [id])
+
+  createdAt DateTime @default(now())
+}
+
+model DeliveryRoute {
+  id Int @id @default(autoincrement())
+
+  shipmentId Int
+  shipment   Shipment @relation(fields: [shipmentId], references: [id])
+
+  origin String
+
+  destination String
+
+  distanceKm Float?
+
+  estimatedDuration String?
+
+  priority LogisticsPriority @default(NORMAL)
+
+  driverName String?
+
+  vehicleRegistration String?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
