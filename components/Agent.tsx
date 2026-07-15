@@ -1,4 +1,4 @@
-// components/Agent.tsx – Android voice fix: only local voices, time‑based karaoke
+// components/Agent.tsx – Complete: natural speech + time‑based progressive reveal + Farmers Comments + Paystack Payment (KES forced, display in local currency from session country)
 "use client";
 
 import { useState, useEffect, useRef } from "react";
@@ -7,7 +7,7 @@ import Link from "next/link";
 import { toast } from "sonner";
 import { useOfflineTranslation } from '@/lib/hooks/useOfflineTranslation';
 import VoiceService from "@/lib/voice/VoiceService";
-import { MPESAPaymentModal } from "@/components/Payment/MPESAPaymentModal";
+import { PaystackPaymentModal } from "@/components/Payment/PaystackPaymentModal";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { OfflineBanner } from "@/components/OfflineBanner";
 import {
@@ -25,6 +25,8 @@ import {
   VolumeX,
 } from "lucide-react";
 import { useCurrency } from '@/lib/context/CurrencyContext';
+// Import the currency map to get display data from session country
+import { COUNTRY_CURRENCY_MAP, DEFAULT_CURRENCY } from '@/lib/config/currency';
 
 const LINE_BREAK = '␊';
 
@@ -40,6 +42,46 @@ interface StructuredItem {
   params?: Record<string, any>;
 }
 
+// ==================== STATIC EXCHANGE RATES ====================
+// 1 KES = X local currency (approximate, update periodically or use live API)
+const EXCHANGE_RATES: Record<string, number> = {
+  KES: 1,
+  USD: 0.010, GBP: 0.008, AUD: 0.010, NZD: 0.011, CAD: 0.010,
+  UGX: 28, TZS: 23, RWF: 10, NGN: 1.3, GHS: 0.08,
+  ZAR: 0.14, ZMW: 0.018, MWK: 2.3, BWP: 0.10, ZWL: 3.2,
+  SZL: 0.14, LSL: 0.14, NAD: 0.14, MZN: 0.80, AOA: 1.1,
+  SDG: 6.0, SSP: 0.25, SLL: 0.003, LRD: 0.002, GMD: 0.008,
+  KMF: 0.005, SCR: 0.017, MUR: 0.028, JMD: 0.15, TTD: 0.065,
+  BBD: 0.020, BSD: 0.010, BZD: 0.020, GYD: 0.20, SRD: 0.035,
+  FJD: 0.015, PGK: 0.026, INR: 0.85, PKR: 2.0, BDT: 1.2,
+  LKR: 0.30, NPR: 1.3, PHP: 0.60, MYR: 0.035, SGD: 0.013,
+  HKD: 0.080,
+  EUR: 0.009, XOF: 6.0, XAF: 6.0, MGA: 5.0, DJF: 2.0,
+  CDF: 2.8, GNF: 9.0, MRU: 0.035, HTG: 0.014, XCD: 0.027,
+  COP: 4.0, ARS: 1.0, CLP: 0.9, PEN: 0.035, UYU: 0.040,
+  PYG: 7.0, BOB: 0.065, VES: 0.03, CRC: 0.050, GTQ: 0.075,
+  HNL: 0.025, NIO: 0.034, PAB: 0.010, DOP: 0.060, CUP: 0.010,
+  MXN: 0.18,
+  BIF: 2.0, SOS: 0.006,
+};
+
+const getLocalAmount = (amountKES: number, currencyCode: string): string => {
+  const rate = EXCHANGE_RATES[currencyCode] || 1;
+  const local = amountKES * rate;
+  if (currencyCode === 'EUR' || currencyCode === 'USD' || currencyCode === 'GBP') {
+    return local.toFixed(2);
+  }
+  if (local < 1) return local.toFixed(2);
+  if (local < 10) return local.toFixed(1);
+  return local.toFixed(0);
+};
+
+// Helper to get display currency from session country
+const getDisplayCurrencyFromSession = (sessionCountry?: string) => {
+  const country = sessionCountry?.toLowerCase() || 'kenya';
+  return COUNTRY_CURRENCY_MAP[country] || DEFAULT_CURRENCY;
+};
+
 const Agent = ({
   userName,
   userId,
@@ -53,22 +95,13 @@ const Agent = ({
   const getDisplaySymbol = (): string => currency.symbol || 'Ksh';
 
   const getSpokenCurrencyName = (): string => {
+    if (i18n.language === 'es') return 'Euros';
     const lang = i18n.language;
     switch (currency.code) {
-      case 'KES':
-        if (lang === 'fr') return 'Shillings kényans';
-        if (lang === 'sw') return 'Shilingi za Kenya';
-        return 'Kenyan Shillings';
-      case 'UGX':
-        if (lang === 'fr') return 'Shillings ougandais';
-        if (lang === 'sw') return 'Shilingi za Uganda';
-        return 'Ugandan Shillings';
-      case 'TZS':
-        if (lang === 'fr') return 'Shillings tanzaniens';
-        if (lang === 'sw') return 'Shilingi za Tanzania';
-        return 'Tanzanian Shillings';
-      default:
-        return currency.name;
+      case 'KES': return lang === 'fr' ? 'Shillings kényans' : lang === 'sw' ? 'Shilingi za Kenya' : 'Kenyan Shillings';
+      case 'UGX': return lang === 'fr' ? 'Shillings ougandais' : lang === 'sw' ? 'Shilingi za Uganda' : 'Ugandan Shillings';
+      case 'TZS': return lang === 'fr' ? 'Shillings tanzaniens' : lang === 'sw' ? 'Shilingi za Tanzania' : 'Tanzanian Shillings';
+      default: return currency.name;
     }
   };
 
@@ -92,8 +125,8 @@ const Agent = ({
       const template = i18n.t(key);
       if (!params) return template;
       let result = template;
-      for (const [k, v] of Object.entries(params)) {
-        result = result.replace(new RegExp(`{{${k}}}`, 'g'), String(v));
+      for (const [paramKey, paramValue] of Object.entries(params)) {
+        result = result.replace(new RegExp(`{{${paramKey}}}`, 'g'), String(paramValue));
       }
       return result;
     } catch { return key; }
@@ -101,11 +134,10 @@ const Agent = ({
 
   const [voiceEnabled, setVoiceEnabled] = useState(false);
   const [voiceInitializing, setVoiceInitializing] = useState(false);
-  const [hasPaid, setHasPaid] = useState(true); // For demo; adjust as needed
-  const [paymentChecked, setPaymentChecked] = useState(true);
-  const [paymentUsed, setPaymentUsed] = useState(false);
+  const [hasPaid, setHasPaid] = useState(false);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
   const [welcomeSpoken, setWelcomeSpoken] = useState(false);
   const [recommendationsSpoken, setRecommendationsSpoken] = useState(false);
   const [structuredList, setStructuredList] = useState<any[]>([]);
@@ -114,13 +146,18 @@ const Agent = ({
   const [readRecommendations, setReadRecommendations] = useState<Set<number>>(new Set());
   const [recommendationStreams, setRecommendationStreams] = useState<{[key: number]: string}>({});
   const [activeStreamingRec, setActiveStreamingRec] = useState<number | null>(null);
+
+  // ---------- Farmers Comments State ----------
+  const [farmerComment, setFarmerComment] = useState<string>("");
+  const [isCommentSubmitting, setIsCommentSubmitting] = useState<boolean>(false);
+  const [commentSubmitted, setCommentSubmitted] = useState<boolean>(false);
+
   const nameUsageCountRef = useRef(0);
   const voiceServiceRef = useRef<VoiceService | null>(null);
   const mountedRef = useRef(true);
   const voiceServiceInitializedRef = useRef(false);
-  const abortStreamingRef = useRef<boolean>(false);
   const currentUtteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
-  const [isSpeaking, setIsSpeaking] = useState(false);
+  const abortAnimationRef = useRef<number | null>(null);
 
   const soilTest = sessionData?.soilTest;
   const hasSoilTest = soilTest && soilTest.testDate;
@@ -129,7 +166,72 @@ const Agent = ({
   const farmerName = sessionData?.farmerName || userName || "Farmer";
   const farmerCountry = sessionData?.country || 'kenya';
   const cropName = sessionData?.crops?.[0] || '';
+  const farmerEmail = sessionData?.farmerEmail || sessionData?.email || 'farmer@example.com';
+  const farmerPhone = sessionData?.phoneNumber || sessionData?.phone || '';
 
+  // ---------- Get the session ID reliably ----------
+  const getSessionId = () => {
+    return sessionData?.id || interviewId || null;
+  };
+
+  // ---------- Load payment status from localStorage ----------
+  useEffect(() => {
+    const id = getSessionId();
+    if (id) {
+      const paid = localStorage.getItem(`paid_${id}`);
+      if (paid === 'true') {
+        setHasPaid(true);
+      }
+    }
+  }, [sessionData, interviewId]);
+
+  // ---------- NEW: If session already has recommendations, mark as paid (free viewing) ----------
+  useEffect(() => {
+    if (sessionData && (sessionData.structuredList?.length > 0 || sessionData.recommendations?.length > 0)) {
+      setHasPaid(true);
+      const id = getSessionId();
+      if (id) {
+        localStorage.setItem(`paid_${id}`, 'true');
+      }
+    }
+  }, [sessionData, interviewId]);
+
+  // ---------- Submit Farmers Comment ----------
+  const submitFarmerComment = async () => {
+    if (!farmerComment.trim() || !sessionData) return;
+    setIsCommentSubmitting(true);
+    setCommentSubmitted(false);
+
+    try {
+      const res = await fetch('/api/farmer/farmerscomments', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          comment: farmerComment,
+          farmerName: sessionData.farmerName || userName || "Farmer",
+          userId: userId,
+          sessionId: sessionData.id || interviewId,
+          crop: sessionData.primaryCrop || sessionData.crops?.[0] || '',
+          country: sessionData.country || 'kenya'
+        })
+      });
+
+      if (res.ok) {
+        setCommentSubmitted(true);
+        setFarmerComment('');
+        toast.success(safeT('feedback_saved', 'Comment saved successfully!'));
+      } else {
+        toast.error(safeT('feedback_failed', 'Failed to save comment. Please try again.'));
+      }
+    } catch (error) {
+      console.error("Error submitting farmer comment:", error);
+      toast.error(safeT('feedback_failed', 'Failed to save comment. Please try again.'));
+    } finally {
+      setIsCommentSubmitting(false);
+    }
+  };
+
+  // ========== FULL getGapKeyFromCrop (complete mapping) ==========
   const getGapKeyFromCrop = (crop: string): string => {
     if (!crop) return 'gap_generic';
     const cropLower = crop.toLowerCase().trim();
@@ -201,41 +303,90 @@ const Agent = ({
     return 'en-US';
   })();
 
-  // ========== VOICE CANDIDATES: ONLY LOCAL / OFFLINE VOICES ==========
-  const getLocalVoiceCandidates = (): SpeechSynthesisVoice[] => {
+  // ========== FULL getBestVoice (complete logic) ==========
+  const getBestVoice = () => {
     const voices = window.speechSynthesis.getVoices();
-    if (!voices.length) return [];
+    console.log(`Looking for voice for language: ${recognitionLanguage}`);
 
-    const isLocal = (v: SpeechSynthesisVoice) => {
-      const name = v.name.toLowerCase();
-      return !name.includes('online') && !name.includes('natural') && !name.includes('google') && !name.includes('cloud') && !name.includes('remote');
-    };
-
-    // Filter only local voices
-    const localVoices = voices.filter(isLocal);
-    if (localVoices.length === 0) return [];
-
-    // Prioritise by language: exact match, then en-GB, en-US, any English, then any
-    const exact = localVoices.filter(v => v.lang === recognitionLanguage);
-    const enGB = localVoices.filter(v => v.lang === 'en-GB');
-    const enUS = localVoices.filter(v => v.lang === 'en-US');
-    const anyEn = localVoices.filter(v => v.lang.startsWith('en'));
-    const any = [...localVoices];
-
-    const candidates: SpeechSynthesisVoice[] = [];
-    const addUnique = (list: SpeechSynthesisVoice[]) => {
-      for (const v of list) {
-        if (!candidates.some(ex => ex.name === v.name && ex.lang === v.lang)) {
-          candidates.push(v);
-        }
+    const findBritishEnglishFemale = (): SpeechSynthesisVoice | null => {
+      const femaleNames = ['libby', 'hazel', 'susan', 'maisie', 'sonia', 'kate', 'victoria', 'millie', 'olivia', 'google uk english female', 'microsoft libby', 'microsoft hazel', 'microsoft susan', 'microsoft maisie', 'microsoft sonia', 'british english female', 'uk english female'];
+      for (const name of femaleNames) {
+        const voice = voices.find(v => v.lang === 'en-GB' && v.name.toLowerCase().includes(name));
+        if (voice) return voice;
       }
+      const maleIndicators = ['george', 'ryan', 'thomas', 'david', 'mark', 'james', 'john', 'paul', 'michael'];
+      const anyBritishFemale = voices.find(v => v.lang === 'en-GB' && !maleIndicators.some(m => v.name.toLowerCase().includes(m)));
+      if (anyBritishFemale) return anyBritishFemale;
+      return voices.find(v => v.lang === 'en-GB') || null;
     };
-    addUnique(exact);
-    addUnique(enGB);
-    addUnique(enUS);
-    addUnique(anyEn);
-    addUnique(any);
-    return candidates;
+
+    const findAmericanEnglishFemale = (): SpeechSynthesisVoice | null => {
+      const femaleNames = ['samantha', 'victoria', 'zira', 'jenny', 'aria', 'google us english female', 'microsoft jenny', 'microsoft zira', 'microsoft aria', 'us english female'];
+      for (const name of femaleNames) {
+        const voice = voices.find(v => v.lang === 'en-US' && v.name.toLowerCase().includes(name));
+        if (voice) return voice;
+      }
+      const maleIndicators = ['david', 'mark', 'james', 'john', 'paul', 'michael', 'alex', 'thomas'];
+      const anyFemale = voices.find(v => v.lang === 'en-US' && !maleIndicators.some(m => v.name.toLowerCase().includes(m)));
+      if (anyFemale) return anyFemale;
+      return voices.find(v => v.lang === 'en-US') || null;
+    };
+
+    const findFrenchVoice = (): SpeechSynthesisVoice | null => {
+      let vivienne = voices.find(v => v.lang.startsWith('fr') && v.name.toLowerCase().includes('vivienne'));
+      if (vivienne) return vivienne;
+      const frenchFemale = voices.find(v => v.lang.startsWith('fr') && (v.name.toLowerCase().includes('denise') || v.name.toLowerCase().includes('google français female') || v.name.toLowerCase().includes('marie') || v.name.toLowerCase().includes('chloe')));
+      if (frenchFemale) return frenchFemale;
+      return voices.find(v => v.lang.startsWith('fr')) || null;
+    };
+
+    const findSpanishVoice = (): SpeechSynthesisVoice | null => {
+      const femaleNames = ['elena', 'ximena', 'maria', 'paloma', 'sofia', 'catalina', 'salome', 'belkys', 'ramona', 'andrea', 'lorena', 'teresa', 'marta', 'karla', 'dalia', 'yolanda', 'margarita', 'tania', 'camila', 'karina', 'elvira', 'valentina', 'paola', 'michelle', 'gabriela', 'lucia', 'laura', 'fernanda', 'victoria', 'monica', 'paulina', 'sabina', 'helena', 'florencia'];
+      for (const name of femaleNames) {
+        const voice = voices.find(v => v.lang.startsWith('es') && v.name.toLowerCase().includes(name));
+        if (voice) return voice;
+      }
+      const nonMale = voices.find(v => v.lang.startsWith('es') && !v.name.toLowerCase().includes('alvaro') && !v.name.toLowerCase().includes('jorge') && !v.name.toLowerCase().includes('manuel') && !v.name.toLowerCase().includes('andres') && !v.name.toLowerCase().includes('carlos') && !v.name.toLowerCase().includes('juan') && !v.name.toLowerCase().includes('luis') && !v.name.toLowerCase().includes('rodrigo') && !v.name.toLowerCase().includes('javier'));
+      if (nonMale) return nonMale;
+      return null;
+    };
+
+    const findSwahiliVoice = (): SpeechSynthesisVoice | null => {
+      let swahiliVoices = voices.filter(v => v.lang === 'sw-KE' && (v.name.includes('Rafiki') || v.name.includes('Zuri') || v.name.includes('Aisha') || v.name.includes('Kenya')));
+      if (swahiliVoices.length > 0) return swahiliVoices[0];
+      swahiliVoices = voices.filter(v => v.lang === 'sw-KE');
+      if (swahiliVoices.length > 0) return swahiliVoices[0];
+      return null;
+    };
+
+    if (recognitionLanguage === 'en-GB') {
+      const britishVoice = findBritishEnglishFemale();
+      if (britishVoice) return { voice: britishVoice, language: 'en-GB' };
+      const anyNonMale = voices.find(v => v.lang.startsWith('en') && !v.name.toLowerCase().includes('male'));
+      if (anyNonMale) return { voice: anyNonMale, language: 'en-GB' };
+    }
+    if (recognitionLanguage === 'en-US') {
+      const usVoice = findAmericanEnglishFemale();
+      if (usVoice) return { voice: usVoice, language: 'en-US' };
+      const anyNonMale = voices.find(v => v.lang.startsWith('en') && !v.name.toLowerCase().includes('male'));
+      if (anyNonMale) return { voice: anyNonMale, language: 'en-US' };
+    }
+    if (recognitionLanguage === 'fr-FR' || recognitionLanguage === 'fr-CA' || recognitionLanguage.startsWith('fr')) {
+      const frenchVoice = findFrenchVoice();
+      if (frenchVoice) return { voice: frenchVoice, language: 'fr-FR' };
+    }
+    if (recognitionLanguage === 'es-ES' || recognitionLanguage.startsWith('es')) {
+      const spanishVoice = findSpanishVoice();
+      if (spanishVoice) return { voice: spanishVoice, language: 'es-ES' };
+    }
+    if (recognitionLanguage === 'sw-KE' || recognitionLanguage === 'sw-TZ' || recognitionLanguage.startsWith('sw')) {
+      const swahiliVoice = findSwahiliVoice();
+      if (swahiliVoice) return { voice: swahiliVoice, language: 'sw-KE' };
+    }
+    const anyEnglish = voices.find(v => v.lang.startsWith('en') && !v.name.toLowerCase().includes('male'));
+    if (anyEnglish) return { voice: anyEnglish, language: 'en-GB' };
+    if (voices.length > 0) return { voice: voices[0], language: 'en-GB' };
+    return { voice: null, language: 'en-GB' };
   };
 
   const waitForVoices = (maxAttempts = 10): Promise<void> => {
@@ -264,11 +415,6 @@ const Agent = ({
       }
     }
   }, []);
-
-  useEffect(() => {
-    setHasPaid(true);
-    setPaymentChecked(true);
-  }, [interviewId, userId]);
 
   useEffect(() => {
     if (!mountedRef.current) return;
@@ -359,39 +505,38 @@ const Agent = ({
     return speechText;
   };
 
-  // ========== KARAOKE STREAMING WITH LOCAL VOICES ONLY ==========
+  // ========== SIMPLE TIME‑BASED PROGRESSIVE REVEAL + NATURAL SPEECH ==========
   const streamRecommendationKaraoke = async (rawRecommendation: string, index: number) => {
     if (!voiceEnabled || !window.speechSynthesis) return;
 
+    // Cancel any ongoing speech
     if (window.speechSynthesis.speaking) {
       window.speechSynthesis.cancel();
-      await new Promise(resolve => setTimeout(resolve, 200));
+      await new Promise(r => setTimeout(r, 200));
     }
 
-    abortStreamingRef.current = false;
     setActiveStreamingRec(index);
     setRecommendationStreams(prev => ({ ...prev, [index]: "" }));
 
-    const speechText = prepareForSpeech(rawRecommendation);
     const fullRawText = rawRecommendation;
-    const estimatedDuration = Math.max(1000, speechText.length * 70);
-
-    // Time-based animation (always runs)
-    let animationId: number | null = null;
+    const speechText = prepareForSpeech(rawRecommendation);
+    const totalChars = speechText.length;
+    const totalDuration = Math.max(3000, totalChars * 80);
     let startTime = 0;
+    let animationId: number | null = null;
+
     const updateProgress = (progress: number) => {
-      if (abortStreamingRef.current) return;
       const charIndex = Math.floor(progress * fullRawText.length);
       setRecommendationStreams(prev => ({ ...prev, [index]: fullRawText.substring(0, charIndex) }));
     };
+
     const startAnimation = () => {
       if (animationId) cancelAnimationFrame(animationId);
       startTime = 0;
       const animate = (timestamp: number) => {
-        if (abortStreamingRef.current) return;
         if (!startTime) startTime = timestamp;
         const elapsed = timestamp - startTime;
-        const progress = Math.min(1, elapsed / estimatedDuration);
+        const progress = Math.min(1, elapsed / totalDuration);
         updateProgress(progress);
         if (progress < 1) {
           animationId = requestAnimationFrame(animate);
@@ -402,121 +547,51 @@ const Agent = ({
       };
       animationId = requestAnimationFrame(animate);
     };
+
     startAnimation();
 
-    // Voice candidates – only local voices
-    const candidates = getLocalVoiceCandidates();
-    if (candidates.length === 0) {
-      // No local voices – rely on animation only; mark as read when animation ends
-      setTimeout(() => {
-        if (activeStreamingRec === index && !readRecommendations.has(index)) {
-          setRecommendationStreams(prev => ({ ...prev, [index]: fullRawText }));
-          setReadRecommendations(prev => new Set(prev).add(index));
-          setActiveStreamingRec(null);
-        }
-      }, estimatedDuration + 500);
-      return;
-    }
+    const utterance = new SpeechSynthesisUtterance(speechText);
+    const { voice, language } = getBestVoice();
+    if (voice) utterance.voice = voice;
+    utterance.lang = language;
+    utterance.rate = 0.9;
+    utterance.pitch = 1.1;
+    utterance.volume = 1.0;
 
-    let voiceIdx = 0;
-    const trySpeak = () => {
-      if (voiceIdx >= candidates.length) {
-        // All local voices failed – rely on animation
-        setTimeout(() => {
-          if (activeStreamingRec === index && !readRecommendations.has(index)) {
-            setRecommendationStreams(prev => ({ ...prev, [index]: fullRawText }));
-            setReadRecommendations(prev => new Set(prev).add(index));
-            setActiveStreamingRec(null);
-          }
-        }, estimatedDuration + 500);
-        return;
-      }
-
-      const utterance = new SpeechSynthesisUtterance(speechText);
-      const voice = candidates[voiceIdx];
-      utterance.voice = voice;
-      utterance.lang = voice.lang;
-      utterance.rate = 0.9;
-      utterance.pitch = 1.1;
-      utterance.volume = 1.0;
-
+    await new Promise<void>((resolve) => {
       utterance.onend = () => {
         if (animationId) cancelAnimationFrame(animationId);
         setRecommendationStreams(prev => ({ ...prev, [index]: fullRawText }));
         setReadRecommendations(prev => new Set(prev).add(index));
         setActiveStreamingRec(null);
-        currentUtteranceRef.current = null;
+        resolve();
       };
-
       utterance.onerror = (err) => {
-        console.warn(`Local voice ${voice.name} (${voice.lang}) failed, trying next`);
-        voiceIdx++;
-        trySpeak();
-      };
-
-      currentUtteranceRef.current = utterance;
-      window.speechSynthesis.speak(utterance);
-    };
-    trySpeak();
-
-    // Safety timeout
-    setTimeout(() => {
-      if (activeStreamingRec === index && !readRecommendations.has(index)) {
+        console.error("Speech error:", err);
         if (animationId) cancelAnimationFrame(animationId);
         setRecommendationStreams(prev => ({ ...prev, [index]: fullRawText }));
         setReadRecommendations(prev => new Set(prev).add(index));
         setActiveStreamingRec(null);
-      }
-    }, estimatedDuration + 2000);
+        resolve();
+      };
+      window.speechSynthesis.speak(utterance);
+      currentUtteranceRef.current = utterance;
+    });
   };
 
   const speakWithVoice = async (text: string): Promise<void> => {
-    return new Promise(async (resolve) => {
-      if (!window.speechSynthesis) {
-        resolve();
-        return;
-      }
-
-      if (!voicesLoaded) {
-        await waitForVoices();
-      }
-
-      if (window.speechSynthesis.speaking) {
-        window.speechSynthesis.cancel();
-      }
-
-      setTimeout(() => {
-        const speechText = prepareForSpeech(text);
-        const candidates = getLocalVoiceCandidates();
-        if (candidates.length === 0) {
-          resolve();
-          return;
-        }
-        let idx = 0;
-        const trySpeak = () => {
-          if (idx >= candidates.length) {
-            resolve();
-            return;
-          }
-          const utterance = new SpeechSynthesisUtterance(speechText);
-          const voice = candidates[idx];
-          utterance.voice = voice;
-          utterance.lang = voice.lang;
-          utterance.rate = 0.9;
-          utterance.pitch = 1.1;
-          utterance.volume = 1.0;
-
-          utterance.onend = () => resolve();
-          utterance.onerror = () => {
-            idx++;
-            trySpeak();
-          };
-          window.speechSynthesis.speak(utterance);
-        };
-        trySpeak();
-
-        setTimeout(() => resolve(), Math.max(text.length * 20, 3000));
-      }, 100);
+    if (!window.speechSynthesis) return;
+    if (!voicesLoaded) await waitForVoices();
+    const speechText = prepareForSpeech(text);
+    const utterance = new SpeechSynthesisUtterance(speechText);
+    const { voice, language } = getBestVoice();
+    if (voice) utterance.voice = voice;
+    utterance.lang = language;
+    utterance.rate = 0.9;
+    return new Promise((resolve) => {
+      utterance.onend = () => resolve();
+      utterance.onerror = () => resolve();
+      window.speechSynthesis.speak(utterance);
     });
   };
 
@@ -581,7 +656,7 @@ const Agent = ({
         continue;
       }
       await streamRecommendationKaraoke(content, i);
-      await new Promise(resolve => setTimeout(resolve, 500));
+      await new Promise(resolve => setTimeout(resolve, 800));
     }
 
     if (structuredFinancialAdvice) {
@@ -593,44 +668,47 @@ const Agent = ({
     await speakWithVoice(safeT('post_recommendations'));
   };
 
+  // ---- START VOICE INTERVIEW (with payment logic) ----
   const startVoiceInterview = async () => {
-    if (!voiceEnabled) {
-      toast.error("Please turn voice ON first by clicking the 'Voice ON' button");
-      return;
-    }
+    if (isProcessing) return;
+    setIsProcessing(true);
 
-    if (interviewId && userId) {
-      if (paymentUsed) {
-        toast.info(safeT('payment_used_new'));
-        setShowPaymentModal(true);
-        return;
-      }
+    try {
+      // If not paid, show payment modal
       if (!hasPaid) {
         toast.info(safeT('payment_required_to_start'));
         setShowPaymentModal(true);
+        setIsProcessing(false);
         return;
       }
-    }
 
-    if (!voiceServiceRef.current) {
-      const initToast = toast.loading(safeT('initializing_voice'));
-      setVoiceInitializing(true);
-      let attempts = 0;
-      while (!voiceServiceRef.current && attempts < 15) {
-        await new Promise(resolve => setTimeout(resolve, 300));
-        attempts++;
+      // If paid, check voice
+      if (!voiceEnabled) {
+        toast.error("Please turn voice ON first by clicking the 'Voice ON' button");
+        setIsProcessing(false);
+        return;
       }
-      toast.dismiss(initToast);
-      setVoiceInitializing(false);
+
+      // Proceed with voice service
       if (!voiceServiceRef.current) {
-        toast.error(safeT('voice_service_failed'));
-        return;
+        const initToast = toast.loading(safeT('initializing_voice'));
+        setVoiceInitializing(true);
+        let attempts = 0;
+        while (!voiceServiceRef.current && attempts < 15) {
+          await new Promise(resolve => setTimeout(resolve, 300));
+          attempts++;
+        }
+        toast.dismiss(initToast);
+        setVoiceInitializing(false);
+        if (!voiceServiceRef.current) {
+          toast.error(safeT('voice_service_failed'));
+          setIsProcessing(false);
+          return;
+        }
       }
-    }
 
-    setIsLoading(true);
+      setIsLoading(true);
 
-    try {
       if (sessionData && voiceServiceRef.current && typeof voiceServiceRef.current.startFarmerSession === 'function') {
         await voiceServiceRef.current.startFarmerSession(sessionData);
       }
@@ -638,7 +716,6 @@ const Agent = ({
       if (sessionData && !welcomeSpoken) {
         setWelcomeSpoken(true);
         nameUsageCountRef.current = 0;
-
         setRecommendationStreams({});
         setReadRecommendations(new Set());
 
@@ -654,22 +731,33 @@ const Agent = ({
       toast.error(safeT('failed_to_start', { message: error.message }));
     } finally {
       setIsLoading(false);
+      setIsProcessing(false);
     }
   };
 
-  const isStartButtonDisabled = isLoading || !voiceEnabled || !hasPaid || voiceInitializing;
+  // ---- Button state ----
+  const isStartButtonDisabled = isLoading || voiceInitializing || isProcessing;
+
+  const getDisplayCurrency = () => {
+    return getDisplayCurrencyFromSession(sessionData?.country);
+  };
 
   const getStartButtonText = () => {
     if (isLoading) return safeT('starting');
     if (voiceInitializing) return safeT('initializing');
-    if (!hasPaid) return safeT('pay_to_start', { symbol: getDisplaySymbol(), amount: 3 });
+    if (!hasPaid) {
+      const displayCurrency = getDisplayCurrency();
+      const localAmount = getLocalAmount(10, displayCurrency.code);
+      const symbol = displayCurrency.symbol;
+      const payText = safeT('pay') || 'Pay';
+      return `${payText} ${symbol} ${localAmount}`;
+    }
     if (!voiceEnabled) return "Turn Voice ON First";
     return safeT('start_voice_session');
   };
 
   const renderRecommendationText = (item: StructuredItem, idx: number) => {
     let displayContent = '';
-
     if (item.params?.content) {
       displayContent = item.params.content;
     } else if (item.key === 'gap_grouped') {
@@ -703,14 +791,11 @@ const Agent = ({
       displayContent = safeT(item.key, item.params);
     }
 
-    if (!displayContent || displayContent.trim() === '') {
-      return null;
-    }
+    if (!displayContent || displayContent.trim() === '') return null;
 
     const displayedText = recommendationStreams[idx] || '';
     const isActive = activeStreamingRec === idx;
     const isRead = readRecommendations.has(idx);
-
     if (!isActive && !isRead) return null;
 
     const finalText = isActive ? displayedText : displayContent;
@@ -753,10 +838,7 @@ const Agent = ({
             {isActive && displayContent.length > 0 && (
               <div className="mt-3 flex items-center gap-2">
                 <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
-                  <div
-                    className="h-full bg-purple-600 transition-all duration-150"
-                    style={{ width: `${progressPercent}%` }}
-                  />
+                  <div className="h-full bg-purple-600 transition-all duration-150" style={{ width: `${progressPercent}%` }} />
                 </div>
                 <span className="text-sm text-purple-700 font-medium">
                   {Math.round(progressPercent)}%
@@ -788,19 +870,6 @@ const Agent = ({
                 {sessionData?.country && <span className="text-gray-400">• {sessionData.country}</span>}
                 {hasSoilTest && <span className="text-purple-600">• {safeT('soil_test')}</span>}
               </div>
-              {interviewId && userId && (
-                <div className="mt-1">
-                  {hasPaid ? (
-                    <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full">
-                      {safeT('payment_verified', { symbol: getDisplaySymbol(), amount: 3 })}
-                    </span>
-                  ) : (
-                    <span className="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full">
-                      {safeT('payment_required', { symbol: getDisplaySymbol(), amount: 3 })}
-                    </span>
-                  )}
-                </div>
-              )}
             </div>
           </div>
           <div className="flex items-center gap-3">
@@ -822,25 +891,7 @@ const Agent = ({
             </button>
           </div>
         </div>
-        {isSpeaking && (
-          <div className="mt-2 text-xs text-blue-600 flex items-center gap-1">
-            <Volume2 className="w-3 h-3 animate-pulse" />
-            <span>{safeT('speaking')}</span>
-          </div>
-        )}
       </div>
-
-      {!voiceEnabled && structuredList.length > 0 && (
-        <div className="bg-yellow-100 border-l-4 border-yellow-500 rounded-lg p-4">
-          <div className="flex items-center gap-3">
-            <VolumeX className="w-6 h-6 text-yellow-600" />
-            <div>
-              <p className="font-semibold text-yellow-800">Voice is OFF</p>
-              <p className="text-sm text-yellow-700">Click "Voice ON" above, then "Start Voice Session" to hear recommendations with karaoke effect.</p>
-            </div>
-          </div>
-        </div>
-      )}
 
       <div className="flex flex-row gap-4 justify-center">
         {sessionData?.grossMarginAnalysis && (
@@ -880,22 +931,6 @@ const Agent = ({
           <div className="space-y-4">
             {structuredList.map((item, idx) => renderRecommendationText(item, idx))}
           </div>
-          {interventions.length > 0 && (
-            <div className="mt-6 p-4 bg-blue-50 rounded-xl border-2 border-blue-300">
-              <h4 className="font-bold text-blue-800 mb-3 flex items-center gap-2">
-                <Beaker className="w-5 h-5" />
-                {safeT('precision_fertilizer_calculations')}
-              </h4>
-              <div className="space-y-3">
-                {interventions.map((inv: any, idx: number) => (
-                  <div key={idx} className="border-l-4 border-red-500 pl-3 py-1">
-                    <p className="font-semibold text-gray-800">{inv.nutrient}: {inv.value} ({inv.level})</p>
-                    <p className="text-sm text-gray-700">{inv.recommendation}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
           {!hasSoilTest && (
             <div className="mt-4 p-3 bg-yellow-50 rounded-lg border border-yellow-300">
               <p className="text-yellow-800 text-sm flex items-center gap-2">
@@ -910,19 +945,52 @@ const Agent = ({
         </div>
       )}
 
-      <MPESAPaymentModal
+      {/* ========== FARMERS COMMENTS SECTION ========== */}
+      <div className="mt-2 p-4 bg-gray-50 rounded-xl border-2 border-gray-300">
+        <h4 className="font-bold text-gray-700 mb-2 flex items-center gap-2">
+          💬 {safeT('farmers_comments', 'Farmers Comments / Suggestions')}
+        </h4>
+        <textarea
+          value={farmerComment}
+          onChange={(e) => setFarmerComment(e.target.value)}
+          placeholder={safeT('write_suggestion_placeholder', 'Write your suggestion to improve the content...')}
+          className="w-full p-3 border rounded-xl text-gray-800 h-24 resize-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+        />
+        <button
+          onClick={submitFarmerComment}
+          disabled={!farmerComment.trim() || isCommentSubmitting}
+          className="mt-2 px-6 py-2 bg-blue-600 text-white rounded-xl font-medium disabled:opacity-50 hover:bg-blue-700 transition-colors"
+        >
+          {isCommentSubmitting
+            ? safeT('submitting', 'Submitting...')
+            : safeT('submit_farmers_comment', 'Submit Farmers Comment')}
+        </button>
+        {commentSubmitted && (
+          <p className="text-green-600 text-sm mt-2">✅ {safeT('thanks_for_feedback', 'Thank you! Your comment helps us improve.')}</p>
+        )}
+      </div>
+
+      {/* ========== PAYSTACK PAYMENT MODAL ========== */}
+      <PaystackPaymentModal
         isOpen={showPaymentModal}
         onClose={() => setShowPaymentModal(false)}
         onSuccess={() => {
           setShowPaymentModal(false);
           setHasPaid(true);
-          setPaymentUsed(false);
+          const id = getSessionId();
+          if (id) {
+            localStorage.setItem(`paid_${id}`, 'true');
+          }
           toast.success(safeT('payment_confirmed'));
-          setTimeout(() => startVoiceInterview(), 1500);
+          startVoiceInterview();
         }}
-        cost={3}
-        interviewId={interviewId || ""}
-        userId={userId || ""}
+        amount={10}
+        currency="KES"
+        displayAmount={getLocalAmount(10, getDisplayCurrency().code)}
+        displayCurrency={getDisplayCurrency().code}
+        email={farmerEmail}
+        phone={farmerPhone}
+        name={farmerName}
       />
 
       <OfflineBanner />
