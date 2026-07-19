@@ -209,3 +209,4 @@ export function getDefaultCurrencyForLanguage(language: string): string {
       return 'KES';      // Fallback to Kenyan Shillings
   }
 }
+export const DEFAULT_CURRENCY = COUNTRY_CURRENCY_MAP[DEFAULT_COUNTRY];

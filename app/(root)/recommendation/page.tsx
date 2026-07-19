@@ -1,0 +1,201 @@
+// app/(root)/recommendation/page.tsx
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/lib/hooks/useAuth";
+import { useOfflineTranslation } from "@/lib/hooks/useOfflineTranslation";
+import { LoadingSpinner } from "@/components/LoadingSpinner";
+import { OfflineBanner } from "@/components/OfflineBanner";
+import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
+
+interface RecommendationOption {
+  id: string;
+  label: string;
+  emoji: string;
+  description: string;
+  agents: string[];
+  modules: string[];
+  color: string;
+}
+
+const OPTIONS: RecommendationOption[] = [
+  {
+    id: "fertilizer",
+    label: "Fertilizer Recommendation",
+    emoji: "🌱",
+    description: "Personalized fertilizer plan based on your soil or extension advice",
+    agents: ["EnterpriseSetupAgent", "FertilizerInterviewAgent"],
+    modules: ["confidence", "fertilizer_plan","soil_test","planting_fertilizer", "topdressing_fertilizer", "business_tip", "fertilizer_remember", "reminder"],
+    color: "from-green-500 to-emerald-600",
+  },
+  {
+    id: "pest",
+    label: "Pest Management",
+    emoji: "🐛",
+    description: "Identify pests and get control recommendations",
+    agents: ["EnterpriseSetupAgent", "PestInterviewAgent"],
+    modules: ["confidence", "pest_management", "plant_damage", "reminder"],
+    color: "from-red-500 to-orange-600",
+  },
+  {
+    id: "disease",
+    label: "Disease Management",
+    emoji: "🍄",
+    description: "Identify diseases and get treatment options",
+    agents: ["EnterpriseSetupAgent", "DiseaseInterviewAgent"],
+    modules: ["confidence", "disease_management", "plant_damage", "reminder"],
+    color: "from-purple-500 to-pink-600",
+  },
+  {
+    id: "nutrient",
+    label: "Nutrient Deficiency",
+    emoji: "🔬",
+    description: "Diagnose nutrient problems from symptoms",
+    agents: ["EnterpriseSetupAgent", "NutrientInterviewAgent"],
+    modules: ["confidence", "deficiency_analysis", "plant_damage", "reminder"],
+    color: "from-blue-500 to-cyan-600",
+  },
+  {
+    id: "financial",
+    label: "Financial Analysis",
+    emoji: "💰",
+    description: "Gross margin, costs, and profit analysis",
+    agents: ["EnterpriseSetupAgent", "GrossMarginInterviewAgent"],
+    modules: ["confidence", "gross_margin", "farming_business", "reminder"],
+    color: "from-amber-500 to-yellow-600",
+  },
+  {
+    id: "conservation",
+    label: "Soil & Water Conservation",
+    emoji: "💧",
+    description: "Conservation practices for your farm",
+    agents: ["EnterpriseSetupAgent", "ConservationInterviewAgent"],
+    modules: ["confidence", "conservation", "reminder"],
+    color: "from-teal-500 to-green-600",
+  },
+  {
+    id: "postharvest",
+    label: "Post-Harvest Handling",
+    emoji: "📦",
+    description: "Storage, processing, and value addition",
+    agents: ["EnterpriseSetupAgent", "StorageInterviewAgent"],
+    modules: ["confidence", "post_harvest", "reminder"],
+    color: "from-indigo-500 to-blue-600",
+  },
+  {
+    id: "business",
+    label: "Farming as a Business",
+    emoji: "📈",
+    description: "Business advice, marketing, and growth",
+    agents: ["EnterpriseSetupAgent", "GAPInterviewAgent"],
+    modules: ["confidence", "farming_business", "reminder"],
+    color: "from-violet-500 to-purple-600",
+  },
+  {
+    id: "nutrition",
+    label: "Nutrition Benefits",
+    emoji: "🥗",
+    description: "Health and nutrition value of your crops",
+    agents: ["EnterpriseSetupAgent"],
+    modules: ["confidence", "nutrition_benefits", "reminder"],
+    color: "from-rose-500 to-pink-600",
+  },
+  {
+    id: "complete",
+    label: "Complete Farm Health Check",
+    emoji: "📋",
+    description: "All recommendations in one comprehensive report",
+    agents: [],
+    modules: ["complete"],
+    color: "from-emerald-600 to-teal-700",
+  },
+];
+
+export default function RecommendationPage() {
+  const { user, isLoading: authLoading } = useAuth();
+  const { t, ready, isOnline } = useOfflineTranslation();
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+
+  const safeT = (key: string, params?: any): string => {
+    try {
+      const result = t(key, params);
+      return typeof result === "string" ? result : key;
+    } catch {
+      return key;
+    }
+  };
+
+  if (authLoading || !ready) {
+    return <LoadingSpinner fullScreen={false} message="Loading..." />;
+  }
+
+  if (!user) {
+    router.push("/sign-in");
+    return null;
+  }
+
+  const handleSelect = (option: RecommendationOption) => {
+    setLoading(true);
+
+    localStorage.setItem("selectedRecommendation", option.id);
+    localStorage.setItem("recommendationAgents", JSON.stringify(option.agents));
+    localStorage.setItem("recommendationModules", JSON.stringify(option.modules));
+
+    router.push("/interview-flow");
+  };
+
+  return (
+    <div className="flex flex-col gap-6 p-4 max-w-4xl mx-auto">
+      {!isOnline && <OfflineBanner />}
+
+      {/* Header */}
+      <div className="flex items-center gap-4">
+        <Link href="/" className="p-2 bg-gray-100 rounded-xl hover:bg-gray-200">
+          <ArrowLeft className="w-5 h-5" />
+        </Link>
+        <div>
+          <h1 className="text-2xl font-bold text-green-800">
+            🌾 {safeT("what_do_you_need") || "What do you need today?"}
+          </h1>
+          <p className="text-sm text-gray-500">
+            {safeT("select_recommendation") ||
+              "Select what you need help with. We'll ask only the relevant questions."}
+          </p>
+        </div>
+      </div>
+
+      {/* Options Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {OPTIONS.map((option) => (
+          <button
+            key={option.id}
+            onClick={() => handleSelect(option)}
+            disabled={loading}
+            className={`bg-white p-6 rounded-2xl border-2 transition-all text-left hover:shadow-lg relative overflow-hidden ${
+              loading ? "opacity-50 cursor-not-allowed" : "hover:border-green-400"
+            }`}
+          >
+            <div className="text-4xl mb-2">{option.emoji}</div>
+            <h3 className="text-lg font-semibold text-gray-800">{option.label}</h3>
+            <p className="text-sm text-gray-500 mt-1">{option.description}</p>
+            {option.id === "complete" && (
+              <span className="inline-block mt-2 text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">
+                {safeT("full_report") || "Full Report"}
+              </span>
+            )}
+            <div className={`absolute top-0 right-0 w-2 h-full bg-gradient-to-b ${option.color} opacity-30`} />
+          </button>
+        ))}
+      </div>
+
+      {loading && (
+        <div className="text-center py-4">
+          <LoadingSpinner fullScreen={false} message="Preparing your interview..." />
+        </div>
+      )}
+    </div>
+  );
+}

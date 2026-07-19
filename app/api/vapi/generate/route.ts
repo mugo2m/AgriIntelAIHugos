@@ -1,4 +1,4 @@
-// app/api/vapi/generate/route.ts – FINAL: costs fixed + sentence line breaks (safe null checks)
+// app/api/vapi/generate/route.ts – UPDATED with Lime after Fertilizer Plan
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/firebase/admin";
 import { soilTestInterpreter } from "@/lib/soilTestInterpreter";
@@ -10,7 +10,6 @@ import { COUNTRY_CURRENCY_MAP } from "@/lib/config/currency";
 
 console.log("Farmer Session Generation Route Loaded");
 
-// ========== TIMEOUT UTILITY ==========
 const withTimeout = <T>(promise: Promise<T>, ms: number, errorMessage: string = "Operation timed out"): Promise<T> => {
   let timeoutId: NodeJS.Timeout;
   const timeoutPromise = new Promise<T>((_, reject) => {
@@ -19,7 +18,6 @@ const withTimeout = <T>(promise: Promise<T>, ms: number, errorMessage: string = 
   return Promise.race([promise, timeoutPromise]).finally(() => clearTimeout(timeoutId));
 };
 
-// ========== CACHING ==========
 const cache = new Map();
 const CACHE_TTL = 10 * 60 * 1000;
 
@@ -134,6 +132,151 @@ function getCurrencyForCountry(country: string = 'kenya'): { symbol: string; nam
   };
 }
 
+// ========== NPK PARSING ==========
+function parseNPK(fertilizerName: string): { n: number; p: number; k: number } {
+  const name = fertilizerName.toLowerCase();
+  const match = name.match(/(\d+)[\s-]*(\d+)[\s-]*(\d+)/);
+  if (match) {
+    const n = parseInt(match[1]) || 0;
+    const p = parseInt(match[2]) || 0;
+    const k = parseInt(match[3]) || 0;
+    return { n, p, k };
+  }
+  if (name.includes('dap')) return { n: 18, p: 46, k: 0 };
+  if (name.includes('urea')) return { n: 46, p: 0, k: 0 };
+  if (name.includes('can')) return { n: 27, p: 0, k: 0 };
+  if (name.includes('mop')) return { n: 0, p: 0, k: 60 };
+  if (name.includes('sop')) return { n: 0, p: 0, k: 50 };
+  if (name.includes('tsp')) return { n: 0, p: 46, k: 0 };
+  if (name.includes('ssp')) return { n: 0, p: 20, k: 0 };
+  return { n: 0, p: 0, k: 0 };
+}
+
+// ========== BUILD EXTENSION PLAN ==========
+function buildExtensionFertilizerPlan(
+  plantingFertilizerType: string,
+  plantingFertilizerQuantity: number,
+  plantingFertilizerCost: number,
+  topdressingFertilizerType: string,
+  topdressingFertilizerQuantity: number,
+  topdressingFertilizerCost: number,
+  potassiumFertilizerType: string,
+  potassiumFertilizerQuantity: number,
+  potassiumFertilizerCost: number,
+  farmSize: number,
+  spacingInfo: any | null,
+  plantingNutrients: any = {},
+  topdressingNutrients: any = {},
+  potassiumNutrients: any = {}
+) {
+  const defaultCost = 2500;
+  const plantingCostPer50kg = plantingFertilizerCost || defaultCost;
+  const topdressingCostPer50kg = topdressingFertilizerCost || defaultCost;
+  const potassiumCostPer50kg = potassiumFertilizerCost || defaultCost;
+
+  let plantsPerAcre = 20000;
+  if (spacingInfo && spacingInfo.plantsPerAcre) plantsPerAcre = spacingInfo.plantsPerAcre;
+  const totalPlants = plantsPerAcre * farmSize;
+
+  const pNPK = parseNPK(plantingFertilizerType);
+  const tNPK = parseNPK(topdressingFertilizerType);
+  const kNPK = parseNPK(potassiumFertilizerType);
+
+  function formatExtraNutrients(nutrients: any): string {
+    if (!nutrients || typeof nutrients !== 'object') return "";
+    const map: Record<string, string> = {
+      sulfur: "S", calcium: "Ca", magnesium: "Mg",
+      zinc: "Zn", boron: "B", copper: "Cu", manganese: "Mn"
+    };
+    const parts = Object.entries(nutrients)
+      .filter(([key, val]) => val > 0 && map[key])
+      .map(([key, val]) => `${map[key]}:${val}%`);
+    return parts.join(", ");
+  }
+
+  const plantingRec = {
+    kgNeeded: plantingFertilizerQuantity || 0,
+    name: plantingFertilizerType || "Planting Fertilizer",
+    cost: plantingFertilizerQuantity ? (plantingFertilizerQuantity / 50) * plantingCostPer50kg : 0,
+    n: pNPK.n,
+    p: pNPK.p,
+    k: pNPK.k,
+    extraNutrients: formatExtraNutrients(plantingNutrients),
+    fertilizerId: plantingFertilizerType || "",
+    brand: plantingFertilizerType || "",
+    npk: `${pNPK.n}-${pNPK.p}-${pNPK.k}`,
+    pricePer50kg: plantingCostPer50kg,
+    packageSizes: [],
+    provides: {
+      n: plantingFertilizerQuantity ? (plantingFertilizerQuantity * pNPK.n / 100) : 0,
+      p: plantingFertilizerQuantity ? (plantingFertilizerQuantity * pNPK.p / 100) : 0,
+      k: plantingFertilizerQuantity ? (plantingFertilizerQuantity * pNPK.k / 100) : 0,
+    },
+    amountKg: plantingFertilizerQuantity || 0,
+  };
+
+  const topdressingRec = {
+    kgNeeded: topdressingFertilizerQuantity || 0,
+    name: topdressingFertilizerType || "Topdressing Fertilizer",
+    cost: topdressingFertilizerQuantity ? (topdressingFertilizerQuantity / 50) * topdressingCostPer50kg : 0,
+    n: tNPK.n,
+    p: tNPK.p,
+    k: tNPK.k,
+    extraNutrients: formatExtraNutrients(topdressingNutrients),
+    fertilizerId: topdressingFertilizerType || "",
+    brand: topdressingFertilizerType || "",
+    npk: `${tNPK.n}-${tNPK.p}-${tNPK.k}`,
+    pricePer50kg: topdressingCostPer50kg,
+    packageSizes: [],
+    provides: {
+      n: topdressingFertilizerQuantity ? (topdressingFertilizerQuantity * tNPK.n / 100) : 0,
+      p: topdressingFertilizerQuantity ? (topdressingFertilizerQuantity * tNPK.p / 100) : 0,
+      k: topdressingFertilizerQuantity ? (topdressingFertilizerQuantity * tNPK.k / 100) : 0,
+    },
+    amountKg: topdressingFertilizerQuantity || 0,
+  };
+
+  const potassiumRec = {
+    kgNeeded: potassiumFertilizerQuantity || 0,
+    name: potassiumFertilizerType || "Potassium Fertilizer",
+    cost: potassiumFertilizerQuantity ? (potassiumFertilizerQuantity / 50) * potassiumCostPer50kg : 0,
+    n: kNPK.n,
+    p: kNPK.p,
+    k: kNPK.k,
+    extraNutrients: formatExtraNutrients(potassiumNutrients),
+    fertilizerId: potassiumFertilizerType || "",
+    brand: potassiumFertilizerType || "",
+    npk: `${kNPK.n}-${kNPK.p}-${kNPK.k}`,
+    pricePer50kg: potassiumCostPer50kg,
+    packageSizes: [],
+    provides: {
+      n: potassiumFertilizerQuantity ? (potassiumFertilizerQuantity * kNPK.n / 100) : 0,
+      p: potassiumFertilizerQuantity ? (potassiumFertilizerQuantity * kNPK.p / 100) : 0,
+      k: potassiumFertilizerQuantity ? (potassiumFertilizerQuantity * kNPK.k / 100) : 0,
+    },
+    amountKg: potassiumFertilizerQuantity || 0,
+  };
+
+  const recommendations = [plantingRec];
+  if (topdressingRec.kgNeeded > 0) recommendations.push(topdressingRec);
+  if (potassiumRec.kgNeeded > 0 && potassiumFertilizerType !== "None - I don't use potassium") recommendations.push(potassiumRec);
+
+  const totalCost = recommendations.reduce((sum, r) => sum + r.cost, 0);
+
+  return {
+    totalCost: totalCost,
+    farmSize: farmSize,
+    plantingRecommendations: [plantingRec],
+    topDressingRecommendations: [topdressingRec, potassiumRec].filter(r => r.kgNeeded > 0 && r.name !== "None - I don't use potassium"),
+    perPlant: {
+      dapGrams: totalPlants ? (plantingRec.kgNeeded * 1000) / totalPlants : 0,
+      ureaGrams: totalPlants ? (topdressingRec.kgNeeded * 1000) / totalPlants : 0,
+      mopGrams: totalPlants ? (potassiumRec.kgNeeded * 1000) / totalPlants : 0,
+      totalGrams: totalPlants ? ((plantingRec.kgNeeded + topdressingRec.kgNeeded + potassiumRec.kgNeeded) * 1000) / totalPlants : 0,
+    }
+  };
+}
+
 function buildDefaultFertilizerPlan(crop: string, farmSize: number, spacingInfo: any | null) {
   const dapKg = 50;
   const ureaKg = 50;
@@ -160,16 +303,15 @@ function buildDefaultFertilizerPlan(crop: string, farmSize: number, spacingInfo:
   };
 }
 
-// ========== TRANSFORMATION WITH COST CALCULATION (FIXES NaN) ==========
 function transformFertilizerPlanForEngine(plan: any): any {
   if (!plan) return null;
   const transformed: any = {
     totalCost: plan.totalCost,
     farmSize: plan.farmSize,
     perPlant: plan.perPlant,
+    limeRecommendations: plan.limeRecommendations || null,
   };
 
-  // Planting fertilizer
   if (plan.plantingRecommendations && plan.plantingRecommendations.length > 0) {
     const pf = plan.plantingRecommendations[0];
     const amountKg = pf.amountKg ?? pf.kgNeeded ?? 0;
@@ -191,7 +333,6 @@ function transformFertilizerPlanForEngine(plan: any): any {
     };
   }
 
-  // Topdressing fertilizers (both CAN and MOP will be processed)
   if (plan.topDressingRecommendations && plan.topDressingRecommendations.length > 0) {
     transformed.topdressingFertilizers = plan.topDressingRecommendations.map((tf: any) => {
       const amountKg = tf.amountKg ?? tf.kgNeeded ?? 0;
@@ -217,27 +358,20 @@ function transformFertilizerPlanForEngine(plan: any): any {
   return transformed;
 }
 
-// ========== VOICE-FRIENDLY LINE BREAKS (sentence boundaries, no decimal breakage, safe null checks) ==========
 function addLineBreaksForVoice(recommendations: any): any {
   if (!recommendations) return recommendations;
 
   const processText = (text: string): string => {
     if (!text) return text;
     let result = text
-      // Bullet points
       .replace(/([^•])(• )/g, '$1\n$2')
-      // Warning symbol
       .replace(/([^⚠️])(⚠️)/g, '$1\n$2')
-      // Numbered lists (e.g., "1. ", "2. ")
       .replace(/([^0-9])(\d+\. )/g, '$1\n$2')
-      // Sentence endings: period, exclamation, question mark followed by space
-      // Negative lookbehind ensures we don't break decimal numbers (e.g., 1,520.64)
       .replace(/(?<!\d)([.!?]) /g, '$1\n ');
     if (result.startsWith('\n')) result = result.substring(1);
     return result;
   };
 
-  // Process structuredList safely
   if (recommendations.structuredList && Array.isArray(recommendations.structuredList)) {
     recommendations.structuredList = recommendations.structuredList.map((item: any) => {
       if (!item || !item.params) return item;
@@ -251,7 +385,6 @@ function addLineBreaksForVoice(recommendations: any): any {
     });
   }
 
-  // Process list safely
   if (recommendations.list && Array.isArray(recommendations.list)) {
     recommendations.list = recommendations.list.map((item: any) => {
       if (!item || !item.params) return item;
@@ -265,7 +398,6 @@ function addLineBreaksForVoice(recommendations: any): any {
     });
   }
 
-  // Process financialAdvice safely
   if (recommendations.financialAdvice && typeof recommendations.financialAdvice === 'string') {
     recommendations.financialAdvice = processText(recommendations.financialAdvice);
   }
@@ -273,9 +405,10 @@ function addLineBreaksForVoice(recommendations: any): any {
   return recommendations;
 }
 
+// ========== MAIN POST ==========
 export async function POST(request: NextRequest) {
   try {
-    console.log("🚀🚀🚀 USING V4.3 ROUTE (Costs Fixed + Sentence Pauses) 🚀🚀🚀");
+    console.log("🚀🚀🚀 USING V5.1 ROUTE (Lime after Fertilizer Plan) 🚀🚀🚀");
     const body = await request.json();
     const cookieLanguage = request.cookies.get('preferred-language')?.value;
     const bodyLanguage = body.language;
@@ -287,6 +420,7 @@ export async function POST(request: NextRequest) {
       crops, cropVarieties, cropAcres, plantingDate, seedSource, spacing, seedRate,
       usePlantingFertilizer, plantingFertilizerType, plantingFertilizerQuantity,
       useTopdressingFertilizer, topdressingFertilizerType, topdressingFertilizerQuantity,
+      potassiumFertilizerType,
       commonPests, commonDiseases, actualYieldKg, pricePerKg, storageMethod,
       ploughingCost, plantingLabourCost, weedingCost, harvestingCost,
       transportCostTotal, packagingCostTotal, miscellaneousCostTotal,
@@ -309,6 +443,7 @@ export async function POST(request: NextRequest) {
       plantsDamaged, seedCost, season, county, acres, conservationPractices,
       useCertifiedSeed, seedQuantity, userid, country,
       deficiencySymptoms, deficiencyLocation, wantsNutritionBenefits,
+      modules,
     } = body;
 
     const cleanedCommonPests = cleanUserInput(commonPests);
@@ -411,6 +546,7 @@ export async function POST(request: NextRequest) {
           organicCarbonRating: soilTestOCRating || '', organicMatterRating: soilTestOMRating || '',
           cecRating: soilTestCECRating || '', targetYield: targetYield ? parseFloat(targetYield) : null,
           recCalciticLime: recCalciticLime ? parseFloat(recCalciticLime) : null,
+          recDolomiticLime: recDolomiticLime ? parseFloat(recDolomiticLime) : null,
           recPlantingFertilizer: recPlantingFertilizer || null,
           recPlantingQuantity: recPlantingQuantity ? parseFloat(recPlantingQuantity) : null,
           recTopdressingFertilizer: recTopdressingFertilizer || null,
@@ -467,13 +603,67 @@ export async function POST(request: NextRequest) {
       } catch (error) {
         console.error("Error processing soil test:", error);
       }
+    } else if (hasDoneSoilTest === "No") {
+      console.log("🔄 No soil test – building fertilizer plan from extension officer inputs");
+      const pFertType = plantingFertilizerType || plantingFertilizerToUse || "";
+      const pFertQty = parseFloat(plantingFertilizerQuantityKg || plantingFertilizerQuantity || 0);
+      const pFertCost = parseFloat(plantingFertilizerCost || 0);
+      const tFertType = topdressingFertilizerType || topdressingFertilizerToUse || "";
+      const tFertQty = parseFloat(topdressingFertilizerQuantityKg || topdressingFertilizerQuantity || 0);
+      const tFertCost = parseFloat(topdressingFertilizerCost || 0);
+      const kFertType = potassiumFertilizerType || potassiumFertilizerToUse || "";
+      const kFertQty = parseFloat(potassiumFertilizerQuantityKg || potassiumFertilizerQuantity || 0);
+      const kFertCost = parseFloat(potassiumFertilizerCost || 0);
+
+      if (!pFertType && !tFertType && !kFertType) {
+        console.log("⚠️ No extension inputs provided – using default plan");
+        fertilizerPlan = buildDefaultFertilizerPlan(primaryCrop, farmSize, spacingInfo);
+      } else {
+        fertilizerPlan = buildExtensionFertilizerPlan(
+          pFertType, pFertQty, pFertCost,
+          tFertType, tFertQty, tFertCost,
+          kFertType, kFertQty, kFertCost,
+          farmSize, spacingInfo,
+          plantingFertilizerNutrients,
+          topdressingFertilizerNutrients,
+          potassiumFertilizerNutrients
+        );
+        console.log("✅ Extension-based fertilizer plan built:", fertilizerPlan);
+      }
     }
 
     if (!fertilizerPlan) {
-      console.log("⚠️ No fertilizer plan from soil test, using default plan");
+      console.log("⚠️ No fertilizer plan – using default plan");
       fertilizerPlan = buildDefaultFertilizerPlan(primaryCrop, farmSize, spacingInfo);
     }
 
+    // ===== LIME HANDLING =====
+    // Check if recCalciticLime and recDolomiticLime were provided (even if 0)
+    const hasCalcitic = recCalciticLime !== undefined && recCalciticLime !== null && recCalciticLime !== "";
+    const hasDolomitic = recDolomiticLime !== undefined && recDolomiticLime !== null && recDolomiticLime !== "";
+
+    let calciticKg = hasCalcitic ? parseFloat(recCalciticLime) : 0;
+    let dolomiticKg = hasDolomitic ? parseFloat(recDolomiticLime) : 0;
+
+    const calciticPrice = calciticLimePricePerBag ? parseFloat(calciticLimePricePerBag) : 300;
+    const dolomiticPrice = dolomiticLimePricePerBag ? parseFloat(dolomiticLimePricePerBag) : 350;
+
+    // Calculate costs
+    const calciticCost = Math.ceil(calciticKg / 50) * calciticPrice;
+    const dolomiticCost = Math.ceil(dolomiticKg / 50) * dolomiticPrice;
+    const limeCost = calciticCost + dolomiticCost;
+
+    // Add lime cost to total fertilizer investment
+    fertilizerPlan.totalCost = (fertilizerPlan.totalCost || 0) + limeCost;
+
+    // Store lime details for later
+    fertilizerPlan.limeRecommendations = {
+      calcitic: { kgNeeded: calciticKg, pricePer50kg: calciticPrice, cost: calciticCost },
+      dolomitic: { kgNeeded: dolomiticKg, pricePer50kg: dolomiticPrice, cost: dolomiticCost }
+    };
+    console.log(`🧪 Lime: calcitic ${calciticKg}kg (${calciticCost} Ksh), dolomitic ${dolomiticKg}kg (${dolomiticCost} Ksh), total lime cost ${limeCost} Ksh`);
+
+    // ===== GENERATE RECOMMENDATIONS =====
     console.log("🔍 Raw fertilizerPlan before transform:", JSON.stringify(fertilizerPlan, null, 2));
     const engineFertilizerPlan = transformFertilizerPlanForEngine(fertilizerPlan);
     console.log("🔍 Transformed engineFertilizerPlan:", JSON.stringify(engineFertilizerPlan, null, 2));
@@ -517,10 +707,10 @@ export async function POST(request: NextRequest) {
               pricePerKg: validatedPricePerKg,
               totalCosts: totalCosts,
               country: country || 'kenya',
-              limePricePerBag: calciticLimePricePerBag ? parseFloat(calciticLimePricePerBag) : 300,
-              recCalciticLime: recCalciticLime ? parseFloat(recCalciticLime) : 0,
-              recDolomiticLime: recDolomiticLime ? parseFloat(recDolomiticLime) : 0,
-              dolomiticLimePricePerBag: dolomiticLimePricePerBag ? parseFloat(dolomiticLimePricePerBag) : 300,
+              limePricePerBag: calciticPrice,
+              recCalciticLime: calciticKg,
+              recDolomiticLime: dolomiticKg,
+              dolomiticLimePricePerBag: dolomiticPrice,
               plantsDamaged: plantsDamaged ? parseInt(plantsDamaged) : null,
               language: userLanguage,
               deficiencySymptoms, deficiencyLocation,
@@ -529,7 +719,8 @@ export async function POST(request: NextRequest) {
               wantsNutritionBenefits: wantsNutritionBenefits === true || wantsNutritionBenefits === "Yes",
               currencySymbol: currencyConfig.symbol,
               currencyName: currencyConfig.name,
-            }
+            },
+            modules: modules || [],
           }),
           600000,
           "Recommendation generation timed out after 600 seconds"
@@ -553,7 +744,60 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // ========== APPLY VOICE-FRIENDLY LINE BREAKS (sentence boundaries) ==========
+    // ===== POST-PROCESS: INSERT LIME AFTER FERTILIZER PLAN =====
+    if (recommendationsOutput && modules && modules.includes("fertilizer_plan")) {
+      // Build lime content only if lime data was provided (even if zero)
+      const showLime = (hasCalcitic || hasDolomitic) || (calciticKg > 0 || dolomiticKg > 0);
+
+      let limeContent = "";
+      if (showLime) {
+        limeContent = "Lime Recommendations (based on your soil test)\n";
+        // Show calcitic
+        const calciticBags = Math.ceil(calciticKg / 50);
+        const calciticCostDisplay = calciticBags * calciticPrice;
+        limeContent += `- Calcitic Lime: ${calciticKg.toFixed(0)} kg/acre (${calciticBags} bag(s) of 50kg)\n  Cost: ${formatCurrencyForCountry(calciticCostDisplay, country)}\n`;
+        // Show dolomitic
+        const dolomiticBags = Math.ceil(dolomiticKg / 50);
+        const dolomiticCostDisplay = dolomiticBags * dolomiticPrice;
+        limeContent += `- Dolomitic Lime: ${dolomiticKg.toFixed(0)} kg/acre (${dolomiticBags} bag(s) of 50kg)\n  Cost: ${formatCurrencyForCountry(dolomiticCostDisplay, country)}\n`;
+        limeContent += "- Apply lime 2–3 months before planting.";
+      }
+
+      if (limeContent) {
+        const structuredList = recommendationsOutput.structuredList || [];
+        // Remove any existing lime item to avoid duplication
+        const existingLimeIndex = structuredList.findIndex((item: any) => item.key === "lime_recommendation");
+        if (existingLimeIndex !== -1) {
+          structuredList.splice(existingLimeIndex, 1);
+        }
+
+        // ✅ NEW: Insert AFTER fertilizer_header_grouped
+        let insertIndex = structuredList.findIndex((item: any) => item.key === "fertilizer_header_grouped");
+        if (insertIndex === -1) {
+          // fallback: after confidence_label
+          insertIndex = structuredList.findIndex((item: any) => item.key === "confidence_label");
+        }
+        if (insertIndex === -1) insertIndex = 1;
+
+        // Insert the lime item after the found index
+        structuredList.splice(insertIndex + 1, 0, {
+          key: "lime_recommendation",
+          params: { content: limeContent }
+        });
+
+        recommendationsOutput.structuredList = structuredList;
+
+        // Also update the list array for voice
+        const hasLimeInList = recommendationsOutput.list.some((item: any) => item.key === "lime_recommendation");
+        if (!hasLimeInList) {
+          recommendationsOutput.list.push({
+            key: "lime_recommendation",
+            params: { content: limeContent }
+          });
+        }
+      }
+    }
+
     if (recommendationsOutput) {
       recommendationsOutput = addLineBreaksForVoice(recommendationsOutput);
     }
@@ -597,13 +841,10 @@ export async function POST(request: NextRequest) {
       financialAdvice: recommendationsOutput.financialAdvice,
       structuredList: recommendationsOutput.structuredList || [],
       structuredFinancialAdvice: recommendationsOutput.structuredFinancialAdvice || null,
-      fertilizerPlan: fertilizerPlan ? {
-        totalCost: fertilizerPlan.totalCost,
-        farmSize: fertilizerPlan.farmSize,
-        plantingRecommendations: fertilizerPlan.plantingRecommendations,
-        topDressingRecommendations: fertilizerPlan.topDressingRecommendations,
-        perPlant: fertilizerPlan.perPlant
-      } : null,
+      fertilizerPlan: {
+        ...fertilizerPlan,
+        limeRecommendations: fertilizerPlan.limeRecommendations,
+      },
       soilTest: hasDoneSoilTest === "Yes" ? {
         testDate: soilTestDate, ph: soilTestPH ? parseFloat(soilTestPH) : null, phRating: soilTestPHRating,
         phosphorus: soilTestP ? parseFloat(soilTestP) : null, phosphorusRating: soilTestPRating,
@@ -616,13 +857,27 @@ export async function POST(request: NextRequest) {
         organicMatter: soilTestOM ? parseFloat(soilTestOM) : null, organicMatterRating: soilTestOMRating,
         cec: soilTestCEC ? parseFloat(soilTestCEC) : null, cecRating: soilTestCECRating,
         targetYield: targetYield ? parseFloat(targetYield) : null,
-        recCalciticLime: recCalciticLime ? parseFloat(recCalciticLime) : null,
-        recDolomiticLime: recDolomiticLime ? parseFloat(recDolomiticLime) : null,
+        recCalciticLime: calciticKg > 0 ? calciticKg : null,
+        recDolomiticLime: dolomiticKg > 0 ? dolomiticKg : null,
         recPlantingFertilizer, recPlantingQuantity, recTopdressingFertilizer, recTopdressingQuantity,
         recPotassiumFertilizer, recPotassiumQuantity,
         plantingFertilizerNutrients, topdressingFertilizerNutrients, potassiumFertilizerNutrients,
         plantingFertilizerToUse, plantingFertilizerCost, topdressingFertilizerToUse, topdressingFertilizerCost,
         potassiumFertilizerToUse, potassiumFertilizerCost,
+      } : null,
+      extensionInputs: hasDoneSoilTest === "No" ? {
+        plantingFertilizerType: plantingFertilizerType || plantingFertilizerToUse || "",
+        plantingFertilizerQuantity: parseFloat(plantingFertilizerQuantityKg || plantingFertilizerQuantity || 0),
+        plantingFertilizerCost: parseFloat(plantingFertilizerCost || 0),
+        topdressingFertilizerType: topdressingFertilizerType || topdressingFertilizerToUse || "",
+        topdressingFertilizerQuantity: parseFloat(topdressingFertilizerQuantityKg || topdressingFertilizerQuantity || 0),
+        topdressingFertilizerCost: parseFloat(topdressingFertilizerCost || 0),
+        potassiumFertilizerType: potassiumFertilizerType || potassiumFertilizerToUse || "",
+        potassiumFertilizerQuantity: parseFloat(potassiumFertilizerQuantityKg || potassiumFertilizerQuantity || 0),
+        potassiumFertilizerCost: parseFloat(potassiumFertilizerCost || 0),
+        plantingFertilizerNutrients: plantingFertilizerNutrients || null,
+        topdressingFertilizerNutrients: topdressingFertilizerNutrients || null,
+        potassiumFertilizerNutrients: potassiumFertilizerNutrients || null,
       } : null,
       useCertifiedSeed: useCertifiedSeed === "yes",
       deficiencySymptoms: deficiencySymptoms || null,
@@ -633,7 +888,7 @@ export async function POST(request: NextRequest) {
         warnings: { yield: yieldWarnings, price: priceWarnings, spacing: spacingWarning ? [spacingWarning] : [] },
         createdAt: new Date().toISOString(),
         source: "logic-based",
-        version: "4.3-voice-friendly"
+        version: "5.1-lime-after-fertilizer-plan"
       }
     };
 
@@ -662,7 +917,7 @@ export async function POST(request: NextRequest) {
 export async function GET() {
   return NextResponse.json({
     status: "operational",
-    message: "Farmer Session Generation API - FULL 19-SLOT OUTPUT + COSTS FIXED + SENTENCE PAUSES",
-    version: "4.3"
+    message: "Farmer Session Generation API - v5.1: Lime after Fertilizer Plan",
+    version: "5.1"
   });
 }

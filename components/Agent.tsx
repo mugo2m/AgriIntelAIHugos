@@ -1,4 +1,5 @@
-// components/Agent.tsx – Complete: natural speech + time‑based progressive reveal + Farmers Comments + Paystack Payment (KES forced, display in local currency from session country)
+// components/Agent.tsx – Complete: natural speech + time‑based progressive reveal + Farmers Comments + Paystack Payment (KES forced)
+// + Branching: Soil test vs Extension Officer input (Path B)
 "use client";
 
 import { useState, useEffect, useRef } from "react";
@@ -7,7 +8,6 @@ import Link from "next/link";
 import { toast } from "sonner";
 import { useOfflineTranslation } from '@/lib/hooks/useOfflineTranslation';
 import VoiceService from "@/lib/voice/VoiceService";
-import { PaystackPaymentModal } from "@/components/Payment/PaystackPaymentModal";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { OfflineBanner } from "@/components/OfflineBanner";
 import {
@@ -23,9 +23,10 @@ import {
   AlertCircle,
   Rocket,
   VolumeX,
+  CheckCircle,
+  HelpCircle,
 } from "lucide-react";
 import { useCurrency } from '@/lib/context/CurrencyContext';
-// Import the currency map to get display data from session country
 import { COUNTRY_CURRENCY_MAP, DEFAULT_CURRENCY } from '@/lib/config/currency';
 
 const LINE_BREAK = '␊';
@@ -152,6 +153,21 @@ const Agent = ({
   const [isCommentSubmitting, setIsCommentSubmitting] = useState<boolean>(false);
   const [commentSubmitted, setCommentSubmitted] = useState<boolean>(false);
 
+  // ---------- NEW: Branching & Path B (No Soil Test) State ----------
+  const [soilTestDone, setSoilTestDone] = useState<boolean | null>(null);
+  const [path, setPath] = useState<'branch' | 'soil' | 'extension' | 'recommendations'>('branch');
+  const [extensionAnswers, setExtensionAnswers] = useState({
+    plantingFertilizer: '',
+    plantingRate: '',
+    topdressingFertilizer: '',
+    topdressingRate: '',
+    limeType: '',
+    limeRate: '',
+    manureApplied: false,
+    manureRate: '',
+  });
+  // We'll generate a "fake" structuredList from extension answers once they're complete
+
   const nameUsageCountRef = useRef(0);
   const voiceServiceRef = useRef<VoiceService | null>(null);
   const mountedRef = useRef(true);
@@ -195,6 +211,20 @@ const Agent = ({
       }
     }
   }, [sessionData, interviewId]);
+
+  // ---------- NEW: Initialize path based on existing data ----------
+  useEffect(() => {
+    if (hasSoilTest) {
+      setSoilTestDone(true);
+      setPath('soil');
+    } else if (sessionData?.soilTestDone === false) {
+      setSoilTestDone(false);
+      setPath('extension');
+    } else {
+      setPath('branch');
+      setSoilTestDone(null);
+    }
+  }, [hasSoilTest, sessionData]);
 
   // ---------- Submit Farmers Comment ----------
   const submitFarmerComment = async () => {
@@ -509,7 +539,6 @@ const Agent = ({
   const streamRecommendationKaraoke = async (rawRecommendation: string, index: number) => {
     if (!voiceEnabled || !window.speechSynthesis) return;
 
-    // Cancel any ongoing speech
     if (window.speechSynthesis.speaking) {
       window.speechSynthesis.cancel();
       await new Promise(r => setTimeout(r, 200));
@@ -611,6 +640,8 @@ const Agent = ({
       }) + ' ';
     } else if (hasSoilTest) {
       introMessage += safeT('soil_test_calculated', 'Based on your soil test, I\'ve calculated precision fertilizer recommendations. ');
+    } else {
+      introMessage += safeT('extension_recommendations', 'Based on the advice from your extension officer, here is your fertilizer plan. ');
     }
 
     await speakWithVoice(introMessage);
@@ -668,12 +699,90 @@ const Agent = ({
     await speakWithVoice(safeT('post_recommendations'));
   };
 
-  // ---- START VOICE INTERVIEW (with payment logic) ----
+  // ========== NEW: Generate recommendations from extension answers (Path B) ==========
+  const generateExtensionRecommendations = () => {
+    const displaySymbol = getDisplaySymbol();
+    const currencyName = getSpokenCurrencyName();
+    const crop = cropName || 'your crop';
+
+    const recs: StructuredItem[] = [];
+    const plantingFert = extensionAnswers.plantingFertilizer || 'Not specified';
+    const plantingRate = extensionAnswers.plantingRate || '0';
+    const topFert = extensionAnswers.topdressingFertilizer || 'Not specified';
+    const topRate = extensionAnswers.topdressingRate || '0';
+    const limeType = extensionAnswers.limeType || 'Not specified';
+    const limeRate = extensionAnswers.limeRate || '0';
+    const manureApplied = extensionAnswers.manureApplied;
+    const manureRate = extensionAnswers.manureRate || '0';
+
+    // 1. Summary
+    recs.push({
+      key: 'extension_summary',
+      params: {
+        content: `Based on the advice from your agricultural extension officer, here is your fertilizer plan for ${crop}.\n\n` +
+                 `Planting fertilizer: ${plantingFert} at ${plantingRate} kg/acre\n` +
+                 `Topdressing: ${topFert} at ${topRate} kg/acre\n` +
+                 `Lime: ${limeType} at ${limeRate} kg/acre\n` +
+                 `Manure: ${manureApplied ? `${manureRate} tons/acre` : 'Not applied'}`
+      }
+    });
+
+    // 2. Cost estimation (simplified)
+    const priceMap: Record<string, number> = {
+      'DAP': 3000, 'CAN': 2500, 'UREA': 2800,
+      'NPK 23:23:0': 2800, 'NPK 17:17:17': 2800,
+      'NPK 20:10:10': 2800, 'NPK 26:5:5': 2800,
+      'TSP': 3200, 'SSP': 2000, 'MOP': 2200, 'SOP': 2500,
+    };
+    const getPrice = (fert: string) => priceMap[fert] || 2500;
+    const plantingCost = (parseFloat(plantingRate) || 0) * (getPrice(plantingFert) / 50);
+    const topCost = (parseFloat(topRate) || 0) * (getPrice(topFert) / 50);
+    const limeCost = (parseFloat(limeRate) || 0) * 10; // ~10 KES/kg
+    const manureCost = manureApplied ? (parseFloat(manureRate) || 0) * 500 : 0; // 500 KES/ton
+    const totalCost = plantingCost + topCost + limeCost + manureCost;
+
+    recs.push({
+      key: 'extension_cost',
+      params: {
+        content: `Estimated total fertilizer cost: ${displaySymbol} ${totalCost.toFixed(2)} (${currencyName}).\n\n` +
+                 `Planting fertilizer: ${displaySymbol} ${plantingCost.toFixed(2)}\n` +
+                 `Topdressing: ${displaySymbol} ${topCost.toFixed(2)}\n` +
+                 `Lime: ${displaySymbol} ${limeCost.toFixed(2)}\n` +
+                 `Manure: ${displaySymbol} ${manureCost.toFixed(2)}`
+      }
+    });
+
+    // 3. Confidence label – Medium (no lab test)
+    recs.push({
+      key: 'extension_confidence',
+      params: {
+        content: `🟡 Confidence: Medium – This recommendation is based on extension officer advice, not a laboratory soil test. A soil test will improve accuracy.`
+      }
+    });
+
+    setStructuredList(recs);
+    setPath('recommendations');
+  };
+
+  // ========== Modified startVoiceInterview ==========
   const startVoiceInterview = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
 
     try {
+      // If we are in extension path and answers are incomplete, prompt to fill
+      if (path === 'extension') {
+        const { plantingFertilizer, plantingRate, topdressingFertilizer, topdressingRate } = extensionAnswers;
+        if (!plantingFertilizer || !plantingRate || !topdressingFertilizer || !topdressingRate) {
+          toast.error('Please fill in at least planting fertilizer and topdressing details before proceeding.');
+          setIsProcessing(false);
+          return;
+        }
+        // Generate recommendations from extension answers
+        generateExtensionRecommendations();
+        // Then continue to payment/voice
+      }
+
       // If not paid, show payment modal
       if (!hasPaid) {
         toast.info(safeT('payment_required_to_start'));
@@ -851,6 +960,186 @@ const Agent = ({
     );
   };
 
+  // ========== Render branching UI ==========
+  const renderBranching = () => {
+    if (path !== 'branch') return null;
+    return (
+      <div className="bg-white rounded-2xl p-6 border-2 border-blue-200 shadow-xl">
+        <h3 className="font-bold text-xl mb-4 flex items-center gap-2 text-blue-800">
+          <HelpCircle className="w-6 h-6 text-blue-600" />
+          {safeT('soil_test_question', 'Have you done a soil test for this field?')}
+        </h3>
+        <div className="flex gap-4">
+          <button
+            onClick={() => {
+              setSoilTestDone(true);
+              setPath('soil');
+            }}
+            className="flex-1 py-3 bg-green-600 text-white rounded-xl font-bold hover:bg-green-700 transition"
+          >
+            Yes
+          </button>
+          <button
+            onClick={() => {
+              setSoilTestDone(false);
+              setPath('extension');
+            }}
+            className="flex-1 py-3 bg-yellow-600 text-white rounded-xl font-bold hover:bg-yellow-700 transition"
+          >
+            No
+          </button>
+        </div>
+      </div>
+    );
+  };
+
+  // ========== Render extension input form ==========
+  const renderExtensionForm = () => {
+    if (path !== 'extension') return null;
+    return (
+      <div className="bg-white rounded-2xl p-6 border-2 border-yellow-200 shadow-xl">
+        <h3 className="font-bold text-xl mb-4 flex items-center gap-2 text-yellow-800">
+          <Beaker className="w-6 h-6 text-yellow-600" />
+          {safeT('extension_officer_advice', 'Extension Officer Advice')}
+        </h3>
+        <p className="text-gray-600 mb-4">
+          Please enter the recommendations you received from your agricultural extension officer.
+        </p>
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              {safeT('planting_fertilizer', 'Planting fertilizer formulation')}
+            </label>
+            <select
+              value={extensionAnswers.plantingFertilizer}
+              onChange={(e) => setExtensionAnswers({ ...extensionAnswers, plantingFertilizer: e.target.value })}
+              className="mt-1 block w-full p-2 border rounded-lg"
+            >
+              <option value="">Select...</option>
+              <option value="DAP">DAP</option>
+              <option value="CAN">CAN</option>
+              <option value="UREA">UREA</option>
+              <option value="NPK 23:23:0">NPK 23:23:0</option>
+              <option value="NPK 17:17:17">NPK 17:17:17</option>
+              <option value="NPK 20:10:10">NPK 20:10:10</option>
+              <option value="NPK 26:5:5">NPK 26:5:5</option>
+              <option value="TSP">TSP</option>
+              <option value="SSP">SSP</option>
+              <option value="MOP">MOP</option>
+              <option value="SOP">SOP</option>
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              {safeT('planting_rate', 'Planting rate (kg/acre)')}
+            </label>
+            <input
+              type="number"
+              value={extensionAnswers.plantingRate}
+              onChange={(e) => setExtensionAnswers({ ...extensionAnswers, plantingRate: e.target.value })}
+              className="mt-1 block w-full p-2 border rounded-lg"
+              placeholder="e.g., 50"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              {safeT('topdressing_fertilizer', 'Topdressing fertilizer formulation')}
+            </label>
+            <select
+              value={extensionAnswers.topdressingFertilizer}
+              onChange={(e) => setExtensionAnswers({ ...extensionAnswers, topdressingFertilizer: e.target.value })}
+              className="mt-1 block w-full p-2 border rounded-lg"
+            >
+              <option value="">Select...</option>
+              <option value="DAP">DAP</option>
+              <option value="CAN">CAN</option>
+              <option value="UREA">UREA</option>
+              <option value="NPK 23:23:0">NPK 23:23:0</option>
+              <option value="NPK 17:17:17">NPK 17:17:17</option>
+              <option value="NPK 20:10:10">NPK 20:10:10</option>
+              <option value="NPK 26:5:5">NPK 26:5:5</option>
+              <option value="TSP">TSP</option>
+              <option value="SSP">SSP</option>
+              <option value="MOP">MOP</option>
+              <option value="SOP">SOP</option>
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              {safeT('topdressing_rate', 'Topdressing rate (kg/acre)')}
+            </label>
+            <input
+              type="number"
+              value={extensionAnswers.topdressingRate}
+              onChange={(e) => setExtensionAnswers({ ...extensionAnswers, topdressingRate: e.target.value })}
+              className="mt-1 block w-full p-2 border rounded-lg"
+              placeholder="e.g., 50"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              {safeT('lime_type', 'Lime type')}
+            </label>
+            <select
+              value={extensionAnswers.limeType}
+              onChange={(e) => setExtensionAnswers({ ...extensionAnswers, limeType: e.target.value })}
+              className="mt-1 block w-full p-2 border rounded-lg"
+            >
+              <option value="">Not recommended</option>
+              <option value="Calcitic">Calcitic</option>
+              <option value="Dolomitic">Dolomitic</option>
+            </select>
+          </div>
+          {extensionAnswers.limeType && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                {safeT('lime_rate', 'Lime rate (kg/acre)')}
+              </label>
+              <input
+                type="number"
+                value={extensionAnswers.limeRate}
+                onChange={(e) => setExtensionAnswers({ ...extensionAnswers, limeRate: e.target.value })}
+                className="mt-1 block w-full p-2 border rounded-lg"
+                placeholder="e.g., 200"
+              />
+            </div>
+          )}
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              checked={extensionAnswers.manureApplied}
+              onChange={(e) => setExtensionAnswers({ ...extensionAnswers, manureApplied: e.target.checked })}
+              className="w-5 h-5"
+            />
+            <label className="text-sm font-medium text-gray-700">
+              {safeT('manure_recommended', 'Manure recommended?')}
+            </label>
+          </div>
+          {extensionAnswers.manureApplied && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                {safeT('manure_rate', 'Manure rate (tons/acre)')}
+              </label>
+              <input
+                type="number"
+                value={extensionAnswers.manureRate}
+                onChange={(e) => setExtensionAnswers({ ...extensionAnswers, manureRate: e.target.value })}
+                className="mt-1 block w-full p-2 border rounded-lg"
+                placeholder="e.g., 2"
+              />
+            </div>
+          )}
+          <button
+            onClick={startVoiceInterview}
+            className="w-full py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition"
+          >
+            {safeT('generate_recommendations', 'Generate Recommendations')}
+          </button>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="flex flex-col gap-6 p-4 bg-gradient-to-br from-slate-50 to-white rounded-2xl">
       <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-4 shadow-lg border border-emerald-100">
@@ -869,6 +1158,7 @@ const Agent = ({
                 {sessionData?.county && <span className="text-gray-500">• {sessionData.county}</span>}
                 {sessionData?.country && <span className="text-gray-400">• {sessionData.country}</span>}
                 {hasSoilTest && <span className="text-purple-600">• {safeT('soil_test')}</span>}
+                {soilTestDone === false && <span className="text-yellow-600">• No soil test</span>}
               </div>
             </div>
           </div>
@@ -892,6 +1182,12 @@ const Agent = ({
           </div>
         </div>
       </div>
+
+      {/* Branching, Extension Form, or existing soil-test UI */}
+      {renderBranching()}
+      {renderExtensionForm()}
+
+      {/* Soil-test path: keep existing UI (no change) */}
 
       <div className="flex flex-row gap-4 justify-center">
         {sessionData?.grossMarginAnalysis && (
@@ -931,11 +1227,11 @@ const Agent = ({
           <div className="space-y-4">
             {structuredList.map((item, idx) => renderRecommendationText(item, idx))}
           </div>
-          {!hasSoilTest && (
+          {!hasSoilTest && soilTestDone === false && (
             <div className="mt-4 p-3 bg-yellow-50 rounded-lg border border-yellow-300">
               <p className="text-yellow-800 text-sm flex items-center gap-2">
                 <AlertCircle className="w-4 h-4" />
-                {safeT('soil_test_reminder')}
+                {safeT('soil_test_reminder', 'A soil test will improve accuracy – consider doing one next season.')}
               </p>
             </div>
           )}
@@ -945,7 +1241,7 @@ const Agent = ({
         </div>
       )}
 
-      {/* ========== FARMERS COMMENTS SECTION ========== */}
+      {/* Farmers Comments Section */}
       <div className="mt-2 p-4 bg-gray-50 rounded-xl border-2 border-gray-300">
         <h4 className="font-bold text-gray-700 mb-2 flex items-center gap-2">
           💬 {safeT('farmers_comments', 'Farmers Comments / Suggestions')}
@@ -969,29 +1265,6 @@ const Agent = ({
           <p className="text-green-600 text-sm mt-2">✅ {safeT('thanks_for_feedback', 'Thank you! Your comment helps us improve.')}</p>
         )}
       </div>
-
-      {/* ========== PAYSTACK PAYMENT MODAL ========== */}
-      <PaystackPaymentModal
-        isOpen={showPaymentModal}
-        onClose={() => setShowPaymentModal(false)}
-        onSuccess={() => {
-          setShowPaymentModal(false);
-          setHasPaid(true);
-          const id = getSessionId();
-          if (id) {
-            localStorage.setItem(`paid_${id}`, 'true');
-          }
-          toast.success(safeT('payment_confirmed'));
-          startVoiceInterview();
-        }}
-        amount={10}
-        currency="KES"
-        displayAmount={getLocalAmount(10, getDisplayCurrency().code)}
-        displayCurrency={getDisplayCurrency().code}
-        email={farmerEmail}
-        phone={farmerPhone}
-        name={farmerName}
-      />
 
       <OfflineBanner />
     </div>

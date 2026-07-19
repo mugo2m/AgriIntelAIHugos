@@ -1,4 +1,4 @@
-// lib/recommendationEngine.ts – COMPLETE (Kiswahili, French, Spanish, English all working)
+// lib/recommendationEngine.ts – COMPLETE with module filtering
 import { COUNTRY_CURRENCY_MAP } from '@/lib/config/currency';
 import { cropPestDiseaseMap, PestDisease } from '@/lib/data/pestDiseaseMapping';
 import swTranslations from '../public/locales/sw/common.json';
@@ -232,7 +232,55 @@ interface RecommendationInput {
   crop: string;
   crops: string[];
   farmerData: any;
+  modules?: string[];
 }
+
+type ModuleKey =
+  | 'confidence'
+  | 'soil_test'
+  | 'calcitic_lime'
+  | 'dolomitic_lime'
+  | 'fertilizer_plan'
+  | 'planting_fertilizer'
+  | 'topdressing_fertilizer'
+  | 'plant_population'
+  | 'business_tip'
+  | 'fertilizer_remember'
+  | 'gross_margin'
+  | 'good_practices'
+  | 'disease_management'
+  | 'pest_management'
+  | 'deficiency_analysis'
+  | 'plant_damage'
+  | 'conservation'
+  | 'post_harvest'
+  | 'farming_business'
+  | 'nutrition_benefits'
+  | 'reminder';
+
+const moduleKeyMap: Record<string, ModuleKey> = {
+  'confidence_label': 'confidence',
+  'soil_test_grouped': 'soil_test',
+  'calcitic_lime_grouped': 'calcitic_lime',
+  'dolomitic_lime_grouped': 'dolomitic_lime',
+  'fertilizer_header_grouped': 'fertilizer_plan',
+  'planting_fertilizer': 'planting_fertilizer',
+  'topdressing_fertilizer': 'topdressing_fertilizer',
+  'plant_population': 'plant_population',
+  'fertilizer_business_tip': 'business_tip',
+  'fertilizer_remember': 'fertilizer_remember',
+  'gross_margin_grouped': 'gross_margin',
+  'good_practices': 'good_practices',
+  'disease_management_grouped': 'disease_management',
+  'pest_management_grouped': 'pest_management',
+  'deficiency_analysis': 'deficiency_analysis',
+  'plant_damage': 'plant_damage',
+  'conservation': 'conservation',
+  'post_harvest': 'post_harvest',
+  'farming_business': 'farming_business',
+  'nutrition_benefits': 'nutrition_benefits',
+};
+
 interface RecommendationOutput {
   list: string[];
   financialAdvice: string;
@@ -242,7 +290,7 @@ interface RecommendationOutput {
 
 export async function generateRecommendations(input: RecommendationInput): Promise<RecommendationOutput> {
   const structuredList: any[] = [];
-  const { hasSoilTest, soilAnalysis, fertilizerPlan, crop, farmerData } = input;
+  const { hasSoilTest, soilAnalysis, fertilizerPlan, crop, farmerData, modules } = input;
   const lowerCrop = crop.toLowerCase();
   const country = farmerData.country || 'kenya';
   const language = farmerData.language || 'en';
@@ -252,6 +300,7 @@ export async function generateRecommendations(input: RecommendationInput): Promi
   const isEnglish = !isSwahili && !isFrench && !isSpanish;
 
   console.log("🔍 [ENGINE] Received fertilizerPlan:", JSON.stringify(fertilizerPlan, null, 2));
+  console.log("🔍 [ENGINE] Modules filter:", modules);
 
   const formatCurrency = (amount: number): string => {
     const currency = COUNTRY_CURRENCY_MAP[country] || COUNTRY_CURRENCY_MAP.kenya;
@@ -265,8 +314,45 @@ export async function generateRecommendations(input: RecommendationInput): Promi
   };
   const currencySymbol = farmerData.currencySymbol || COUNTRY_CURRENCY_MAP[country]?.symbol || 'Ksh';
 
-  // ========== GROUP 1: SOIL TEST ANALYSIS ==========
-  if (hasSoilTest && soilAnalysis) {
+  const shouldIncludeModule = (key: string): boolean => {
+    if (!modules || modules.length === 0) return true;
+    if (modules.includes('complete')) return true;
+    const moduleKey = moduleKeyMap[key];
+    if (!moduleKey) return false;
+    return modules.includes(moduleKey);
+  };
+
+  const addToStructuredList = (item: any) => {
+    const key = item.key;
+    if (shouldIncludeModule(key)) {
+      structuredList.push(item);
+    }
+  };
+
+  // ========== CONFIDENCE LABEL ==========
+  if (shouldIncludeModule('confidence_label')) {
+    let confidenceLabel = '';
+    if (hasSoilTest) {
+      confidenceLabel = isSwahili ? '🟢 IMANI: Juu (kutokana na uchambuzi wa udongo wa maabara)' :
+                        isFrench ? '🟢 CONFIANCE: Élevée (basée sur analyse de sol en laboratoire)' :
+                        isSpanish ? '🟢 CONFIANZA: Alta (basada en análisis de suelo de laboratorio)' :
+                        '🟢 Confidence: High (based on laboratory soil test)';
+    } else if (fertilizerPlan) {
+      confidenceLabel = isSwahili ? '🟡 IMANI: Wastani (kutokana na ushauri wa mhudumu wa ugani)' :
+                        isFrench ? '🟡 CONFIANCE: Moyenne (basée sur les conseils du vulgarisateur)' :
+                        isSpanish ? '🟡 CONFIANZA: Media (basada en el consejo del extensionista)' :
+                        '🟡 Confidence: Medium (based on extension officer advice)';
+    } else {
+      confidenceLabel = isSwahili ? '🟠 IMANI: Chini (habari ndogo sana)' :
+                        isFrench ? '🟠 CONFIANCE: Faible (informations minimales)' :
+                        isSpanish ? '🟠 CONFIANZA: Baja (información mínima)' :
+                        '🟠 Confidence: Low (minimal information)';
+    }
+    addToStructuredList({ key: 'confidence_label', params: { content: confidenceLabel } });
+  }
+
+  // ========== SOIL TEST ANALYSIS ==========
+  if (hasSoilTest && soilAnalysis && shouldIncludeModule('soil_test_grouped')) {
     const soilLines: string[] = [];
     const ph = soilAnalysis.ph ?? '?';
     const phRating = soilAnalysis.phRating || '';
@@ -329,7 +415,7 @@ export async function generateRecommendations(input: RecommendationInput): Promi
       soilLines.push(`Nitrogen (N): ${totalNitrogen}% (${totalNitrogenRating || '?'})`);
       soilLines.push(`Organic Matter (OM): ${organicMatter}% (${organicMatterRating || '?'})`);
     }
-    structuredList.push({
+    addToStructuredList({
       key: 'soil_test_grouped',
       params: {
         title: isSwahili ? SW.soil_analysis_title : isFrench ? FR.soil_analysis_title : isSpanish ? ES.soil_analysis_title : 'SOIL TEST ANALYSIS - KNOW YOUR SOIL, GROW YOUR BUSINESS',
@@ -343,8 +429,8 @@ export async function generateRecommendations(input: RecommendationInput): Promi
     });
   }
 
-  // ========== GROUP 2: CALCITIC LIME (fixed for all languages) ==========
-  if (hasSoilTest && farmerData.recCalciticLime && farmerData.recCalciticLime > 0) {
+  // ========== CALCITIC LIME ==========
+  if (hasSoilTest && farmerData.recCalciticLime && farmerData.recCalciticLime > 0 && shouldIncludeModule('calcitic_lime_grouped')) {
     const limeKg = farmerData.recCalciticLime;
     const limePricePerBag = farmerData.limePricePerBag || 300;
     const bagsNeeded = Math.ceil(limeKg / 50);
@@ -395,11 +481,11 @@ export async function generateRecommendations(input: RecommendationInput): Promi
     const yearly = isSwahili ? "CHUNGUZA UDONGO KILA MWAKA kujua wakati wa kurudia." : isFrench ? "ANALYSEZ LE SOL CHAQUE ANNÉE pour savoir quand réappliquer." : isSpanish ? "ANALICE EL SUELO ANUALMENTE para saber cuándo reaplicar." : 'TEST SOIL YEARLY to know when to reapply.';
 
     const contentLines = [title, need, bags, cost, whyText, application, wait, business, yearly].filter(line => line && line.trim() !== '');
-    structuredList.push({ key: 'calcitic_lime_grouped', params: { content: contentLines.join('\n'), kg: limeKg, bags: bagsNeeded, total: formatCurrency(totalCost), perBag: formatCurrency(limePricePerBag), ph: soilAnalysis?.ph, ca: soilAnalysis?.calcium } });
+    addToStructuredList({ key: 'calcitic_lime_grouped', params: { content: contentLines.join('\n'), kg: limeKg, bags: bagsNeeded, total: formatCurrency(totalCost), perBag: formatCurrency(limePricePerBag), ph: soilAnalysis?.ph, ca: soilAnalysis?.calcium } });
   }
 
-  // ========== GROUP 3: DOLOMITIC LIME (all languages) ==========
-  if (hasSoilTest && soilAnalysis) {
+  // ========== DOLOMITIC LIME ==========
+  if (hasSoilTest && soilAnalysis && shouldIncludeModule('dolomitic_lime_grouped')) {
     const autoDolomitic = soilTestInterpreter.getDolomiticLimeRecommendation(soilAnalysis);
     let dolomiticNeeded = autoDolomitic.needed;
     let limeKg = autoDolomitic.kgPerAcre;
@@ -467,190 +553,205 @@ export async function generateRecommendations(input: RecommendationInput): Promi
         }
       }
       const contentLines = [title, need, bagsText, costText, whyText, application, wait, business, yearly].filter(line => line && line.trim() !== '');
-      structuredList.push({ key: 'dolomitic_lime_grouped', params: { content: contentLines.join('\n'), kg: limeKg, bags: bagsNeeded, total: formatCurrency(totalCost), perBag: formatCurrency(dolomiticPricePerBag), mg: soilAnalysis?.magnesium, caMgRatio: soilAnalysis?.calcium && soilAnalysis?.magnesium ? (soilAnalysis.calcium / soilAnalysis.magnesium).toFixed(1) : undefined } });
+      addToStructuredList({ key: 'dolomitic_lime_grouped', params: { content: contentLines.join('\n'), kg: limeKg, bags: bagsNeeded, total: formatCurrency(totalCost), perBag: formatCurrency(dolomiticPricePerBag), mg: soilAnalysis?.magnesium, caMgRatio: soilAnalysis?.calcium && soilAnalysis?.magnesium ? (soilAnalysis.calcium / soilAnalysis.magnesium).toFixed(1) : undefined } });
     }
   }
 
-  // ========== GROUP 4: FERTILIZER PLAN HEADER ==========
-  if (hasSoilTest && fertilizerPlan) {
-    let title = '', farmSize = '', totalInv = '';
+  // ========== FERTILIZER PLAN HEADER ==========
+  if (fertilizerPlan && shouldIncludeModule('fertilizer_header_grouped')) {
+    const hasSoilTestData = hasSoilTest && soilAnalysis;
+    let title = '', farmSize = '', totalInv = '', intro = '';
     if (isSwahili) {
       title = replacePlaceholders(SW.fertilizer_plan_title, { crop: crop.toUpperCase() });
       farmSize = replacePlaceholders(SW.fertilizer_plan_farm_size, { size: fertilizerPlan.farmSize });
       totalInv = replacePlaceholders(SW.fertilizer_plan_total_investment, { amount: formatCurrency(fertilizerPlan.totalCost) });
+      intro = hasSoilTestData ? "Uchapishaji huu wa mbolea umehesabiwa kwa usahihi kulingana na uchambuzi wako wa udongo." :
+                               "Uchapishaji huu wa mbolea umejengwa kulingana na ushauri wa mhudumu wako wa ugani. **Dhibitisho: Wastani** – hakikisha ufuatilie mavuno yako na urekebishe inavyohitajika.";
     } else if (isFrench) {
       title = replacePlaceholders(FR.fertilizer_plan_title, { crop: crop.toUpperCase() });
       farmSize = replacePlaceholders(FR.fertilizer_plan_farm_size, { size: fertilizerPlan.farmSize });
       totalInv = replacePlaceholders(FR.fertilizer_plan_total_investment, { amount: formatCurrency(fertilizerPlan.totalCost) });
+      intro = hasSoilTestData ? "Ce plan d'engrais a été calculé avec précision à partir de votre analyse de sol." :
+                               "Ce plan d'engrais a été élaboré sur la base des conseils de votre vulgarisateur. **Confiance : Moyenne** – surveillez vos rendements et ajustez si nécessaire.";
     } else if (isSpanish) {
       title = replacePlaceholders(ES.fertilizer_plan_title, { crop: crop.toUpperCase() });
       farmSize = replacePlaceholders(ES.fertilizer_plan_farm_size, { size: fertilizerPlan.farmSize });
       totalInv = replacePlaceholders(ES.fertilizer_plan_total_investment, { amount: formatCurrency(fertilizerPlan.totalCost) });
+      intro = hasSoilTestData ? "Este plan de fertilizantes se ha calculado con precisión a partir de su análisis de suelo." :
+                               "Este plan de fertilizantes se ha elaborado según el consejo de su extensionista. **Confianza: Media** – supervise sus rendimientos y ajuste según sea necesario.";
     } else {
       title = `PRECISION FERTILIZER INVESTMENT PLAN for your ${crop.toUpperCase()} ENTERPRISE`;
       farmSize = `Your farm size: ${fertilizerPlan.farmSize} acre(s)`;
       totalInv = `TOTAL FERTILIZER INVESTMENT: ${formatCurrency(fertilizerPlan.totalCost)} for your entire farm`;
+      intro = hasSoilTestData ? "This fertilizer plan has been precisely calculated from your soil test analysis." :
+                               "This fertilizer plan has been built from your extension officer's advice. **Confidence: Medium** – monitor your yields and adjust as needed.";
     }
-    structuredList.push({ key: 'fertilizer_header_grouped', params: { content: [title, farmSize, totalInv].join('\n'), crop: crop.toUpperCase(), size: fertilizerPlan.farmSize, amount: formatCurrency(fertilizerPlan.totalCost) } });
-  }
+    const contentLines = [title, intro, farmSize, totalInv].filter(l => l);
+    addToStructuredList({ key: 'fertilizer_header_grouped', params: { content: contentLines.join('\n'), crop: crop.toUpperCase(), size: fertilizerPlan.farmSize, amount: formatCurrency(fertilizerPlan.totalCost) } });
 
-  // ========== GROUP 5: PLANTING FERTILIZER (full titles for all languages) ==========
-  if (hasSoilTest && fertilizerPlan && fertilizerPlan.plantingFertilizer) {
-    const pf = fertilizerPlan.plantingFertilizer;
-    if (pf && pf.kgNeeded > 0) {
-      const bags = Math.floor(pf.kgNeeded / 50);
-      const openBag = pf.kgNeeded % 50;
-      let title, buyText, costText, providesText, extra;
-      if (isSwahili) {
-        title = "MBEGEAZA MBOLEA (Weka wakati wa kupanda)";
-        buyText = `Nunua ${pf.kgNeeded} kg ya ${pf.name}`;
-        costText = `Gharama: ${formatCurrency(pf.cost)}`;
-        providesText = `Hutoa: ${pf.n.toFixed(1)} kg N, ${pf.p.toFixed(1)} kg P, ${pf.k.toFixed(1)} kg K`;
-        extra = pf.extraNutrients ? `Virutubisho vya ziada: ${pf.extraNutrients}` : '';
-      } else if (isFrench) {
-        title = FR.planting_fertilizer_title;
-        buyText = `Achetez ${pf.kgNeeded} kg de ${pf.name}`;
-        costText = `Coût : ${formatCurrency(pf.cost)}`;
-        providesText = `Fournit : ${pf.n.toFixed(1)} kg N, ${pf.p.toFixed(1)} kg P, ${pf.k.toFixed(1)} kg K`;
-        extra = pf.extraNutrients ? `Nutriments supplémentaires : ${pf.extraNutrients}` : '';
-      } else if (isSpanish) {
-        title = "FERTILIZANTE DE PLANTACIÓN (Aplicar en la siembra)";
-        buyText = `Compre ${pf.kgNeeded} kg de ${pf.name}`;
-        costText = `Costo: ${formatCurrency(pf.cost)}`;
-        providesText = `Proporciona: ${pf.n.toFixed(1)} kg N, ${pf.p.toFixed(1)} kg P, ${pf.k.toFixed(1)} kg K`;
-        extra = pf.extraNutrients ? `Nutrientes adicionales: ${pf.extraNutrients}` : '';
-      } else {
-        title = "PLANTING FERTILIZER (Apply at planting)";
-        buyText = `Buy ${pf.kgNeeded} kg of ${pf.name}`;
-        costText = `Cost: ${formatCurrency(pf.cost)}`;
-        providesText = `Provides: ${pf.n.toFixed(1)} kg N, ${pf.p.toFixed(1)} kg P, ${pf.k.toFixed(1)} kg K`;
-        extra = pf.extraNutrients ? `Extra nutrients: ${pf.extraNutrients}` : '';
-      }
-      const bagInfo = isFrench ? `C'est ${bags} sac(s) de 50kg + ${openBag}kg ouvert` : (isSwahili ? `Hii ni magunia ${bags} ya 50kg + ${openBag}kg fungua` : (isSpanish ? `Esto es ${bags} bolsa(s) de 50kg + ${openBag}kg suelto` : `This is ${bags} bag(s) of 50kg + ${openBag}kg open`));
-      const contentLines = [title, buyText, bagInfo, costText, providesText, extra].filter(l => l);
-      structuredList.push({ key: 'planting_fertilizer', params: { content: contentLines.join('\n') } });
-    }
-  }
-
-  // ========== GROUP 6: TOPDRESSING FERTILIZER (full titles for all languages) ==========
-  if (hasSoilTest && fertilizerPlan && fertilizerPlan.topdressingFertilizers && fertilizerPlan.topdressingFertilizers.length) {
-    for (const tf of fertilizerPlan.topdressingFertilizers) {
-      if (tf.kgNeeded > 0) {
-        const bags = Math.floor(tf.kgNeeded / 50);
-        const openBag = tf.kgNeeded % 50;
+    // PLANTING FERTILIZER
+    if (fertilizerPlan.plantingFertilizer && shouldIncludeModule('planting_fertilizer')) {
+      const pf = fertilizerPlan.plantingFertilizer;
+      if (pf && pf.kgNeeded > 0) {
+        const bags = Math.floor(pf.kgNeeded / 50);
+        const openBag = pf.kgNeeded % 50;
         let title, buyText, costText, providesText, extra;
         if (isSwahili) {
-          title = "MBEGEAZA MBOLEA (Weka wiki 3-4 baada ya kupanda)";
-          buyText = `Nunua ${tf.kgNeeded} kg ya ${tf.name}`;
-          costText = `Gharama: ${formatCurrency(tf.cost)}`;
-          providesText = `Hutoa: ${tf.n.toFixed(1)} kg N, ${tf.p.toFixed(1)} kg P, ${tf.k.toFixed(1)} kg K`;
-          extra = tf.extraNutrients ? `Virutubisho vya ziada: ${tf.extraNutrients}` : '';
+          title = "MBEGEAZA MBOLEA (Weka wakati wa kupanda)";
+          buyText = `Nunua ${pf.kgNeeded} kg ya ${pf.name}`;
+          costText = `Gharama: ${formatCurrency(pf.cost)}`;
+          providesText = `Hutoa: ${pf.n.toFixed(1)} kg N, ${pf.p.toFixed(1)} kg P, ${pf.k.toFixed(1)} kg K`;
+          extra = pf.extraNutrients ? `Virutubisho vya ziada: ${pf.extraNutrients}` : '';
         } else if (isFrench) {
-          title = FR.topdressing_fertilizer_title;
-          buyText = `Achetez ${tf.kgNeeded} kg de ${tf.name}`;
-          costText = `Coût : ${formatCurrency(tf.cost)}`;
-          providesText = `Fournit : ${tf.n.toFixed(1)} kg N, ${tf.p.toFixed(1)} kg P, ${tf.k.toFixed(1)} kg K`;
-          extra = tf.extraNutrients ? `Nutriments supplémentaires : ${tf.extraNutrients}` : '';
+          title = FR.planting_fertilizer_title || "ENGRAIS DE PLANTATION (Appliquer à la plantation)";
+          buyText = `Achetez ${pf.kgNeeded} kg de ${pf.name}`;
+          costText = `Coût : ${formatCurrency(pf.cost)}`;
+          providesText = `Fournit : ${pf.n.toFixed(1)} kg N, ${pf.p.toFixed(1)} kg P, ${pf.k.toFixed(1)} kg K`;
+          extra = pf.extraNutrients ? `Nutriments supplémentaires : ${pf.extraNutrients}` : '';
         } else if (isSpanish) {
-          title = "FERTILIZANTE DE COBERTURA (Aplicar 3-4 semanas después de la siembra)";
-          buyText = `Compre ${tf.kgNeeded} kg de ${tf.name}`;
-          costText = `Costo: ${formatCurrency(tf.cost)}`;
-          providesText = `Proporciona: ${tf.n.toFixed(1)} kg N, ${tf.p.toFixed(1)} kg P, ${tf.k.toFixed(1)} kg K`;
-          extra = tf.extraNutrients ? `Nutrientes adicionales: ${tf.extraNutrients}` : '';
+          title = "FERTILIZANTE DE PLANTACIÓN (Aplicar en la siembra)";
+          buyText = `Compre ${pf.kgNeeded} kg de ${pf.name}`;
+          costText = `Costo: ${formatCurrency(pf.cost)}`;
+          providesText = `Proporciona: ${pf.n.toFixed(1)} kg N, ${pf.p.toFixed(1)} kg P, ${pf.k.toFixed(1)} kg K`;
+          extra = pf.extraNutrients ? `Nutrientes adicionales: ${pf.extraNutrients}` : '';
         } else {
-          title = "TOP DRESSING FERTILIZER (Apply 3-4 weeks after planting)";
-          buyText = `Buy ${tf.kgNeeded} kg of ${tf.name}`;
-          costText = `Cost: ${formatCurrency(tf.cost)}`;
-          providesText = `Provides: ${tf.n.toFixed(1)} kg N, ${tf.p.toFixed(1)} kg P, ${tf.k.toFixed(1)} kg K`;
-          extra = tf.extraNutrients ? `Extra nutrients: ${tf.extraNutrients}` : '';
+          title = "PLANTING FERTILIZER (Apply at planting)";
+          buyText = `Buy ${pf.kgNeeded} kg of ${pf.name}`;
+          costText = `Cost: ${formatCurrency(pf.cost)}`;
+          providesText = `Provides: ${pf.n.toFixed(1)} kg N, ${pf.p.toFixed(1)} kg P, ${pf.k.toFixed(1)} kg K`;
+          extra = pf.extraNutrients ? `Extra nutrients: ${pf.extraNutrients}` : '';
         }
         const bagInfo = isFrench ? `C'est ${bags} sac(s) de 50kg + ${openBag}kg ouvert` : (isSwahili ? `Hii ni magunia ${bags} ya 50kg + ${openBag}kg fungua` : (isSpanish ? `Esto es ${bags} bolsa(s) de 50kg + ${openBag}kg suelto` : `This is ${bags} bag(s) of 50kg + ${openBag}kg open`));
         const contentLines = [title, buyText, bagInfo, costText, providesText, extra].filter(l => l);
-        structuredList.push({ key: 'topdressing_fertilizer', params: { content: contentLines.join('\n') } });
+        addToStructuredList({ key: 'planting_fertilizer', params: { content: contentLines.join('\n') } });
       }
     }
-  }
 
-  // ========== GROUP 7: PLANT POPULATION & PER-PLANT GUIDE ==========
-  if (farmerData.spacing && fertilizerPlan && fertilizerPlan.farmSize && fertilizerPlan.perPlant) {
-    let spacing = farmerData.spacing;
-    let plantsPerAcre = 0;
-    if (spacing.includes('x')) {
-      const parts = spacing.split('x');
-      const row = parseFloat(parts[0]);
-      const plant = parseFloat(parts[1]);
-      if (!isNaN(row) && !isNaN(plant)) {
-        plantsPerAcre = Math.round(43560 / (row * plant));
+    // TOPDRESSING FERTILIZERS
+    if (fertilizerPlan.topdressingFertilizers && fertilizerPlan.topdressingFertilizers.length && shouldIncludeModule('topdressing_fertilizer')) {
+      for (const tf of fertilizerPlan.topdressingFertilizers) {
+        if (tf.kgNeeded > 0) {
+          const bags = Math.floor(tf.kgNeeded / 50);
+          const openBag = tf.kgNeeded % 50;
+          let title, buyText, costText, providesText, extra;
+          if (isSwahili) {
+            title = "MBEGEAZA MBOLEA (Weka wiki 3-4 baada ya kupanda)";
+            buyText = `Nunua ${tf.kgNeeded} kg ya ${tf.name}`;
+            costText = `Gharama: ${formatCurrency(tf.cost)}`;
+            providesText = `Hutoa: ${tf.n.toFixed(1)} kg N, ${tf.p.toFixed(1)} kg P, ${tf.k.toFixed(1)} kg K`;
+            extra = tf.extraNutrients ? `Virutubisho vya ziada: ${tf.extraNutrients}` : '';
+          } else if (isFrench) {
+            title = FR.topdressing_fertilizer_title || "ENGRAIS DE COUVERTURE (Appliquer 3-4 semaines après la plantation)";
+            buyText = `Achetez ${tf.kgNeeded} kg de ${tf.name}`;
+            costText = `Coût : ${formatCurrency(tf.cost)}`;
+            providesText = `Fournit : ${tf.n.toFixed(1)} kg N, ${tf.p.toFixed(1)} kg P, ${tf.k.toFixed(1)} kg K`;
+            extra = tf.extraNutrients ? `Nutriments supplémentaires : ${tf.extraNutrients}` : '';
+          } else if (isSpanish) {
+            title = "FERTILIZANTE DE COBERTURA (Aplicar 3-4 semanas después de la siembra)";
+            buyText = `Compre ${tf.kgNeeded} kg de ${tf.name}`;
+            costText = `Costo: ${formatCurrency(tf.cost)}`;
+            providesText = `Proporciona: ${tf.n.toFixed(1)} kg N, ${tf.p.toFixed(1)} kg P, ${tf.k.toFixed(1)} kg K`;
+            extra = tf.extraNutrients ? `Nutrientes adicionales: ${tf.extraNutrients}` : '';
+          } else {
+            title = "TOP DRESSING FERTILIZER (Apply 3-4 weeks after planting)";
+            buyText = `Buy ${tf.kgNeeded} kg of ${tf.name}`;
+            costText = `Cost: ${formatCurrency(tf.cost)}`;
+            providesText = `Provides: ${tf.n.toFixed(1)} kg N, ${tf.p.toFixed(1)} kg P, ${tf.k.toFixed(1)} kg K`;
+            extra = tf.extraNutrients ? `Extra nutrients: ${tf.extraNutrients}` : '';
+          }
+          const bagInfo = isFrench ? `C'est ${bags} sac(s) de 50kg + ${openBag}kg ouvert` : (isSwahili ? `Hii ni magunia ${bags} ya 50kg + ${openBag}kg fungua` : (isSpanish ? `Esto es ${bags} bolsa(s) de 50kg + ${openBag}kg suelto` : `This is ${bags} bag(s) of 50kg + ${openBag}kg open`));
+          const contentLines = [title, buyText, bagInfo, costText, providesText, extra].filter(l => l);
+          addToStructuredList({ key: 'topdressing_fertilizer', params: { content: contentLines.join('\n') } });
+        }
       }
     }
-    if (plantsPerAcre > 0) {
-      let plantCountText = '';
-      if (isSwahili) {
-        plantCountText = `Kulingana na umbali wako ${spacing}, una takriban mimea ${plantsPerAcre} kwenye ekari ${fertilizerPlan.farmSize}.`;
-      } else if (isFrench) {
-        plantCountText = `Selon votre espacement ${spacing}, vous avez environ ${plantsPerAcre} plantes sur ${fertilizerPlan.farmSize} acres.`;
-      } else if (isSpanish) {
-        plantCountText = `Según su espaciamiento ${spacing}, tiene aproximadamente ${plantsPerAcre} plantas en ${fertilizerPlan.farmSize} acres.`;
-      } else {
-        plantCountText = `Based on your spacing of ${spacing}, you have approximately ${plantsPerAcre} plants on your ${fertilizerPlan.farmSize} acre farm.`;
+
+    // ========== PLANT POPULATION & PER-PLANT GUIDE ==========
+    if (farmerData.spacing && fertilizerPlan.farmSize && fertilizerPlan.perPlant && shouldIncludeModule('plant_population')) {
+      let spacing = farmerData.spacing;
+      let plantsPerAcre = 0;
+      const match = spacing.match(/(\d+)\s*x\s*(\d+)/);
+      if (match) {
+        const row = parseFloat(match[1]);
+        const plant = parseFloat(match[2]);
+        if (!isNaN(row) && !isNaN(plant)) {
+          plantsPerAcre = Math.round(43560 / (row * plant));
+        }
       }
-      const pp = fertilizerPlan.perPlant;
-      const perPlantText = `
+      if (plantsPerAcre > 0) {
+        let plantCountText = '';
+        if (isSwahili) {
+          plantCountText = `Kulingana na umbali wako ${spacing}, una takriban mimea ${plantsPerAcre} kwenye ekari ${fertilizerPlan.farmSize}.`;
+        } else if (isFrench) {
+          plantCountText = `Selon votre espacement ${spacing}, vous avez environ ${plantsPerAcre} plantes sur ${fertilizerPlan.farmSize} acres.`;
+        } else if (isSpanish) {
+          plantCountText = `Según su espaciamiento ${spacing}, tiene aproximadamente ${plantsPerAcre} plantas en ${fertilizerPlan.farmSize} acres.`;
+        } else {
+          plantCountText = `Based on your spacing of ${spacing}, you have approximately ${plantsPerAcre} plants on your ${fertilizerPlan.farmSize} acre farm.`;
+        }
+        const pp = fertilizerPlan.perPlant;
+        const perPlantText = `
 FERTILIZER PER PLANT
 DAP: ${pp.dapGrams.toFixed(1)} grams (${pp.dapGuide})
 UREA: ${pp.ureaGrams.toFixed(1)} grams (${pp.ureaGuide})
 MOP: ${pp.mopGrams.toFixed(1)} grams (${pp.mopGuide})
 TOTAL: ${pp.totalGrams.toFixed(1)} grams (${pp.totalGuide})
 `;
-      structuredList.push({ key: 'plant_population', params: { content: plantCountText + perPlantText, plants: plantsPerAcre, spacing } });
+        addToStructuredList({ key: 'plant_population', params: { content: plantCountText + perPlantText, plants: plantsPerAcre, spacing } });
+      }
+    }
+
+    // ========== BUSINESS TIP ==========
+    if (shouldIncludeModule('fertilizer_business_tip')) {
+      addToStructuredList({
+        key: 'fertilizer_business_tip',
+        params: {
+          symbol: currencySymbol,
+          content: isSwahili ? `SHAURI YA BIASHARA: Nunua ukubwa unaolingana na mahitaji yako ili kuepuka upotevu. Kila ${currencySymbol} unayookoa ni ${currencySymbol} uliyopata!` : isFrench ? `CONSEIL COMMERCIAL : Achetez la taille adaptée à vos besoins pour éviter le gaspillage. Chaque ${currencySymbol} économisé est un ${currencySymbol} gagné !` : isSpanish ? `CONSEJO DE NEGOCIO: Compre tamaños que se ajusten a sus necesidades para evitar desperdicio. ¡Cada ${currencySymbol} ahorrado es ${currencySymbol} ganado!` : `BUSINESS TIP: Buy sizes that fit your needs to avoid waste. Every ${currencySymbol} saved is ${currencySymbol} earned!`
+        }
+      });
+    }
+
+    // ========== FERTILIZER REMEMBER ==========
+    if (shouldIncludeModule('fertilizer_remember')) {
+      addToStructuredList({
+        key: 'fertilizer_remember',
+        params: {
+          crop: crop.toUpperCase(),
+          content: isSwahili ? `KUMBUKA: Hii ni BIASHARA yako ya ${crop.toUpperCase()}. Kila pembejeo lazima iongeze faida yako!` : isFrench ? `RAPPELEZ-VOUS : C'est votre ENTREPRISE ${crop.toUpperCase()}. Chaque intrant doit augmenter votre profit !` : isSpanish ? `RECUERDE: Esta es su EMPRESA de ${crop.toUpperCase()}. ¡Cada insumo debe aumentar su ganancia!` : `REMEMBER: This is your ${crop.toUpperCase()} ENTERPRISE. Every input must increase your profit!`
+        }
+      });
     }
   }
 
-  // ========== GROUP 8: BUSINESS TIP ==========
-  structuredList.push({
-    key: 'fertilizer_business_tip',
-    params: {
-      symbol: currencySymbol,
-      content: isSwahili ? `SHAURI YA BIASHARA: Nunua ukubwa unaolingana na mahitaji yako ili kuepuka upotevu. Kila ${currencySymbol} unayookoa ni ${currencySymbol} uliyopata!` : isFrench ? `CONSEIL COMMERCIAL : Achetez la taille adaptée à vos besoins pour éviter le gaspillage. Chaque ${currencySymbol} économisé est un ${currencySymbol} gagné !` : isSpanish ? `CONSEJO DE NEGOCIO: Compre tamaños que se ajusten a sus necesidades para evitar desperdicio. ¡Cada ${currencySymbol} ahorrado es ${currencySymbol} ganado!` : `BUSINESS TIP: Buy sizes that fit your needs to avoid waste. Every ${currencySymbol} saved is ${currencySymbol} earned!`
+  // ========== GROSS MARGIN ANALYSIS ==========
+  if (shouldIncludeModule('gross_margin_grouped')) {
+    let actualYieldKg = farmerData.actualYieldKg || 0;
+    let pricePerKg = farmerData.pricePerKg || 0;
+    let actualCosts = farmerData.totalCosts || 0;
+    if (!actualYieldKg || actualYieldKg === 0) {
+      const defaultYields: Record<string, number> = { maize: 2000, beans: 1200, cassava: 8000, bananas: 20000, coffee: 2000 };
+      actualYieldKg = defaultYields[lowerCrop] || 2000;
     }
-  });
+    if (!pricePerKg || pricePerKg === 0) pricePerKg = 0.5;
+    if (!actualCosts || actualCosts === 0) actualCosts = 50000;
 
-  // ========== GROUP 9: FERTILIZER REMEMBER ==========
-  structuredList.push({
-    key: 'fertilizer_remember',
-    params: {
-      crop: crop.toUpperCase(),
-      content: isSwahili ? `KUMBUKA: Hii ni BIASHARA yako ya ${crop.toUpperCase()}. Kila pembejeo lazima iongeze faida yako!` : isFrench ? `RAPPELEZ-VOUS : C'est votre ENTREPRISE ${crop.toUpperCase()}. Chaque intrant doit augmenter votre profit !` : isSpanish ? `RECUERDE: Esta es su EMPRESA de ${crop.toUpperCase()}. ¡Cada insumo debe aumentar su ganancia!` : `REMEMBER: This is your ${crop.toUpperCase()} ENTERPRISE. Every input must increase your profit!`
-    }
-  });
+    const lowYield = actualYieldKg * 0.33;
+    const mediumYield = actualYieldKg;
+    const highYield = actualYieldKg * 1.26;
+    const lowCost = actualCosts * 0.5;
+    const mediumCost = actualCosts;
+    const highCost = actualCosts * 1.5;
 
-  // ========== GROUP 10: DETAILED GROSS MARGIN TABLE ==========
-  let actualYieldKg = farmerData.actualYieldKg || 0;
-  let pricePerKg = farmerData.pricePerKg || 0;
-  let actualCosts = farmerData.totalCosts || 0;
-  if (!actualYieldKg || actualYieldKg === 0) {
-    const defaultYields: Record<string, number> = { maize: 2000, beans: 1200, cassava: 8000, bananas: 20000, coffee: 2000 };
-    actualYieldKg = defaultYields[lowerCrop] || 2000;
-  }
-  if (!pricePerKg || pricePerKg === 0) pricePerKg = 0.5;
-  if (!actualCosts || actualCosts === 0) actualCosts = 50000;
+    const lowRevenue = lowYield * pricePerKg;
+    const mediumRevenue = mediumYield * pricePerKg;
+    const highRevenue = highYield * pricePerKg;
 
-  const lowYield = actualYieldKg * 0.33;
-  const mediumYield = actualYieldKg;
-  const highYield = actualYieldKg * 1.26;
-  const lowCost = actualCosts * 0.5;
-  const mediumCost = actualCosts;
-  const highCost = actualCosts * 1.5;
+    const lowMargin = lowRevenue - lowCost;
+    const mediumMargin = mediumRevenue - mediumCost;
+    const highMargin = highRevenue - highCost;
 
-  const lowRevenue = lowYield * pricePerKg;
-  const mediumRevenue = mediumYield * pricePerKg;
-  const highRevenue = highYield * pricePerKg;
-
-  const lowMargin = lowRevenue - lowCost;
-  const mediumMargin = mediumRevenue - mediumCost;
-  const highMargin = highRevenue - highCost;
-
-  const marginTable = `
+    const marginTable = `
 GROSS MARGIN ANALYSIS FOR YOUR ${crop.toUpperCase()} ENTERPRISE (per acre)
 Based on YOUR actual farm data, here's how different management levels compare
 
@@ -678,40 +779,26 @@ BOTTOM LINE
 Moving from Medium to High could put an extra ${formatCurrency(highMargin - mediumMargin)} in your pocket
 `;
 
-  structuredList.push({ key: 'gross_margin_grouped', params: { content: marginTable, actualMargin: mediumMargin, potentialGain: highMargin - mediumMargin } });
+    addToStructuredList({ key: 'gross_margin_grouped', params: { content: marginTable, actualMargin: mediumMargin, potentialGain: highMargin - mediumMargin } });
+  }
 
-  // ========== GROUP 11: GOOD AGRICULTURAL PRACTICES ==========
-  let gapText = '';
-  if (isSwahili) {
-    gapText = `MAZOEZI BORA YA KILIMO KWA ${crop.toUpperCase()}\nTumia mbegu bora, mbolea sahihi, na umwagiliaji mzuri.`;
-  } else if (isFrench) {
-    gapText = `BONNES PRATIQUES AGRICOLES POUR ${crop.toUpperCase()}\nUtilisez des semences de qualité, des engrais appropriés et une irrigation correcte.`;
-  } else if (isSpanish) {
-    gapText = `BUENAS PRÁCTICAS AGRÍCOLAS PARA ${crop.toUpperCase()}\nUtilice semillas de calidad, fertilizantes apropiados y riego adecuado.`;
-  } else {
-    if (lowerCrop === 'coffee') {
-      gapText = `GOOD AGRICULTURAL PRACTICES FOR YOUR COFFEE ENTERPRISE
-Use healthy coffee seedlings (disease-resistant varieties). Plant at the onset of rains, spacing 2.5m x 2.5m (1,300 trees/acre). Dig holes 60cm x 60cm x 60cm, apply 100g DAP at planting. Maintain 40-50% shade for the first years. Apply 20kg of manure per tree annually. Prune to maintain shape. Harvest ripe (red) cherries.
-
-• Always read and follow the manufacturer's label – it's the law.
-• Observe pre-harvest intervals: do not harvest within the specified days after the last pesticide application.
-• Use the recommended fertilizer rate per acre – too much wastes money, too little reduces yield.
-• Rinse empty containers three times, puncture them, and dispose of them in designated sites. Never reuse for food or water.
-• Wear gloves, mask, long-sleeved shirt, and boots when handling agrochemicals.
-• Calibrate your sprayer before each use to apply the exact rate per acre.
-• Avoid spraying during strong wind or when bees are active (early morning or late evening).
-• Store products in their original containers, under lock, away from children, food, and animal feed.
-• Keep records of all inputs – date, product, rate, area treated – to track performance and meet export market requirements.
-• Trace elements (lead, cadmium, copper) can contaminate crops – maintain soil health to avoid market rejection.
-REMEMBER: Every practice you do well puts more money in your pocket.`;
+  // ========== GOOD AGRICULTURAL PRACTICES ==========
+  if (shouldIncludeModule('good_practices')) {
+    let gapText = '';
+    if (isSwahili) {
+      gapText = `MAZOEZI BORA YA KILIMO KWA ${crop.toUpperCase()}\nTumia mbegu bora, mbolea sahihi, na umwagiliaji mzuri.`;
+    } else if (isFrench) {
+      gapText = `BONNES PRATIQUES AGRICOLES POUR ${crop.toUpperCase()}\nUtilisez des semences de qualité, des engrais appropriés et une irrigation correcte.`;
+    } else if (isSpanish) {
+      gapText = `BUENAS PRÁCTICAS AGRÍCOLAS PARA ${crop.toUpperCase()}\nUtilice semillas de calidad, fertilizantes apropiados y riego adecuado.`;
     } else {
       gapText = `GOOD AGRICULTURAL PRACTICES FOR ${crop.toUpperCase()}\nUse quality seeds, proper fertilizers, and correct irrigation.\n\nREMEMBER: Every practice you do well puts more money in your pocket.`;
     }
+    addToStructuredList({ key: 'good_practices', params: { content: gapText, crop: crop.toUpperCase() } });
   }
-  structuredList.push({ key: 'good_practices', params: { content: gapText, crop: crop.toUpperCase() } });
 
-  // ========== GROUP 12: DISEASE MANAGEMENT ==========
-  if (farmerData.commonDiseases) {
+  // ========== DISEASE MANAGEMENT ==========
+  if (farmerData.commonDiseases && shouldIncludeModule('disease_management_grouped')) {
     let diseaseLines: string[] = [];
     const diseaseTitle = replacePlaceholders(isSwahili ? (SW.disease_management_title as string) : isFrench ? (FR.disease_management_title as string) : isSpanish ? (ES.disease_management_title as string) : null, { crop: crop.toUpperCase() }) || (isSwahili ? `UDHIBITI JUMUISHI WA MAGONJWA KWA BIASHARA YAKO YA ${crop.toUpperCase()}` : isFrench ? `GESTION INTÉGRÉE DES MALADIES POUR VOTRE ENTREPRISE ${crop.toUpperCase()}` : isSpanish ? `MANEJO INTEGRADO DE ENFERMEDADES PARA TU EMPRESA de ${crop.toUpperCase()}` : `INTEGRATED DISEASE MANAGEMENT FOR YOUR ${crop.toUpperCase()} ENTERPRISE`);
     diseaseLines.push(diseaseTitle);
@@ -861,11 +948,11 @@ REMEMBER: Every practice you do well puts more money in your pocket.`;
       diseaseLines = content.split('\n');
     }
 
-    structuredList.push({ key: 'disease_management_grouped', params: { content: diseaseLines.join('\n'), crop: crop.toUpperCase(), diseases: farmerData.commonDiseases, low: formatCurrency(2000), high: formatCurrency(5000), saved: formatCurrency(100000), symbol: currencySymbol } });
+    addToStructuredList({ key: 'disease_management_grouped', params: { content: diseaseLines.join('\n'), crop: crop.toUpperCase(), diseases: farmerData.commonDiseases, low: formatCurrency(2000), high: formatCurrency(5000), saved: formatCurrency(100000), symbol: currencySymbol } });
   }
 
-  // ========== GROUP 13: PEST MANAGEMENT ==========
-  if (farmerData.commonPests) {
+  // ========== PEST MANAGEMENT ==========
+  if (farmerData.commonPests && shouldIncludeModule('pest_management_grouped')) {
     let pestLines: string[] = [];
     const pestTitle = replacePlaceholders(isSwahili ? (SW.pest_management_title as string) : isFrench ? (FR.pest_management_title as string) : isSpanish ? (ES.pest_management_title as string) : null, { crop: crop.toUpperCase() }) || (isSwahili ? `UDHIBITI JUMUISHI WA WADUDU (IPM) KWA BIASHARA YAKO YA ${crop.toUpperCase()}` : isFrench ? `GESTION INTÉGRÉE DES RAVAGEURS (IPM) POUR VOTRE ENTREPRISE ${crop.toUpperCase()}` : isSpanish ? `MANEJO INTEGRADO DE PLAGAS (MIP) PARA TU EMPRESA de ${crop.toUpperCase()}` : `INTEGRATED PEST MANAGEMENT (IPM) FOR YOUR ${crop.toUpperCase()} ENTERPRISE`);
     pestLines.push(pestTitle);
@@ -1015,11 +1102,11 @@ REMEMBER: Every practice you do well puts more money in your pocket.`;
       pestLines = content.split('\n');
     }
 
-    structuredList.push({ key: 'pest_management_grouped', params: { content: pestLines.join('\n'), crop: crop.toUpperCase(), pests: farmerData.commonPests, lowLoss: formatCurrency(80000), highLoss: formatCurrency(120000), lowCost: formatCurrency(1500), highCost: formatCurrency(3000), saved: formatCurrency(100000), symbol: currencySymbol } });
+    addToStructuredList({ key: 'pest_management_grouped', params: { content: pestLines.join('\n'), crop: crop.toUpperCase(), pests: farmerData.commonPests, lowLoss: formatCurrency(80000), highLoss: formatCurrency(120000), lowCost: formatCurrency(1500), highCost: formatCurrency(3000), saved: formatCurrency(100000), symbol: currencySymbol } });
   }
 
-  // ========== GROUP 14: NUTRIENT DEFICIENCY ==========
-  if (farmerData.deficiencySymptoms && farmerData.deficiencySymptoms.trim() !== '') {
+  // ========== NUTRIENT DEFICIENCY ==========
+  if (farmerData.deficiencySymptoms && farmerData.deficiencySymptoms.trim() !== '' && shouldIncludeModule('deficiency_analysis')) {
     let symptoms = farmerData.deficiencySymptoms;
     let location = farmerData.deficiencyLocation || 'not specified';
     if (isFrench) {
@@ -1121,11 +1208,11 @@ REMEMBER: Every practice you do well puts more money in your pocket.`;
         deficiencyLines.push('BUSINESS TIP: Early detection saves yield and profit!');
       }
     }
-    structuredList.push({ key: 'deficiency_analysis', params: { content: deficiencyLines.join('\n'), symptoms, location, crop: crop.toUpperCase() } });
+    addToStructuredList({ key: 'deficiency_analysis', params: { content: deficiencyLines.join('\n'), symptoms, location, crop: crop.toUpperCase() } });
   }
 
-  // ========== GROUP 15: PLANT DAMAGE REPORT ==========
-  if (farmerData.plantsDamaged && farmerData.plantsDamaged > 0) {
+  // ========== PLANT DAMAGE REPORT ==========
+  if (farmerData.plantsDamaged && farmerData.plantsDamaged > 0 && shouldIncludeModule('plant_damage')) {
     let damageText = '';
     if (isFrench) {
       damageText = `RAPPORT DE DÉGÂTS POUR VOTRE ENTREPRISE ${crop.toUpperCase()}\nVous avez signalé ${farmerData.plantsDamaged} plantes endommagées au-delà de tout rétablissement.\nEnvisagez de revoir vos stratégies de lutte contre les ravageurs et les maladies pour éviter de futures pertes.\nPour des conseils personnalisés sur la réduction des dégâts aux plantes, interrogez notre système Q&A sur la lutte antiparasitaire ou la prévention des maladies.`;
@@ -1136,67 +1223,73 @@ REMEMBER: Every practice you do well puts more money in your pocket.`;
     } else {
       damageText = `DAMAGE REPORT FOR YOUR ${crop.toUpperCase()} ENTERPRISE\nYou reported ${farmerData.plantsDamaged} plants damaged beyond recovery.\nConsider reviewing your pest and disease management strategies to prevent future losses.\nFor personalized advice on reducing plant damage, ask our Q&A system about pest control or disease prevention.`;
     }
-    structuredList.push({ key: 'plant_damage', params: { content: damageText, count: farmerData.plantsDamaged } });
+    addToStructuredList({ key: 'plant_damage', params: { content: damageText, count: farmerData.plantsDamaged } });
   }
 
-  // ========== GROUP 16: SOIL AND WATER CONSERVATION ==========
-  const conservationPractices = farmerData.conservationPractices ? farmerData.conservationPractices.split(',').map(p => p.trim()) : [];
-  let conservationText = '';
-  if (conservationPractices.length > 0 && conservationPractices.some(p => p !== 'None')) {
-    if (isSwahili) {
-      conservationText = `UHIFADHI WA UDONGO NA MAJI KWA BIASHARA YAKO YA ${crop.toUpperCase()}\nTayari unatumia: ${conservationPractices.filter(p => p !== 'None').join(', ')}. Kazi nzuri!\n\nNJIA ZILIZOPENDEKEZWA\nSamadi: Endelea kuweka tani 5-10 kwa ekari. Inaboresha muundo wa udongo na uwezo wa kuhifadhi maji.\nMatuta: Bora kwa miteremko! Inapunguza mmonyoko wa udongo hadi 80%.\nKufunika: Kuhifadhi unyevu, kupunguza palizi. Tumia mabaki ya mazao - NI BURE! (Saves ${formatCurrency(5000)}/acre)\nMazao ya kufunika: Panda mucuna au dolichos kati ya mistari. Hutoa kilo 40 N/ekari kiasili! (Yanaokoa ${formatCurrency(3500)} ya mbolea)\nKuvuna maji ya mvua: Jenga mabirika - 1,000m³ yanagharimu ${formatCurrency(200000)}, yanadumu miaka 10.\nKilimo cha mtaro: Kwenye miteremko >5% - inapunguza mmonyoko kwa 50% na kuhifadhi maji.\n\nHALI YA BIASHARA\nKufunika kunaokoa palizi mara 2 = ${formatCurrency(5000)}/ekari iliyookolewa\nMazao ya kufunika hutoa kilo 40 N/ekari = yanaokoa ${formatCurrency(3500)} ya mbolea\nKila ${currencySymbol}1 inayowekezwa katika uhifadhi inarudisha ${currencySymbol}5 katika kuokoa pembejeo na kuongeza mavuno`;
-    } else if (isFrench) {
-      conservationText = `CONSERVATION DES SOLS ET DE L'EAU POUR VOTRE ENTREPRISE ${crop.toUpperCase()}\nVous utilisez déjà : ${conservationPractices.filter(p => p !== 'None').join(', ')}. Bon travail !\n\nPRATIQUES RECOMMANDÉES\nFumier : Continuez à appliquer 5-10 tonnes par acre. Améliore la structure du sol et la capacité de rétention d'eau.\nTerrasses : Excellentes pour les pentes ! Réduit l'érosion du sol jusqu'à 80%.\nPaillage : Retient l'humidité, réduit le désherbage. Utilisez les résidus de culture - c'est GRATUIT ! (Économise ${formatCurrency(5000)}/acre)\nCultures de couverture : Plantez du mucuna ou du dolichos entre les rangs. Fixe 40 kg N/acre naturellement ! (Économise ${formatCurrency(3500)} d'engrais)\nCollecte des eaux de pluie : Construisez des bassins - un bassin de 1 000 m³ coûte ${formatCurrency(200000)} et dure 10 ans.\nCulture en courbes de niveau : Sur les pentes >5% - réduit l'érosion de 50% et retient l'eau.\n\nCAS COMMERCIAL\nLe paillage permet d'économiser 2 désherbages = ${formatCurrency(5000)}/acre économisés\nLes cultures de couverture fixent 40 kg N/acre = économisent ${formatCurrency(3500)} d'engrais\nChaque ${currencySymbol}1 investi dans la conservation rapporte ${currencySymbol}5 en intrants économisés et en rendements accrus`;
-    } else if (isSpanish) {
-      conservationText = `CONSERVACIÓN DE SUELO Y AGUA PARA SU EMPRESA ${crop.toUpperCase()}\nYa está usando: ${conservationPractices.filter(p => p !== 'None').join(', ')}. ¡Buen trabajo!\n\nPRÁCTICAS RECOMENDADAS\nEstiércol: Continúe aplicando 5-10 toneladas por acre. Mejora la estructura del suelo y la capacidad de retención de agua.\nTerrazas: ¡Excelentes para pendientes! Reduce la erosión del suelo hasta en un 80%.\nAcolchado: Retiene humedad, reduce deshierbe. Use residuos de cultivos - ¡es GRATIS! (Ahorra ${formatCurrency(5000)}/acre)\nCultivos de cobertura: Plante mucuna o dolichos entre hileras. ¡Fija 40 kg N/acre naturalmente! (Ahorra ${formatCurrency(3500)} de fertilizante)\nCaptación de agua de lluvia: Construya reservorios - un reservorio de 1,000 m³ cuesta ${formatCurrency(200000)} y dura 10 años.\nSiembra en curvas de nivel: En pendientes >5% - reduce la erosión en un 50% y retiene agua.\n\nCASO DE NEGOCIO\nEl acolchado ahorra 2 rondas de deshierbe = ${formatCurrency(5000)}/acre ahorrados\nLos cultivos de cobertura fijan 40 kg N/acre = ahorran ${formatCurrency(3500)} de fertilizante\nCada ${currencySymbol}1 invertido en conservación retorna ${currencySymbol}5 en ahorro de insumos y mayores rendimientos`;
+  // ========== SOIL AND WATER CONSERVATION ==========
+  if (shouldIncludeModule('conservation')) {
+    const conservationPractices = farmerData.conservationPractices ? farmerData.conservationPractices.split(',').map(p => p.trim()) : [];
+    let conservationText = '';
+    if (conservationPractices.length > 0 && conservationPractices.some(p => p !== 'None')) {
+      if (isSwahili) {
+        conservationText = `UHIFADHI WA UDONGO NA MAJI KWA BIASHARA YAKO YA ${crop.toUpperCase()}\nTayari unatumia: ${conservationPractices.filter(p => p !== 'None').join(', ')}. Kazi nzuri!\n\nNJIA ZILIZOPENDEKEZWA\nSamadi: Endelea kuweka tani 5-10 kwa ekari. Inaboresha muundo wa udongo na uwezo wa kuhifadhi maji.\nMatuta: Bora kwa miteremko! Inapunguza mmonyoko wa udongo hadi 80%.\nKufunika: Kuhifadhi unyevu, kupunguza palizi. Tumia mabaki ya mazao - NI BURE! (Saves ${formatCurrency(5000)}/acre)\nMazao ya kufunika: Panda mucuna au dolichos kati ya mistari. Hutoa kilo 40 N/ekari kiasili! (Yanaokoa ${formatCurrency(3500)} ya mbolea)\nKuvuna maji ya mvua: Jenga mabirika - 1,000m³ yanagharimu ${formatCurrency(200000)}, yanadumu miaka 10.\nKilimo cha mtaro: Kwenye miteremko >5% - inapunguza mmonyoko kwa 50% na kuhifadhi maji.\n\nHALI YA BIASHARA\nKufunika kunaokoa palizi mara 2 = ${formatCurrency(5000)}/ekari iliyookolewa\nMazao ya kufunika hutoa kilo 40 N/ekari = yanaokoa ${formatCurrency(3500)} ya mbolea\nKila ${currencySymbol}1 inayowekezwa katika uhifadhi inarudisha ${currencySymbol}5 katika kuokoa pembejeo na kuongeza mavuno`;
+      } else if (isFrench) {
+        conservationText = `CONSERVATION DES SOLS ET DE L'EAU POUR VOTRE ENTREPRISE ${crop.toUpperCase()}\nVous utilisez déjà : ${conservationPractices.filter(p => p !== 'None').join(', ')}. Bon travail !\n\nPRATIQUES RECOMMANDÉES\nFumier : Continuez à appliquer 5-10 tonnes par acre. Améliore la structure du sol et la capacité de rétention d'eau.\nTerrasses : Excellentes pour les pentes ! Réduit l'érosion du sol jusqu'à 80%.\nPaillage : Retient l'humidité, réduit le désherbage. Utilisez les résidus de culture - c'est GRATUIT ! (Économise ${formatCurrency(5000)}/acre)\nCultures de couverture : Plantez du mucuna ou du dolichos entre les rangs. Fixe 40 kg N/acre naturellement ! (Économise ${formatCurrency(3500)} d'engrais)\nCollecte des eaux de pluie : Construisez des bassins - un bassin de 1 000 m³ coûte ${formatCurrency(200000)} et dure 10 ans.\nCulture en courbes de niveau : Sur les pentes >5% - réduit l'érosion de 50% et retient l'eau.\n\nCAS COMMERCIAL\nLe paillage permet d'économiser 2 désherbages = ${formatCurrency(5000)}/acre économisés\nLes cultures de couverture fixent 40 kg N/acre = économisent ${formatCurrency(3500)} d'engrais\nChaque ${currencySymbol}1 investi dans la conservation rapporte ${currencySymbol}5 en intrants économisés et en rendements accrus`;
+      } else if (isSpanish) {
+        conservationText = `CONSERVACIÓN DE SUELO Y AGUA PARA SU EMPRESA ${crop.toUpperCase()}\nYa está usando: ${conservationPractices.filter(p => p !== 'None').join(', ')}. ¡Buen trabajo!\n\nPRÁCTICAS RECOMENDADAS\nEstiércol: Continúe aplicando 5-10 toneladas por acre. Mejora la estructura del suelo y la capacidad de retención de agua.\nTerrazas: ¡Excelentes para pendientes! Reduce la erosión del suelo hasta en un 80%.\nAcolchado: Retiene humedad, reduce deshierbe. Use residuos de cultivos - ¡es GRATIS! (Ahorra ${formatCurrency(5000)}/acre)\nCultivos de cobertura: Plante mucuna o dolichos entre hileras. ¡Fija 40 kg N/acre naturalmente! (Ahorra ${formatCurrency(3500)} de fertilizante)\nCaptación de agua de lluvia: Construya reservorios - un reservorio de 1,000 m³ cuesta ${formatCurrency(200000)} y dura 10 años.\nSiembra en curvas de nivel: En pendientes >5% - reduce la erosión en un 50% y retiene agua.\n\nCASO DE NEGOCIO\nEl acolchado ahorra 2 rondas de deshierbe = ${formatCurrency(5000)}/acre ahorrados\nLos cultivos de cobertura fijan 40 kg N/acre = ahorran ${formatCurrency(3500)} de fertilizante\nCada ${currencySymbol}1 invertido en conservación retorna ${currencySymbol}5 en ahorro de insumos y mayores rendimientos`;
+      } else {
+        conservationText = `SOIL AND WATER CONSERVATION FOR YOUR ${crop.toUpperCase()} ENTERPRISE\nYou're already using: ${conservationPractices.filter(p => p !== 'None').join(', ')}. Great job!\n\nRECOMMENDED PRACTICES\nOrganic Manure: Continue applying 5-10 tons per acre.\nTerracing: Excellent for slopes! Reduces soil erosion by up to 80%.\nMulching: Retains moisture, reduces weeding. Use crop residues - it's FREE! (Saves ${formatCurrency(5000)}/acre)\nCover crops: Plant mucuna or dolichos between rows. Fixes 40kg N/acre naturally! (Saves ${formatCurrency(3500)} fertilizer)\nRainwater harvesting: Build water pans - 1,000m³ pan costs ${formatCurrency(200000)}, lasts 10 years.\nContour farming: On slopes >5% - reduces erosion by 50% and retains water.\n\nBUSINESS CASE\nMulching saves 2 weeding rounds = ${formatCurrency(5000)}/acre saved\nCover crops fix 40kg N/acre = saves ${formatCurrency(3500)} fertilizer\nEvery ${currencySymbol}1 invested in conservation returns ${currencySymbol}5 in saved inputs and increased yields`;
+      }
     } else {
-      conservationText = `SOIL AND WATER CONSERVATION FOR YOUR ${crop.toUpperCase()} ENTERPRISE\nYou're already using: ${conservationPractices.filter(p => p !== 'None').join(', ')}. Great job!\n\nRECOMMENDED PRACTICES\nOrganic Manure: Continue applying 5-10 tons per acre.\nTerracing: Excellent for slopes! Reduces soil erosion by up to 80%.\nMulching: Retains moisture, reduces weeding. Use crop residues - it's FREE! (Saves ${formatCurrency(5000)}/acre)\nCover crops: Plant mucuna or dolichos between rows. Fixes 40kg N/acre naturally! (Saves ${formatCurrency(3500)} fertilizer)\nRainwater harvesting: Build water pans - 1,000m³ pan costs ${formatCurrency(200000)}, lasts 10 years.\nContour farming: On slopes >5% - reduces erosion by 50% and retains water.\n\nBUSINESS CASE\nMulching saves 2 weeding rounds = ${formatCurrency(5000)}/acre saved\nCover crops fix 40kg N/acre = saves ${formatCurrency(3500)} fertilizer\nEvery ${currencySymbol}1 invested in conservation returns ${currencySymbol}5 in saved inputs and increased yields`;
+      if (isSwahili) {
+        conservationText = `UHIFADHI WA UDONGO NA MAJI KWA BIASHARA YAKO YA ${crop.toUpperCase()}\nHakuna mbinu za uhifadhi zilizoripotiwa. Hapa kuna mbinu zilizopendekezwa:\n\nNJIA ZILIZOPENDEKEZWA\nSamadi: Weka tani 5-10 kwa ekari. Inaboresha muundo wa udongo na uwezo wa kuhifadhi maji.\nMatuta: Bora kwa miteremko! Inapunguza mmonyoko wa udongo hadi 80%.\nKufunika: Kuhifadhi unyevu, kupunguza palizi. Tumia mabaki ya mazao - NI BURE! (Saves ${formatCurrency(5000)}/acre)\nMazao ya kufunika: Panda mucuna au dolichos kati ya mistari. Hutoa kilo 40 N/ekari kiasili! (Yanaokoa ${formatCurrency(3500)} ya mbolea)\nKuvuna maji ya mvua: Jenga mabirika - 1,000m³ yanagharimu ${formatCurrency(200000)}, yanadumu miaka 10.\nKilimo cha mtaro: Kwenye miteremko >5% - inapunguza mmonyoko kwa 50% na kuhifadhi maji.\n\nHALI YA BIASHARA\nKufunika kunaokoa palizi mara 2 = ${formatCurrency(5000)}/ekari iliyookolewa\nMazao ya kufunika hutoa kilo 40 N/ekari = yanaokoa ${formatCurrency(3500)} ya mbolea\nKila ${currencySymbol}1 inayowekezwa katika uhifadhi inarudisha ${currencySymbol}5 katika kuokoa pembejeo na kuongeza mavuno`;
+      } else if (isFrench) {
+        conservationText = `CONSERVATION DES SOLS ET DE L'EAU POUR VOTRE ENTREPRISE ${crop.toUpperCase()}\nAucune pratique de conservation signalée. Voici les techniques recommandées :\n\nPRATIQUES RECOMMANDÉES\nFumier : Appliquez 5-10 tonnes par acre. Améliore la structure du sol et la capacité de rétention d'eau.\nTerrasses : Excellentes pour les pentes ! Réduit l'érosion du sol jusqu'à 80%.\nPaillage : Retient l'humidité, réduit le désherbage. Utilisez les résidus de culture - c'est GRATUIT ! (Économise ${formatCurrency(5000)}/acre)\nCultures de couverture : Plantez du mucuna ou du dolichos entre les rangs. Fixe 40 kg N/acre naturellement ! (Économise ${formatCurrency(3500)} d'engrais)\nCollecte des eaux de pluie : Construisez des bassins - un bassin de 1 000 m³ coûte ${formatCurrency(200000)} et dure 10 ans.\nCulture en courbes de niveau : Sur les pentes >5% - réduit l'érosion de 50% et retient l'eau.\n\nCAS COMMERCIAL\nLe paillage permet d'économiser 2 désherbages = ${formatCurrency(5000)}/acre économisés\nLes cultures de couverture fixent 40 kg N/acre = économisent ${formatCurrency(3500)} d'engrais\nChaque ${currencySymbol}1 investi dans la conservation rapporte ${currencySymbol}5 en intrants économisés et en rendements accrus`;
+      } else if (isSpanish) {
+        conservationText = `CONSERVACIÓN DE SUELO Y AGUA PARA SU EMPRESA ${crop.toUpperCase()}\nNo se reportaron prácticas de conservación. Aquí están las técnicas recomendadas:\n\nPRÁCTICAS RECOMENDADAS\nEstiércol: Aplique 5-10 toneladas por acre. Mejora la estructura del suelo y la capacidad de retención de agua.\nTerrazas: ¡Excelentes para pendientes! Reduce la erosión del suelo hasta en un 80%.\nAcolchado: Retiene humedad, reduce deshierbe. Use residuos de cultivos - ¡es GRATIS! (Ahorra ${formatCurrency(5000)}/acre)\nCultivos de cobertura: Plante mucuna o dolichos entre hileras. ¡Fija 40 kg N/acre naturalmente! (Ahorra ${formatCurrency(3500)} de fertilizante)\nCaptación de agua de lluvia: Construya reservorios - un reservorio de 1,000 m³ cuesta ${formatCurrency(200000)} y dura 10 años.\nSiembra en curvas de nivel: En pendientes >5% - reduce la erosión en un 50% y retiene agua.\n\nCASO DE NEGOCIO\nEl acolchado ahorra 2 rondas de deshierbe = ${formatCurrency(5000)}/acre ahorrados\nLos cultivos de cobertura fijan 40 kg N/acre = ahorran ${formatCurrency(3500)} de fertilizante\nCada ${currencySymbol}1 invertido en conservación retorna ${currencySymbol}5 en ahorro de insumos y mayores rendimientos`;
+      } else {
+        conservationText = `SOIL AND WATER CONSERVATION FOR YOUR ${crop.toUpperCase()} ENTERPRISE\nNo conservation practices reported. Here are recommended practices:\n\nRECOMMENDED PRACTICES\nOrganic Manure: Apply 5-10 tons per acre.\nTerracing: Excellent for slopes! Reduces soil erosion by up to 80%.\nMulching: Retains moisture, reduces weeding. Use crop residues - it's FREE! (Saves ${formatCurrency(5000)}/acre)\nCover crops: Plant mucuna or dolichos between rows. Fixes 40kg N/acre naturally! (Saves ${formatCurrency(3500)} fertilizer)\nRainwater harvesting: Build water pans - 1,000m³ pan costs ${formatCurrency(200000)}, lasts 10 years.\nContour farming: On slopes >5% - reduces erosion by 50% and retains water.\n\nBUSINESS CASE\nMulching saves 2 weeding rounds = ${formatCurrency(5000)}/acre saved\nCover crops fix 40kg N/acre = saves ${formatCurrency(3500)} fertilizer\nEvery ${currencySymbol}1 invested in conservation returns ${currencySymbol}5 in saved inputs and increased yields`;
+      }
     }
-  } else {
-    if (isSwahili) {
-      conservationText = `UHIFADHI WA UDONGO NA MAJI KWA BIASHARA YAKO YA ${crop.toUpperCase()}\nHakuna mbinu za uhifadhi zilizoripotiwa. Hapa kuna mbinu zilizopendekezwa:\n\nNJIA ZILIZOPENDEKEZWA\nSamadi: Weka tani 5-10 kwa ekari. Inaboresha muundo wa udongo na uwezo wa kuhifadhi maji.\nMatuta: Bora kwa miteremko! Inapunguza mmonyoko wa udongo hadi 80%.\nKufunika: Kuhifadhi unyevu, kupunguza palizi. Tumia mabaki ya mazao - NI BURE! (Saves ${formatCurrency(5000)}/acre)\nMazao ya kufunika: Panda mucuna au dolichos kati ya mistari. Hutoa kilo 40 N/ekari kiasili! (Yanaokoa ${formatCurrency(3500)} ya mbolea)\nKuvuna maji ya mvua: Jenga mabirika - 1,000m³ yanagharimu ${formatCurrency(200000)}, yanadumu miaka 10.\nKilimo cha mtaro: Kwenye miteremko >5% - inapunguza mmonyoko kwa 50% na kuhifadhi maji.\n\nHALI YA BIASHARA\nKufunika kunaokoa palizi mara 2 = ${formatCurrency(5000)}/ekari iliyookolewa\nMazao ya kufunika hutoa kilo 40 N/ekari = yanaokoa ${formatCurrency(3500)} ya mbolea\nKila ${currencySymbol}1 inayowekezwa katika uhifadhi inarudisha ${currencySymbol}5 katika kuokoa pembejeo na kuongeza mavuno`;
-    } else if (isFrench) {
-      conservationText = `CONSERVATION DES SOLS ET DE L'EAU POUR VOTRE ENTREPRISE ${crop.toUpperCase()}\nAucune pratique de conservation signalée. Voici les techniques recommandées :\n\nPRATIQUES RECOMMANDÉES\nFumier : Appliquez 5-10 tonnes par acre. Améliore la structure du sol et la capacité de rétention d'eau.\nTerrasses : Excellentes pour les pentes ! Réduit l'érosion du sol jusqu'à 80%.\nPaillage : Retient l'humidité, réduit le désherbage. Utilisez les résidus de culture - c'est GRATUIT ! (Économise ${formatCurrency(5000)}/acre)\nCultures de couverture : Plantez du mucuna ou du dolichos entre les rangs. Fixe 40 kg N/acre naturellement ! (Économise ${formatCurrency(3500)} d'engrais)\nCollecte des eaux de pluie : Construisez des bassins - un bassin de 1 000 m³ coûte ${formatCurrency(200000)} et dure 10 ans.\nCulture en courbes de niveau : Sur les pentes >5% - réduit l'érosion de 50% et retient l'eau.\n\nCAS COMMERCIAL\nLe paillage permet d'économiser 2 désherbages = ${formatCurrency(5000)}/acre économisés\nLes cultures de couverture fixent 40 kg N/acre = économisent ${formatCurrency(3500)} d'engrais\nChaque ${currencySymbol}1 investi dans la conservation rapporte ${currencySymbol}5 en intrants économisés et en rendements accrus`;
+    addToStructuredList({ key: 'conservation', params: { content: conservationText } });
+  }
+
+  // ========== POST-HARVEST HANDLING & STORAGE ==========
+  if (shouldIncludeModule('post_harvest')) {
+    let storageMethod = farmerData.storageMethod || '';
+    if (isFrench) {
+      storageMethod = translateStorageFr(storageMethod);
+    }
+    let postHarvestText = '';
+    if (isFrench) {
+      postHarvestText = `MANUTENTION ET STOCKAGE POST-RÉCOLTE POUR VOTRE ENTREPRISE ${crop.toUpperCase()}\nMéthode de stockage : ${storageMethod}\n\n${getPostHarvestLossWarning(crop, language)}\n\n${getSortingGradingAdvice(crop, language)}\n${getValueAdditionSuggestion(crop, language)}\n\nCONSEIL COMMERCIAL : Réduire les pertes post-récolte de 10 % augmente votre profit de 10 % sans frais de production supplémentaires ! Triez et calibrez pour de meilleurs prix.`;
+    } else if (isSwahili) {
+      postHarvestText = `USHUGHULIKAJI NA UHIFADHI WA BAADA YA MAVUNO KWA BIASHARA YAKO YA ${crop.toUpperCase()}\nMbinu ya kuhifadhi: ${storageMethod}\n\n${getPostHarvestLossWarning(crop, language)}\n\n${getSortingGradingAdvice(crop, language)}\n${getValueAdditionSuggestion(crop, language)}\n\nTAARIFA YA BIASHARA: Kupunguza hasara za baada ya mavuno kwa 10% kunaongeza faida yako kwa 10% bila gharama za ziada za uzalishaji! Panga na chemsha mavuno yako kwa bei bora.`;
     } else if (isSpanish) {
-      conservationText = `CONSERVACIÓN DE SUELO Y AGUA PARA SU EMPRESA ${crop.toUpperCase()}\nNo se reportaron prácticas de conservación. Aquí están las técnicas recomendadas:\n\nPRÁCTICAS RECOMENDADAS\nEstiércol: Aplique 5-10 toneladas por acre. Mejora la estructura del suelo y la capacidad de retención de agua.\nTerrazas: ¡Excelentes para pendientes! Reduce la erosión del suelo hasta en un 80%.\nAcolchado: Retiene humedad, reduce deshierbe. Use residuos de cultivos - ¡es GRATIS! (Ahorra ${formatCurrency(5000)}/acre)\nCultivos de cobertura: Plante mucuna o dolichos entre hileras. ¡Fija 40 kg N/acre naturalmente! (Ahorra ${formatCurrency(3500)} de fertilizante)\nCaptación de agua de lluvia: Construya reservorios - un reservorio de 1,000 m³ cuesta ${formatCurrency(200000)} y dura 10 años.\nSiembra en curvas de nivel: En pendientes >5% - reduce la erosión en un 50% y retiene agua.\n\nCASO DE NEGOCIO\nEl acolchado ahorra 2 rondas de deshierbe = ${formatCurrency(5000)}/acre ahorrados\nLos cultivos de cobertura fijan 40 kg N/acre = ahorran ${formatCurrency(3500)} de fertilizante\nCada ${currencySymbol}1 invertido en conservación retorna ${currencySymbol}5 en ahorro de insumos y mayores rendimientos`;
+      postHarvestText = `MANEJO Y ALMACENAMIENTO POSTCOSECHA PARA SU EMPRESA ${crop.toUpperCase()}\nMétodo de almacenamiento: ${storageMethod}\n\n${getPostHarvestLossWarning(crop, language)}\n\n${getSortingGradingAdvice(crop, language)}\n${getValueAdditionSuggestion(crop, language)}\n\nCONSEJO COMERCIAL: ¡Reducir las pérdidas postcosecha en un 10% aumenta su ganancia en un 10% sin costos adicionales de producción! Seleccione y calibre para mejores precios.`;
     } else {
-      conservationText = `SOIL AND WATER CONSERVATION FOR YOUR ${crop.toUpperCase()} ENTERPRISE\nNo conservation practices reported. Here are recommended practices:\n\nRECOMMENDED PRACTICES\nOrganic Manure: Apply 5-10 tons per acre.\nTerracing: Excellent for slopes! Reduces soil erosion by up to 80%.\nMulching: Retains moisture, reduces weeding. Use crop residues - it's FREE! (Saves ${formatCurrency(5000)}/acre)\nCover crops: Plant mucuna or dolichos between rows. Fixes 40kg N/acre naturally! (Saves ${formatCurrency(3500)} fertilizer)\nRainwater harvesting: Build water pans - 1,000m³ pan costs ${formatCurrency(200000)}, lasts 10 years.\nContour farming: On slopes >5% - reduces erosion by 50% and retains water.\n\nBUSINESS CASE\nMulching saves 2 weeding rounds = ${formatCurrency(5000)}/acre saved\nCover crops fix 40kg N/acre = saves ${formatCurrency(3500)} fertilizer\nEvery ${currencySymbol}1 invested in conservation returns ${currencySymbol}5 in saved inputs and increased yields`;
+      postHarvestText = `POST-HARVEST HANDLING & STORAGE FOR YOUR ${crop.toUpperCase()} ENTERPRISE\nStorage method: ${storageMethod}\n\n${getPostHarvestLossWarning(crop, language)}\n\n${getSortingGradingAdvice(crop, language)}\n${getValueAdditionSuggestion(crop, language)}\n\nBUSINESS TIP: Reducing post-harvest losses by 10% increases your profit by 10% with no extra production costs! Sort and grade for better prices.`;
     }
+    addToStructuredList({ key: 'post_harvest', params: { content: postHarvestText } });
   }
-  structuredList.push({ key: 'conservation', params: { content: conservationText } });
 
-  // ========== GROUP 17: POST-HARVEST HANDLING & STORAGE ==========
-  let storageMethod = farmerData.storageMethod || '';
-  if (isFrench) {
-    storageMethod = translateStorageFr(storageMethod);
+  // ========== FARMING AS BUSINESS ==========
+  if (shouldIncludeModule('farming_business')) {
+    let businessText = '';
+    if (isSwahili) {
+      businessText = `KILIMO KAMA BIASHARA - ONGEZA FAIDA YAKO\n\n1. JUA GHARAMA ZAKO\nFuatilia KILA pembejeo: mbegu, mbolea, kazi, usafirishaji, magunia\nMfano mahindi ya kati: Gharama ${formatCurrency(40000)}/hekta\n\n2. NUNUA KWA JUMLA (Okoa 20-30%)\nDAP: gunia 50kg ${formatCurrency(3500)} -> Nunua magunia 10 ${formatCurrency(31500)} (okoa ${formatCurrency(3500)})\nCAN: gunia 50kg ${formatCurrency(3200)} -> Nunua magunia 10 ${formatCurrency(28800)} (okoa ${formatCurrency(3200)})\n\n3. UNDA VIKUNDI VYA WAKULIMA\nUnunuzi wa jumla wa pembejeo: Okoa 15-25%\nUsafirishaji wa pamoja: Okoa ${formatCurrency(5000)}/ekari\nUuzaji wa pamoja: Pata bei 10-20% za juu\n\n4. AWAMU YA KUONGEZEKA\nKila ${currencySymbol}1 ya ziada inayowekezwa inarudisha ${currencySymbol}3-5 faida\nEndelea kuwekeza - pembejeo zaidi = faida zaidi\n\nMATOKEO YA MWISHO: Kilimo ni BIASHARA. Fanya kila shilingi ikufanyie kazi`;
+    } else if (isFrench) {
+      businessText = `L'AGRICULTURE COMME ENTREPRISE - MAXIMISEZ VOTRE PROFIT\n\n1. CONNAISSEZ VOS COÛTS\nSuivez CHAQUE intrant : semences, engrais, main-d'œuvre, transport, sacs\nExemple maïs moyen : Coûts ${formatCurrency(40000)}/hectare\n\n2. ACHETEZ EN VRAC (Économisez 20-30%)\nDAP : sac de 50 kg ${formatCurrency(3500)} -> Achetez 10 sacs ${formatCurrency(31500)} (économisez ${formatCurrency(3500)})\nCAN : sac de 50 kg ${formatCurrency(3200)} -> Achetez 10 sacs ${formatCurrency(28800)} (économisez ${formatCurrency(3200)})\n\n3. FORMEZ DES GROUPES D'AGRICULTEURS\nAchats groupés d'intrants : Économisez 15-25%\nTransport partagé : Économisez ${formatCurrency(5000)}/acre\nMarketing collectif : Obtenez des prix 10-20% plus élevés\n\n4. PHASE EXPONENTIELLE\nChaque ${currencySymbol}1 supplémentaire investi rapporte ${currencySymbol}3-5 de profit\nContinuez à investir - plus d'intrants = plus de profits\n\nCONCLUSION : L'agriculture est une ENTREPRISE. Faites travailler chaque centime pour vous`;
+    } else if (isSpanish) {
+      businessText = `AGRICULTURA COMO NEGOCIO - MAXIMICE SU GANANCIA\n\n1. CONOZCA SUS COSTOS\nRegistre CADA insumo: semillas, fertilizante, mano de obra, transporte, sacos\nEjemplo maíz medio: Costos ${formatCurrency(40000)}/hectárea\n\n2. COMPRE AL POR MAYOR (Ahorre 20-30%)\nDAP: saco 50kg ${formatCurrency(3500)} -> Compre 10 sacos ${formatCurrency(31500)} (ahorre ${formatCurrency(3500)})\nCAN: saco 50kg ${formatCurrency(3200)} -> Compre 10 sacos ${formatCurrency(28800)} (ahorre ${formatCurrency(3200)})\n\n3. FORME GRUPOS DE AGRICULTORES\nCompras al por mayor de insumos: Ahorre 15-25%\nTransporte compartido: Ahorre ${formatCurrency(5000)}/acre\nComercialización colectiva: Obtenga precios 10-20% más altos\n\n4. FASE EXPONENCIAL\nCada ${currencySymbol}1 adicional invertido retorna ${currencySymbol}3-5 de ganancia\nSiga invirtiendo - más insumos = más ganancias\n\nRESULTADO FINAL: La agricultura es un NEGOCIO. ¡Haga que cada ${currencySymbol} trabaje para usted!`;
+    } else {
+      businessText = `FARMING AS A BUSINESS - MAXIMIZE YOUR PROFIT\n\n1. KNOW YOUR COSTS\nTrack EVERY input: seeds, fertilizer, labour, transport, bags\nExample maize medium: Costs ${formatCurrency(40000)}/hectare\n\n2. BUY IN BULK (Save 20-30%)\nDAP: 50kg bag ${formatCurrency(3500)} -> Buy 10 bags ${formatCurrency(31500)} (save ${formatCurrency(3500)})\nCAN: 50kg bag ${formatCurrency(3200)} -> Buy 10 bags ${formatCurrency(28800)} (save ${formatCurrency(3200)})\n\n3. FORM FARMER GROUPS\nBulk input purchases: Save 15-25%\nShared transport: Save ${formatCurrency(5000)}/acre\nCollective marketing: Get 10-20% higher prices\n\n4. EXPONENTIAL PHASE\nEvery additional ${currencySymbol}1 input returns ${currencySymbol}3-5 profit\nKeep investing - more inputs = more profits\n\nBOTTOM LINE: Farming is a BUSINESS. Make every ${currencySymbol} work for you`;
+    }
+    addToStructuredList({ key: 'farming_business', params: { content: businessText } });
   }
-  let postHarvestText = '';
-  if (isFrench) {
-    postHarvestText = `MANUTENTION ET STOCKAGE POST-RÉCOLTE POUR VOTRE ENTREPRISE ${crop.toUpperCase()}\nMéthode de stockage : ${storageMethod}\n\n${getPostHarvestLossWarning(crop, language)}\n\n${getSortingGradingAdvice(crop, language)}\n${getValueAdditionSuggestion(crop, language)}\n\nCONSEIL COMMERCIAL : Réduire les pertes post-récolte de 10 % augmente votre profit de 10 % sans frais de production supplémentaires ! Triez et calibrez pour de meilleurs prix.`;
-  } else if (isSwahili) {
-    postHarvestText = `USHUGHULIKAJI NA UHIFADHI WA BAADA YA MAVUNO KWA BIASHARA YAKO YA ${crop.toUpperCase()}\nMbinu ya kuhifadhi: ${storageMethod}\n\n${getPostHarvestLossWarning(crop, language)}\n\n${getSortingGradingAdvice(crop, language)}\n${getValueAdditionSuggestion(crop, language)}\n\nTAARIFA YA BIASHARA: Kupunguza hasara za baada ya mavuno kwa 10% kunaongeza faida yako kwa 10% bila gharama za ziada za uzalishaji! Panga na chemsha mavuno yako kwa bei bora.`;
-  } else if (isSpanish) {
-    postHarvestText = `MANEJO Y ALMACENAMIENTO POSTCOSECHA PARA SU EMPRESA ${crop.toUpperCase()}\nMétodo de almacenamiento: ${storageMethod}\n\n${getPostHarvestLossWarning(crop, language)}\n\n${getSortingGradingAdvice(crop, language)}\n${getValueAdditionSuggestion(crop, language)}\n\nCONSEJO COMERCIAL: ¡Reducir las pérdidas postcosecha en un 10% aumenta su ganancia en un 10% sin costos adicionales de producción! Seleccione y calibre para mejores precios.`;
-  } else {
-    postHarvestText = `POST-HARVEST HANDLING & STORAGE FOR YOUR ${crop.toUpperCase()} ENTERPRISE\nStorage method: ${storageMethod}\n\n${getPostHarvestLossWarning(crop, language)}\n\n${getSortingGradingAdvice(crop, language)}\n${getValueAdditionSuggestion(crop, language)}\n\nBUSINESS TIP: Reducing post-harvest losses by 10% increases your profit by 10% with no extra production costs! Sort and grade for better prices.`;
-  }
-  structuredList.push({ key: 'post_harvest', params: { content: postHarvestText } });
 
-  // ========== GROUP 18: FARMING AS BUSINESS ==========
-  let businessText = '';
-  if (isSwahili) {
-    businessText = `KILIMO KAMA BIASHARA - ONGEZA FAIDA YAKO\n\n1. JUA GHARAMA ZAKO\nFuatilia KILA pembejeo: mbegu, mbolea, kazi, usafirishaji, magunia\nMfano mahindi ya kati: Gharama ${formatCurrency(40000)}/hekta\n\n2. NUNUA KWA JUMLA (Okoa 20-30%)\nDAP: gunia 50kg ${formatCurrency(3500)} -> Nunua magunia 10 ${formatCurrency(31500)} (okoa ${formatCurrency(3500)})\nCAN: gunia 50kg ${formatCurrency(3200)} -> Nunua magunia 10 ${formatCurrency(28800)} (okoa ${formatCurrency(3200)})\n\n3. UNDA VIKUNDI VYA WAKULIMA\nUnunuzi wa jumla wa pembejeo: Okoa 15-25%\nUsafirishaji wa pamoja: Okoa ${formatCurrency(5000)}/ekari\nUuzaji wa pamoja: Pata bei 10-20% za juu\n\n4. AWAMU YA KUONGEZEKA\nKila ${currencySymbol}1 ya ziada inayowekezwa inarudisha ${currencySymbol}3-5 faida\nEndelea kuwekeza - pembejeo zaidi = faida zaidi\n\nMATOKEO YA MWISHO: Kilimo ni BIASHARA. Fanya kila shilingi ikufanyie kazi`;
-  } else if (isFrench) {
-    businessText = `L'AGRICULTURE COMME ENTREPRISE - MAXIMISEZ VOTRE PROFIT\n\n1. CONNAISSEZ VOS COÛTS\nSuivez CHAQUE intrant : semences, engrais, main-d'œuvre, transport, sacs\nExemple maïs moyen : Coûts ${formatCurrency(40000)}/hectare\n\n2. ACHETEZ EN VRAC (Économisez 20-30%)\nDAP : sac de 50 kg ${formatCurrency(3500)} -> Achetez 10 sacs ${formatCurrency(31500)} (économisez ${formatCurrency(3500)})\nCAN : sac de 50 kg ${formatCurrency(3200)} -> Achetez 10 sacs ${formatCurrency(28800)} (économisez ${formatCurrency(3200)})\n\n3. FORMEZ DES GROUPES D'AGRICULTEURS\nAchats groupés d'intrants : Économisez 15-25%\nTransport partagé : Économisez ${formatCurrency(5000)}/acre\nMarketing collectif : Obtenez des prix 10-20% plus élevés\n\n4. PHASE EXPONENTIELLE\nChaque ${currencySymbol}1 supplémentaire investi rapporte ${currencySymbol}3-5 de profit\nContinuez à investir - plus d'intrants = plus de profits\n\nCONCLUSION : L'agriculture est une ENTREPRISE. Faites travailler chaque centime pour vous`;
-  } else if (isSpanish) {
-    businessText = `AGRICULTURA COMO NEGOCIO - MAXIMICE SU GANANCIA\n\n1. CONOZCA SUS COSTOS\nRegistre CADA insumo: semillas, fertilizante, mano de obra, transporte, sacos\nEjemplo maíz medio: Costos ${formatCurrency(40000)}/hectárea\n\n2. COMPRE AL POR MAYOR (Ahorre 20-30%)\nDAP: saco 50kg ${formatCurrency(3500)} -> Compre 10 sacos ${formatCurrency(31500)} (ahorre ${formatCurrency(3500)})\nCAN: saco 50kg ${formatCurrency(3200)} -> Compre 10 sacos ${formatCurrency(28800)} (ahorre ${formatCurrency(3200)})\n\n3. FORME GRUPOS DE AGRICULTORES\nCompras al por mayor de insumos: Ahorre 15-25%\nTransporte compartido: Ahorre ${formatCurrency(5000)}/acre\nComercialización colectiva: Obtenga precios 10-20% más altos\n\n4. FASE EXPONENCIAL\nCada ${currencySymbol}1 adicional invertido retorna ${currencySymbol}3-5 de ganancia\nSiga invirtiendo - más insumos = más ganancias\n\nRESULTADO FINAL: La agricultura es un NEGOCIO. ¡Haga que cada ${currencySymbol} trabaje para usted!`;
-  } else {
-    businessText = `FARMING AS A BUSINESS - MAXIMIZE YOUR PROFIT\n\n1. KNOW YOUR COSTS\nTrack EVERY input: seeds, fertilizer, labour, transport, bags\nExample maize medium: Costs ${formatCurrency(40000)}/hectare\n\n2. BUY IN BULK (Save 20-30%)\nDAP: 50kg bag ${formatCurrency(3500)} -> Buy 10 bags ${formatCurrency(31500)} (save ${formatCurrency(3500)})\nCAN: 50kg bag ${formatCurrency(3200)} -> Buy 10 bags ${formatCurrency(28800)} (save ${formatCurrency(3200)})\n\n3. FORM FARMER GROUPS\nBulk input purchases: Save 15-25%\nShared transport: Save ${formatCurrency(5000)}/acre\nCollective marketing: Get 10-20% higher prices\n\n4. EXPONENTIAL PHASE\nEvery additional ${currencySymbol}1 input returns ${currencySymbol}3-5 profit\nKeep investing - more inputs = more profits\n\nBOTTOM LINE: Farming is a BUSINESS. Make every ${currencySymbol} work for you`;
-  }
-  structuredList.push({ key: 'farming_business', params: { content: businessText } });
-
-  // ========== GROUP 19: NUTRITION & HEALTH BENEFITS ==========
-  if (farmerData.wantsNutritionBenefits) {
+  // ========== NUTRITION & HEALTH BENEFITS ==========
+  if (farmerData.wantsNutritionBenefits && shouldIncludeModule('nutrition_benefits')) {
     let nutritionText = '';
     if (lowerCrop === 'coffee') {
       if (isFrench) {
@@ -1229,7 +1322,16 @@ REMEMBER: Every practice you do well puts more money in your pocket.`;
         nutritionText = `🌿 NUTRITIONAL BENEFITS – ${crop.toUpperCase()}\nRich in vitamins, minerals, and antioxidants. A healthy diet starts on your farm.`;
       }
     }
-    structuredList.push({ key: 'nutrition_benefits', params: { content: nutritionText } });
+    addToStructuredList({ key: 'nutrition_benefits', params: { content: nutritionText } });
+  }
+
+  // ========== REMINDER ==========
+  if (shouldIncludeModule('reminder')) {
+    const reminderText = isSwahili ? "Chunguza udongo wako kila mwaka ili kuweka biashara yako yenye faida." :
+                         isFrench ? "Testez votre sol chaque année pour garder votre entreprise rentable." :
+                         isSpanish ? "Analice su suelo anualmente para mantener su empresa rentable." :
+                         "Test your soil yearly to keep your enterprise profitable.";
+    addToStructuredList({ key: 'reminder', params: { content: reminderText } });
   }
 
   const list = structuredList.map(item => item.params?.content || '').filter(c => c);

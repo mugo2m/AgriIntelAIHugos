@@ -123,9 +123,25 @@ export default function HomeContent({ user, farmerSessions, recentQueries }: Hom
             {safeT('ask_anything_description')}
           </p>
 
-          <Button asChild className="bg-green-600 hover:bg-green-700 text-white max-sm:w-full">
-            <Link href="/generate">🌱 {safeT('start_session')}</Link>
-          </Button>
+          <div className="flex flex-col sm:flex-row gap-3">
+            {/* NEW: Quick Recommendation Button */}
+            <Button asChild className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white max-sm:w-full shadow-lg">
+              <Link href="/recommendation">
+                🚀 {safeT('quick_recommendation') || "Quick Recommendation"}
+              </Link>
+            </Button>
+
+            {/* Existing: Full Session Button */}
+            <Button asChild variant="outline" className="border-green-600 text-green-700 hover:bg-green-50 max-sm:w-full">
+              <Link href="/generate">
+                📋 {safeT('full_health_check') || "Complete Farm Health Check"}
+              </Link>
+            </Button>
+          </div>
+
+          <p className="text-sm text-gray-500">
+            {safeT('quick_or_full_help') || "Quick = targeted advice • Full = complete farm analysis"}
+          </p>
         </div>
 
         <Image
@@ -223,8 +239,8 @@ export default function HomeContent({ user, farmerSessions, recentQueries }: Hom
           ) : (
             <div className="col-span-3 text-center py-8 bg-gray-50 rounded-lg">
               <p className="text-gray-500">{safeT('no_sessions')}</p>
-              <Link href="/generate" className="text-green-600 hover:text-green-700 mt-2 inline-block">
-                🌾 {safeT('start_first_session')}
+              <Link href="/recommendation" className="text-green-600 hover:text-green-700 mt-2 inline-block">
+                🚀 {safeT('start_first_session') || "Start Your First Session"}
               </Link>
             </div>
           )}

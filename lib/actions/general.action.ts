@@ -1,4 +1,5 @@
 ﻿// lib/actions/general.action.ts
+// VERSION: 2.0 – Fully compatible with "No Soil Test" path (extensionInputs stored in session)
 "use server";
 
 import { db } from "@/firebase/admin";
@@ -414,6 +415,14 @@ DAMAGE REPORT:
 - Plants damaged beyond recovery: ${session.plantsDamaged} plants
 ` : "";
 
+        // Include extension inputs if present (no soil test)
+        const extensionContext = session.extensionInputs ? `
+EXTENSION OFFICER INPUTS (No Soil Test):
+- Planting Fertilizer: ${session.extensionInputs.plantingFertilizerType || "Not specified"} at ${session.extensionInputs.plantingFertilizerQuantity || 0} kg/acre
+- Topdressing Fertilizer: ${session.extensionInputs.topdressingFertilizerType || "Not specified"} at ${session.extensionInputs.topdressingFertilizerQuantity || 0} kg/acre
+- Potassium Fertilizer: ${session.extensionInputs.potassiumFertilizerType || "Not specified"} at ${session.extensionInputs.potassiumFertilizerQuantity || 0} kg/acre
+` : "";
+
         const prompt = `
 You are an agricultural extension officer. Based on this farmer's Q&A session, provide a comprehensive summary.
 
@@ -423,8 +432,10 @@ FARMER DETAILS:
 - Location: ${session?.county || "Not specified"}
 - Farm size: ${session?.cultivatedAcres || session?.acres || "Not specified"} acres
 - Management level: ${session?.managementLevel || "Not specified"}
+- Soil test done: ${session.soilTest ? "Yes" : "No"}
 
 ${soilContext}
+${extensionContext}
 ${damageContext}
 ${financialContext}
 
@@ -439,8 +450,9 @@ INSTRUCTIONS:
 2. Provide 3 follow-up recommendations
 3. Include financial advice based on their questions
 4. If soil test data exists, highlight key findings
-5. If damage reports exist, acknowledge them and provide recovery advice
-6. Emphasize farming as a BUSINESS - every input should maximize profit
+5. If extension inputs exist (no soil test), acknowledge them and provide advice based on those inputs
+6. If damage reports exist, acknowledge them and provide recovery advice
+7. Emphasize farming as a BUSINESS - every input should maximize profit
 
 Return as JSON:
 {
@@ -449,6 +461,7 @@ Return as JSON:
   "financialAdvice": "string",
   "soilTestAdvice": "string",
   "damageAdvice": "string",
+  "extensionAdvice": "string",
   "topics": ["string"],
   "nextSteps": "string"
 }
@@ -480,6 +493,7 @@ Return as JSON:
         financialAdvice: grossMargin?.recommendation || "Track all input costs (seeds, fertilizer, labour) to calculate your actual profit margins. Farming is a BUSINESS!",
         soilTestAdvice: soilTestSummary ? `Your soil test from ${soilTestSummary.testDate} shows ${soilTestSummary.phRating} pH and ${soilTestSummary.phosphorusRating} phosphorus.` : "Consider doing a soil test for precise fertilizer recommendations - it can save you up to 30% on fertilizer costs!",
         damageAdvice: session.plantsDamaged ? `You reported ${session.plantsDamaged} plants damaged beyond recovery. Consider reviewing your pest and disease management strategies.` : "",
+        extensionAdvice: session.extensionInputs ? `You provided extension officer recommendations: ${session.extensionInputs.plantingFertilizerType} at ${session.extensionInputs.plantingFertilizerQuantity} kg/acre.` : "",
         topics: session?.crops || ["general farming"],
         nextSteps: "Continue asking questions about your specific crops to maximize profitability."
       };
@@ -495,6 +509,7 @@ Return as JSON:
       financialAdvice: summary.financialAdvice || null,
       soilTestAdvice: summary.soilTestAdvice || null,
       damageAdvice: summary.damageAdvice || null,
+      extensionAdvice: summary.extensionAdvice || null,
       topics: summary.topics,
       nextSteps: summary.nextSteps,
       questionCount: qaPairs.length,

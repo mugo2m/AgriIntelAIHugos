@@ -1,4 +1,5 @@
 // lib/fertilizerCalculator.ts
+// VERSION: 2.0 – No changes needed for No Soil Test path (API uses separate extension builder)
 import { SoilTestResults, NutrientRequirement, FertilizerRecommendation, FertilizerBlendResult } from '@/types/soilTest';
 import { plantingFertilizers, getPlantingFertilizerById } from './fertilizers/plantingFertilizers';
 import { topDressingFertilizers, getTopDressingFertilizerById } from './fertilizers/topDressingFertilizers';
