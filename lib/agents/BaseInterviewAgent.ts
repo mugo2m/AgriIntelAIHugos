@@ -1,82 +1,38 @@
 // lib/agents/BaseInterviewAgent.ts
+// lib/agents/BaseInterviewAgent.ts
+
+// This matches the old "dependsOn" logic perfectly
+export interface DependsOn {
+  field: string;
+  value?: string;
+  valueNot?: string;
+  field2?: string;
+}
 
 export interface InterviewQuestion {
   id: string;
-  type:
-    | "text"
-    | "number"
-    | "select"
-    | "multiselect"
-    | "date"
-    | "boolean"
-    | "image";
-
-  label: string;
-
+  type: "text" | "number" | "dropdown" | "multiselect" | "date" | "button" | "custom";
+  questionKey: string;       // The i18n key (e.g., "question_common_diseases")
+  options?: string[];        // Hardcoded or dynamically generated options
   placeholder?: string;
-
-  options?: {
-    value: string;
-    label: string;
-  }[];
-
-  required?: boolean;
-
-  dependsOn?: {
-    field: string;
-    value: any;
-  };
-
-  validation?: (value: any) => boolean;
+  step?: string;
+  min?: number;
+  max?: number;
+  dependsOn?: DependsOn;     // Conditional logic
+  sectionKey?: string;       // e.g., "section_diseases"
+  renderCustom?: boolean;    // For complex custom renders like nutrient dropdowns
 }
 
-export interface InterviewAnswer {
-  [key: string]: any;
+// The context passed to every agent (answers collected so far)
+export interface FarmerContext {
+  crops?: string;
+  hasDoneSoilTest?: string;
+  country?: string;
+  [key: string]: any; // Allow any other farmer detail
 }
 
 export abstract class BaseInterviewAgent {
-  protected questions: InterviewQuestion[] = [];
-
-  protected answers: InterviewAnswer = {};
-
-  getQuestions(): InterviewQuestion[] {
-    return this.questions;
-  }
-
-  getAnswers(): InterviewAnswer {
-    return this.answers;
-  }
-
-  setAnswer(questionId: string, value: any) {
-    this.answers[questionId] = value;
-  }
-
-  getAnswer(questionId: string) {
-    return this.answers[questionId];
-  }
-
-  hasAnswer(questionId: string) {
-    return this.answers[questionId] !== undefined;
-  }
-
-  resetAnswers() {
-    this.answers = {};
-  }
-
-  isQuestionVisible(question: InterviewQuestion): boolean {
-    if (!question.dependsOn) return true;
-
-    return (
-      this.answers[question.dependsOn.field] ===
-      question.dependsOn.value
-    );
-  }
-
-  getVisibleQuestions(): InterviewQuestion[] {
-    return this.questions.filter((q) =>
-      this.isQuestionVisible(q)
-    );
-  }
-
-  abstract generateRecommendation(): Promise<any>;
+  abstract getAgentKey(): string;
+  // Returns the list of questions for this agent based on the current context
+  abstract getQuestions(context: FarmerContext): InterviewQuestion[];
 }

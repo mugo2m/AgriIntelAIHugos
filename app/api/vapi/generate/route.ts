@@ -1,4 +1,7 @@
-// app/api/vapi/generate/route.ts – UPDATED with Lime after Fertilizer Plan
+// app/api/vapi/generate/route.ts – FULLY UPDATED
+// Supports both crops and poultry via the same recommendation engine
+// Poultry path uses generateRecommendations (with isPoultry: true)
+
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/firebase/admin";
 import { soilTestInterpreter } from "@/lib/soilTestInterpreter";
@@ -8,7 +11,7 @@ import { getSpacingOptions } from "@/lib/data/spacing";
 import { getPlantingAdvice, getPlantingAdviceText } from "@/lib/data/plantingDates";
 import { COUNTRY_CURRENCY_MAP } from "@/lib/config/currency";
 
-console.log("Farmer Session Generation Route Loaded");
+console.log("Farmer Session Generation Route Loaded - v7.0 (Unified Engine)");
 
 const withTimeout = <T>(promise: Promise<T>, ms: number, errorMessage: string = "Operation timed out"): Promise<T> => {
   let timeoutId: NodeJS.Timeout;
@@ -40,6 +43,11 @@ function getCacheKey(inputs: any): string {
     spacing,
     storageMethod,
     wantsNutritionBenefits,
+    isPoultry,
+    poultry_breed,
+    poultry_system,
+    poultry_flock_size,
+    poultry_age_weeks,
   } = inputs;
   return JSON.stringify({
     lang: userLanguage,
@@ -59,6 +67,11 @@ function getCacheKey(inputs: any): string {
     spacing,
     storage: storageMethod,
     wants: wantsNutritionBenefits,
+    isPoultry,
+    poultry_breed,
+    poultry_system,
+    poultry_flock_size,
+    poultry_age_weeks,
   });
 }
 
@@ -408,7 +421,7 @@ function addLineBreaksForVoice(recommendations: any): any {
 // ========== MAIN POST ==========
 export async function POST(request: NextRequest) {
   try {
-    console.log("🚀🚀🚀 USING V5.1 ROUTE (Lime after Fertilizer Plan) 🚀🚀🚀");
+    console.log("🚀🚀🚀 USING V7.0 ROUTE (Unified Engine) 🚀🚀🚀");
     const body = await request.json();
     const cookieLanguage = request.cookies.get('preferred-language')?.value;
     const bodyLanguage = body.language;
@@ -416,6 +429,7 @@ export async function POST(request: NextRequest) {
     console.log(`🌐 Generating recommendations in language: ${userLanguage}`);
 
     const {
+      // Common fields
       farmerName, phoneNumber, subCounty, ward, village, totalFarmSize, cultivatedAcres, waterSources,
       crops, cropVarieties, cropAcres, plantingDate, seedSource, spacing, seedRate,
       usePlantingFertilizer, plantingFertilizerType, plantingFertilizerQuantity,
@@ -444,18 +458,165 @@ export async function POST(request: NextRequest) {
       useCertifiedSeed, seedQuantity, userid, country,
       deficiencySymptoms, deficiencyLocation, wantsNutritionBenefits,
       modules,
+
+      // ===== POULTRY FIELDS =====
+      isPoultry,
+      poultry_breed,
+      poultry_system,
+      poultry_flock_size,
+      poultry_age_weeks,
+      poultry_farming_goal,
+      poultry_location_region,
+      poultry_rainfall_pattern,
+      poultry_altitude,
+      poultry_feed_type,
+      poultry_feed_cost_kg,
+      poultry_vaccination_done,
+      poultry_mortality_count,
+      poultry_chick_cost,
+      poultry_egg_price,
+      poultry_meat_price,
+      poultry_house_size_m2,
     } = body;
 
-    const cleanedCommonPests = cleanUserInput(commonPests);
-    const cleanedCommonDiseases = cleanUserInput(commonDiseases);
-    const cleanedConservationPractices = cleanUserInput(conservationPractices);
-
-    if (!crops || !county || !userid) {
-      console.error("Missing required fields:", { crops, county, userid });
-      return NextResponse.json({ error: "Missing required fields: crops, county, userid are required" }, { status: 400 });
+    // Basic validation (userid is always required)
+    if (!userid) {
+      console.error("Missing required fields: userid");
+      return NextResponse.json({ error: "Missing required fields: userid is required" }, { status: 400 });
     }
 
     const currencyConfig = getCurrencyForCountry(country);
+
+    // ============================================================
+    // POULTRY PATH – uses generateRecommendations with isPoultry: true
+    // ============================================================
+    if (isPoultry) {
+      console.log(`🐔 Generating poultry recommendations for breed: ${poultry_breed}, system: ${poultry_system}, flock: ${poultry_flock_size}`);
+
+      // Build farmerData for the recommendation engine
+      const farmerData = {
+        farmerName: farmerName || 'Farmer',
+        country: country || 'kenya',
+        language: userLanguage,
+        currencySymbol: currencyConfig.symbol,
+        currencyName: currencyConfig.name,
+        county: county || '',
+        // Poultry fields
+        poultry_breed: poultry_breed || 'Sussex',
+        poultry_system: poultry_system || 'deep_litter',
+        poultry_flock_size: poultry_flock_size || 100,
+        poultry_age_weeks: poultry_age_weeks || 0,
+        poultry_farming_goal: poultry_farming_goal || 'Both',
+        poultry_location_region: poultry_location_region || 'Moderate',
+        poultry_rainfall_pattern: poultry_rainfall_pattern || 'Wet',
+        poultry_altitude: poultry_altitude || 'Lowland',
+        poultry_feed_type: poultry_feed_type || 'Mash',
+        poultry_feed_cost_kg: poultry_feed_cost_kg || 65,
+        poultry_vaccination_done: poultry_vaccination_done || 'No',
+        poultry_mortality_count: poultry_mortality_count || 0,
+        poultry_chick_cost: poultry_chick_cost || 120,
+        poultry_egg_price: poultry_egg_price || 280,
+        poultry_meat_price: poultry_meat_price || 350,
+        poultry_house_size_m2: poultry_house_size_m2 || 40,
+        // Disease fields (collected by PoultryDiseaseAgent)
+        poultry_disease: body.poultry_disease || '',
+        symptomsObserved: body.symptomsObserved || '',
+        mortalityCountDisease: body.mortalityCountDisease || '',
+        diseaseDuration: body.diseaseDuration || '',
+      };
+
+      // Call the recommendation engine
+      let recommendationsOutput = await withTimeout(
+        generateRecommendations({
+          hasSoilTest: false,
+          soilAnalysis: null,
+          fertilizerPlan: null,
+          crop: '',
+          crops: [],
+          farmerData: farmerData,
+          modules: modules || [],
+          isPoultry: true,
+          poultrySpecies: 'chicken',
+        }),
+        600000,
+        "Recommendation generation timed out after 600 seconds"
+      );
+
+      // Post-process: add line breaks for voice
+      recommendationsOutput = addLineBreaksForVoice(recommendationsOutput);
+
+      // Save session
+      const sessionRef = db.collection("farmer_sessions").doc();
+      const sessionId = sessionRef.id;
+
+      const farmerSession = {
+        id: sessionId,
+        userId: userid,
+        language: userLanguage,
+        farmerName,
+        phoneNumber,
+        county,
+        subCounty,
+        ward,
+        village,
+        country: country || 'kenya',
+        species: "poultry",
+        isPoultry: true,
+        poultry: {
+          breed: poultry_breed,
+          system: poultry_system,
+          flockSize: poultry_flock_size,
+          ageWeeks: poultry_age_weeks,
+          farmingGoal: poultry_farming_goal,
+          locationRegion: poultry_location_region,
+          rainfallPattern: poultry_rainfall_pattern,
+          altitude: poultry_altitude,
+          feedType: poultry_feed_type,
+          feedCostKg: poultry_feed_cost_kg,
+          vaccinationDone: poultry_vaccination_done,
+          mortalityCount: poultry_mortality_count,
+          chickCost: poultry_chick_cost,
+          eggPrice: poultry_egg_price,
+          meatPrice: poultry_meat_price,
+          houseSizeM2: poultry_house_size_m2,
+          disease: body.poultry_disease || '',
+          symptomsObserved: body.symptomsObserved || '',
+          mortalityCountDisease: body.mortalityCountDisease || '',
+          diseaseDuration: body.diseaseDuration || '',
+        },
+        recommendations: recommendationsOutput.list || [],
+        financialAdvice: recommendationsOutput.financialAdvice || null,
+        structuredList: recommendationsOutput.structuredList || [],
+        structuredFinancialAdvice: recommendationsOutput.structuredFinancialAdvice || null,
+        metadata: {
+          createdAt: new Date().toISOString(),
+          source: "poultry-v7.0-unified-engine",
+          version: "7.0"
+        }
+      };
+
+      await sessionRef.set(farmerSession);
+      console.log(`✅ Saved poultry session ${sessionId} for ${poultry_breed}. Recommendations count: ${recommendationsOutput.structuredList?.length || 0}`);
+
+      return NextResponse.json({
+        success: true,
+        sessionId: sessionId,
+        structuredList: recommendationsOutput.structuredList || [],
+        structuredFinancialAdvice: recommendationsOutput.structuredFinancialAdvice || null,
+        financialAdvice: recommendationsOutput.financialAdvice || null,
+        recommendations: recommendationsOutput.list || [],
+        welcomeMessage: `Welcome ${farmerName || "Farmer"}! I've prepared your poultry recommendations for ${poultry_breed}.`
+      }, { status: 200 });
+    }
+
+    // ============================================================
+    // CROP PATH – existing logic (unchanged)
+    // ============================================================
+    if (!crops || !county) {
+      console.error("Missing required fields for crops:", { crops, county });
+      return NextResponse.json({ error: "Missing required fields: crops, county are required for crop path" }, { status: 400 });
+    }
+
     const cropsArray = crops.split(",").map((c: string) => c.trim());
     const primaryCrop = cropsArray[0];
     const farmSize = parseFloat(cropAcres) || parseFloat(acres) || 1;
@@ -638,7 +799,6 @@ export async function POST(request: NextRequest) {
     }
 
     // ===== LIME HANDLING =====
-    // Check if recCalciticLime and recDolomiticLime were provided (even if 0)
     const hasCalcitic = recCalciticLime !== undefined && recCalciticLime !== null && recCalciticLime !== "";
     const hasDolomitic = recDolomiticLime !== undefined && recDolomiticLime !== null && recDolomiticLime !== "";
 
@@ -648,15 +808,11 @@ export async function POST(request: NextRequest) {
     const calciticPrice = calciticLimePricePerBag ? parseFloat(calciticLimePricePerBag) : 300;
     const dolomiticPrice = dolomiticLimePricePerBag ? parseFloat(dolomiticLimePricePerBag) : 350;
 
-    // Calculate costs
     const calciticCost = Math.ceil(calciticKg / 50) * calciticPrice;
     const dolomiticCost = Math.ceil(dolomiticKg / 50) * dolomiticPrice;
     const limeCost = calciticCost + dolomiticCost;
 
-    // Add lime cost to total fertilizer investment
     fertilizerPlan.totalCost = (fertilizerPlan.totalCost || 0) + limeCost;
-
-    // Store lime details for later
     fertilizerPlan.limeRecommendations = {
       calcitic: { kgNeeded: calciticKg, pricePer50kg: calciticPrice, cost: calciticCost },
       dolomitic: { kgNeeded: dolomiticKg, pricePer50kg: dolomiticPrice, cost: dolomiticCost }
@@ -673,7 +829,8 @@ export async function POST(request: NextRequest) {
       userLanguage, primaryCrop, hasDoneSoilTest, farmSize,
       soilTestPH, soilTestP, soilTestK, actualYieldKg: validatedYieldKg,
       pricePerKg: validatedPricePerKg, totalCosts, country, plantsDamaged,
-      deficiencySymptoms, deficiencyLocation, spacing, storageMethod, wantsNutritionBenefits
+      deficiencySymptoms, deficiencyLocation, spacing, storageMethod, wantsNutritionBenefits,
+      isPoultry: false, poultry_breed: null, poultry_system: null, poultry_flock_size: null, poultry_age_weeks: null
     });
 
     if (cache.has(cacheKey)) {
@@ -699,9 +856,9 @@ export async function POST(request: NextRequest) {
             farmerData: {
               farmerName: farmerName || 'Farmer',
               usePlantingFertilizer, useTopdressingFertilizer,
-              conservationPractices: cleanedConservationPractices,
-              commonPests: cleanedCommonPests,
-              commonDiseases: cleanedCommonDiseases,
+              conservationPractices: cleanUserInput(conservationPractices),
+              commonPests: cleanUserInput(commonPests),
+              commonDiseases: cleanUserInput(commonDiseases),
               managementLevel: "Medium",
               actualYieldKg: validatedYieldKg,
               pricePerKg: validatedPricePerKg,
@@ -746,17 +903,13 @@ export async function POST(request: NextRequest) {
 
     // ===== POST-PROCESS: INSERT LIME AFTER FERTILIZER PLAN =====
     if (recommendationsOutput && modules && modules.includes("fertilizer_plan")) {
-      // Build lime content only if lime data was provided (even if zero)
       const showLime = (hasCalcitic || hasDolomitic) || (calciticKg > 0 || dolomiticKg > 0);
-
       let limeContent = "";
       if (showLime) {
         limeContent = "Lime Recommendations (based on your soil test)\n";
-        // Show calcitic
         const calciticBags = Math.ceil(calciticKg / 50);
         const calciticCostDisplay = calciticBags * calciticPrice;
         limeContent += `- Calcitic Lime: ${calciticKg.toFixed(0)} kg/acre (${calciticBags} bag(s) of 50kg)\n  Cost: ${formatCurrencyForCountry(calciticCostDisplay, country)}\n`;
-        // Show dolomitic
         const dolomiticBags = Math.ceil(dolomiticKg / 50);
         const dolomiticCostDisplay = dolomiticBags * dolomiticPrice;
         limeContent += `- Dolomitic Lime: ${dolomiticKg.toFixed(0)} kg/acre (${dolomiticBags} bag(s) of 50kg)\n  Cost: ${formatCurrencyForCountry(dolomiticCostDisplay, country)}\n`;
@@ -765,36 +918,15 @@ export async function POST(request: NextRequest) {
 
       if (limeContent) {
         const structuredList = recommendationsOutput.structuredList || [];
-        // Remove any existing lime item to avoid duplication
         const existingLimeIndex = structuredList.findIndex((item: any) => item.key === "lime_recommendation");
-        if (existingLimeIndex !== -1) {
-          structuredList.splice(existingLimeIndex, 1);
-        }
-
-        // ✅ NEW: Insert AFTER fertilizer_header_grouped
+        if (existingLimeIndex !== -1) structuredList.splice(existingLimeIndex, 1);
         let insertIndex = structuredList.findIndex((item: any) => item.key === "fertilizer_header_grouped");
-        if (insertIndex === -1) {
-          // fallback: after confidence_label
-          insertIndex = structuredList.findIndex((item: any) => item.key === "confidence_label");
-        }
+        if (insertIndex === -1) insertIndex = structuredList.findIndex((item: any) => item.key === "confidence_label");
         if (insertIndex === -1) insertIndex = 1;
-
-        // Insert the lime item after the found index
-        structuredList.splice(insertIndex + 1, 0, {
-          key: "lime_recommendation",
-          params: { content: limeContent }
-        });
-
+        structuredList.splice(insertIndex + 1, 0, { key: "lime_recommendation", params: { content: limeContent } });
         recommendationsOutput.structuredList = structuredList;
-
-        // Also update the list array for voice
         const hasLimeInList = recommendationsOutput.list.some((item: any) => item.key === "lime_recommendation");
-        if (!hasLimeInList) {
-          recommendationsOutput.list.push({
-            key: "lime_recommendation",
-            params: { content: limeContent }
-          });
-        }
+        if (!hasLimeInList) recommendationsOutput.list.push({ key: "lime_recommendation", params: { content: limeContent } });
       }
     }
 
@@ -833,10 +965,10 @@ export async function POST(request: NextRequest) {
       plantingDate,
       plantingAdvice,
       plantingAdviceText,
-      commonPests: cleanedCommonPests ? cleanedCommonPests.split(',').map((p: string) => p.trim()) : [],
-      commonDiseases: cleanedCommonDiseases ? cleanedCommonDiseases.split(',').map((d: string) => d.trim()) : [],
+      commonPests: cleanUserInput(commonPests) ? cleanUserInput(commonPests).split(',').map((p: string) => p.trim()) : [],
+      commonDiseases: cleanUserInput(commonDiseases) ? cleanUserInput(commonDiseases).split(',').map((d: string) => d.trim()) : [],
       storageMethod,
-      conservationPractices: cleanedConservationPractices ? cleanedConservationPractices.split(',').map((p: string) => p.trim()) : [],
+      conservationPractices: cleanUserInput(conservationPractices) ? cleanUserInput(conservationPractices).split(',').map((p: string) => p.trim()) : [],
       recommendations: recommendationsOutput.list,
       financialAdvice: recommendationsOutput.financialAdvice,
       structuredList: recommendationsOutput.structuredList || [],
@@ -888,7 +1020,7 @@ export async function POST(request: NextRequest) {
         warnings: { yield: yieldWarnings, price: priceWarnings, spacing: spacingWarning ? [spacingWarning] : [] },
         createdAt: new Date().toISOString(),
         source: "logic-based",
-        version: "5.1-lime-after-fertilizer-plan"
+        version: "7.0"
       }
     };
 
@@ -917,7 +1049,7 @@ export async function POST(request: NextRequest) {
 export async function GET() {
   return NextResponse.json({
     status: "operational",
-    message: "Farmer Session Generation API - v5.1: Lime after Fertilizer Plan",
-    version: "5.1"
+    message: "Farmer Session Generation API - v7.0: Unified Engine for Crops + Poultry",
+    version: "7.0"
   });
 }

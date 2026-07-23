@@ -1,43 +1,37 @@
-// lib/agents/AgentRegistry.ts
-import { EnterpriseSetupAgent } from "./EnterpriseSetupAgent";
-import { FertilizerInterviewAgent } from "./FertilizerInterviewAgent";
-import { PestInterviewAgent } from "./PestInterviewAgent";
-import { DiseaseInterviewAgent } from "./DiseaseInterviewAgent";
-import { NutrientInterviewAgent } from "./NutrientInterviewAgent";
-import { GrossMarginInterviewAgent } from "./GrossMarginInterviewAgent";
-import { StorageInterviewAgent } from "./StorageInterviewAgent";
-import { ConservationInterviewAgent } from "./ConservationInterviewAgent";
-import { GAPInterviewAgent } from "./GAPInterviewAgent";
-import { InterviewAgentConstructor } from "./AgentTypes";
+// lib/agents/agentRegistry.ts
+import { BaseInterviewAgent, InterviewQuestion, FarmerContext } from "./BaseInterviewAgent";
+import EnterpriseSetupAgent from "./EnterpriseSetupAgent";
+import DiseaseInterviewAgent from "./DiseaseInterviewAgent";
 
-export const AgentRegistry: InterviewAgentConstructor[] = [
-  EnterpriseSetupAgent,
-  FertilizerInterviewAgent,
-  PestInterviewAgent,
-  DiseaseInterviewAgent,
-  NutrientInterviewAgent,
-  GrossMarginInterviewAgent,
-  StorageInterviewAgent,
-  ConservationInterviewAgent,
-  GAPInterviewAgent,
-];
+const agentMap: Record<string, BaseInterviewAgent> = {
+  EnterpriseSetupAgent: new EnterpriseSetupAgent(),
+  DiseaseInterviewAgent: new DiseaseInterviewAgent(),
+  // Add other agents here when ready
+};
 
-export const AgentNames = [
-  "Enterprise Setup",
-  "Fertilizer Management",
-  "Pest Management",
-  "Disease Management",
-  "Nutrient Management",
-  "Gross Margin",
-  "Storage",
-  "Conservation",
-  "Good Agricultural Practices",
-];
+export function getQuestionsForAgents(
+  agentNames: string[],
+  context: FarmerContext
+): InterviewQuestion[] {
+  let allQuestions: InterviewQuestion[] = [];
 
-export function getAgentName(index: number): string {
-  return AgentNames[index] || `Agent ${index + 1}`;
-}
+  const finalAgentNames = agentNames.includes("EnterpriseSetupAgent")
+    ? agentNames
+    : ["EnterpriseSetupAgent", ...agentNames];
 
-export function getTotalAgents(): number {
-  return AgentRegistry.length;
+  for (const name of finalAgentNames) {
+    const agent = agentMap[name];
+    if (agent && typeof agent.getQuestions === "function") {
+      allQuestions = allQuestions.concat(agent.getQuestions(context));
+    } else {
+      console.warn(`Agent "${name}" not found or invalid.`);
+    }
+  }
+
+  const seen = new Set<string>();
+  return allQuestions.filter((q) => {
+    if (seen.has(q.id)) return false;
+    seen.add(q.id);
+    return true;
+  });
 }

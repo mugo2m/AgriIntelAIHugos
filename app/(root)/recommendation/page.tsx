@@ -1,4 +1,5 @@
-// app/(root)/recommendation/page.tsx
+// app/(root)/recommendation/page.tsx – COMPLETE
+// Entry point for all recommendations – Crops + Poultry
 "use client";
 
 import { useState } from "react";
@@ -18,17 +19,22 @@ interface RecommendationOption {
   agents: string[];
   modules: string[];
   color: string;
+  category?: "crops" | "poultry" | "both";
 }
 
 const OPTIONS: RecommendationOption[] = [
+  // ============================================================
+  // CROP OPTIONS
+  // ============================================================
   {
     id: "fertilizer",
     label: "Fertilizer Recommendation",
     emoji: "🌱",
     description: "Personalized fertilizer plan based on your soil or extension advice",
     agents: ["EnterpriseSetupAgent", "FertilizerInterviewAgent"],
-    modules: ["confidence", "fertilizer_plan","soil_test","planting_fertilizer", "topdressing_fertilizer", "business_tip", "fertilizer_remember", "reminder"],
+    modules: ["confidence", "fertilizer_plan", "soil_test", "planting_fertilizer", "topdressing_fertilizer", "business_tip", "fertilizer_remember", "reminder"],
     color: "from-green-500 to-emerald-600",
+    category: "crops"
   },
   {
     id: "pest",
@@ -38,6 +44,7 @@ const OPTIONS: RecommendationOption[] = [
     agents: ["EnterpriseSetupAgent", "PestInterviewAgent"],
     modules: ["confidence", "pest_management", "plant_damage", "reminder"],
     color: "from-red-500 to-orange-600",
+    category: "crops"
   },
   {
     id: "disease",
@@ -47,6 +54,7 @@ const OPTIONS: RecommendationOption[] = [
     agents: ["EnterpriseSetupAgent", "DiseaseInterviewAgent"],
     modules: ["confidence", "disease_management", "plant_damage", "reminder"],
     color: "from-purple-500 to-pink-600",
+    category: "crops"
   },
   {
     id: "nutrient",
@@ -56,6 +64,7 @@ const OPTIONS: RecommendationOption[] = [
     agents: ["EnterpriseSetupAgent", "NutrientInterviewAgent"],
     modules: ["confidence", "deficiency_analysis", "plant_damage", "reminder"],
     color: "from-blue-500 to-cyan-600",
+    category: "crops"
   },
   {
     id: "financial",
@@ -65,6 +74,7 @@ const OPTIONS: RecommendationOption[] = [
     agents: ["EnterpriseSetupAgent", "GrossMarginInterviewAgent"],
     modules: ["confidence", "gross_margin", "farming_business", "reminder"],
     color: "from-amber-500 to-yellow-600",
+    category: "crops"
   },
   {
     id: "conservation",
@@ -74,6 +84,7 @@ const OPTIONS: RecommendationOption[] = [
     agents: ["EnterpriseSetupAgent", "ConservationInterviewAgent"],
     modules: ["confidence", "conservation", "reminder"],
     color: "from-teal-500 to-green-600",
+    category: "crops"
   },
   {
     id: "postharvest",
@@ -83,6 +94,7 @@ const OPTIONS: RecommendationOption[] = [
     agents: ["EnterpriseSetupAgent", "StorageInterviewAgent"],
     modules: ["confidence", "post_harvest", "reminder"],
     color: "from-indigo-500 to-blue-600",
+    category: "crops"
   },
   {
     id: "business",
@@ -92,6 +104,7 @@ const OPTIONS: RecommendationOption[] = [
     agents: ["EnterpriseSetupAgent", "GAPInterviewAgent"],
     modules: ["confidence", "farming_business", "reminder"],
     color: "from-violet-500 to-purple-600",
+    category: "crops"
   },
   {
     id: "nutrition",
@@ -101,6 +114,7 @@ const OPTIONS: RecommendationOption[] = [
     agents: ["EnterpriseSetupAgent"],
     modules: ["confidence", "nutrition_benefits", "reminder"],
     color: "from-rose-500 to-pink-600",
+    category: "crops"
   },
   {
     id: "complete",
@@ -110,6 +124,101 @@ const OPTIONS: RecommendationOption[] = [
     agents: [],
     modules: ["complete"],
     color: "from-emerald-600 to-teal-700",
+    category: "crops"
+  },
+
+  // ============================================================
+  // POULTRY OPTIONS (FIXED: using PoultryDiseaseAgent instead of DiseaseInterviewAgent)
+  // ============================================================
+  {
+    id: "poultry_disease",
+    label: "Poultry Disease Management",
+    emoji: "🐔",
+    description: "Identify poultry diseases and get treatment options (vaccination, antibiotics, biosecurity)",
+    agents: ["PoultrySetupAgent", "PoultryDiseaseAgent"], // ✅ FIXED
+    modules: ["confidence", "poultry_disease_management", "bird_damage", "reminder"],
+    color: "from-orange-500 to-red-600",
+    category: "poultry"
+  },
+  {
+    id: "poultry_health",
+    label: "Complete Poultry Health Check",
+    emoji: "🩺",
+    description: "Full health assessment including diseases, parasites, nutrition, and financial analysis",
+    agents: ["PoultrySetupAgent", "PoultryDiseaseAgent"], // ✅ FIXED
+    modules: ["confidence", "poultry_disease_management", "poultry_feed", "poultry_vaccination", "poultry_financial", "poultry_housing", "poultry_biosecurity", "poultry_breed_advice", "poultry_sourcing", "bird_damage", "reminder"],
+    color: "from-amber-500 to-orange-600",
+    category: "poultry"
+  },
+  {
+    id: "poultry_feed",
+    label: "Poultry Feed & Nutrition",
+    emoji: "🍽️",
+    description: "Get feed recommendations, protein requirements, and FCR advice for your birds",
+    agents: ["PoultrySetupAgent"],
+    modules: ["confidence", "poultry_feed", "reminder"],
+    color: "from-green-500 to-teal-600",
+    category: "poultry"
+  },
+  {
+    id: "poultry_vaccination",
+    label: "Poultry Vaccination Schedule",
+    emoji: "💉",
+    description: "Get a full vaccination schedule with costs and timing for your flock",
+    agents: ["PoultrySetupAgent"],
+    modules: ["confidence", "poultry_vaccination", "reminder"],
+    color: "from-blue-500 to-cyan-600",
+    category: "poultry"
+  },
+  {
+    id: "poultry_financial",
+    label: "Poultry Financial Analysis",
+    emoji: "💰",
+    description: "Calculate cost per bird, break-even prices, and profit margins",
+    agents: ["PoultrySetupAgent", "GrossMarginInterviewAgent"],
+    modules: ["confidence", "poultry_financial", "farming_business", "reminder"],
+    color: "from-amber-500 to-yellow-600",
+    category: "poultry"
+  },
+  {
+    id: "poultry_housing",
+    label: "Poultry Housing Advice",
+    emoji: "🏠",
+    description: "Get space requirements, ventilation, and equipment recommendations",
+    agents: ["PoultrySetupAgent"],
+    modules: ["confidence", "poultry_housing", "reminder"],
+    color: "from-purple-500 to-indigo-600",
+    category: "poultry"
+  },
+  {
+    id: "poultry_biosecurity",
+    label: "Poultry Biosecurity Checklist",
+    emoji: "🧹",
+    description: "Critical biosecurity steps to prevent disease outbreaks",
+    agents: ["PoultrySetupAgent"],
+    modules: ["confidence", "poultry_biosecurity", "reminder"],
+    color: "from-red-500 to-rose-600",
+    category: "poultry"
+  },
+  {
+    id: "poultry_breed",
+    label: "Poultry Breed Advice",
+    emoji: "🐓",
+    description: "Find the best breed for your climate, system, and farming goals",
+    agents: ["PoultrySetupAgent"],
+    modules: ["confidence", "poultry_breed_advice", "reminder"],
+    color: "from-pink-500 to-rose-600",
+    category: "poultry"
+  },
+  {
+    id: "poultry_sourcing",
+    label: "Hatchery & Sourcing",
+    emoji: "📍",
+    description: "Find hatcheries near you with prices and breed availability",
+    agents: ["PoultrySetupAgent"],
+    modules: ["confidence", "poultry_sourcing", "reminder"],
+    color: "from-teal-500 to-cyan-600",
+    category: "poultry"
   },
 ];
 
@@ -118,6 +227,7 @@ export default function RecommendationPage() {
   const { t, ready, isOnline } = useOfflineTranslation();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [activeCategory, setActiveCategory] = useState<"all" | "crops" | "poultry">("all");
 
   const safeT = (key: string, params?: any): string => {
     try {
@@ -147,13 +257,17 @@ export default function RecommendationPage() {
     router.push("/interview-flow");
   };
 
+  const filteredOptions = activeCategory === "all"
+    ? OPTIONS
+    : OPTIONS.filter(opt => opt.category === activeCategory);
+
   return (
     <div className="flex flex-col gap-6 p-4 max-w-4xl mx-auto">
       {!isOnline && <OfflineBanner />}
 
       {/* Header */}
       <div className="flex items-center gap-4">
-        <Link href="/" className="p-2 bg-gray-100 rounded-xl hover:bg-gray-200">
+        <Link href="/" className="p-2 bg-gray-100 rounded-xl hover:bg-gray-200 transition">
           <ArrowLeft className="w-5 h-5" />
         </Link>
         <div>
@@ -167,9 +281,37 @@ export default function RecommendationPage() {
         </div>
       </div>
 
+      {/* Category Filter */}
+      <div className="flex gap-2 bg-gray-100 p-1 rounded-xl self-start">
+        <button
+          onClick={() => setActiveCategory("all")}
+          className={`px-4 py-2 rounded-lg text-sm font-medium transition ${
+            activeCategory === "all" ? "bg-white text-green-700 shadow" : "text-gray-600 hover:bg-gray-200"
+          }`}
+        >
+          {safeT("all") || "All"}
+        </button>
+        <button
+          onClick={() => setActiveCategory("crops")}
+          className={`px-4 py-2 rounded-lg text-sm font-medium transition ${
+            activeCategory === "crops" ? "bg-white text-green-700 shadow" : "text-gray-600 hover:bg-gray-200"
+          }`}
+        >
+          🌾 {safeT("crops") || "Crops"}
+        </button>
+        <button
+          onClick={() => setActiveCategory("poultry")}
+          className={`px-4 py-2 rounded-lg text-sm font-medium transition ${
+            activeCategory === "poultry" ? "bg-white text-orange-700 shadow" : "text-gray-600 hover:bg-gray-200"
+          }`}
+        >
+          🐔 {safeT("poultry") || "Poultry"}
+        </button>
+      </div>
+
       {/* Options Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {OPTIONS.map((option) => (
+        {filteredOptions.map((option) => (
           <button
             key={option.id}
             onClick={() => handleSelect(option)}
@@ -186,10 +328,26 @@ export default function RecommendationPage() {
                 {safeT("full_report") || "Full Report"}
               </span>
             )}
+            {option.category === "poultry" && (
+              <span className="inline-block mt-2 text-xs bg-orange-100 text-orange-700 px-2 py-1 rounded-full ml-2">
+                🐔 Poultry
+              </span>
+            )}
+            {option.category === "crops" && option.id !== "complete" && (
+              <span className="inline-block mt-2 text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full ml-2">
+                🌾 Crops
+              </span>
+            )}
             <div className={`absolute top-0 right-0 w-2 h-full bg-gradient-to-b ${option.color} opacity-30`} />
           </button>
         ))}
       </div>
+
+      {filteredOptions.length === 0 && (
+        <div className="text-center py-8 text-gray-500">
+          {safeT("no_options_available") || "No options available for this category."}
+        </div>
+      )}
 
       {loading && (
         <div className="text-center py-4">

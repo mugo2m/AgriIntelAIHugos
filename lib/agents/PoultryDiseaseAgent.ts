@@ -1,47 +1,58 @@
 // lib/agents/PoultryDiseaseAgent.ts
-import { BaseInterviewAgent, InterviewQuestion } from "./BaseInterviewAgent";
+import { BaseInterviewAgent } from "./BaseInterviewAgent";
+import { poultryDiseaseMap } from "@/lib/data/poultryDiseaseMap";
 
 export class PoultryDiseaseAgent extends BaseInterviewAgent {
   constructor() {
     super();
+
+    const diseaseNames = Object.keys(poultryDiseaseMap).sort();
+
     this.questions = [
+      {
+        id: "poultry_disease",
+        type: "dropdown",
+        questionKey: "question_poultry_disease_select",
+        options: diseaseNames,  // These are disease names from the map – they need to be translated keys too, or just used as-is if they are in the translation file
+        required: true,
+      },
       {
         id: "symptomsObserved",
         type: "multiselect",
-        label: "What symptoms are you seeing in your flock?",
+        questionKey: "question_poultry_disease_symptoms",
         options: [
-          { value: "respiratory", label: "Respiratory (gasping, coughing)" },
-          { value: "green_diarrhoea", label: "Green diarrhoea" },
-          { value: "white_diarrhoea", label: "White / chalky diarrhoea" },
-          { value: "chocolate_diarrhoea", label: "Chocolate / bloody diarrhoea" },
-          { value: "paralysis", label: "Paralysis / twisted neck" },
-          { value: "scabs", label: "Scabs / skin lesions" },
-          { value: "lameness", label: "Lameness / swollen joints" },
-          { value: "sudden_death", label: "Sudden death" },
-          { value: "swollen_face", label: "Swollen face / eyes" },
-          { value: "egg_drop", label: "Drop in egg production" },
-          { value: "tremors", label: "Tremors / head shaking" },
-          { value: "depression", label: "Depression / huddling" },
+          "poultry_symptom_respiratory",
+          "poultry_symptom_green_diarrhoea",
+          "poultry_symptom_white_diarrhoea",
+          "poultry_symptom_chocolate_diarrhoea",
+          "poultry_symptom_paralysis",
+          "poultry_symptom_scabs",
+          "poultry_symptom_lameness",
+          "poultry_symptom_sudden_death",
+          "poultry_symptom_swollen_face",
+          "poultry_symptom_egg_drop",
+          "poultry_symptom_tremors",
+          "poultry_symptom_depression",
         ],
-        required: true,
+        required: false,
       },
       {
         id: "mortalityCountDisease",
         type: "number",
-        label: "How many birds have died in the last 7 days?",
+        questionKey: "question_poultry_mortality_count_disease",
         placeholder: "e.g., 5",
         required: false,
       },
       {
         id: "diseaseDuration",
-        type: "select",
-        label: "How long have these symptoms been present?",
+        type: "dropdown",
+        questionKey: "question_poultry_disease_duration",
         options: [
-          { value: "less_than_3_days", label: "Less than 3 days" },
-          { value: "3_to_7_days", label: "3 to 7 days" },
-          { value: "more_than_1_week", label: "More than 1 week" },
+          "poultry_duration_less_than_3_days",
+          "poultry_duration_3_to_7_days",
+          "poultry_duration_more_than_1_week",
         ],
-        required: true,
+        required: false,
       },
     ];
   }
@@ -50,7 +61,7 @@ export class PoultryDiseaseAgent extends BaseInterviewAgent {
     return {
       agentType: "PoultryDisease",
       collectedData: this.answers,
-      message: "Disease symptoms collected.",
+      message: "Poultry disease data collected.",
     };
   }
 }

@@ -1,5 +1,7 @@
 // components/Agent.tsx – Complete: natural speech + time‑based progressive reveal + Farmers Comments + Paystack Payment (KES forced)
 // + Branching: Soil test vs Extension Officer input (Path B)
+// + POULTRY SUPPORT: Full rendering for poultry modules (feed, vaccination, financial, housing, biosecurity, breed advice, sourcing)
+
 "use client";
 
 import { useState, useEffect, useRef } from "react";
@@ -44,7 +46,6 @@ interface StructuredItem {
 }
 
 // ==================== STATIC EXCHANGE RATES ====================
-// 1 KES = X local currency (approximate, update periodically or use live API)
 const EXCHANGE_RATES: Record<string, number> = {
   KES: 1,
   USD: 0.010, GBP: 0.008, AUD: 0.010, NZD: 0.011, CAD: 0.010,
@@ -77,7 +78,6 @@ const getLocalAmount = (amountKES: number, currencyCode: string): string => {
   return local.toFixed(0);
 };
 
-// Helper to get display currency from session country
 const getDisplayCurrencyFromSession = (sessionCountry?: string) => {
   const country = sessionCountry?.toLowerCase() || 'kenya';
   return COUNTRY_CURRENCY_MAP[country] || DEFAULT_CURRENCY;
@@ -153,7 +153,7 @@ const Agent = ({
   const [isCommentSubmitting, setIsCommentSubmitting] = useState<boolean>(false);
   const [commentSubmitted, setCommentSubmitted] = useState<boolean>(false);
 
-  // ---------- NEW: Branching & Path B (No Soil Test) State ----------
+  // ---------- Branching & Path B (No Soil Test) State ----------
   const [soilTestDone, setSoilTestDone] = useState<boolean | null>(null);
   const [path, setPath] = useState<'branch' | 'soil' | 'extension' | 'recommendations'>('branch');
   const [extensionAnswers, setExtensionAnswers] = useState({
@@ -166,7 +166,6 @@ const Agent = ({
     manureApplied: false,
     manureRate: '',
   });
-  // We'll generate a "fake" structuredList from extension answers once they're complete
 
   const nameUsageCountRef = useRef(0);
   const voiceServiceRef = useRef<VoiceService | null>(null);
@@ -185,6 +184,11 @@ const Agent = ({
   const farmerEmail = sessionData?.farmerEmail || sessionData?.email || 'farmer@example.com';
   const farmerPhone = sessionData?.phoneNumber || sessionData?.phone || '';
 
+  // ===== POULTRY DETECTION =====
+  const isPoultry = sessionData?.isPoultry || sessionData?.species === 'poultry';
+  const poultryBreed = sessionData?.poultry?.breed || '';
+  const poultrySystem = sessionData?.poultry?.system || '';
+
   // ---------- Get the session ID reliably ----------
   const getSessionId = () => {
     return sessionData?.id || interviewId || null;
@@ -201,7 +205,7 @@ const Agent = ({
     }
   }, [sessionData, interviewId]);
 
-  // ---------- NEW: If session already has recommendations, mark as paid (free viewing) ----------
+  // ---------- If session already has recommendations, mark as paid ----------
   useEffect(() => {
     if (sessionData && (sessionData.structuredList?.length > 0 || sessionData.recommendations?.length > 0)) {
       setHasPaid(true);
@@ -212,7 +216,7 @@ const Agent = ({
     }
   }, [sessionData, interviewId]);
 
-  // ---------- NEW: Initialize path based on existing data ----------
+  // ---------- Initialize path based on existing data ----------
   useEffect(() => {
     if (hasSoilTest) {
       setSoilTestDone(true);
@@ -633,7 +637,10 @@ const Agent = ({
     const currencyName = getSpokenCurrencyName();
 
     let introMessage = safeT('prepared_recommendations', 'I\'ve prepared personalized recommendations for your farm enterprise. ');
-    if (hasSoilTest && fertilizerPlan?.totalCost) {
+
+    if (isPoultry) {
+      introMessage += `For your ${poultryBreed || 'poultry'} flock, I have prepared the following recommendations. `;
+    } else if (hasSoilTest && fertilizerPlan?.totalCost) {
       introMessage += safeT('soil_test_recommendations', {
         amount: fertilizerPlan.totalCost.toLocaleString(),
         currencyName
@@ -699,7 +706,7 @@ const Agent = ({
     await speakWithVoice(safeT('post_recommendations'));
   };
 
-  // ========== NEW: Generate recommendations from extension answers (Path B) ==========
+  // ========== Generate recommendations from extension answers (Path B) ==========
   const generateExtensionRecommendations = () => {
     const displaySymbol = getDisplaySymbol();
     const currencyName = getSpokenCurrencyName();
@@ -715,7 +722,6 @@ const Agent = ({
     const manureApplied = extensionAnswers.manureApplied;
     const manureRate = extensionAnswers.manureRate || '0';
 
-    // 1. Summary
     recs.push({
       key: 'extension_summary',
       params: {
@@ -727,7 +733,6 @@ const Agent = ({
       }
     });
 
-    // 2. Cost estimation (simplified)
     const priceMap: Record<string, number> = {
       'DAP': 3000, 'CAN': 2500, 'UREA': 2800,
       'NPK 23:23:0': 2800, 'NPK 17:17:17': 2800,
@@ -737,8 +742,8 @@ const Agent = ({
     const getPrice = (fert: string) => priceMap[fert] || 2500;
     const plantingCost = (parseFloat(plantingRate) || 0) * (getPrice(plantingFert) / 50);
     const topCost = (parseFloat(topRate) || 0) * (getPrice(topFert) / 50);
-    const limeCost = (parseFloat(limeRate) || 0) * 10; // ~10 KES/kg
-    const manureCost = manureApplied ? (parseFloat(manureRate) || 0) * 500 : 0; // 500 KES/ton
+    const limeCost = (parseFloat(limeRate) || 0) * 10;
+    const manureCost = manureApplied ? (parseFloat(manureRate) || 0) * 500 : 0;
     const totalCost = plantingCost + topCost + limeCost + manureCost;
 
     recs.push({
@@ -752,7 +757,6 @@ const Agent = ({
       }
     });
 
-    // 3. Confidence label – Medium (no lab test)
     recs.push({
       key: 'extension_confidence',
       params: {
@@ -770,7 +774,6 @@ const Agent = ({
     setIsProcessing(true);
 
     try {
-      // If we are in extension path and answers are incomplete, prompt to fill
       if (path === 'extension') {
         const { plantingFertilizer, plantingRate, topdressingFertilizer, topdressingRate } = extensionAnswers;
         if (!plantingFertilizer || !plantingRate || !topdressingFertilizer || !topdressingRate) {
@@ -778,12 +781,9 @@ const Agent = ({
           setIsProcessing(false);
           return;
         }
-        // Generate recommendations from extension answers
         generateExtensionRecommendations();
-        // Then continue to payment/voice
       }
 
-      // If not paid, show payment modal
       if (!hasPaid) {
         toast.info(safeT('payment_required_to_start'));
         setShowPaymentModal(true);
@@ -791,14 +791,12 @@ const Agent = ({
         return;
       }
 
-      // If paid, check voice
       if (!voiceEnabled) {
         toast.error("Please turn voice ON first by clicking the 'Voice ON' button");
         setIsProcessing(false);
         return;
       }
 
-      // Proceed with voice service
       if (!voiceServiceRef.current) {
         const initToast = toast.loading(safeT('initializing_voice'));
         setVoiceInitializing(true);
@@ -844,7 +842,6 @@ const Agent = ({
     }
   };
 
-  // ---- Button state ----
   const isStartButtonDisabled = isLoading || voiceInitializing || isProcessing;
 
   const getDisplayCurrency = () => {
@@ -865,8 +862,12 @@ const Agent = ({
     return safeT('start_voice_session');
   };
 
+  // ========== RENDER RECOMMENDATION TEXT (UPDATED WITH POULTRY MODULES) ==========
   const renderRecommendationText = (item: StructuredItem, idx: number) => {
     let displayContent = '';
+    let moduleType = item.key;
+
+    // Handle different module types
     if (item.params?.content) {
       displayContent = item.params.content;
     } else if (item.key === 'gap_grouped') {
@@ -924,6 +925,78 @@ const Agent = ({
     const lines = processedText.split(/\n/);
     const progressPercent = (displayedText.length / displayContent.length) * 100;
 
+    // ===== POULTRY MODULE RENDERERS =====
+    const getPoultryIcon = (key: string): string => {
+      switch (key) {
+        case 'poultry_feed': return '🍽️';
+        case 'poultry_vaccination': return '💉';
+        case 'poultry_financial': return '💰';
+        case 'poultry_housing': return '🏠';
+        case 'poultry_biosecurity': return '🧹';
+        case 'poultry_breed_advice': return '🐓';
+        case 'poultry_sourcing': return '📍';
+        case 'bird_damage': return '🩺';
+        default: return '🐔';
+      }
+    };
+
+    const getPoultryBgColor = (key: string): string => {
+      switch (key) {
+        case 'poultry_feed': return 'bg-green-50 border-green-300';
+        case 'poultry_vaccination': return 'bg-blue-50 border-blue-300';
+        case 'poultry_financial': return 'bg-amber-50 border-amber-300';
+        case 'poultry_housing': return 'bg-purple-50 border-purple-300';
+        case 'poultry_biosecurity': return 'bg-red-50 border-red-300';
+        case 'poultry_breed_advice': return 'bg-pink-50 border-pink-300';
+        case 'poultry_sourcing': return 'bg-teal-50 border-teal-300';
+        case 'bird_damage': return 'bg-rose-50 border-rose-300';
+        default: return 'bg-purple-50 border-purple-300';
+      }
+    };
+
+    const poultryKey = moduleType;
+
+    if (poultryKey.startsWith('poultry_') || poultryKey === 'bird_damage') {
+      return (
+        <div
+          key={idx}
+          className={`rounded-xl p-5 transition-all duration-300 border-2 ${getPoultryBgColor(poultryKey)} ${
+            isActive ? 'shadow-2xl scale-105' : ''
+          }`}
+        >
+          <div className="flex items-start gap-4">
+            <span className="text-3xl">{getPoultryIcon(poultryKey)}</span>
+            <div className="flex-1">
+              <p className="text-xl text-gray-800 leading-relaxed whitespace-pre-wrap">
+                {lines.map((line, i) => (
+                  <span key={i}>
+                    {line}
+                    {i < lines.length - 1 && <br />}
+                  </span>
+                ))}
+              </p>
+              {isActive && displayContent.length > 0 && (
+                <div className="mt-3 flex items-center gap-2">
+                  <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+                    <div className={`h-full transition-all duration-150 ${
+                      poultryKey === 'poultry_vaccination' ? 'bg-blue-600' :
+                      poultryKey === 'poultry_financial' ? 'bg-amber-600' :
+                      poultryKey === 'poultry_biosecurity' ? 'bg-red-600' :
+                      'bg-purple-600'
+                    }`} style={{ width: `${progressPercent}%` }} />
+                  </div>
+                  <span className="text-sm font-medium text-gray-700">
+                    {Math.round(progressPercent)}%
+                  </span>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // ===== CROP MODULE RENDERERS (existing) =====
     return (
       <div
         key={idx}
@@ -936,7 +1009,7 @@ const Agent = ({
             {idx + 1}
           </span>
           <div className="flex-1">
-            <p className="text-xl text-gray-800 leading-relaxed">
+            <p className="text-xl text-gray-800 leading-relaxed whitespace-pre-wrap">
               {lines.map((line, i) => (
                 <span key={i}>
                   {line}
@@ -962,7 +1035,7 @@ const Agent = ({
 
   // ========== Render branching UI ==========
   const renderBranching = () => {
-    if (path !== 'branch') return null;
+    if (path !== 'branch' || isPoultry) return null;
     return (
       <div className="bg-white rounded-2xl p-6 border-2 border-blue-200 shadow-xl">
         <h3 className="font-bold text-xl mb-4 flex items-center gap-2 text-blue-800">
@@ -995,7 +1068,7 @@ const Agent = ({
 
   // ========== Render extension input form ==========
   const renderExtensionForm = () => {
-    if (path !== 'extension') return null;
+    if (path !== 'extension' || isPoultry) return null;
     return (
       <div className="bg-white rounded-2xl p-6 border-2 border-yellow-200 shadow-xl">
         <h3 className="font-bold text-xl mb-4 flex items-center gap-2 text-yellow-800">
@@ -1154,9 +1227,15 @@ const Agent = ({
             <div>
               <h4 className="font-bold text-lg text-gray-800">{userName}</h4>
               <div className="flex flex-wrap gap-1 text-xs">
-                {sessionData?.crops && <span className="text-emerald-600">{sessionData.crops.join(", ")}</span>}
+                {isPoultry && poultryBreed && (
+                  <span className="text-orange-600">🐔 {poultryBreed}</span>
+                )}
+                {!isPoultry && sessionData?.crops && (
+                  <span className="text-emerald-600">{sessionData.crops.join(", ")}</span>
+                )}
                 {sessionData?.county && <span className="text-gray-500">• {sessionData.county}</span>}
                 {sessionData?.country && <span className="text-gray-400">• {sessionData.country}</span>}
+                {isPoultry && poultrySystem && <span className="text-gray-500">• {poultrySystem}</span>}
                 {hasSoilTest && <span className="text-purple-600">• {safeT('soil_test')}</span>}
                 {soilTestDone === false && <span className="text-yellow-600">• No soil test</span>}
               </div>
@@ -1183,14 +1262,11 @@ const Agent = ({
         </div>
       </div>
 
-      {/* Branching, Extension Form, or existing soil-test UI */}
       {renderBranching()}
       {renderExtensionForm()}
 
-      {/* Soil-test path: keep existing UI (no change) */}
-
       <div className="flex flex-row gap-4 justify-center">
-        {sessionData?.grossMarginAnalysis && (
+        {sessionData?.grossMarginAnalysis && !isPoultry && (
           <Link href={`/financial/${interviewId}`} className="flex-1">
             <button className="w-full px-4 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-xl font-bold hover:from-emerald-700 hover:to-teal-700 flex items-center justify-center gap-2">
               <BarChart3 className="w-5 h-5" />
@@ -1210,7 +1286,7 @@ const Agent = ({
         <div className="bg-white rounded-2xl p-6 border-2 border-purple-200 shadow-xl">
           <h3 className="font-bold text-2xl mb-4 flex items-center gap-2 text-purple-800">
             <Sparkles className="w-6 h-6 text-purple-600" />
-            {safeT('personalized_recommendations')}
+            {isPoultry ? '🐔 Poultry Recommendations' : safeT('personalized_recommendations')}
             {activeStreamingRec !== null && (
               <span className="ml-auto flex items-center gap-2 text-purple-600">
                 <Volume2 className="w-5 h-5 animate-pulse" />
@@ -1221,13 +1297,16 @@ const Agent = ({
           <div className="mb-6 p-3 bg-gradient-to-r from-amber-400 to-yellow-500 rounded-xl text-white">
             <p className="text-sm flex items-center gap-2">
               <Rocket className="w-4 h-4" />
-              {safeT('business_tip_short')}
+              {isPoultry
+                ? '💡 Business Tip: Every shilling invested in quality feed and vaccination returns 3-5 shillings in productivity!'
+                : safeT('business_tip_short')
+              }
             </p>
           </div>
           <div className="space-y-4">
             {structuredList.map((item, idx) => renderRecommendationText(item, idx))}
           </div>
-          {!hasSoilTest && soilTestDone === false && (
+          {!hasSoilTest && soilTestDone === false && !isPoultry && (
             <div className="mt-4 p-3 bg-yellow-50 rounded-lg border border-yellow-300">
               <p className="text-yellow-800 text-sm flex items-center gap-2">
                 <AlertCircle className="w-4 h-4" />
@@ -1241,7 +1320,6 @@ const Agent = ({
         </div>
       )}
 
-      {/* Farmers Comments Section */}
       <div className="mt-2 p-4 bg-gray-50 rounded-xl border-2 border-gray-300">
         <h4 className="font-bold text-gray-700 mb-2 flex items-center gap-2">
           💬 {safeT('farmers_comments', 'Farmers Comments / Suggestions')}

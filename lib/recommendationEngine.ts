@@ -1,4 +1,7 @@
-// lib/recommendationEngine.ts – COMPLETE with module filtering
+// lib/recommendationEngine.ts – COMPLETE with crop + poultry
+// ALL FALLBACKS ADDED: feed, vaccination, financial, housing, breed, sourcing
+// FULL CROP PATH – all modules (soil, lime, fertilizer, gross margin, disease, pest, deficiency, conservation, post‑harvest, business, nutrition, reminder)
+
 import { COUNTRY_CURRENCY_MAP } from '@/lib/config/currency';
 import { cropPestDiseaseMap, PestDisease } from '@/lib/data/pestDiseaseMapping';
 import swTranslations from '../public/locales/sw/common.json';
@@ -10,6 +13,19 @@ const FR = frTranslations as any;
 const ES = esTranslations as any;
 import { soilTestInterpreter } from './soilTestInterpreter';
 
+// ===== POULTRY UTILITIES =====
+import {
+  getPoultryFeed,
+  getPoultryVaccines,
+  getPoultryCosts,
+  getPoultryHousing,
+  getPoultryTraits,
+  getHatcheriesByCounty,
+  getBiosecurityItems,
+} from '@/lib/agents/utils/poultryUtils';
+import { poultryDiseaseMap } from '@/lib/data/poultryDiseaseMap';
+
+// ===== HELPERS =====
 const safeT = (translation: any, fallback: string, ...args: any[]): string => {
   if (typeof translation === 'function') return translation(...args);
   let result = (translation as string) || fallback;
@@ -29,7 +45,6 @@ const replacePlaceholders = (template: string | undefined, params: Record<string
   return result;
 };
 
-// ========== French‑only helpers ==========
 const translateDeficiencyFr = (text: string): string => {
   const map: Record<string, string> = {
     "Purple color": "Couleur violette",
@@ -54,12 +69,29 @@ const translateStorageFr = (method: string | undefined): string => {
   return map[method] || method;
 };
 
-// ========== Translation helpers for rates, timing, safety, status, organic ==========
 const translateRate = (rate: string, lang: string): string => {
   if (lang === 'es') return rate;
   const map: Record<string, Record<string, string>> = {
-    sw: { "10ml per 20L water": "10 mililita kwa lita 20 za maji", "50g per 20L water": "50 gramu kwa lita 20 za maji", "40ml per 20L water": "40 mililita kwa lita 20 za maji", "20ml per 20L water": "20 mililita kwa lita 20 za maji", "4ml per 20L water": "4 mililita kwa lita 20 za maji", "5ml per 20L water": "5 mililita kwa lita 20 za maji", "30g per 20L water": "30 gramu kwa lita 20 za maji", "15g per 20L water": "15 gramu kwa lita 20 za maji" },
-    fr: { "10ml per 20L water": "10 ml pour 20 L d'eau", "50g per 20L water": "50 g pour 20 L d'eau", "40ml per 20L water": "40 ml pour 20 L d'eau", "20ml per 20L water": "20 ml pour 20 L d'eau", "4ml per 20L water": "4 ml pour 20 L d'eau", "5ml per 20L water": "5 ml pour 20 L d'eau", "30g per 20L water": "30 g pour 20 L d'eau", "15g per 20L water": "15 g pour 20 L d'eau" }
+    sw: {
+      "10ml per 20L water": "10 mililita kwa lita 20 za maji",
+      "50g per 20L water": "50 gramu kwa lita 20 za maji",
+      "40ml per 20L water": "40 mililita kwa lita 20 za maji",
+      "20ml per 20L water": "20 mililita kwa lita 20 za maji",
+      "4ml per 20L water": "4 mililita kwa lita 20 za maji",
+      "5ml per 20L water": "5 mililita kwa lita 20 za maji",
+      "30g per 20L water": "30 gramu kwa lita 20 za maji",
+      "15g per 20L water": "15 gramu kwa lita 20 za maji"
+    },
+    fr: {
+      "10ml per 20L water": "10 ml pour 20 L d'eau",
+      "50g per 20L water": "50 g pour 20 L d'eau",
+      "40ml per 20L water": "40 ml pour 20 L d'eau",
+      "20ml per 20L water": "20 ml pour 20 L d'eau",
+      "4ml per 20L water": "4 ml pour 20 L d'eau",
+      "5ml per 20L water": "5 ml pour 20 L d'eau",
+      "30g per 20L water": "30 g pour 20 L d'eau",
+      "15g per 20L water": "15 g pour 20 L d'eau"
+    }
   };
   return map[lang]?.[rate] || rate;
 };
@@ -67,8 +99,36 @@ const translateRate = (rate: string, lang: string): string => {
 const translateTiming = (timing: string, lang: string): string => {
   if (lang === 'es') return timing;
   const map: Record<string, Record<string, string>> = {
-    sw: { "When larvae young (1st-2nd instar)": "Wakati mabuu ni wachanga (1-2)", "When larvae young": "Wakati mabuu ni wachanga", "At first sign of larvae": "Wakati dalili za mabuu zinaonekana", "When larvae active": "Wakati mabuu wanashambulia", "When colonies appear": "Wakati makundi yanaonekana", "When aphids appear": "Wakati vidukari wanaonekana", "When webbing visible": "Wakati utando unaonekana", "When flies active": "Wakati nzi wanashambulia", "At first sign of disease, repeat every 7-10 days": "Dalili za kwanza za ugonjwa, rudia kila siku 7-10", "Every 7-10 days in wet weather": "Kila siku 7-10 wakati wa mvua", "At first sign of spots": "Wakati madoa yanaonekana", "Preventatively, every 7-10 days": "Kinga, kila siku 7-10", "Preventatively": "Kinga" },
-    fr: { "When larvae young (1st-2nd instar)": "Quand les larves sont jeunes (1er-2e stade)", "When larvae young": "Quand les larves sont jeunes", "At first sign of larvae": "Au premier signe de larves", "When larvae active": "Quand les larves sont actives", "When colonies appear": "Quand les colonies apparaissent", "When aphids appear": "Quand les pucerons apparaissent", "When webbing visible": "Quand les toiles sont visibles", "When flies active": "Quand les mouches sont actives", "At first sign of disease, repeat every 7-10 days": "Au premier signe de maladie, répéter tous les 7-10 jours", "Every 7-10 days in wet weather": "Tous les 7-10 jours par temps humide", "At first sign of spots": "Au premier signe de taches", "Preventatively, every 7-10 days": "Préventivement, tous les 7-10 jours", "Preventatively": "Préventivement" }
+    sw: {
+      "When larvae young (1st-2nd instar)": "Wakati mabuu ni wachanga (1-2)",
+      "When larvae young": "Wakati mabuu ni wachanga",
+      "At first sign of larvae": "Wakati dalili za mabuu zinaonekana",
+      "When larvae active": "Wakati mabuu wanashambulia",
+      "When colonies appear": "Wakati makundi yanaonekana",
+      "When aphids appear": "Wakati vidukari wanaonekana",
+      "When webbing visible": "Wakati utando unaonekana",
+      "When flies active": "Wakati nzi wanashambulia",
+      "At first sign of disease, repeat every 7-10 days": "Dalili za kwanza za ugonjwa, rudia kila siku 7-10",
+      "Every 7-10 days in wet weather": "Kila siku 7-10 wakati wa mvua",
+      "At first sign of spots": "Wakati madoa yanaonekana",
+      "Preventatively, every 7-10 days": "Kinga, kila siku 7-10",
+      "Preventatively": "Kinga"
+    },
+    fr: {
+      "When larvae young (1st-2nd instar)": "Quand les larves sont jeunes (1er-2e stade)",
+      "When larvae young": "Quand les larves sont jeunes",
+      "At first sign of larvae": "Au premier signe de larves",
+      "When larvae active": "Quand les larves sont actives",
+      "When colonies appear": "Quand les colonies apparaissent",
+      "When aphids appear": "Quand les pucerons apparaissent",
+      "When webbing visible": "Quand les toiles sont visibles",
+      "When flies active": "Quand les mouches sont actives",
+      "At first sign of disease, repeat every 7-10 days": "Au premier signe de maladie, répéter tous les 7-10 jours",
+      "Every 7-10 days in wet weather": "Tous les 7-10 jours par temps humide",
+      "At first sign of spots": "Au premier signe de taches",
+      "Preventatively, every 7-10 days": "Préventivement, tous les 7-10 jours",
+      "Preventatively": "Préventivement"
+    }
   };
   return map[lang]?.[timing] || timing;
 };
@@ -76,8 +136,22 @@ const translateTiming = (timing: string, lang: string): string => {
 const translateSafety = (safety: string, lang: string): string => {
   if (lang === 'es') return safety;
   const map: Record<string, Record<string, string>> = {
-    sw: { "14 days": "siku kumi na nne", "7 days": "siku saba", "21 days": "siku ishirini na moja", "30 days": "siku thelathini", "14 days before harvest": "siku kumi na nne kabla ya mavuno", "7 days before harvest": "siku saba kabla ya mavuno" },
-    fr: { "14 days": "14 jours", "7 days": "7 jours", "21 days": "21 jours", "30 days": "30 jours", "14 days before harvest": "14 jours avant la récolte", "7 days before harvest": "7 jours avant la récolte" }
+    sw: {
+      "14 days": "siku kumi na nne",
+      "7 days": "siku saba",
+      "21 days": "siku ishirini na moja",
+      "30 days": "siku thelathini",
+      "14 days before harvest": "siku kumi na nne kabla ya mavuno",
+      "7 days before harvest": "siku saba kabla ya mavuno"
+    },
+    fr: {
+      "14 days": "14 jours",
+      "7 days": "7 jours",
+      "21 days": "21 jours",
+      "30 days": "30 jours",
+      "14 days before harvest": "14 jours avant la récolte",
+      "7 days before harvest": "7 jours avant la récolte"
+    }
   };
   return map[lang]?.[safety] || safety;
 };
@@ -85,8 +159,18 @@ const translateSafety = (safety: string, lang: string): string => {
 const translateStatus = (status: string, lang: string): string => {
   if (lang === 'es') return status;
   const map: Record<string, Record<string, string>> = {
-    sw: { "✅ Active": "✅ Inatumika", "⚠️ RESTRICTED": "⚠️ IMERESTRISHWA", "❌ BANNED": "❌ IMEPIGWA MARUFUKU", "check-locally": "Angalia upatikanaji" },
-    fr: { "✅ Active": "✅ Actif", "⚠️ RESTRICTED": "⚠️ RESTREINT", "❌ BANNED": "❌ INTERDIT", "check-locally": "Vérifiez la disponibilité locale" }
+    sw: {
+      "✅ Active": "✅ Inatumika",
+      "⚠️ RESTRICTED": "⚠️ IMERESTRISHWA",
+      "❌ BANNED": "❌ IMEPIGWA MARUFUKU",
+      "check-locally": "Angalia upatikanaji"
+    },
+    fr: {
+      "✅ Active": "✅ Actif",
+      "⚠️ RESTRICTED": "⚠️ RESTREINT",
+      "❌ BANNED": "❌ INTERDIT",
+      "check-locally": "Vérifiez la disponibilité locale"
+    }
   };
   return map[lang]?.[status] || status;
 };
@@ -94,13 +178,34 @@ const translateStatus = (status: string, lang: string): string => {
 const translateOrganic = (text: string, lang: string): string => {
   if (lang === 'es') return text;
   const map: Record<string, Record<string, string>> = {
-    sw: { "Mix 50ml neem oil with 20L water + few drops liquid soap": "Changanya 50 mililita mafuta ya mwarobaini na lita 20 za maji + matone machache ya sabuni", "Spray every 10-14 days": "Pulizia kila siku 10-14", "Spray every 7-10 days": "Pulizia kila siku 7-10", "Spray on affected plants": "Pulizia kwenye mimea iliyoathirika", "Cover beds with insect netting": "Funika vitanda kwa nyavu za wadudu", "Remove heavily infested leaves": "Ondoa majani yaliyoathirika sana", "Avoid excess nitrogen fertilizer which attracts aphids": "Epuka mbolea ya nitrojeni nyingi kwa sababu huvutia vidukari", "Hand removal": "Kuondoa kwa mkono", "Neem spray": "Pulizia ya mwarobaini", "Soap solution": "Suluhisho la sabuni" },
-    fr: { "Mix 50ml neem oil with 20L water + few drops liquid soap": "Mélanger 50 ml d'huile de neem avec 20 L d'eau + quelques gouttes de savon liquide", "Spray every 10-14 days": "Pulvériser tous les 10-14 jours", "Spray every 7-10 days": "Pulvériser tous les 7-10 jours", "Spray on affected plants": "Pulvériser sur les plantes affectées", "Cover beds with insect netting": "Couvrir les planches avec une moustiquaire", "Remove heavily infested leaves": "Retirer les feuilles fortement infestées", "Avoid excess nitrogen fertilizer which attracts aphids": "Éviter l'excès d'engrais azoté qui attire les pucerons", "Hand removal": "Retrait manuel", "Neem spray": "Pulvérisation de neem", "Soap solution": "Solution savonneuse" }
+    sw: {
+      "Mix 50ml neem oil with 20L water + few drops liquid soap": "Changanya 50 mililita mafuta ya mwarobaini na lita 20 za maji + matone machache ya sabuni",
+      "Spray every 10-14 days": "Pulizia kila siku 10-14",
+      "Spray every 7-10 days": "Pulizia kila siku 7-10",
+      "Spray on affected plants": "Pulizia kwenye mimea iliyoathirika",
+      "Cover beds with insect netting": "Funika vitanda kwa nyavu za wadudu",
+      "Remove heavily infested leaves": "Ondoa majani yaliyoathirika sana",
+      "Avoid excess nitrogen fertilizer which attracts aphids": "Epuka mbolea ya nitrojeni nyingi kwa sababu huvutia vidukari",
+      "Hand removal": "Kuondoa kwa mkono",
+      "Neem spray": "Pulizia ya mwarobaini",
+      "Soap solution": "Suluhisho la sabuni"
+    },
+    fr: {
+      "Mix 50ml neem oil with 20L water + few drops liquid soap": "Mélanger 50 ml d'huile de neem avec 20 L d'eau + quelques gouttes de savon liquide",
+      "Spray every 10-14 days": "Pulvériser tous les 10-14 jours",
+      "Spray every 7-10 days": "Pulvériser tous les 7-10 jours",
+      "Spray on affected plants": "Pulvériser sur les plantes affectées",
+      "Cover beds with insect netting": "Couvrir les planches avec une moustiquaire",
+      "Remove heavily infested leaves": "Retirer les feuilles fortement infestées",
+      "Avoid excess nitrogen fertilizer which attracts aphids": "Éviter l'excès d'engrais azoté qui attire les pucerons",
+      "Hand removal": "Retrait manuel",
+      "Neem spray": "Pulvérisation de neem",
+      "Soap solution": "Solution savonneuse"
+    }
   };
   return map[lang]?.[text] || text;
 };
 
-// ========== Nutrient description ==========
 const getNutrientDescription = (nutrient: string, language: string): string => {
   const n = nutrient.toLowerCase();
   if (language === 'sw') {
@@ -225,6 +330,7 @@ const getValueAdditionSuggestion = (crop: string, language: string): string => {
   return "Add value: dry, mill, package – **drying removes moisture that causes rot, and good packaging prevents pests**. Processed products sell for 2-3x higher price.";
 };
 
+// ===== INTERFACES =====
 interface RecommendationInput {
   hasSoilTest: boolean;
   soilAnalysis?: any;
@@ -233,6 +339,8 @@ interface RecommendationInput {
   crops: string[];
   farmerData: any;
   modules?: string[];
+  isPoultry?: boolean;
+  poultrySpecies?: string;
 }
 
 type ModuleKey =
@@ -256,7 +364,15 @@ type ModuleKey =
   | 'post_harvest'
   | 'farming_business'
   | 'nutrition_benefits'
-  | 'reminder';
+  | 'reminder'
+  | 'poultry_feed'
+  | 'poultry_vaccination'
+  | 'poultry_financial'
+  | 'poultry_housing'
+  | 'poultry_biosecurity'
+  | 'poultry_breed_advice'
+  | 'poultry_sourcing'
+  | 'bird_damage';
 
 const moduleKeyMap: Record<string, ModuleKey> = {
   'confidence_label': 'confidence',
@@ -279,6 +395,14 @@ const moduleKeyMap: Record<string, ModuleKey> = {
   'post_harvest': 'post_harvest',
   'farming_business': 'farming_business',
   'nutrition_benefits': 'nutrition_benefits',
+  'poultry_feed': 'poultry_feed',
+  'poultry_vaccination': 'poultry_vaccination',
+  'poultry_financial': 'poultry_financial',
+  'poultry_housing': 'poultry_housing',
+  'poultry_biosecurity': 'poultry_biosecurity',
+  'poultry_breed_advice': 'poultry_breed_advice',
+  'poultry_sourcing': 'poultry_sourcing',
+  'bird_damage': 'bird_damage',
 };
 
 interface RecommendationOutput {
@@ -288,7 +412,288 @@ interface RecommendationOutput {
   structuredFinancialAdvice: any;
 }
 
+// ===== FALLBACKS =====
+const FALLBACK_VACCINES = [
+  { disease: 'Newcastle Disease', ageDays: 1, route: 'Eye drop', costPerBird: 0.50 },
+  { disease: 'Gumboro (IBD)', ageDays: 14, route: 'Drinking water', costPerBird: 0.30 },
+  { disease: 'Infectious Bronchitis', ageDays: 28, route: 'Drinking water', costPerBird: 0.30 },
+  { disease: 'Newcastle Disease (booster)', ageDays: 56, route: 'Drinking water', costPerBird: 0.50 },
+  { disease: 'Fowl Pox', ageDays: 70, route: 'Wing web', costPerBird: 0.40 },
+];
+
+const FALLBACK_FEED = {
+  lifeStage: 'Starter/Grower',
+  proteinMin: 18,
+  proteinMax: 20,
+  dailyFeedIntakeG: 40,
+  feedConversionRatio: 2.2,
+  costPerKg: 60,
+};
+
+const FALLBACK_COSTS = {
+  system: 'deep_litter',
+  chickCost: 120,
+  feedCostToMarket: 350,
+  vaccinationCost: 20,
+  medicationCost: 15,
+  labourCost: 30,
+  housingCost: 25,
+  totalCostPerBird: 560,
+  expectedYield: 2.5,
+  breakEvenMeatPrice: 224,
+  breakEvenEggPrice: 7,
+};
+
+const FALLBACK_HOUSING = {
+  floorSpaceM2PerBird: 0.4,
+  feederSpaceCmPerBird: 5,
+  drinkerSpaceCmPerBird: 2.5,
+  ventilation: 'Natural with ridge vents',
+  litterType: 'Wood shavings or rice husks (10-15cm deep)',
+};
+
+const FALLBACK_TRAITS = {
+  heatTolerance: 'Medium',
+  growthRate: 'Medium',
+  foragingAbility: 'Average',
+  eggProduction: 'Medium',
+  docility: 'Calm',
+};
+
+const FALLBACK_HATCHERY = {
+  name: 'Local Hatchery',
+  county: 'Your Area',
+  country: 'Kenya',
+  breedsSupplied: ['Various breeds'],
+  pricePerChick: 120,
+  phone: 'Contact local agrovet',
+};
+
+// ===== POULTRY GENERATOR =====
+async function generatePoultryRecommendations(
+  farmerData: any,
+  modules?: string[]
+): Promise<RecommendationOutput> {
+  const structuredList: any[] = [];
+  const list: string[] = [];
+  const country = farmerData.country || 'kenya';
+  const language = farmerData.language || 'en';
+  const isSwahili = language === 'sw';
+  const isFrench = language === 'fr';
+  const isSpanish = language === 'es';
+
+  const formatCurrency = (amount: number): string => {
+    const currency = COUNTRY_CURRENCY_MAP[country] || COUNTRY_CURRENCY_MAP.kenya;
+    const symbol = farmerData.currencySymbol || currency.symbol;
+    const formattedAmount = new Intl.NumberFormat(currency.locale, {
+      style: 'decimal',
+      minimumFractionDigits: currency.decimalPlaces,
+      maximumFractionDigits: currency.decimalPlaces
+    }).format(amount);
+    return currency.position === 'before' ? `${symbol} ${formattedAmount}` : `${formattedAmount} ${symbol}`;
+  };
+  const currencySymbol = farmerData.currencySymbol || COUNTRY_CURRENCY_MAP[country]?.symbol || 'Ksh';
+
+  const shouldInclude = (key: string): boolean => {
+    if (!modules || modules.length === 0) return true;
+    if (modules.includes('complete')) return true;
+    const moduleKey = moduleKeyMap[key];
+    if (moduleKey) return modules.includes(moduleKey);
+    return modules.includes(key);
+  };
+
+  const addToStructuredList = (key: string, params: any) => {
+    if (shouldInclude(key)) {
+      structuredList.push({ key, params });
+    }
+  };
+
+  const addToList = (content: string) => {
+    if (content && content.trim()) list.push(content);
+  };
+
+  // 1. Confidence
+  if (shouldInclude('confidence_label')) {
+    const label = isSwahili ? '🟡 IMANI: Wastani (kutokana na ushauri wa mhudumu wa ugani)' :
+                   isFrench ? '🟡 CONFIANCE: Moyenne (basée sur les conseils du vulgarisateur)' :
+                   isSpanish ? '🟡 CONFIANZA: Media (basada en el consejo del extensionista)' :
+                   '🟡 Confidence: Medium (based on extension officer advice)';
+    addToStructuredList('confidence_label', { content: label });
+    addToList(label);
+  }
+
+  // 2. Feed
+  if (shouldInclude('poultry_feed')) {
+    let feed = getPoultryFeed('chicken', farmerData.poultry_breed, farmerData.poultry_age_weeks || 0);
+    if (!feed) feed = FALLBACK_FEED;
+    const content = `${farmerData.poultry_breed} at ${farmerData.poultry_age_weeks || 0} weeks: ${feed.lifeStage} feed, ${feed.proteinMin}-${feed.proteinMax}% protein, ${feed.dailyFeedIntakeG}g/bird/day. FCR: ${feed.feedConversionRatio}. Cost: ${formatCurrency(feed.costPerKg)}/kg.`;
+    addToStructuredList('poultry_feed', { content });
+    addToList(content);
+  }
+
+  // 3. Vaccination
+  if (shouldInclude('poultry_vaccination')) {
+    let vaccines = getPoultryVaccines('chicken', farmerData.poultry_breed);
+    if (!vaccines || vaccines.length === 0) vaccines = FALLBACK_VACCINES;
+    const vaccineLines = vaccines.map(v => `• Day ${v.ageDays}: ${v.disease} (${v.route})`).join('\n');
+    const content = `Vaccination schedule for ${farmerData.poultry_breed}:\n${vaccineLines}\n\n💉 Estimated cost: ~${formatCurrency(vaccines.reduce((sum, v) => sum + v.costPerBird, 0))} per bird for all vaccines.`;
+    addToStructuredList('poultry_vaccination', { content });
+    addToList(`💉 Vaccination schedule: ${vaccines.length} vaccines listed.`);
+  }
+
+  // 4. Financial
+  if (shouldInclude('poultry_financial')) {
+    let costs = getPoultryCosts('chicken', farmerData.poultry_breed, farmerData.poultry_system || 'deep_litter');
+    if (!costs) costs = { ...FALLBACK_COSTS, system: farmerData.poultry_system || 'deep_litter' };
+    const totalCostPerBird = costs.totalCostPerBird || 0;
+    const expectedYield = costs.expectedYield || 0;
+    const breakEvenMeatPrice = costs.breakEvenMeatPrice || 0;
+    const breakEvenEggPrice = costs.breakEvenEggPrice || 0;
+    const revenue = expectedYield * (breakEvenMeatPrice || breakEvenEggPrice);
+    const profit = revenue - totalCostPerBird;
+    const content = `Cost per bird: ${formatCurrency(totalCostPerBird)}\nRevenue: ${formatCurrency(revenue)}\nProfit: ${formatCurrency(profit)}`;
+    addToStructuredList('poultry_financial', { content });
+    addToList(content);
+  }
+
+  // 5. Housing
+  if (shouldInclude('poultry_housing')) {
+    let housing = getPoultryHousing('chicken', farmerData.poultry_breed, farmerData.poultry_system || 'deep_litter');
+    if (!housing) housing = FALLBACK_HOUSING;
+    const space = housing.floorSpaceM2PerBird * (farmerData.poultry_flock_size || 100);
+    const content = `Recommended floor space: ${space.toFixed(1)} m² for ${farmerData.poultry_flock_size || 100} birds. Ventilation: ${housing.ventilation}. Litter: ${housing.litterType}.`;
+    addToStructuredList('poultry_housing', { content });
+    addToList(content);
+  }
+
+  // 6. Biosecurity
+  if (shouldInclude('poultry_biosecurity')) {
+    const biosecurity = getBiosecurityItems();
+    if (biosecurity && biosecurity.length) {
+      const critical = biosecurity.filter(i => i.importance === 'critical').map(i => `• ${i.item}`).join('\n');
+      const content = `Critical biosecurity steps:\n${critical}`;
+      addToStructuredList('poultry_biosecurity', { content });
+      addToList(content);
+    }
+  }
+
+  // 7. Breed advice
+  if (shouldInclude('poultry_breed_advice')) {
+    let traits = getPoultryTraits('chicken', farmerData.poultry_breed);
+    if (!traits) traits = FALLBACK_TRAITS;
+    const content = `${farmerData.poultry_breed}: heat tolerance ${traits.heatTolerance}, growth rate ${traits.growthRate}, foraging ability ${traits.foragingAbility}, egg production ${traits.eggProduction}.`;
+    addToStructuredList('poultry_breed_advice', { content });
+    addToList(content);
+  }
+
+  // 8. Sourcing
+  if (shouldInclude('poultry_sourcing')) {
+    let hatcheries = getHatcheriesByCounty(farmerData.county || '');
+    if (!hatcheries || hatcheries.length === 0) {
+      hatcheries = [{ ...FALLBACK_HATCHERY, county: farmerData.county || 'your area' }];
+    }
+    const h = hatcheries[0];
+    const content = `Nearest hatchery: ${h.name} in ${h.county} – ${h.breedsSupplied.join(', ')}. Price: ${formatCurrency(h.pricePerChick)}/chick.`;
+    addToStructuredList('poultry_sourcing', { content });
+    addToList(content);
+  }
+
+  // 9. Bird damage
+  if (shouldInclude('bird_damage')) {
+    const mortality = farmerData.poultry_mortality_count || 0;
+    if (mortality > 0) {
+      const content = `BIRD LOSS REPORT FOR YOUR ${farmerData.poultry_breed.toUpperCase()} FLOCK\nYou reported ${mortality} birds lost.\nConsider reviewing your biosecurity and vaccination strategies to prevent future losses.`;
+      addToStructuredList('bird_damage', { content });
+      addToList(content);
+    }
+  }
+
+  // 10. Reminder
+  if (shouldInclude('reminder')) {
+    const content = isSwahili ? "Chunguza udongo wako kila mwaka ili kuweka biashara yako yenye faida." :
+                     isFrench ? "Testez votre sol chaque année pour garder votre entreprise rentable." :
+                     isSpanish ? "Analice su suelo anualmente para mantener su empresa rentable." :
+                     "Test your soil yearly to keep your enterprise profitable.";
+    addToStructuredList('reminder', { content });
+    addToList(content);
+  }
+
+  // 11. Disease Management
+  if (shouldInclude('poultry_disease_management')) {
+    const selectedDisease = farmerData.poultry_disease;
+    const species = farmerData.poultry_species || 'chicken';
+    const diseaseMap = poultryDiseaseMap[species] || poultryDiseaseMap['chicken'];
+    const diseaseInfo = diseaseMap.find((d: any) => d.name === selectedDisease);
+
+    let content = '';
+    if (selectedDisease && diseaseInfo) {
+      content = `🐔 DISEASE: ${selectedDisease.toUpperCase()}\n\n`;
+      if (diseaseInfo.description) content += `📋 ${diseaseInfo.description}\n\n`;
+
+      if (diseaseInfo.chemicalControls && diseaseInfo.chemicalControls.length) {
+        content += `🧪 CHEMICAL TREATMENTS:\n`;
+        for (const chem of diseaseInfo.chemicalControls) {
+          content += `• ${chem.productName} (${chem.activeIngredient})\n`;
+          content += `  Dose: ${chem.rate}\n`;
+          content += `  Application: ${chem.applicationMethod}\n`;
+          content += `  Timing: ${chem.timing}\n`;
+          if (chem.withdrawalPeriod) content += `  Withdrawal: ${chem.withdrawalPeriod}\n`;
+          const status = chem.status === 'restricted' ? '⚠️ RESTRICTED' :
+                         chem.status === 'banned' ? '❌ BANNED' :
+                         chem.status === 'vaccine' ? '💉 Vaccine' : '✅ Active';
+          content += `  Status: ${status}\n\n`;
+        }
+      }
+
+      if (diseaseInfo.organicControls && diseaseInfo.organicControls.length) {
+        content += `🌱 ORGANIC / NATURAL OPTIONS:\n`;
+        for (const org of diseaseInfo.organicControls) {
+          content += `• ${org.method}\n`;
+          if (org.preparation) content += `  Prep: ${org.preparation}\n`;
+          if (org.application) content += `  Apply: ${org.application}\n\n`;
+        }
+      }
+
+      if (diseaseInfo.culturalControls && diseaseInfo.culturalControls.length) {
+        content += `📋 CULTURAL CONTROLS:\n`;
+        for (const control of diseaseInfo.culturalControls) {
+          content += `• ${control}\n`;
+        }
+        content += `\n`;
+      }
+
+      if (diseaseInfo.businessNote) {
+        content += `💼 ${diseaseInfo.businessNote}\n`;
+      }
+    } else {
+      content = selectedDisease
+        ? `Selected disease "${selectedDisease}" not found in the poultry disease database. Please consult a veterinarian.`
+        : `No specific disease was selected. If you have disease concerns, please select a disease from the list.`;
+    }
+
+    addToStructuredList('poultry_disease_management', { content });
+    addToList(content);
+  }
+
+  return {
+    list,
+    financialAdvice: isSwahili ? "Tazama uchambuzi wa kifedha hapo juu ili kuongeza faida yako." :
+                     isFrench ? "Voyez l'analyse financière ci-dessus pour maximiser votre profit." :
+                     isSpanish ? "Vea el análisis financiero arriba para maximizar su ganancia." :
+                     "See financial analysis above to maximize your profit.",
+    structuredList,
+    structuredFinancialAdvice: null,
+  };
+}
+
+// ===== MAIN EXPORT =====
 export async function generateRecommendations(input: RecommendationInput): Promise<RecommendationOutput> {
+  // ---- POULTRY PATH ----
+  if (input.isPoultry) {
+    return generatePoultryRecommendations(input.farmerData, input.modules);
+  }
+
+  // ---- CROP PATH (full logic) ----
   const structuredList: any[] = [];
   const { hasSoilTest, soilAnalysis, fertilizerPlan, crop, farmerData, modules } = input;
   const lowerCrop = crop.toLowerCase();
@@ -298,9 +703,6 @@ export async function generateRecommendations(input: RecommendationInput): Promi
   const isFrench = language === 'fr';
   const isSpanish = language === 'es';
   const isEnglish = !isSwahili && !isFrench && !isSpanish;
-
-  console.log("🔍 [ENGINE] Received fertilizerPlan:", JSON.stringify(fertilizerPlan, null, 2));
-  console.log("🔍 [ENGINE] Modules filter:", modules);
 
   const formatCurrency = (amount: number): string => {
     const currency = COUNTRY_CURRENCY_MAP[country] || COUNTRY_CURRENCY_MAP.kenya;
@@ -666,7 +1068,7 @@ export async function generateRecommendations(input: RecommendationInput): Promi
       }
     }
 
-    // ========== PLANT POPULATION & PER-PLANT GUIDE ==========
+    // ========== PLANT POPULATION ==========
     if (farmerData.spacing && fertilizerPlan.farmSize && fertilizerPlan.perPlant && shouldIncludeModule('plant_population')) {
       let spacing = farmerData.spacing;
       let plantsPerAcre = 0;
@@ -692,10 +1094,10 @@ export async function generateRecommendations(input: RecommendationInput): Promi
         const pp = fertilizerPlan.perPlant;
         const perPlantText = `
 FERTILIZER PER PLANT
-DAP: ${pp.dapGrams.toFixed(1)} grams (${pp.dapGuide})
-UREA: ${pp.ureaGrams.toFixed(1)} grams (${pp.ureaGuide})
-MOP: ${pp.mopGrams.toFixed(1)} grams (${pp.mopGuide})
-TOTAL: ${pp.totalGrams.toFixed(1)} grams (${pp.totalGuide})
+DAP: ${pp.dapGrams.toFixed(1)} grams
+UREA: ${pp.ureaGrams.toFixed(1)} grams
+MOP: ${pp.mopGrams.toFixed(1)} grams
+TOTAL: ${pp.totalGrams.toFixed(1)} grams
 `;
         addToStructuredList({ key: 'plant_population', params: { content: plantCountText + perPlantText, plants: plantsPerAcre, spacing } });
       }
@@ -1334,8 +1736,12 @@ Moving from Medium to High could put an extra ${formatCurrency(highMargin - medi
     addToStructuredList({ key: 'reminder', params: { content: reminderText } });
   }
 
+  // ===== BUILD FINAL OUTPUT =====
   const list = structuredList.map(item => item.params?.content || '').filter(c => c);
-  const financialAdvice = isSwahili ? "Tazama uchambuzi wa kifedha hapo juu ili kuongeza faida yako." : (isFrench ? "Voyez l'analyse financière ci-dessus pour maximiser votre profit." : (isSpanish ? "Vea el análisis financiero arriba para maximizar su ganancia." : "See financial analysis above to maximize your profit."));
+  const financialAdvice = isSwahili ? "Tazama uchambuzi wa kifedha hapo juu ili kuongeza faida yako." :
+                         isFrench ? "Voyez l'analyse financière ci-dessus pour maximiser votre profit." :
+                         isSpanish ? "Vea el análisis financiero arriba para maximizar su ganancia." :
+                         "See financial analysis above to maximize your profit.";
   const structuredFinancialAdvice = { key: 'financial_advice', params: { content: financialAdvice } };
 
   return { list, financialAdvice, structuredList, structuredFinancialAdvice };

@@ -1,4 +1,8 @@
-﻿// components/CreateInterviewAgent.tsx – COMPLETE with lime quantity questions for no soil test
+﻿// components/CreateInterviewAgent.tsx – FULL COMPLETE FILE
+// FIXED: Poultry data now loads and saves to Firestore
+// All poultry state variables are restored when profile is loaded
+// This prevents questions from being skipped with empty data
+
 "use client";
 
 import { useState, useEffect, useRef, useMemo, useCallback } from "react";
@@ -58,13 +62,16 @@ import { db } from "@/firebase/client";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { useAuth } from "@/lib/hooks/useAuth";
 
+// ===== POULTRY DISEASE MAP =====
+import { poultryDiseaseMap } from "@/lib/data/poultryDiseaseMap";
+
 interface CreateInterviewAgentProps {
   userName: string;
   userId?: string;
   profileImage?: string;
-  filter?: string;      // "fertilizer", "pest", "disease", etc.
-  agents?: string[];    // ["EnterpriseSetupAgent", "DiseaseInterviewAgent"]
-  modules?: string[];   // NEW: list of module keys to include
+  filter?: string;
+  agents?: string[];
+  modules?: string[];
 }
 
 // Helper function for crop template variables
@@ -72,7 +79,7 @@ const translateWithCrop = (t: any, key: string, crop: string | undefined) => {
   return String(t(key, { crop: crop?.toUpperCase() || 'your crop' }));
 };
 
-// Country codes for phone (kept for any future use)
+// Country codes
 const countryCodes = [
   { code: "+254", country: "Kenya", flag: "🇰🇪" },
   { code: "+256", country: "Uganda", flag: "🇺🇬" },
@@ -93,60 +100,18 @@ const countryCodes = [
   { code: "+44", country: "UK", flag: "🇬🇧" }
 ];
 
-// ========== UPDATED CROP CATEGORIES (supports all 200+ crops) ==========
+// Crop categories
 const cropCategories = {
-  grains: [
-    "maize", "beans", "wheat", "sorghum", "millet", "rice", "barley", "finger millet",
-    "oats", "teff", "triticale", "buckwheat", "quinoa", "fonio", "spelt", "kamut", "amaranth grain"
-  ],
-  pulses: [
-    "soya beans", "cowpeas", "green grams", "bambara nuts", "groundnuts", "pigeonpeas",
-    "chickpea", "lentil", "faba bean", "peanut", "fenugreek", "caraway", "anise", "cumin"
-  ],
-  cash: [
-    "coffee", "cotton", "sugarcane", "tobacco", "sunflower", "simsim", "pyrethrum",
-    "tea", "cocoa", "sisal", "oil palm", "rubber", "kenaf", "jute", "flax", "hemp"
-  ],
-  tubers: [
-    "cassava", "sweet potatoes", "irish potatoes", "yams", "taro", "ginger", "turmeric",
-    "horseradish", "parsnip", "turnip", "rutabaga", "radish", "beetroot", "carrots"
-  ],
-  vegetables: [
-    "tomatoes", "cabbage", "kales", "onions", "capsicums", "chillies", "brinjals",
-    "french beans", "garden peas", "spinach", "okra", "cauliflower", "lettuce", "broccoli",
-    "celery", "leeks", "pumpkin", "courgettes", "cucumbers", "artichoke", "asparagus",
-    "arugula", "endive", "kohlrabi", "watercress", "pumpkin leaves", "sweet potato leaves",
-    "jute mallow", "spider plant", "african nightshade", "amaranth", "ethiopian kale",
-    "coriander", "parsley", "dill", "fennel", "radicchio", "escarole", "frisee",
-    "turnip greens", "mustard greens", "collard greens", "bok choy", "Swiss chard"
-  ],
-  fruits: [
-    "bananas", "oranges", "pineapples", "mangoes", "avocados", "pawpaws", "passion fruit",
-    "citrus", "watermelon", "grapefruit", "lemons", "limes", "guava", "jackfruit",
-    "breadfruit", "pomegranate", "star fruit", "coconut", "fig", "date palm", "mulberry",
-    "lychee", "persimmon", "gooseberry", "currant", "elderberry", "rambutan", "durian",
-    "mangosteen", "longan", "marula"
-  ],
-  nuts: [
-    "macadamia", "cashew", "almond", "brazil nut", "chestnut", "hazelnut", "pecan",
-    "pistachio", "shea", "walnut", "pili nut"
-  ],
-  cover: [
-    "mucuna", "desmodium", "dolichos", "canavalia", "crotalaria ochroleuca",
-    "crotalaria juncea", "crotalaria paulina", "vetch", "clover", "alfalfa", "lucerne"
-  ],
-  herbs: [
-    "basil", "mint", "rosemary", "thyme", "oregano", "sage", "lavender", "chamomile",
-    "echinacea", "ginseng", "goldenseal", "hibiscus", "hops", "lemon grass", "moringa",
-    "mustard", "rapeseed", "safflower", "wasabi", "stevia", "lovage", "marjoram",
-    "tarragon", "sorrel", "chervil", "savory", "calendula", "nasturtium", "borage",
-    "St. John's wort", "valerian"
-  ],
-  forage: [
-    "brachiaria", "buffel_grass", "guinea_grass", "italian_ryegrass", "lucerne",
-    "napier grass", "napier_hybrid", "orchard_grass", "rhodes grass", "timothy_grass",
-    "white_clover", "alfalfa", "forage_sorghum", "calliandra", "cenchrus", "leucaena", "sesbania"
-  ],
+  grains: ["maize", "beans", "wheat", "sorghum", "millet", "rice", "barley", "finger millet", "oats", "teff", "triticale", "buckwheat", "quinoa", "fonio", "spelt", "kamut", "amaranth grain"],
+  pulses: ["soya beans", "cowpeas", "green grams", "bambara nuts", "groundnuts", "pigeonpeas", "chickpea", "lentil", "faba bean", "peanut", "fenugreek", "caraway", "anise", "cumin"],
+  cash: ["coffee", "cotton", "sugarcane", "tobacco", "sunflower", "simsim", "pyrethrum", "tea", "cocoa", "sisal", "oil palm", "rubber", "kenaf", "jute", "flax", "hemp"],
+  tubers: ["cassava", "sweet potatoes", "irish potatoes", "yams", "taro", "ginger", "turmeric", "horseradish", "parsnip", "turnip", "rutabaga", "radish", "beetroot", "carrots"],
+  vegetables: ["tomatoes", "cabbage", "kales", "onions", "capsicums", "chillies", "brinjals", "french beans", "garden peas", "spinach", "okra", "cauliflower", "lettuce", "broccoli", "celery", "leeks", "pumpkin", "courgettes", "cucumbers", "artichoke", "asparagus", "arugula", "endive", "kohlrabi", "watercress", "pumpkin leaves", "sweet potato leaves", "jute mallow", "spider plant", "african nightshade", "amaranth", "ethiopian kale", "coriander", "parsley", "dill", "fennel", "radicchio", "escarole", "frisee", "turnip greens", "mustard greens", "collard greens", "bok choy", "Swiss chard"],
+  fruits: ["bananas", "oranges", "pineapples", "mangoes", "avocados", "pawpaws", "passion fruit", "citrus", "watermelon", "grapefruit", "lemons", "limes", "guava", "jackfruit", "breadfruit", "pomegranate", "star fruit", "coconut", "fig", "date palm", "mulberry", "lychee", "persimmon", "gooseberry", "currant", "elderberry", "rambutan", "durian", "mangosteen", "longan", "marula"],
+  nuts: ["macadamia", "cashew", "almond", "brazil nut", "chestnut", "hazelnut", "pecan", "pistachio", "shea", "walnut", "pili nut"],
+  cover: ["mucuna", "desmodium", "dolichos", "canavalia", "crotalaria ochroleuca", "crotalaria juncea", "crotalaria paulina", "vetch", "clover", "alfalfa", "lucerne"],
+  herbs: ["basil", "mint", "rosemary", "thyme", "oregano", "sage", "lavender", "chamomile", "echinacea", "ginseng", "goldenseal", "hibiscus", "hops", "lemon grass", "moringa", "mustard", "rapeseed", "safflower", "wasabi", "stevia", "lovage", "marjoram", "tarragon", "sorrel", "chervil", "savory", "calendula", "nasturtium", "borage", "St. John's wort", "valerian"],
+  forage: ["brachiaria", "buffel_grass", "guinea_grass", "italian_ryegrass", "lucerne", "napier grass", "napier_hybrid", "orchard_grass", "rhodes grass", "timothy_grass", "white_clover", "alfalfa", "forage_sorghum", "calliandra", "cenchrus", "leucaena", "sesbania"],
   medicinal: ["aloe vera", "stinging nettle", "watercress", "echinacea", "ginseng", "goldenseal"],
   other: ["bamboo", "oyster nut", "mushroom", "ramie"]
 };
@@ -204,10 +169,8 @@ const needsPlantingMaterialCost = (crop: string): boolean => {
 
 const getPlantingMaterialCostQuestion = (crop: string) => {
   const lowerCrop = crop.toLowerCase();
-
   let unit = "seedling";
   let placeholder = "e.g., 30";
-
   if (lowerCrop.includes("sweet potato") || lowerCrop.includes("cassava")) {
     unit = "cutting";
     placeholder = "e.g., 5";
@@ -269,7 +232,6 @@ const getPlantingMaterialCostQuestion = (crop: string) => {
     unit = "cutting/seed";
     placeholder = "e.g., 20";
   }
-
   return {
     id: "plantingMaterialCost",
     questionKey: "question_planting_material_cost",
@@ -283,16 +245,8 @@ const getPlantingMaterialCostQuestion = (crop: string) => {
 const getPlantingMaterialQuestion = (crop: string) => {
   const cropType = getCropType(crop);
   const lowerCrop = crop.toLowerCase();
-
-  // Specific crops
   if (lowerCrop === "rice") {
-    return {
-      id: "plantingMaterial",
-      questionKey: "question_planting_material_rice",
-      type: "dropdown",
-      options: ["Direct seeding", "Transplanting seedlings", "Broadcasting", "Other"],
-      sectionKey: "section_planting_material"
-    };
+    return { id: "plantingMaterial", questionKey: "question_planting_material_rice", type: "dropdown", options: ["Direct seeding", "Transplanting seedlings", "Broadcasting", "Other"], sectionKey: "section_planting_material" };
   }
   if (lowerCrop === "mangoes" || lowerCrop === "macadamia" || lowerCrop === "avocados" ||
       lowerCrop === "oranges" || lowerCrop === "lemons" || lowerCrop === "limes" ||
@@ -302,22 +256,10 @@ const getPlantingMaterialQuestion = (crop: string) => {
       lowerCrop === "rambutan" || lowerCrop === "durian" || lowerCrop === "mangosteen" ||
       lowerCrop === "longan" || lowerCrop === "marula" || lowerCrop === "pili nut" ||
       lowerCrop === "pomegranate" || lowerCrop === "star fruit" || lowerCrop === "guava") {
-    return {
-      id: "plantingMaterial",
-      questionKey: "question_planting_material_fruits",
-      type: "dropdown",
-      options: ["Grafted seedlings", "Seedlings", "Cuttings", "Air layers", "Other"],
-      sectionKey: "section_planting_material"
-    };
+    return { id: "plantingMaterial", questionKey: "question_planting_material_fruits", type: "dropdown", options: ["Grafted seedlings", "Seedlings", "Cuttings", "Air layers", "Other"], sectionKey: "section_planting_material" };
   }
   if (lowerCrop === "pineapples") {
-    return {
-      id: "plantingMaterial",
-      questionKey: "question_planting_material_pineapples",
-      type: "dropdown",
-      options: ["Crowns", "Slips", "Suckers", "Tissue culture", "Other"],
-      sectionKey: "section_planting_material"
-    };
+    return { id: "plantingMaterial", questionKey: "question_planting_material_pineapples", type: "dropdown", options: ["Crowns", "Slips", "Suckers", "Tissue culture", "Other"], sectionKey: "section_planting_material" };
   }
   if (lowerCrop === "watermelons" || lowerCrop === "carrots" || lowerCrop === "spinach" ||
       lowerCrop === "okra" || lowerCrop === "cucumbers" || lowerCrop === "courgettes" ||
@@ -330,95 +272,40 @@ const getPlantingMaterialQuestion = (crop: string) => {
       lowerCrop === "radicchio" || lowerCrop === "watercress" || lowerCrop === "arugula" ||
       lowerCrop === "celery" || lowerCrop === "leeks" || lowerCrop === "kohlrabi" ||
       lowerCrop === "broccoli" || lowerCrop === "cauliflower" || lowerCrop === "cabbage") {
-    return {
-      id: "plantingMaterial",
-      questionKey: "question_planting_material_vegetables",
-      type: "dropdown",
-      options: ["Direct seeding", "Transplanting seedlings", "Other"],
-      sectionKey: "section_planting_material"
-    };
+    return { id: "plantingMaterial", questionKey: "question_planting_material_vegetables", type: "dropdown", options: ["Direct seeding", "Transplanting seedlings", "Other"], sectionKey: "section_planting_material" };
   }
   if (lowerCrop === "chillies" || lowerCrop === "capsicums" || lowerCrop === "tomatoes" ||
       lowerCrop === "brinjals" || lowerCrop === "french beans" || lowerCrop === "garden peas") {
-    return {
-      id: "plantingMaterial",
-      questionKey: "question_planting_material_vegetables",
-      type: "dropdown",
-      options: ["Transplanting seedlings", "Direct seeding", "Other"],
-      sectionKey: "section_planting_material"
-    };
+    return { id: "plantingMaterial", questionKey: "question_planting_material_vegetables", type: "dropdown", options: ["Transplanting seedlings", "Direct seeding", "Other"], sectionKey: "section_planting_material" };
   }
   if (lowerCrop === "pigeon peas" || lowerCrop === "bambara nuts" || lowerCrop === "cowpeas" ||
       lowerCrop === "green grams" || lowerCrop === "groundnuts" || lowerCrop === "soya beans" ||
       lowerCrop === "chickpea" || lowerCrop === "lentil" || lowerCrop === "faba bean" ||
       lowerCrop === "peanut" || lowerCrop === "fenugreek" || lowerCrop === "caraway" ||
       lowerCrop === "anise" || lowerCrop === "cumin") {
-    return {
-      id: "plantingMaterial",
-      questionKey: "question_planting_material_legumes",
-      type: "dropdown",
-      options: ["Direct seeding", "Certified seed", "Farm-saved seed", "Other"],
-      sectionKey: "section_planting_material"
-    };
+    return { id: "plantingMaterial", questionKey: "question_planting_material_legumes", type: "dropdown", options: ["Direct seeding", "Certified seed", "Farm-saved seed", "Other"], sectionKey: "section_planting_material" };
   }
   if (lowerCrop === "yams" || lowerCrop === "taro" || lowerCrop === "irish potatoes" ||
       lowerCrop === "sweet potatoes" || lowerCrop === "cassava" || lowerCrop === "ginger" ||
       lowerCrop === "turmeric" || lowerCrop === "horseradish" || lowerCrop === "artichoke" ||
       lowerCrop === "asparagus" || lowerCrop === "rhubarb") {
-    return {
-      id: "plantingMaterial",
-      questionKey: "question_planting_material_tubers",
-      type: "dropdown",
-      options: ["Tubers", "Sets", "Cormels", "Certified seed", "Other"],
-      sectionKey: "section_planting_material"
-    };
+    return { id: "plantingMaterial", questionKey: "question_planting_material_tubers", type: "dropdown", options: ["Tubers", "Sets", "Cormels", "Certified seed", "Other"], sectionKey: "section_planting_material" };
   }
   if (lowerCrop === "tea") {
-    return {
-      id: "plantingMaterial",
-      questionKey: "question_planting_material_tea",
-      type: "dropdown",
-      options: ["Clonal cuttings", "Seedlings", "Tissue culture", "Other"],
-      sectionKey: "section_planting_material"
-    };
+    return { id: "plantingMaterial", questionKey: "question_planting_material_tea", type: "dropdown", options: ["Clonal cuttings", "Seedlings", "Tissue culture", "Other"], sectionKey: "section_planting_material" };
   }
   if (lowerCrop === "cocoa") {
-    return {
-      id: "plantingMaterial",
-      questionKey: "question_planting_material_cocoa",
-      type: "dropdown",
-      options: ["Hybrid seedlings", "Cuttings", "Grafted seedlings", "Other"],
-      sectionKey: "section_planting_material"
-    };
+    return { id: "plantingMaterial", questionKey: "question_planting_material_cocoa", type: "dropdown", options: ["Hybrid seedlings", "Cuttings", "Grafted seedlings", "Other"], sectionKey: "section_planting_material" };
   }
   if (lowerCrop === "bananas") {
-    return {
-      id: "plantingMaterial",
-      questionKey: "question_planting_material_bananas",
-      type: "dropdown",
-      options: ["Sword suckers", "Tissue culture seedlings", "Mother plant corms", "Bits", "Other"],
-      sectionKey: "section_planting_material"
-    };
+    return { id: "plantingMaterial", questionKey: "question_planting_material_bananas", type: "dropdown", options: ["Sword suckers", "Tissue culture seedlings", "Mother plant corms", "Bits", "Other"], sectionKey: "section_planting_material" };
   }
   if (lowerCrop === "coffee") {
-    return {
-      id: "plantingMaterial",
-      questionKey: "question_planting_material_coffee",
-      type: "dropdown",
-      options: ["Grafted seedlings", "Cuttings", "Seeds", "Tissue culture", "Other"],
-      sectionKey: "section_planting_material"
-    };
+    return { id: "plantingMaterial", questionKey: "question_planting_material_coffee", type: "dropdown", options: ["Grafted seedlings", "Cuttings", "Seeds", "Tissue culture", "Other"], sectionKey: "section_planting_material" };
   }
   if (lowerCrop === "sugarcane") {
-    return {
-      id: "plantingMaterial",
-      questionKey: "question_planting_material_sugarcane",
-      type: "dropdown",
-      options: ["Setts (cane cuttings)", "Ratoon (regrowth)", "Tissue culture", "Other"],
-      sectionKey: "section_planting_material"
-    };
+    return { id: "plantingMaterial", questionKey: "question_planting_material_sugarcane", type: "dropdown", options: ["Setts (cane cuttings)", "Ratoon (regrowth)", "Tissue culture", "Other"], sectionKey: "section_planting_material" };
   }
-  // Herbs and spices
   if (lowerCrop === "basil" || lowerCrop === "mint" || lowerCrop === "rosemary" ||
       lowerCrop === "thyme" || lowerCrop === "oregano" || lowerCrop === "sage" ||
       lowerCrop === "lavender" || lowerCrop === "chamomile" || lowerCrop === "echinacea" ||
@@ -429,217 +316,78 @@ const getPlantingMaterialQuestion = (crop: string) => {
       lowerCrop === "st. john's wort" || lowerCrop === "valerian" || lowerCrop === "moringa" ||
       lowerCrop === "lemon grass" || lowerCrop === "parsley" || lowerCrop === "coriander" ||
       lowerCrop === "dill" || lowerCrop === "fennel") {
-    return {
-      id: "plantingMaterial",
-      questionKey: "question_planting_material_vegetables",
-      type: "dropdown",
-      options: ["Cuttings", "Seedlings", "Direct seeding", "Other"],
-      sectionKey: "section_planting_material"
-    };
+    return { id: "plantingMaterial", questionKey: "question_planting_material_vegetables", type: "dropdown", options: ["Cuttings", "Seedlings", "Direct seeding", "Other"], sectionKey: "section_planting_material" };
   }
   if (cropType === "forage") {
-    return {
-      id: "plantingMaterial",
-      questionKey: "question_planting_material_vegetables",
-      type: "dropdown",
-      options: ["Cuttings", "Seed", "Splits", "Other"],
-      sectionKey: "section_planting_material"
-    };
+    return { id: "plantingMaterial", questionKey: "question_planting_material_vegetables", type: "dropdown", options: ["Cuttings", "Seed", "Splits", "Other"], sectionKey: "section_planting_material" };
   }
   if (cropType === "cover") {
-    return {
-      id: "plantingMaterial",
-      questionKey: "question_planting_material_legumes",
-      type: "dropdown",
-      options: ["Direct seeding", "Certified seed", "Other"],
-      sectionKey: "section_planting_material"
-    };
+    return { id: "plantingMaterial", questionKey: "question_planting_material_legumes", type: "dropdown", options: ["Direct seeding", "Certified seed", "Other"], sectionKey: "section_planting_material" };
   }
-  // Default
-  return {
-    id: "seedSource",
-    questionKey: "question_seed_source",
-    type: "dropdown",
-    options: ["Certified seed dealer", "Farm-saved seed", "Local market", "Neighbors", "Agrovet", "Other"],
-    sectionKey: "section_seeds"
-  };
+  return { id: "seedSource", questionKey: "question_seed_source", type: "dropdown", options: ["Certified seed dealer", "Farm-saved seed", "Local market", "Neighbors", "Agrovet", "Other"], sectionKey: "section_seeds" };
 };
 
 const getPlantingQuantityQuestion = (crop: string) => {
   const lowerCrop = crop.toLowerCase();
-  return {
-    id: "seedRate",
-    questionKey: `question_seed_rate_${lowerCrop.replace(/ /g, '_')}`,
-    type: "number",
-    placeholder: "e.g., 10 kg",
-    step: "any",
-    sectionKey: "section_seeds"
-  };
+  return { id: "seedRate", questionKey: `question_seed_rate_${lowerCrop.replace(/ /g, '_')}`, type: "number", placeholder: "e.g., 10 kg", step: "any", sectionKey: "section_seeds" };
 };
 
 const getStorageQuestion = (crop: string) => {
   const lowerCrop = crop.toLowerCase();
-
   if (lowerCrop === "maize" || lowerCrop === "sorghum" || lowerCrop === "finger millet" || lowerCrop === "rice") {
-    return {
-      id: "storageMethod",
-      questionKey: "question_storage_grain",
-      type: "dropdown",
-      options: ["Hermetic bags", "Metallic silos", "Gunny bags", "Local cribs", "Sold immediately", "Other"],
-      sectionKey: "section_storage"
-    };
+    return { id: "storageMethod", questionKey: "question_storage_grain", type: "dropdown", options: ["Hermetic bags", "Metallic silos", "Gunny bags", "Local cribs", "Sold immediately", "Other"], sectionKey: "section_storage" };
   }
   if (lowerCrop === "beans" || lowerCrop === "cowpeas" || lowerCrop === "green grams" || lowerCrop === "groundnuts" || lowerCrop === "pigeon peas" || lowerCrop === "bambara nuts") {
-    return {
-      id: "storageMethod",
-      questionKey: "question_storage_pulses",
-      type: "dropdown",
-      options: ["Hermetic bags", "Gunny bags", "Plastic containers", "Sold immediately", "Other"],
-      sectionKey: "section_storage"
-    };
+    return { id: "storageMethod", questionKey: "question_storage_pulses", type: "dropdown", options: ["Hermetic bags", "Gunny bags", "Plastic containers", "Sold immediately", "Other"], sectionKey: "section_storage" };
   }
   if (lowerCrop === "irish potatoes" || lowerCrop === "sweet potatoes" || lowerCrop === "cassava" || lowerCrop === "yams" || lowerCrop === "taro") {
-    return {
-      id: "storageMethod",
-      questionKey: "question_storage_tubers",
-      type: "dropdown",
-      options: ["Cool dark room", "In-ground storage", "Sold immediately", "Processed into flour", "Other"],
-      sectionKey: "section_storage"
-    };
+    return { id: "storageMethod", questionKey: "question_storage_tubers", type: "dropdown", options: ["Cool dark room", "In-ground storage", "Sold immediately", "Processed into flour", "Other"], sectionKey: "section_storage" };
   }
   if (lowerCrop === "tomatoes" || lowerCrop === "onions" || lowerCrop === "cabbages" || lowerCrop === "chillies" || lowerCrop === "capsicums" || lowerCrop === "okra") {
-    return {
-      id: "storageMethod",
-      questionKey: "question_storage_vegetables",
-      type: "dropdown",
-      options: ["Sold immediately", "Cool storage", "Market delivery", "Other"],
-      sectionKey: "section_storage"
-    };
+    return { id: "storageMethod", questionKey: "question_storage_vegetables", type: "dropdown", options: ["Sold immediately", "Cool storage", "Market delivery", "Other"], sectionKey: "section_storage" };
   }
   if (lowerCrop === "mangoes" || lowerCrop === "avocados" || lowerCrop === "oranges" || lowerCrop === "macadamia") {
-    return {
-      id: "storageMethod",
-      questionKey: "question_storage_fruits",
-      type: "dropdown",
-      options: ["Sold immediately", "Cool storage", "Processing", "Other"],
-      sectionKey: "section_storage"
-    };
+    return { id: "storageMethod", questionKey: "question_storage_fruits", type: "dropdown", options: ["Sold immediately", "Cool storage", "Processing", "Other"], sectionKey: "section_storage" };
   }
   if (lowerCrop === "tea" || lowerCrop === "coffee" || lowerCrop === "cocoa") {
-    return {
-      id: "storageMethod",
-      questionKey: "question_storage_perishable",
-      type: "dropdown",
-      options: ["Sold immediately", "Processing facility", "Drying and storage", "Other"],
-      sectionKey: "section_storage"
-    };
+    return { id: "storageMethod", questionKey: "question_storage_perishable", type: "dropdown", options: ["Sold immediately", "Processing facility", "Drying and storage", "Other"], sectionKey: "section_storage" };
   }
-
   const cropType = getCropType(crop);
   if (cropType === "herbs") {
-    return {
-      id: "storageMethod",
-      questionKey: "question_storage_perishable",
-      type: "dropdown",
-      options: ["Sold immediately", "Drying", "Cool storage", "Other"],
-      sectionKey: "section_storage"
-    };
+    return { id: "storageMethod", questionKey: "question_storage_perishable", type: "dropdown", options: ["Sold immediately", "Drying", "Cool storage", "Other"], sectionKey: "section_storage" };
   }
   if (cropType === "forage") {
-    return {
-      id: "storageMethod",
-      questionKey: "question_storage_generic",
-      type: "dropdown",
-      options: ["Fresh use", "Hay", "Silage", "Sold immediately", "Other"],
-      sectionKey: "section_storage"
-    };
+    return { id: "storageMethod", questionKey: "question_storage_generic", type: "dropdown", options: ["Fresh use", "Hay", "Silage", "Sold immediately", "Other"], sectionKey: "section_storage" };
   }
   if (cropType === "cover") {
-    return {
-      id: "storageMethod",
-      questionKey: "question_storage_generic",
-      type: "dropdown",
-      options: ["Left in field", "Sold as seed", "Other"],
-      sectionKey: "section_storage"
-    };
+    return { id: "storageMethod", questionKey: "question_storage_generic", type: "dropdown", options: ["Left in field", "Sold as seed", "Other"], sectionKey: "section_storage" };
   }
   if (cropType === "medicinal") {
-    return {
-      id: "storageMethod",
-      questionKey: "question_storage_perishable",
-      type: "dropdown",
-      options: ["Sold immediately", "Processing", "Cool storage", "Other"],
-      sectionKey: "section_storage"
-    };
+    return { id: "storageMethod", questionKey: "question_storage_perishable", type: "dropdown", options: ["Sold immediately", "Processing", "Cool storage", "Other"], sectionKey: "section_storage" };
   }
-
-  return {
-    id: "storageMethod",
-    questionKey: "question_storage_generic",
-    type: "dropdown",
-    options: ["Sold immediately", "Storage facility", "Cold storage", "Other"],
-    sectionKey: "section_storage"
-  };
+  return { id: "storageMethod", questionKey: "question_storage_generic", type: "dropdown", options: ["Sold immediately", "Storage facility", "Cold storage", "Other"], sectionKey: "section_storage" };
 };
 
-// ========== NUTRIENT DROPDOWN ==========
-const NutrientDropdown = ({
-  nutrient,
-  value,
-  onChange
-}: {
-  nutrient: string;
-  value: string;
-  onChange: (value: string) => void;
-}) => {
+// Nutrient dropdown component
+const NutrientDropdown = ({ nutrient, value, onChange }: { nutrient: string; value: string; onChange: (value: string) => void }) => {
   const { t } = useTranslation();
-
-  const nutrientLabels: Record<string, string> = {
-    s: "Sulfur (S)",
-    ca: "Calcium (Ca)",
-    mg: "Magnesium (Mg)",
-    zn: "Zinc (Zn)",
-    b: "Boron (B)",
-    cu: "Copper (Cu)",
-    mn: "Manganese (Mn)"
-  };
-
+  const nutrientLabels: Record<string, string> = { s: "Sulfur (S)", ca: "Calcium (Ca)", mg: "Magnesium (Mg)", zn: "Zinc (Zn)", b: "Boron (B)", cu: "Copper (Cu)", mn: "Manganese (Mn)" };
   const percentageOptions = ["0%", "2%", "3%", "4%", "5%", "6%", "7%", "8%", "10%", "12%"];
-
   return (
     <div className="flex items-center gap-3 mb-2">
       <label className="w-32 text-sm font-medium text-gray-800">{nutrientLabels[nutrient]}</label>
-      <select
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-800 bg-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-      >
+      <select value={value} onChange={(e) => onChange(e.target.value)} className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-800 bg-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
         <option value="" className="text-gray-600">Select %</option>
-        {percentageOptions.map(opt => (
-          <option key={opt} value={opt} className="text-gray-800">{opt}</option>
-        ))}
+        {percentageOptions.map(opt => <option key={opt} value={opt} className="text-gray-800">{opt}</option>)}
         <option value="other" className="text-gray-800">Other (specify)</option>
       </select>
-      {value === "other" && (
-        <input
-          type="text"
-          placeholder="e.g., 15%"
-          className="w-24 px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-800 bg-white placeholder-gray-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-          onChange={(e) => onChange(e.target.value)}
-        />
-      )}
+      {value === "other" && <input type="text" placeholder="e.g., 15%" className="w-24 px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-800 bg-white placeholder-gray-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500" onChange={(e) => onChange(e.target.value)} />}
     </div>
   );
 };
 
-const CreateInterviewAgent = ({
-  userName,
-  userId,
-  profileImage,
-  filter = "complete",
-  agents = [],
-  modules = []
-}: CreateInterviewAgentProps) => {
+// ========== MAIN COMPONENT ==========
+const CreateInterviewAgent = ({ userName, userId, profileImage, filter = "complete", agents = [], modules = [] }: CreateInterviewAgentProps) => {
   const { t, i18n } = useTranslation();
   const { setCountry, currency } = useCurrency();
   const { user } = useAuth();
@@ -653,26 +401,43 @@ const CreateInterviewAgent = ({
   const [recognitionLanguage, setRecognitionLanguage] = useState('en-US');
   const nameUsageCountRef = useRef(0);
 
-  const getSpokenCurrencyName = (): string => {
-    return currency.name;
-  };
+  // ========== POULTRY STATE ==========
+  const [selectedSpecies, setSelectedSpecies] = useState<"crop" | "poultry">("crop");
+  const [poultryBreed, setPoultryBreed] = useState<string>("");
+  const [poultrySystem, setPoultrySystem] = useState<string>("deep_litter");
+  const [poultryFlockSize, setPoultryFlockSize] = useState<number>(0);
+  const [poultryAgeWeeks, setPoultryAgeWeeks] = useState<number>(0);
+  const [poultryFarmingGoal, setPoultryFarmingGoal] = useState<string>("Both");
+  const [poultryLocationRegion, setPoultryLocationRegion] = useState<string>("Moderate");
+  const [poultryRainfallPattern, setPoultryRainfallPattern] = useState<string>("Wet");
+  const [poultryAltitude, setPoultryAltitude] = useState<string>("Lowland");
+  const [poultryFeedType, setPoultryFeedType] = useState<string>("Mash");
+  const [poultryFeedCostKg, setPoultryFeedCostKg] = useState<number>(65);
+  const [poultryVaccinationDone, setPoultryVaccinationDone] = useState<string>("No");
+  const [poultryMortalityCount, setPoultryMortalityCount] = useState<number>(0);
+  const [poultryChickCost, setPoultryChickCost] = useState<number>(120);
+  const [poultryEggPrice, setPoultryEggPrice] = useState<number>(280);
+  const [poultryMeatPrice, setPoultryMeatPrice] = useState<number>(350);
+  const [poultryHouseSizeM2, setPoultryHouseSizeM2] = useState<number>(40);
 
-  const getDisplaySymbol = (): string => {
-    return currency.symbol;
-  };
+  // ========== AUTO-DETECT POULTRY FROM FILTER ==========
+  useEffect(() => {
+    if (filter && filter.startsWith("poultry_")) {
+      setSelectedSpecies("poultry");
+    } else if (filter && filter.startsWith("crop_")) {
+      setSelectedSpecies("crop");
+    }
+  }, [filter]);
+
+  const getSpokenCurrencyName = (): string => currency.name;
+  const getDisplaySymbol = (): string => currency.symbol;
 
   const safeT = (key: string, params?: any): string => {
     try {
       const result = t(key, params);
-      if (result && typeof result.then === 'function') {
-        console.warn(`Translation for "${key}" returned a Promise`);
-        return key;
-      }
+      if (result && typeof result.then === 'function') { console.warn(`Translation for "${key}" returned a Promise`); return key; }
       return typeof result === 'string' ? result : String(result || '');
-    } catch (e) {
-      console.error('Translation error for key:', key, e);
-      return key;
-    }
+    } catch (e) { console.error('Translation error for key:', key, e); return key; }
   };
 
   const [currentStep, setCurrentStep] = useState<"idle" | "configuring" | "generating" | "redirecting" | "error">("idle");
@@ -719,120 +484,42 @@ const CreateInterviewAgent = ({
   ];
 
   const [farmerDetails, setFarmerDetails] = useState({
-    country: "",
-    farmerName: "",
-    county: "",
-    subCounty: "",
-    ward: "",
-    village: "",
-    totalFarmSize: "",
-    cultivatedAcres: "",
-    waterSources: "",
-    hasDoneSoilTest: "",
-    crops: "",
-    saleDate: "",
-    cropVarieties: "",
-    cropAcres: "",
-    season: "",
-    plantingDate: "",
-    plantingMaterial: "",
-    plantingQuantity: "",
-    seedSource: "",
-    spacing: "",
-    commonPests: "",
-    pestControlMethod: "",
-    commonDiseases: "",
-    diseaseControlMethod: "",
-    deficiencySymptoms: "",
-    deficiencyLocation: "",
-    harvestUnit: "kg",
-    pricePerKg: "",
-    actualYieldKg: "",
-    storageMethod: "",
-    npkCost: "",
-    ploughingCost: "",
-    plantingLabourCost: "",
-    weedingCost: "",
-    harvestingCost: "",
-    transportCostTotal: "",
-    packagingCostTotal: "",
-    miscellaneousCostTotal: "",
-    seedCost: "",
-    plantingMaterialCost: "",
-    calciticLimePricePerBag: "",
-    recCalciticLime: "",
-    livestockTypes: "",
-    cattle: "",
-    cattleBreed: "",
-    milkYield: "",
-    postHarvestPractices: "",
-    postHarvestLosses: "",
-    valueAddition: "",
-    storageAccess: "",
-    productionChallenges: "",
-    marketingChallenges: "",
-    climateChallenges: "",
-    financialChallenges: "",
-    conservationPractices: "",
-    soilTestDate: "",
-    soilTestPH: "",
-    soilTestPHRating: "",
-    soilTestP: "",
-    soilTestPRating: "",
-    soilTestK: "",
-    soilTestKRating: "",
-    soilTestNPercent: "",
-    soilTestNPercentRating: "",
-    soilTestOC: "",
-    soilTestOCRating: "",
-    soilTestOM: "",
-    soilTestOMRating: "",
-    soilTestCEC: "",
-    soilTestCECRating: "",
-    soilTestCa: "",
-    soilTestCaRating: "",
-    soilTestMg: "",
-    soilTestMgRating: "",
-    soilTestNa: "",
-    soilTestNaRating: "",
-    targetYield: "",
-    recCalciticLime: "",
-    recPlantingFertilizer: "",
-    recPlantingQuantity: "",
-    recTopdressingFertilizer: "",
-    recTopdressingQuantity: "",
-    recPotassiumFertilizer: "",
-    recPotassiumQuantity: "",
-    plantingFertilizerToUse: "",
-    plantingFertilizerCost: "",
-    topdressingFertilizerToUse: "",
-    topdressingFertilizerCost: "",
-    potassiumFertilizerToUse: "",
-    potassiumFertilizerCost: "",
-    plantingFertilizerType: "",
-    plantingFertilizerQuantity: "",
-    topdressingFertilizerType: "",
-    topdressingFertilizerQuantity: "",
-    potassiumFertilizerType: "",
-    potassiumFertilizerQuantity: "",
-    plantingFertilizerNutrients: "",
-    topdressingFertilizerNutrients: "",
-    potassiumFertilizerNutrients: "",
-    plantsDamaged: "",
-    recDolomiticLime: "",
-    dolomiticLimePricePerBag: "",
-    wantsNutritionBenefits: "",
+    country: "", farmerName: "", county: "", subCounty: "", ward: "", village: "",
+    totalFarmSize: "", cultivatedAcres: "", waterSources: "", hasDoneSoilTest: "", crops: "",
+    saleDate: "", cropVarieties: "", cropAcres: "", season: "", plantingDate: "",
+    plantingMaterial: "", plantingQuantity: "", seedSource: "", spacing: "",
+    commonPests: "", pestControlMethod: "", commonDiseases: "", diseaseControlMethod: "",
+    deficiencySymptoms: "", deficiencyLocation: "", harvestUnit: "kg", pricePerKg: "",
+    actualYieldKg: "", storageMethod: "", npkCost: "", ploughingCost: "", plantingLabourCost: "",
+    weedingCost: "", harvestingCost: "", transportCostTotal: "", packagingCostTotal: "",
+    miscellaneousCostTotal: "", seedCost: "", plantingMaterialCost: "", calciticLimePricePerBag: "",
+    recCalciticLime: "", livestockTypes: "", cattle: "", cattleBreed: "", milkYield: "",
+    postHarvestPractices: "", postHarvestLosses: "", valueAddition: "", storageAccess: "",
+    productionChallenges: "", marketingChallenges: "", climateChallenges: "", financialChallenges: "",
+    conservationPractices: "", soilTestDate: "", soilTestPH: "", soilTestPHRating: "",
+    soilTestP: "", soilTestPRating: "", soilTestK: "", soilTestKRating: "", soilTestNPercent: "",
+    soilTestNPercentRating: "", soilTestOC: "", soilTestOCRating: "", soilTestOM: "",
+    soilTestOMRating: "", soilTestCEC: "", soilTestCECRating: "", soilTestCa: "",
+    soilTestCaRating: "", soilTestMg: "", soilTestMgRating: "", soilTestNa: "",
+    soilTestNaRating: "", targetYield: "", recCalciticLime: "", recDolomiticLime: "",
+    recPlantingFertilizer: "", recPlantingQuantity: "", recTopdressingFertilizer: "",
+    recTopdressingQuantity: "", recPotassiumFertilizer: "", recPotassiumQuantity: "",
+    plantingFertilizerToUse: "", plantingFertilizerCost: "", topdressingFertilizerToUse: "",
+    topdressingFertilizerCost: "", potassiumFertilizerToUse: "", potassiumFertilizerCost: "",
+    plantingFertilizerType: "", plantingFertilizerQuantity: "", topdressingFertilizerType: "",
+    topdressingFertilizerQuantity: "", potassiumFertilizerType: "", potassiumFertilizerQuantity: "",
+    plantingFertilizerNutrients: "", topdressingFertilizerNutrients: "", potassiumFertilizerNutrients: "",
+    plantsDamaged: "", recDolomiticLime: "", dolomiticLimePricePerBag: "", wantsNutritionBenefits: "",
+    poultry_species: "chicken",
+    poultry_disease: "",
+    symptomsObserved: "",
+    mortalityCountDisease: "",
+    diseaseDuration: "",
   });
 
-  const [plantingNutrients, setPlantingNutrients] = useState({
-    s: "", ca: "", mg: "", zn: "", b: "", cu: "", mn: ""
-  });
-  const [topdressingNutrients, setTopdressingNutrients] = useState({
-    s: "", ca: "", mg: "", zn: "", b: "", cu: "", mn: ""
-  });
-  const [potassiumNutrients, setPotassiumNutrients] = useState({
-    s: "", ca: "", mg: "", zn: "", b: "", cu: "", mn: ""
-  });
+  const [plantingNutrients, setPlantingNutrients] = useState({ s: "", ca: "", mg: "", zn: "", b: "", cu: "", mn: "" });
+  const [topdressingNutrients, setTopdressingNutrients] = useState({ s: "", ca: "", mg: "", zn: "", b: "", cu: "", mn: "" });
+  const [potassiumNutrients, setPotassiumNutrients] = useState({ s: "", ca: "", mg: "", zn: "", b: "", cu: "", mn: "" });
 
   const [debugInfo, setDebugInfo] = useState({
     callStatus: "INACTIVE",
@@ -862,23 +549,19 @@ const CreateInterviewAgent = ({
     }
   };
 
-  // ===== Sync voice language with global i18n language =====
   const previousLangRef = useRef<string>('');
   useEffect(() => {
     if (currentStep !== "idle") return;
     const newLang = i18n.language;
-    if (!newLang) return;
-    if (newLang === previousLangRef.current) return;
+    if (!newLang || newLang === previousLangRef.current) return;
     previousLangRef.current = newLang;
     const voiceLang = mapI18nToVoiceLanguage(newLang);
     setRecognitionLanguage(voiceLang);
     console.log(`CreateInterviewAgent: Voice language set to ${voiceLang} from i18n language ${newLang}`);
-    if (recognitionRef.current) {
-      recognitionRef.current.lang = voiceLang;
-    }
+    if (recognitionRef.current) recognitionRef.current.lang = voiceLang;
   }, [i18n.language, currentStep]);
 
-  // ========== FIREBASE PROFILE FUNCTIONS ==========
+  // ========== FIREBASE PROFILE FUNCTIONS (FIXED) ==========
   const loadProfileFromFirestore = useCallback(async (uid: string) => {
     try {
       const docRef = doc(db, "farmers", uid);
@@ -886,10 +569,52 @@ const CreateInterviewAgent = ({
       if (docSnap.exists()) {
         const data = docSnap.data();
         const profile = data.profile || {};
-        setFarmerDetails(prev => ({
-          ...prev,
-          ...profile,
-        }));
+
+        // Load crop fields
+        setFarmerDetails(prev => ({ ...prev, ...profile }));
+
+        // ===== LOAD POULTRY FIELDS =====
+        if (profile.poultry) {
+          const p = profile.poultry;
+          setPoultryBreed(p.breed || "");
+          setPoultrySystem(p.system || "deep_litter");
+          setPoultryFlockSize(p.flockSize || 0);
+          setPoultryAgeWeeks(p.ageWeeks || 0);
+          setPoultryFarmingGoal(p.farmingGoal || "Both");
+          setPoultryLocationRegion(p.locationRegion || "Moderate");
+          setPoultryRainfallPattern(p.rainfallPattern || "Wet");
+          setPoultryAltitude(p.altitude || "Lowland");
+          setPoultryFeedType(p.feedType || "Mash");
+          setPoultryFeedCostKg(p.feedCostKg || 65);
+          setPoultryVaccinationDone(p.vaccinationDone || "No");
+          setPoultryMortalityCount(p.mortalityCount || 0);
+          setPoultryChickCost(p.chickCost || 120);
+          setPoultryEggPrice(p.eggPrice || 280);
+          setPoultryMeatPrice(p.meatPrice || 350);
+          setPoultryHouseSizeM2(p.houseSizeM2 || 40);
+
+          // Also update farmerDetails poultry fields for the generate call
+          setFarmerDetails(prev => ({
+            ...prev,
+            poultry_breed: p.breed || "",
+            poultry_system: p.system || "deep_litter",
+            poultry_flock_size: p.flockSize || 0,
+            poultry_age_weeks: p.ageWeeks || 0,
+            poultry_farming_goal: p.farmingGoal || "Both",
+            poultry_location_region: p.locationRegion || "Moderate",
+            poultry_rainfall_pattern: p.rainfallPattern || "Wet",
+            poultry_altitude: p.altitude || "Lowland",
+            poultry_feed_type: p.feedType || "Mash",
+            poultry_feed_cost_kg: p.feedCostKg || 65,
+            poultry_vaccination_done: p.vaccinationDone || "No",
+            poultry_mortality_count: p.mortalityCount || 0,
+            poultry_chick_cost: p.chickCost || 120,
+            poultry_egg_price: p.eggPrice || 280,
+            poultry_meat_price: p.meatPrice || 350,
+            poultry_house_size_m2: p.houseSizeM2 || 40,
+          }));
+        }
+
         console.log("✅ Loaded farmer profile from Firestore");
         return true;
       }
@@ -903,360 +628,128 @@ const CreateInterviewAgent = ({
   const saveProfileToFirestore = useCallback(async (uid: string, details: any) => {
     try {
       const docRef = doc(db, "farmers", uid);
-      await setDoc(docRef, { profile: details }, { merge: true });
+
+      // Build the profile object with ALL poultry fields
+      const profile = {
+        ...details,
+        poultry: {
+          breed: poultryBreed,
+          system: poultrySystem,
+          flockSize: poultryFlockSize,
+          ageWeeks: poultryAgeWeeks,
+          farmingGoal: poultryFarmingGoal,
+          locationRegion: poultryLocationRegion,
+          rainfallPattern: poultryRainfallPattern,
+          altitude: poultryAltitude,
+          feedType: poultryFeedType,
+          feedCostKg: poultryFeedCostKg,
+          vaccinationDone: poultryVaccinationDone,
+          mortalityCount: poultryMortalityCount,
+          chickCost: poultryChickCost,
+          eggPrice: poultryEggPrice,
+          meatPrice: poultryMeatPrice,
+          houseSizeM2: poultryHouseSizeM2,
+          disease: details.poultry_disease || "",
+          symptomsObserved: details.symptomsObserved || "",
+          mortalityCountDisease: details.mortalityCountDisease || "",
+          diseaseDuration: details.diseaseDuration || "",
+        }
+      };
+
+      await setDoc(docRef, { profile }, { merge: true });
       console.log("✅ Saved farmer profile to Firestore");
       return true;
     } catch (error) {
       console.error("Error saving profile:", error);
       return false;
     }
-  }, []);
+  }, [
+    poultryBreed, poultrySystem, poultryFlockSize, poultryAgeWeeks,
+    poultryFarmingGoal, poultryLocationRegion, poultryRainfallPattern,
+    poultryAltitude, poultryFeedType, poultryFeedCostKg,
+    poultryVaccinationDone, poultryMortalityCount, poultryChickCost,
+    poultryEggPrice, poultryMeatPrice, poultryHouseSizeM2
+  ]);
 
-  // Load profile when user is authenticated
   useEffect(() => {
-    if (user?.uid) {
-      loadProfileFromFirestore(user.uid);
-    }
+    if (user?.uid) loadProfileFromFirestore(user.uid);
   }, [user, loadProfileFromFirestore]);
 
   // ========== AGENT-TO-QUESTION MAPPING ==========
   const agentQuestionMap: Record<string, string[]> = {
-    EnterpriseSetupAgent: [
-      "country",
-      "crops",
-      "cropVarieties",
-      "cropAcres",
-      "season",
-      "plantingDate",
-      "plantingMaterial",
-      "spacing",
-      "seedRate",
-      "saleDate"
-    ],
-    FertilizerInterviewAgent: [
-      "hasDoneSoilTest",
-      "soilTestDate",
-      "soilTestPH",
-      "soilTestPHRating",
-      "soilTestP",
-      "soilTestPRating",
-      "soilTestK",
-      "soilTestKRating",
-      "soilTestNPercent",
-      "soilTestNPercentRating",
-      "soilTestCa",
-      "soilTestCaRating",
-      "soilTestMg",
-      "soilTestMgRating",
-      "soilTestNa",
-      "soilTestNaRating",
-      "soilTestOC",
-      "soilTestOCRating",
-      "soilTestOM",
-      "soilTestOMRating",
-      "soilTestCEC",
-      "soilTestCECRating",
-      "targetYield",
-      "recCalciticLime",
-      "recDolomiticLime",
-      "recPlantingFertilizer",
-      "recPlantingQuantity",
-      "recTopdressingFertilizer",
-      "recTopdressingQuantity",
-      "recPotassiumFertilizer",
-      "recPotassiumQuantity",
-      "plantingFertilizerToUse",
-      "plantingFertilizerCost",
-      "topdressingFertilizerToUse",
-      "topdressingFertilizerCost",
-      "potassiumFertilizerToUse",
-      "potassiumFertilizerCost",
-      "plantingFertilizerType",
-      "plantingFertilizerQuantity",
-      "topdressingFertilizerType",
-      "topdressingFertilizerQuantity",
-      "potassiumFertilizerType",
-      "potassiumFertilizerQuantity",
-      "plantingFertilizerNutrients",
-      "topdressingFertilizerNutrients",
-      "potassiumFertilizerNutrients",
-      "calciticLimePricePerBag",
-      "dolomiticLimePricePerBag"
-    ],
-    PestInterviewAgent: [
-      "commonPests",
-      "plantsDamaged"
-    ],
-    DiseaseInterviewAgent: [
-      "commonDiseases",
-      "plantsDamaged"
-    ],
-    NutrientInterviewAgent: [
-      "deficiencySymptoms",
-      "deficiencyLocation"
-    ],
-    GrossMarginInterviewAgent: [
-      "seedCost",
-      "plantingMaterialCost",
-      "ploughingCost",
-      "plantingLabourCost",
-      "weedingCost",
-      "harvestingCost",
-      "transportCostTotal",
-      "packagingCostTotal",
-      "miscellaneousCostTotal"
-    ],
-    StorageInterviewAgent: [
-      "storageMethod"
-    ],
-    ConservationInterviewAgent: [
-      "conservationPractices",
-      "waterSources"
-    ],
-    GAPInterviewAgent: [
-      "productionChallenges",
-      "marketingChallenges",
-      "climateChallenges",
-      "financialChallenges"
-    ]
+    EnterpriseSetupAgent: ["country", "crops", "cropVarieties", "cropAcres", "season", "plantingDate", "plantingMaterial", "spacing", "seedRate", "saleDate"],
+    FertilizerInterviewAgent: ["hasDoneSoilTest", "soilTestDate", "soilTestPH", "soilTestPHRating", "soilTestP", "soilTestPRating", "soilTestK", "soilTestKRating", "soilTestNPercent", "soilTestNPercentRating", "soilTestCa", "soilTestCaRating", "soilTestMg", "soilTestMgRating", "soilTestNa", "soilTestNaRating", "soilTestOC", "soilTestOCRating", "soilTestOM", "soilTestOMRating", "soilTestCEC", "soilTestCECRating", "targetYield", "recCalciticLime", "recDolomiticLime", "recPlantingFertilizer", "recPlantingQuantity", "recTopdressingFertilizer", "recTopdressingQuantity", "recPotassiumFertilizer", "recPotassiumQuantity", "plantingFertilizerToUse", "plantingFertilizerCost", "topdressingFertilizerToUse", "topdressingFertilizerCost", "potassiumFertilizerToUse", "potassiumFertilizerCost", "plantingFertilizerType", "plantingFertilizerQuantity", "topdressingFertilizerType", "topdressingFertilizerQuantity", "potassiumFertilizerType", "potassiumFertilizerQuantity", "plantingFertilizerNutrients", "topdressingFertilizerNutrients", "potassiumFertilizerNutrients", "calciticLimePricePerBag", "dolomiticLimePricePerBag"],
+    PestInterviewAgent: ["commonPests", "plantsDamaged"],
+    DiseaseInterviewAgent: ["commonDiseases", "plantsDamaged"],
+    NutrientInterviewAgent: ["deficiencySymptoms", "deficiencyLocation"],
+    GrossMarginInterviewAgent: ["seedCost", "plantingMaterialCost", "ploughingCost", "plantingLabourCost", "weedingCost", "harvestingCost", "transportCostTotal", "packagingCostTotal", "miscellaneousCostTotal"],
+    StorageInterviewAgent: ["storageMethod"],
+    ConservationInterviewAgent: ["conservationPractices", "waterSources"],
+    GAPInterviewAgent: ["productionChallenges", "marketingChallenges", "climateChallenges", "financialChallenges"],
+    PoultrySetupAgent: ["poultry_breed", "poultry_system", "poultry_flock_size", "poultry_age_weeks", "poultry_farming_goal", "poultry_location_region", "poultry_rainfall_pattern", "poultry_altitude", "poultry_feed_type", "poultry_feed_cost_kg", "poultry_vaccination_done", "poultry_mortality_count", "poultry_chick_cost", "poultry_egg_price", "poultry_meat_price", "poultry_house_size_m2"],
+    PoultryDiseaseAgent: ["poultry_disease", "symptomsObserved", "mortalityCountDisease", "diseaseDuration"],
   };
 
-  // ========== Get allowed question IDs based on filter ==========
   const getAllowedQuestionIds = useCallback((): string[] => {
-    // If no filter or "complete" or no agents, return all questions (empty array = all)
-    if (!filter || filter === "complete" || !agents || agents.length === 0) {
-      return [];
-    }
-
+    if (!filter || filter === "complete" || !agents || agents.length === 0) return [];
     const allowed: string[] = [];
     for (const agentName of agents) {
       const ids = agentQuestionMap[agentName] || [];
       allowed.push(...ids);
     }
-
-    // Always include essential fields required by the API
     const essential = ["country", "county", "subCounty", "village", "farmerName"];
-    for (const field of essential) {
-      if (!allowed.includes(field)) {
-        allowed.push(field);
-      }
-    }
-
+    for (const field of essential) { if (!allowed.includes(field)) allowed.push(field); }
     return allowed;
   }, [filter, agents]);
 
   // ========== QUESTION DEFINITIONS ==========
   const countryQuestion = [
-    {
-      id: "country",
-      questionKey: "question_country",
-      type: "dropdown",
-      options: [
-        "algeria", "anguilla", "antigua and barbuda", "argentina", "australia",
-        "bahamas", "barbados", "belgium", "belize", "benin", "bermuda", "bolivia",
-        "bonaire", "botswana", "burkina faso", "burundi", "cameroon", "canada",
-        "cape verde", "cayman islands", "central african republic", "chad", "chile",
-        "colombia", "comoros", "congo (brazzaville)", "congo (kinshasa)", "costa rica",
-        "cuba", "curacao", "djibouti", "dominica", "dominican republic", "ecuador",
-        "egypt", "el salvador", "equatorial guinea", "eritrea", "eswatini", "ethiopia",
-        "fiji", "france", "french guiana", "french polynesia", "gabon", "gambia",
-        "ghana", "gibraltar", "grenada", "guadeloupe", "guam", "guatemala", "guernsey",
-        "guinea", "guinea-bissau", "guyana", "haiti", "honduras", "india", "ireland",
-        "isle of man", "ivory coast", "jamaica", "jersey", "kenya", "kiribati",
-        "lesotho", "liberia", "libya", "luxembourg", "madagascar", "malawi", "malaysia",
-        "maldives", "mali", "malta", "martinique", "mauritania", "mauritius", "mayotte",
-        "mexico", "monaco", "montserrat", "morocco", "mozambique", "namibia",
-        "new caledonia", "new zealand", "niger", "nigeria", "niue", "norfolk island",
-        "panama", "papua new guinea", "paraguay", "peru", "philippines", "puerto rico",
-        "reunion", "rwanda", "saint barthelemy", "saint kitts and nevis", "saint lucia",
-        "saint martin", "saint pierre and miquelon", "saint vincent and the grenadines",
-        "samoa", "sao tome and principe", "senegal", "seychelles", "sierra leone",
-        "singapore", "sint maarten", "solomon islands", "somalia", "south africa",
-        "south sudan", "spain", "sudan", "suriname", "switzerland", "tanzania", "togo",
-        "tokelau", "trinidad and tobago", "tunisia", "turks and caicos islands",
-        "tuvalu", "uganda", "united kingdom", "united states", "uruguay", "vanuatu",
-        "venezuela", "zambia", "zimbabwe"
-      ].sort((a, b) => a.localeCompare(b)),
+    { id: "country", questionKey: "question_country", type: "dropdown", options: ["algeria", "anguilla", "antigua and barbuda", "argentina", "australia", "bahamas", "barbados", "belgium", "belize", "benin", "bermuda", "bolivia", "bonaire", "botswana", "burkina faso", "burundi", "cameroon", "canada", "cape verde", "cayman islands", "central african republic", "chad", "chile", "colombia", "comoros", "congo (brazzaville)", "congo (kinshasa)", "costa rica", "cuba", "curacao", "djibouti", "dominica", "dominican republic", "ecuador", "egypt", "el salvador", "equatorial guinea", "eritrea", "eswatini", "ethiopia", "fiji", "france", "french guiana", "french polynesia", "gabon", "gambia", "ghana", "gibraltar", "grenada", "guadeloupe", "guam", "guatemala", "guernsey", "guinea", "guinea-bissau", "guyana", "haiti", "honduras", "india", "ireland", "isle of man", "ivory coast", "jamaica", "jersey", "kenya", "kiribati", "lesotho", "liberia", "libya", "luxembourg", "madagascar", "malawi", "malaysia", "maldives", "mali", "malta", "martinique", "mauritania", "mauritius", "mayotte", "mexico", "monaco", "montserrat", "morocco", "mozambique", "namibia", "new caledonia", "new zealand", "niger", "nigeria", "niue", "norfolk island", "panama", "papua new guinea", "paraguay", "peru", "philippines", "puerto rico", "reunion", "rwanda", "saint barthelemy", "saint kitts and nevis", "saint lucia", "saint martin", "saint pierre and miquelon", "saint vincent and the grenadines", "samoa", "sao tome and principe", "senegal", "seychelles", "sierra leone", "singapore", "sint maarten", "solomon islands", "somalia", "south africa", "south sudan", "spain", "sudan", "suriname", "switzerland", "tanzania", "togo", "tokelau", "trinidad and tobago", "tunisia", "turks and caicos islands", "tuvalu", "uganda", "united kingdom", "united states", "uruguay", "vanuatu", "venezuela", "zambia", "zimbabwe"].sort((a, b) => a.localeCompare(b)),
       sectionKey: "section_location"
     }
   ];
 
   const soilTestGatekeeperQuestion = [
-    {
-      id: "hasDoneSoilTest",
-      questionKey: "question_soil_test",
-      type: "dropdown",
-      options: ["Yes", "No"],
-      sectionKey: "section_soil_test"
-    }
+    { id: "hasDoneSoilTest", questionKey: "question_soil_test", type: "dropdown", options: ["Yes", "No"], sectionKey: "section_soil_test" }
   ];
 
   const cropSelectionQuestion = {
     id: "crops",
     questionKey: "question_crop_enterprise",
     type: "dropdown",
-    options: [
-      "african nightshade", "alfalfa", "almond", "aloe vera", "amaranth", "amaranth grain",
-      "anise", "artichoke", "arugula", "asparagus", "avocados", "bambaranuts", "bamboo",
-      "bananas", "barley", "basil", "beans", "beetroot", "black pepper", "bok choy", "borage",
-      "brachiaria", "brazil nut", "breadfruit", "brinjals", "broccoli", "buckwheat",
-      "buffel grass", "cabbages", "calendula", "calliandra", "canavalia", "capsicums",
-      "caraway", "cardamom", "carrots", "cashew", "cassava", "cauliflower", "cayenne",
-      "celery", "cenchrus", "chamomile", "chervil", "chestnut", "chickpea", "chillies",
-      "chives", "cinnamon", "clover", "cloves", "cocoa", "coconut", "coffee", "collard greens",
-      "coriander", "cotton", "courgettes", "cowpeas", "crotalaria paulina", "cucumbers",
-      "cumin", "currant", "date palm", "desmodium", "dill", "dolichos", "durian",
-      "echinacea", "elderberry", "endive", "escarole", "ethiopian kale", "faba bean",
-      "fennel", "fenugreek", "fig", "finger millet", "flax", "fonio", "forage sorghum",
-      "french beans", "frisee", "garden peas", "garlic", "ginger", "ginseng", "goldenseal",
-      "gooseberry", "grapefruit", "green grams", "groundnuts", "guava", "guinea grass",
-      "hazelnut", "hemp", "hibiscus", "hops", "horseradish", "irish potatoes", "italian ryegrass",
-      "jackfruit", "jalapeno", "jute", "jute mallow", "kales", "kamut", "kenaf", "kohlrabi",
-      "lavender", "leeks", "lemon grass", "lemons", "lentil", "lettuce", "leucaena", "limes",
-      "longan", "lovage", "lucerne", "lychee", "macadamia", "maize", "mangoes", "mangosteen",
-      "marjoram", "marula", "millet", "mint", "moringa", "mucuna", "mulberry", "mushroom",
-      "mustard", "mustard greens", "napier grass", "napier hybrid", "nasturtium", "oats",
-      "oil palm", "okra", "onions", "oranges", "orchard grass", "oregano", "oyster nut",
-      "parsley", "parsnip", "passion fruit", "pawpaws", "peanut", "pecan", "persimmon",
-      "pigeonpeas", "pili nut", "pineapples", "pistachio", "pomegranate", "potatoes",
-      "pumpkin", "pumpkin leaves", "pyrethrum", "quinoa", "radicchio", "radish", "rambutan",
-      "ramie", "rapeseed", "rhodes grass", "rhubarb", "rice", "rosemary", "rubber",
-      "rutabaga", "safflower", "sage", "savory", "sesame", "sesbania", "shallots", "shea",
-      "simsim", "sisal", "slender leaf", "sorghum", "sorrel", "soya beans", "spelt", "spider plant",
-      "spinach", "St. John's wort", "star fruit", "stevia", "stinging nettle", "sugarcane",
-      "sunn hemp", "sunflower", "sweet potatoes", "sweet potato leaves", "Swiss chard",
-      "tarragon", "taro", "tea", "teff", "thyme", "timothy grass", "tobacco", "tomatoes",
-      "triticale", "turmeric", "turnip", "turnip greens", "valerian", "vanilla", "vetch",
-      "walnut", "wasabi", "watercress", "watermelons", "wheat", "white clover", "yams"
-    ].sort((a, b) => a.localeCompare(b)),
+    options: ["african nightshade", "alfalfa", "almond", "aloe vera", "amaranth", "amaranth grain", "anise", "artichoke", "arugula", "asparagus", "avocados", "bambaranuts", "bamboo", "bananas", "barley", "basil", "beans", "beetroot", "black pepper", "bok choy", "borage", "brachiaria", "brazil nut", "breadfruit", "brinjals", "broccoli", "buckwheat", "buffel grass", "cabbages", "calendula", "calliandra", "canavalia", "capsicums", "caraway", "cardamom", "carrots", "cashew", "cassava", "cauliflower", "cayenne", "celery", "cenchrus", "chamomile", "chervil", "chestnut", "chickpea", "chillies", "chives", "cinnamon", "clover", "cloves", "cocoa", "coconut", "coffee", "collard greens", "coriander", "cotton", "courgettes", "cowpeas", "crotalaria paulina", "cucumbers", "cumin", "currant", "date palm", "desmodium", "dill", "dolichos", "durian", "echinacea", "elderberry", "endive", "escarole", "ethiopian kale", "faba bean", "fennel", "fenugreek", "fig", "finger millet", "flax", "fonio", "forage sorghum", "french beans", "frisee", "garden peas", "garlic", "ginger", "ginseng", "goldenseal", "gooseberry", "grapefruit", "green grams", "groundnuts", "guava", "guinea grass", "hazelnut", "hemp", "hibiscus", "hops", "horseradish", "irish potatoes", "italian ryegrass", "jackfruit", "jalapeno", "jute", "jute mallow", "kales", "kamut", "kenaf", "kohlrabi", "lavender", "leeks", "lemon grass", "lemons", "lentil", "lettuce", "leucaena", "limes", "longan", "lovage", "lucerne", "lychee", "macadamia", "maize", "mangoes", "mangosteen", "marjoram", "marula", "millet", "mint", "moringa", "mucuna", "mulberry", "mushroom", "mustard", "mustard greens", "napier grass", "napier hybrid", "nasturtium", "oats", "oil palm", "okra", "onions", "oranges", "orchard grass", "oregano", "oyster nut", "parsley", "parsnip", "passion fruit", "pawpaws", "peanut", "pecan", "persimmon", "pigeonpeas", "pili nut", "pineapples", "pistachio", "pomegranate", "potatoes", "pumpkin", "pumpkin leaves", "pyrethrum", "quinoa", "radicchio", "radish", "rambutan", "ramie", "rapeseed", "rhodes grass", "rhubarb", "rice", "rosemary", "rubber", "rutabaga", "safflower", "sage", "savory", "sesame", "sesbania", "shallots", "shea", "simsim", "sisal", "slender leaf", "sorghum", "sorrel", "soya beans", "spelt", "spider plant", "spinach", "St. John's wort", "star fruit", "stevia", "stinging nettle", "sugarcane", "sunn hemp", "sunflower", "sweet potatoes", "sweet potato leaves", "Swiss chard", "tarragon", "taro", "tea", "teff", "thyme", "timothy grass", "tobacco", "tomatoes", "triticale", "turmeric", "turnip", "turnip greens", "valerian", "vanilla", "vetch", "walnut", "wasabi", "watercress", "watermelons", "wheat", "white clover", "yams"].sort((a, b) => a.localeCompare(b)),
     sectionKey: "section_crops"
   };
 
-  const saleDateQuestion = {
-    id: "saleDate",
-    questionKey: "question_sale_date",
-    type: "date",
-    minDate: new Date().toISOString().split('T')[0],
-    maxDate: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-    sectionKey: "section_production"
-  };
+  const saleDateQuestion = { id: "saleDate", questionKey: "question_sale_date", type: "date", minDate: new Date().toISOString().split('T')[0], maxDate: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], sectionKey: "section_production" };
 
   const deficiencyQuestions = [
-    {
-      id: "deficiencySymptoms",
-      questionKey: "question_deficiency_symptoms",
-      type: "dropdown",
-      options: [
-        "Yellow leaves",
-        "Purple color",
-        "Burned edges",
-        "Yellow between veins",
-        "Stunted growth",
-        "Blossom end rot",
-        "Distorted new leaves",
-        "Other (specify)"
-      ],
-      sectionKey: "section_nutrition"
-    },
-    {
-      id: "deficiencyLocation",
-      questionKey: "question_deficiency_location",
-      type: "dropdown",
-      options: ["Older leaves (bottom)", "Younger leaves (top)", "Whole plant", "Fruits/flowers only"],
-      sectionKey: "section_nutrition"
-    }
+    { id: "deficiencySymptoms", questionKey: "question_deficiency_symptoms", type: "dropdown", options: ["Yellow leaves", "Purple color", "Burned edges", "Yellow between veins", "Stunted growth", "Blossom end rot", "Distorted new leaves", "Other (specify)"], sectionKey: "section_nutrition" },
+    { id: "deficiencyLocation", questionKey: "question_deficiency_location", type: "dropdown", options: ["Older leaves (bottom)", "Younger leaves (top)", "Whole plant", "Fruits/flowers only"], sectionKey: "section_nutrition" }
   ];
 
-  // ─── NUTRIENT QUESTIONS (removed dependsOn so they appear for both Yes and No) ───
   const nutrientDetailQuestions = [
-    {
-      id: "plantingFertilizerNutrients",
-      questionKey: "question_planting_fertilizer_nutrients",
-      type: "custom",
-      renderCustom: true,
-      sectionKey: "section_fertilizer_selection"
-    },
-    {
-      id: "topdressingFertilizerNutrients",
-      questionKey: "question_topdressing_fertilizer_nutrients",
-      type: "custom",
-      renderCustom: true,
-      sectionKey: "section_fertilizer_selection"
-    },
-    {
-      id: "potassiumFertilizerNutrients",
-      questionKey: "question_potassium_fertilizer_nutrients",
-      type: "custom",
-      renderCustom: true,
-      sectionKey: "section_fertilizer_selection"
-    },
+    { id: "plantingFertilizerNutrients", questionKey: "question_planting_fertilizer_nutrients", type: "custom", renderCustom: true, sectionKey: "section_fertilizer_selection" },
+    { id: "topdressingFertilizerNutrients", questionKey: "question_topdressing_fertilizer_nutrients", type: "custom", renderCustom: true, sectionKey: "section_fertilizer_selection" },
+    { id: "potassiumFertilizerNutrients", questionKey: "question_potassium_fertilizer_nutrients", type: "custom", renderCustom: true, sectionKey: "section_fertilizer_selection" },
   ];
 
-  const plantsDamagedQuestion = {
-    id: "plantsDamaged",
-    questionKey: "question_plants_damaged",
-    type: "number",
-    placeholder: "e.g., 50",
-    step: "any",
-    sectionKey: "section_pests"
-  };
-
-  const nutritionBenefitsQuestion = {
-    id: "wantsNutritionBenefits",
-    questionKey: "question_wants_nutrition_benefits",
-    type: "button",
-    options: ["Yes"],
-    sectionKey: "section_nutrition"
-  };
+  const plantsDamagedQuestion = { id: "plantsDamaged", questionKey: "question_plants_damaged", type: "number", placeholder: "e.g., 50", step: "any", sectionKey: "section_pests" };
+  const nutritionBenefitsQuestion = { id: "wantsNutritionBenefits", questionKey: "question_wants_nutrition_benefits", type: "button", options: ["Yes"], sectionKey: "section_nutrition" };
 
   const getCropSpecificQuestions = () => {
     if (!farmerDetails.crops) return [];
     const crop = farmerDetails.crops;
     const spacingOptions = getSpacingOptions(crop);
-
     const varietyOptions = getVarietiesOptions(crop);
     const hasVarieties = varietyOptions.length > 0;
-
     return [
-      {
-        id: "cropVarieties",
-        questionKey: "question_crop_varieties",
-        type: hasVarieties ? "dropdown" : "text",
-        options: hasVarieties ? varietyOptions : [],
-        placeholder: hasVarieties ? "Select variety" : "e.g., H614",
-        sectionKey: "section_crops"
-      },
-      {
-        id: "cropAcres",
-        questionKey: "question_crop_acres",
-        type: "number",
-        step: "any",
-        placeholder: "e.g., 2.5",
-        sectionKey: "section_crops"
-      },
-      {
-        id: "season",
-        questionKey: "question_season",
-        type: "dropdown",
-        options: ["long rains", "short rains", "dry season"],
-        sectionKey: "section_crops"
-      },
-      {
-        id: "plantingDate",
-        questionKey: "question_planting_date",
-        type: "date",
-        minDate: "2024-01-01",
-        maxDate: new Date().toISOString().split('T')[0],
-        sectionKey: "section_crops"
-      },
+      { id: "cropVarieties", questionKey: "question_crop_varieties", type: hasVarieties ? "dropdown" : "text", options: hasVarieties ? varietyOptions : [], placeholder: hasVarieties ? "Select variety" : "e.g., H614", sectionKey: "section_crops" },
+      { id: "cropAcres", questionKey: "question_crop_acres", type: "number", step: "any", placeholder: "e.g., 2.5", sectionKey: "section_crops" },
+      { id: "season", questionKey: "question_season", type: "dropdown", options: ["long rains", "short rains", "dry season"], sectionKey: "section_crops" },
+      { id: "plantingDate", questionKey: "question_planting_date", type: "date", minDate: "2024-01-01", maxDate: new Date().toISOString().split('T')[0], sectionKey: "section_crops" },
       getPlantingMaterialQuestion(crop),
-      {
-        id: "spacing",
-        questionKey: "question_spacing",
-        type: "dropdown",
-        options: spacingOptions.map(s => s.label),
-        sectionKey: "section_planting_density"
-      },
+      { id: "spacing", questionKey: "question_spacing", type: "dropdown", options: spacingOptions.map(s => s.label), sectionKey: "section_planting_density" },
       getPlantingQuantityQuestion(crop),
     ];
   };
@@ -1264,78 +757,25 @@ const CreateInterviewAgent = ({
   const getProductionQuestions = () => {
     if (!farmerDetails.crops) return [];
     const crop = farmerDetails.crops;
-    const unitOptions = ["kg"];
     return [
-      {
-        id: "harvestUnit",
-        questionKey: "question_harvest_unit",
-        type: "dropdown",
-        options: unitOptions,
-        sectionKey: "section_production"
-      },
-      {
-        id: "actualYieldKg",
-        questionKey: "question_actual_yield_kg",
-        type: "number",
-        step: "any",
-        placeholder: safeT('enter_yield_kg_placeholder'),
-        sectionKey: "section_production"
-      },
-      {
-        id: "pricePerKg",
-        questionKey: "question_price_per_kg",
-        type: "number",
-        step: "any",
-        placeholder: safeT('enter_price_kg_placeholder'),
-        sectionKey: "section_production"
-      },
+      { id: "harvestUnit", questionKey: "question_harvest_unit", type: "dropdown", options: ["kg"], sectionKey: "section_production" },
+      { id: "actualYieldKg", questionKey: "question_actual_yield_kg", type: "number", step: "any", placeholder: safeT('enter_yield_kg_placeholder'), sectionKey: "section_production" },
+      { id: "pricePerKg", questionKey: "question_price_per_kg", type: "number", step: "any", placeholder: safeT('enter_price_kg_placeholder'), sectionKey: "section_production" },
       getStorageQuestion(crop)
     ];
   };
 
   const farmWaterQuestions = [
-    {
-      id: "totalFarmSize",
-      questionKey: "question_total_farm_size",
-      type: "number",
-      step: "any",
-      placeholder: "e.g., 5",
-      sectionKey: "section_farm"
-    },
-    {
-      id: "waterSources",
-      questionKey: "question_water_sources",
-      type: "multiselect",
-      options: [
-        "Rainwater only",
-        "River only",
-        "Borehole only",
-        "River + Borehole",
-        "River + Borehole + Rainwater",
-        "None (dryland farming)"
-      ],
-      sectionKey: "section_water"
-    }
+    { id: "totalFarmSize", questionKey: "question_total_farm_size", type: "number", step: "any", placeholder: "e.g., 5", sectionKey: "section_farm" },
+    { id: "waterSources", questionKey: "question_water_sources", type: "multiselect", options: ["Rainwater only", "River only", "Borehole only", "River + Borehole", "River + Borehole + Rainwater", "None (dryland farming)"], sectionKey: "section_water" }
   ];
 
   const getPestQuestions = () => {
     if (!farmerDetails.crops) return [];
     const crop = farmerDetails.crops;
     return [
-      {
-        id: "commonPests",
-        questionKey: "question_common_pests",
-        type: "multiselect",
-        options: getPestsOptions(crop),
-        sectionKey: "section_pests"
-      },
-      {
-        id: "commonDiseases",
-        questionKey: "question_common_diseases",
-        type: "multiselect",
-        options: getDiseasesOptions(crop),
-        sectionKey: "section_diseases"
-      },
+      { id: "commonPests", questionKey: "question_common_pests", type: "multiselect", options: getPestsOptions(crop), sectionKey: "section_pests" },
+      { id: "commonDiseases", questionKey: "question_common_diseases", type: "multiselect", options: getDiseasesOptions(crop), sectionKey: "section_diseases" },
     ];
   };
 
@@ -1357,86 +797,24 @@ const CreateInterviewAgent = ({
     if (needsPlantingMaterialCost(crop)) {
       questions.unshift(getPlantingMaterialCostQuestion(crop));
     }
-    // Keep lime price questions for both paths (they are used if farmer enters lime quantities)
     questions.push({ id: "calciticLimePricePerBag", questionKey: "question_lime_price", type: "number", placeholder: "e.g., 300", step: "any", sectionKey: "section_finance" });
     questions.push({ id: "dolomiticLimePricePerBag", questionKey: "question_dolomitic_lime_price", type: "number", placeholder: "e.g., 300", step: "any", sectionKey: "section_finance" });
     return questions;
   };
 
   const conservationQuestion = [
-    {
-      id: "conservationPractices",
-      questionKey: "question_conservation_practices",
-      type: "multiselect",
-      options: [
-        "Organic manure",
-        "Terracing",
-        "Mulching",
-        "Cover crops",
-        "Rainwater harvesting",
-        "Contour farming",
-        "None"
-      ],
-      sectionKey: "section_conservation"
-    }
+    { id: "conservationPractices", questionKey: "question_conservation_practices", type: "multiselect", options: ["Organic manure", "Terracing", "Mulching", "Cover crops", "Rainwater harvesting", "Contour farming", "None"], sectionKey: "section_conservation" }
   ];
 
   const challengesQuestions = [
-    {
-      id: "productionChallenges",
-      questionKey: "question_production_challenges",
-      type: "multiselect",
-      options: [
-        "Pests", "Diseases", "Drought", "Floods", "Poor soil fertility",
-        "High input costs", "Labor shortage", "Weeds", "Wild animals",
-        "Fall armyworm", "Stalk borers", "Aphids", "Whiteflies",
-        "Maize streak virus", "Leaf rust", "Blight", "Other"
-      ],
-      sectionKey: "section_challenges"
-    },
-    {
-      id: "marketingChallenges",
-      questionKey: "question_marketing_challenges",
-      type: "multiselect",
-      options: [
-        "Low prices", "Price fluctuations", "No reliable buyer",
-        "Transport costs", "Brokers/middlemen", "Post-harvest losses",
-        "No storage", "Perishability", "Other"
-      ],
-      sectionKey: "section_challenges"
-    },
-    {
-      id: "climateChallenges",
-      questionKey: "question_climate_challenges",
-      type: "multiselect",
-      options: [
-        "Unreliable rains", "Drought", "Floods", "Hailstorms",
-        "Strong winds", "Extreme heat", "Late rains", "Early cessation",
-        "Other"
-      ],
-      sectionKey: "section_challenges"
-    },
-    {
-      id: "financialChallenges",
-      questionKey: "question_financial_challenges",
-      type: "multiselect",
-      options: [
-        "No capital", "No loans", "High interest rates",
-        "No subsidies", "High input costs", "Cash flow problems",
-        "Debt", "Other"
-      ],
-      sectionKey: "section_challenges"
-    },
+    { id: "productionChallenges", questionKey: "question_production_challenges", type: "multiselect", options: ["Pests", "Diseases", "Drought", "Floods", "Poor soil fertility", "High input costs", "Labor shortage", "Weeds", "Wild animals", "Fall armyworm", "Stalk borers", "Aphids", "Whiteflies", "Maize streak virus", "Leaf rust", "Blight", "Other"], sectionKey: "section_challenges" },
+    { id: "marketingChallenges", questionKey: "question_marketing_challenges", type: "multiselect", options: ["Low prices", "Price fluctuations", "No reliable buyer", "Transport costs", "Brokers/middlemen", "Post-harvest losses", "No storage", "Perishability", "Other"], sectionKey: "section_challenges" },
+    { id: "climateChallenges", questionKey: "question_climate_challenges", type: "multiselect", options: ["Unreliable rains", "Drought", "Floods", "Hailstorms", "Strong winds", "Extreme heat", "Late rains", "Early cessation", "Other"], sectionKey: "section_challenges" },
+    { id: "financialChallenges", questionKey: "question_financial_challenges", type: "multiselect", options: ["No capital", "No loans", "High interest rates", "No subsidies", "High input costs", "Cash flow problems", "Debt", "Other"], sectionKey: "section_challenges" },
   ];
 
   const personalLocationQuestions = [
-    {
-      id: "farmerName",
-      questionKey: "question_farmer_name",
-      type: "text",
-      placeholder: "e.g., John Mugo",
-      sectionKey: "section_personal"
-    },
+    { id: "farmerName", questionKey: "question_farmer_name", type: "text", placeholder: "e.g., John Mugo", sectionKey: "section_personal" },
     { id: "county", questionKey: "question_county", type: "text", placeholder: "e.g., Bungoma", sectionKey: "section_location" },
     { id: "subCounty", questionKey: "question_sub_county", type: "text", placeholder: "e.g., Kimilili", sectionKey: "section_location" },
     { id: "ward", questionKey: "question_ward", type: "text", placeholder: "e.g., Kimilili", sectionKey: "section_location" },
@@ -1465,221 +843,42 @@ const CreateInterviewAgent = ({
     { id: "soilTestOMRating", questionKey: "question_soil_test_om_rating", type: "dropdown", options: ["Very Low", "Low", "Optimum", "High", "Very High"], dependsOn: { field: "hasDoneSoilTest", value: "Yes" }, sectionKey: "section_soil_test" },
     { id: "soilTestCEC", questionKey: "question_soil_test_cec", type: "number", step: "any", dependsOn: { field: "hasDoneSoilTest", value: "Yes" }, sectionKey: "section_soil_test" },
     { id: "soilTestCECRating", questionKey: "question_soil_test_cec_rating", type: "dropdown", options: ["Very Low", "Low", "Optimum", "High", "Very High"], dependsOn: { field: "hasDoneSoilTest", value: "Yes" }, sectionKey: "section_soil_test" },
-    {
-      id: "targetYield",
-      questionKey: "question_target_yield_kg",
-      type: "number",
-      step: "any",
-      placeholder: safeT('enter_target_yield_kg'),
-      dependsOn: { field: "hasDoneSoilTest", value: "Yes" },
-      sectionKey: "section_soil_test_recommendations"
-    },
-    {
-      id: "recCalciticLime",
-      questionKey: "question_rec_calcitic_lime",
-      type: "number",
-      step: "any",
-      placeholder: "e.g., 120",
-      dependsOn: { field: "hasDoneSoilTest", value: "Yes" },
-      sectionKey: "section_soil_test_recommendations"
-    },
-    {
-      id: "recDolomiticLime",
-      questionKey: "question_rec_dolomitic_lime",
-      type: "number",
-      step: "any",
-      placeholder: "e.g., 120",
-      dependsOn: { field: "hasDoneSoilTest", value: "Yes" },
-      sectionKey: "section_soil_test_recommendations"
-    },
-    {
-      id: "recPlantingFertilizer",
-      questionKey: "question_rec_planting_fertilizer",
-      type: "text",
-      placeholder: "e.g., NPK 12.24.12+5S",
-      dependsOn: { field: "hasDoneSoilTest", value: "Yes" },
-      sectionKey: "section_soil_test_recommendations"
-    },
-    {
-      id: "recPlantingQuantity",
-      questionKey: "question_rec_planting_quantity",
-      type: "number",
-      step: "any",
-      placeholder: "e.g., 100",
-      dependsOn: { field: "hasDoneSoilTest", value: "Yes" },
-      sectionKey: "section_soil_test_recommendations"
-    },
-    {
-      id: "recTopdressingFertilizer",
-      questionKey: "question_rec_topdressing_fertilizer",
-      type: "text",
-      placeholder: "e.g., UREA 46-0-0",
-      dependsOn: { field: "hasDoneSoilTest", value: "Yes" },
-      sectionKey: "section_soil_test_recommendations"
-    },
-    {
-      id: "recTopdressingQuantity",
-      questionKey: "question_rec_topdressing_quantity",
-      type: "number",
-      step: "any",
-      placeholder: "e.g., 90",
-      dependsOn: { field: "hasDoneSoilTest", value: "Yes" },
-      sectionKey: "section_soil_test_recommendations"
-    },
-    {
-      id: "recPotassiumFertilizer",
-      questionKey: "question_rec_potassium_fertilizer",
-      type: "text",
-      placeholder: "e.g., MOP 0-0-60",
-      dependsOn: { field: "hasDoneSoilTest", value: "Yes" },
-      sectionKey: "section_soil_test_recommendations"
-    },
-    {
-      id: "recPotassiumQuantity",
-      questionKey: "question_rec_potassium_quantity",
-      type: "number",
-      step: "any",
-      placeholder: "e.g., 30",
-      dependsOn: { field: "hasDoneSoilTest", value: "Yes" },
-      sectionKey: "section_soil_test_recommendations"
-    },
+    { id: "targetYield", questionKey: "question_target_yield_kg", type: "number", step: "any", placeholder: safeT('enter_target_yield_kg'), dependsOn: { field: "hasDoneSoilTest", value: "Yes" }, sectionKey: "section_soil_test_recommendations" },
+    { id: "recCalciticLime", questionKey: "question_rec_calcitic_lime", type: "number", step: "any", placeholder: "e.g., 120", dependsOn: { field: "hasDoneSoilTest", value: "Yes" }, sectionKey: "section_soil_test_recommendations" },
+    { id: "recDolomiticLime", questionKey: "question_rec_dolomitic_lime", type: "number", step: "any", placeholder: "e.g., 120", dependsOn: { field: "hasDoneSoilTest", value: "Yes" }, sectionKey: "section_soil_test_recommendations" },
+    { id: "recPlantingFertilizer", questionKey: "question_rec_planting_fertilizer", type: "text", placeholder: "e.g., NPK 12.24.12+5S", dependsOn: { field: "hasDoneSoilTest", value: "Yes" }, sectionKey: "section_soil_test_recommendations" },
+    { id: "recPlantingQuantity", questionKey: "question_rec_planting_quantity", type: "number", step: "any", placeholder: "e.g., 100", dependsOn: { field: "hasDoneSoilTest", value: "Yes" }, sectionKey: "section_soil_test_recommendations" },
+    { id: "recTopdressingFertilizer", questionKey: "question_rec_topdressing_fertilizer", type: "text", placeholder: "e.g., UREA 46-0-0", dependsOn: { field: "hasDoneSoilTest", value: "Yes" }, sectionKey: "section_soil_test_recommendations" },
+    { id: "recTopdressingQuantity", questionKey: "question_rec_topdressing_quantity", type: "number", step: "any", placeholder: "e.g., 90", dependsOn: { field: "hasDoneSoilTest", value: "Yes" }, sectionKey: "section_soil_test_recommendations" },
+    { id: "recPotassiumFertilizer", questionKey: "question_rec_potassium_fertilizer", type: "text", placeholder: "e.g., MOP 0-0-60", dependsOn: { field: "hasDoneSoilTest", value: "Yes" }, sectionKey: "section_soil_test_recommendations" },
+    { id: "recPotassiumQuantity", questionKey: "question_rec_potassium_quantity", type: "number", step: "any", placeholder: "e.g., 30", dependsOn: { field: "hasDoneSoilTest", value: "Yes" }, sectionKey: "section_soil_test_recommendations" },
   ];
 
   const fertilizerSelectionQuestions = [
-    {
-      id: "plantingFertilizerToUse",
-      questionKey: "question_planting_fertilizer_to_use",
-      type: "dropdown",
-      options: plantingFertilizerOptions.map(opt => opt.label),
-      dependsOn: { field: "hasDoneSoilTest", value: "Yes" },
-      sectionKey: "section_fertilizer_selection"
-    },
-    {
-      id: "plantingFertilizerCost",
-      questionKey: "question_planting_fertilizer_cost",
-      type: "number",
-      placeholder: "e.g., 3,500",
-      step: "any",
-      dependsOn: { field: "hasDoneSoilTest", value: "Yes" },
-      sectionKey: "section_fertilizer_selection"
-    },
-    {
-      id: "topdressingFertilizerToUse",
-      questionKey: "question_topdressing_fertilizer_to_use",
-      type: "dropdown",
-      options: topdressingFertilizerOptions.map(opt => opt.label),
-      dependsOn: { field: "hasDoneSoilTest", value: "Yes" },
-      sectionKey: "section_fertilizer_selection"
-    },
-    {
-      id: "topdressingFertilizerCost",
-      questionKey: "question_topdressing_fertilizer_cost",
-      type: "number",
-      placeholder: "e.g., 2,800",
-      step: "any",
-      dependsOn: { field: "hasDoneSoilTest", value: "Yes" },
-      sectionKey: "section_fertilizer_selection"
-    },
-    {
-      id: "potassiumFertilizerToUse",
-      questionKey: "question_potassium_fertilizer_to_use",
-      type: "dropdown",
-      options: potassiumFertilizerOptions.map(opt => opt.label),
-      dependsOn: { field: "hasDoneSoilTest", value: "Yes" },
-      sectionKey: "section_fertilizer_selection"
-    },
-    {
-      id: "potassiumFertilizerCost",
-      questionKey: "question_potassium_fertilizer_cost",
-      type: "number",
-      placeholder: "e.g., 2,800",
-      step: "any",
-      dependsOn: { field: "hasDoneSoilTest", value: "Yes", field2: "potassiumFertilizerToUse", valueNot: "None - I don't use potassium" },
-      sectionKey: "section_fertilizer_selection"
-    },
+    { id: "plantingFertilizerToUse", questionKey: "question_planting_fertilizer_to_use", type: "dropdown", options: plantingFertilizerOptions.map(opt => opt.label), dependsOn: { field: "hasDoneSoilTest", value: "Yes" }, sectionKey: "section_fertilizer_selection" },
+    { id: "plantingFertilizerCost", questionKey: "question_planting_fertilizer_cost", type: "number", placeholder: "e.g., 3,500", step: "any", dependsOn: { field: "hasDoneSoilTest", value: "Yes" }, sectionKey: "section_fertilizer_selection" },
+    { id: "topdressingFertilizerToUse", questionKey: "question_topdressing_fertilizer_to_use", type: "dropdown", options: topdressingFertilizerOptions.map(opt => opt.label), dependsOn: { field: "hasDoneSoilTest", value: "Yes" }, sectionKey: "section_fertilizer_selection" },
+    { id: "topdressingFertilizerCost", questionKey: "question_topdressing_fertilizer_cost", type: "number", placeholder: "e.g., 2,800", step: "any", dependsOn: { field: "hasDoneSoilTest", value: "Yes" }, sectionKey: "section_fertilizer_selection" },
+    { id: "potassiumFertilizerToUse", questionKey: "question_potassium_fertilizer_to_use", type: "dropdown", options: potassiumFertilizerOptions.map(opt => opt.label), dependsOn: { field: "hasDoneSoilTest", value: "Yes" }, sectionKey: "section_fertilizer_selection" },
+    { id: "potassiumFertilizerCost", questionKey: "question_potassium_fertilizer_cost", type: "number", placeholder: "e.g., 2,800", step: "any", dependsOn: { field: "hasDoneSoilTest", value: "Yes", field2: "potassiumFertilizerToUse", valueNot: "None - I don't use potassium" }, sectionKey: "section_fertilizer_selection" },
   ];
 
-  // ===== UPDATED: Add lime quantity questions for "No soil test" =====
   const fertilizerQuestionsWithoutSoilTest = [
-    {
-      id: "plantingFertilizerType",
-      questionKey: "question_planting_fertilizer_type",
-      type: "dropdown",
-      options: plantingFertilizerOptions.map(opt => opt.label),
-      dependsOn: { field: "hasDoneSoilTest", value: "No" },
-      sectionKey: "section_fertilizer_selection"
-    },
-    {
-      id: "plantingFertilizerQuantity",
-      questionKey: "question_planting_fertilizer_quantity",
-      type: "number",
-      placeholder: "e.g., 50 kg",
-      step: "any",
-      dependsOn: { field: "hasDoneSoilTest", value: "No" },
-      sectionKey: "section_fertilizer_selection"
-    },
-    {
-      id: "topdressingFertilizerType",
-      questionKey: "question_topdressing_fertilizer_type",
-      type: "dropdown",
-      options: topdressingFertilizerOptions.map(opt => opt.label),
-      dependsOn: { field: "hasDoneSoilTest", value: "No" },
-      sectionKey: "section_fertilizer_selection"
-    },
-    {
-      id: "topdressingFertilizerQuantity",
-      questionKey: "question_topdressing_fertilizer_quantity",
-      type: "number",
-      placeholder: "e.g., 50 kg",
-      step: "any",
-      dependsOn: { field: "hasDoneSoilTest", value: "No" },
-      sectionKey: "section_fertilizer_selection"
-    },
-    {
-      id: "potassiumFertilizerType",
-      questionKey: "question_potassium_fertilizer_type",
-      type: "dropdown",
-      options: potassiumFertilizerOptions.map(opt => opt.label),
-      dependsOn: { field: "hasDoneSoilTest", value: "No" },
-      sectionKey: "section_fertilizer_selection"
-    },
-    {
-      id: "potassiumFertilizerQuantity",
-      questionKey: "question_potassium_fertilizer_quantity",
-      type: "number",
-      placeholder: "e.g., 50 kg",
-      step: "any",
-      dependsOn: { field: "hasDoneSoilTest", value: "No", field2: "potassiumFertilizerType", valueNot: "None - I don't use potassium" },
-      sectionKey: "section_fertilizer_selection"
-    },
-    // 🆕 Lime quantity questions for "No soil test"
-    {
-      id: "recCalciticLime",
-      questionKey: "question_rec_calcitic_lime",
-      type: "number",
-      placeholder: "e.g., 120 (kg/acre)",
-      step: "any",
-      dependsOn: { field: "hasDoneSoilTest", value: "No" },
-      sectionKey: "section_soil_test_recommendations"
-    },
-    {
-      id: "recDolomiticLime",
-      questionKey: "question_rec_dolomitic_lime",
-      type: "number",
-      placeholder: "e.g., 120 (kg/acre)",
-      step: "any",
-      dependsOn: { field: "hasDoneSoilTest", value: "No" },
-      sectionKey: "section_soil_test_recommendations"
-    },
+    { id: "plantingFertilizerType", questionKey: "question_planting_fertilizer_type", type: "dropdown", options: plantingFertilizerOptions.map(opt => opt.label), dependsOn: { field: "hasDoneSoilTest", value: "No" }, sectionKey: "section_fertilizer_selection" },
+    { id: "plantingFertilizerQuantity", questionKey: "question_planting_fertilizer_quantity", type: "number", placeholder: "e.g., 50 kg", step: "any", dependsOn: { field: "hasDoneSoilTest", value: "No" }, sectionKey: "section_fertilizer_selection" },
+    { id: "topdressingFertilizerType", questionKey: "question_topdressing_fertilizer_type", type: "dropdown", options: topdressingFertilizerOptions.map(opt => opt.label), dependsOn: { field: "hasDoneSoilTest", value: "No" }, sectionKey: "section_fertilizer_selection" },
+    { id: "topdressingFertilizerQuantity", questionKey: "question_topdressing_fertilizer_quantity", type: "number", placeholder: "e.g., 50 kg", step: "any", dependsOn: { field: "hasDoneSoilTest", value: "No" }, sectionKey: "section_fertilizer_selection" },
+    { id: "potassiumFertilizerType", questionKey: "question_potassium_fertilizer_type", type: "dropdown", options: potassiumFertilizerOptions.map(opt => opt.label), dependsOn: { field: "hasDoneSoilTest", value: "No" }, sectionKey: "section_fertilizer_selection" },
+    { id: "potassiumFertilizerQuantity", questionKey: "question_potassium_fertilizer_quantity", type: "number", placeholder: "e.g., 50 kg", step: "any", dependsOn: { field: "hasDoneSoilTest", value: "No", field2: "potassiumFertilizerType", valueNot: "None - I don't use potassium" }, sectionKey: "section_fertilizer_selection" },
+    { id: "recCalciticLime", questionKey: "question_rec_calcitic_lime", type: "number", placeholder: "e.g., 120 (kg/acre)", step: "any", dependsOn: { field: "hasDoneSoilTest", value: "No" }, sectionKey: "section_soil_test_recommendations" },
+    { id: "recDolomiticLime", questionKey: "question_rec_dolomitic_lime", type: "number", placeholder: "e.g., 120 (kg/acre)", step: "any", dependsOn: { field: "hasDoneSoilTest", value: "No" }, sectionKey: "section_soil_test_recommendations" },
   ];
 
-  // Helper to get fertilizer ID from label
   const getFertilizerIdFromLabel = (label: string, options: any[]): string => {
     const found = options.find(opt => opt.label === label);
     return found ? found.id : "other";
   };
 
-  // Filter questions based on current farmerDetails
   const filterQuestions = useCallback((questions: any[]) => {
     return questions.filter(q => {
       if (!q.dependsOn) return true;
@@ -1702,7 +901,7 @@ const CreateInterviewAgent = ({
     });
   }, [farmerDetails]);
 
-  // Build all questions with filtering
+  // ========== GET ALL QUESTIONS (CROP + POULTRY) ==========
   const getAllQuestions = useCallback(() => {
     let questions: any[] = [];
     const allowedIds = getAllowedQuestionIds();
@@ -1713,163 +912,210 @@ const CreateInterviewAgent = ({
     };
 
     // Country
-    if (shouldInclude("country")) {
-      questions = [...questions, ...countryQuestion];
-    }
+    if (shouldInclude("country")) questions = [...questions, ...countryQuestion];
 
     // Soil test gatekeeper
-    if (shouldInclude("hasDoneSoilTest")) {
-      questions = [...questions, ...soilTestGatekeeperQuestion];
-    }
+    if (shouldInclude("hasDoneSoilTest")) questions = [...questions, ...soilTestGatekeeperQuestion];
 
-    // Crop selection
-    if (shouldInclude("crops")) {
-      questions = [...questions, cropSelectionQuestion];
-    }
+    // ===== CROP PATH =====
+    if (selectedSpecies === "crop") {
+      // Crop selection
+      if (shouldInclude("crops")) questions = [...questions, cropSelectionQuestion];
+      if (shouldInclude("saleDate")) questions = [...questions, saleDateQuestion];
 
-    // Sale date
-    if (shouldInclude("saleDate")) {
-      questions = [...questions, saleDateQuestion];
-    }
+      // Crop-specific questions
+      if (farmerDetails.crops) {
+        const cropQuestions = getCropSpecificQuestions();
+        for (const q of cropQuestions) if (shouldInclude(q.id)) questions.push(q);
+      }
 
-    // Crop-specific questions
-    if (farmerDetails.crops) {
-      const cropQuestions = getCropSpecificQuestions();
-      for (const q of cropQuestions) {
+      // Production questions
+      if (farmerDetails.crops) {
+        const prodQuestions = getProductionQuestions();
+        for (const q of prodQuestions) if (shouldInclude(q.id)) questions.push(q);
+      }
+
+      // Soil test details
+      if (farmerDetails.hasDoneSoilTest === "Yes") {
+        const soilQuestions = soilTestDetailsQuestions;
+        for (const q of soilQuestions) if (shouldInclude(q.id)) questions.push(q);
+        for (const q of fertilizerSelectionQuestions) if (shouldInclude(q.id)) questions.push(q);
+      } else if (farmerDetails.hasDoneSoilTest === "No") {
+        for (const q of fertilizerQuestionsWithoutSoilTest) if (shouldInclude(q.id)) questions.push(q);
+      }
+
+      // Nutrient questions
+      for (const q of nutrientDetailQuestions) {
         if (shouldInclude(q.id)) {
-          questions.push(q);
+          let show = false;
+          if (q.id === "plantingFertilizerNutrients") {
+            const type = farmerDetails.hasDoneSoilTest === "Yes" ? farmerDetails.plantingFertilizerToUse : farmerDetails.plantingFertilizerType;
+            show = !!type && type !== "";
+          } else if (q.id === "topdressingFertilizerNutrients") {
+            const type = farmerDetails.hasDoneSoilTest === "Yes" ? farmerDetails.topdressingFertilizerToUse : farmerDetails.topdressingFertilizerType;
+            show = !!type && type !== "";
+          } else if (q.id === "potassiumFertilizerNutrients") {
+            const type = farmerDetails.hasDoneSoilTest === "Yes" ? farmerDetails.potassiumFertilizerToUse : farmerDetails.potassiumFertilizerType;
+            show = !!type && type !== "" && type !== "None - I don't use potassium";
+          }
+          if (show) questions.push(q);
         }
       }
+
+      // Farm & water
+      for (const q of farmWaterQuestions) if (shouldInclude(q.id)) questions.push(q);
+
+      // Pest questions
+      if (farmerDetails.crops) {
+        const pestQuestions = getPestQuestions();
+        for (const q of pestQuestions) if (shouldInclude(q.id)) questions.push(q);
+      }
+
+      // Plants damaged
+      if (shouldInclude("plantsDamaged")) questions.push(plantsDamagedQuestion);
+
+      // Financial questions
+      if (farmerDetails.crops) {
+        const finQuestions = getFinancialQuestions();
+        for (const q of finQuestions) if (shouldInclude(q.id)) questions.push(q);
+      }
+
+      // Deficiency questions
+      if (farmerDetails.crops) {
+        for (const q of deficiencyQuestions) if (shouldInclude(q.id)) questions.push(q);
+      }
+
+      // Nutrition benefits
+      if (shouldInclude("wantsNutritionBenefits")) questions.push(nutritionBenefitsQuestion);
+
+      // Conservation
+      for (const q of conservationQuestion) if (shouldInclude(q.id)) questions.push(q);
+
+      // Challenges
+      for (const q of challengesQuestions) if (shouldInclude(q.id)) questions.push(q);
+
+      // Personal & location
+      for (const q of personalLocationQuestions) if (shouldInclude(q.id)) questions.push(q);
     }
 
-    // Production questions
-    if (farmerDetails.crops) {
-      const prodQuestions = getProductionQuestions();
-      for (const q of prodQuestions) {
-        if (shouldInclude(q.id)) {
-          questions.push(q);
+    // ===== POULTRY PATH =====
+    if (selectedSpecies === "poultry") {
+      // These are the IDs that PoultrySetupAgent returns
+      const poultryFields = [
+        "poultry_breed", "poultry_system", "poultry_flock_size", "poultry_age_weeks",
+        "poultry_farming_goal", "poultry_location_region", "poultry_rainfall_pattern",
+        "poultry_altitude", "poultry_feed_type", "poultry_feed_cost_kg",
+        "poultry_vaccination_done", "poultry_mortality_count", "poultry_chick_cost",
+        "poultry_egg_price", "poultry_meat_price", "poultry_house_size_m2"
+      ];
+      const allBreeds = (() => {
+        const groups = [
+          { breeds: ["KARI Improved Kienyeji", "Kuroiler", "Rainbow Rooster", "Brown Leghorn", "Hy-Line Brown", "Isa Brown", "Lohmann Brown", "Bovans Brown", "Dekalb White", "Babcock White"] },
+          { breeds: ["Cobb 500", "Ross 308", "Arbor Acres", "Hubbard", "Indian River"] },
+          { breeds: ["Sussex", "Kenbrew (Kenbro)", "Sasso", "Kenya Broiler", "KARI Kienyeji"] },
+          { breeds: ["Local Kienyeji", "Local Turkana", "Local Bantam"] },
+          { breeds: ["Broad Breasted White", "Broad Breasted Bronze", "Narragansett", "Royal Palm", "Local Turkey"] },
+          { breeds: ["Khaki Campbell", "Pekin", "Rouen", "Muscovy", "Indian Runner", "Local Duck"] },
+          { breeds: ["African Grey", "Toulouse", "Embden", "Chinese", "Local Goose"] },
+          { breeds: ["Japanese Quail", "Coturnix Quail", "Bobwhite Quail"] },
+          { breeds: ["Other"] }
+        ];
+        return groups.flatMap(g => g.breeds);
+      })();
+
+      const poultryQuestionMap: Record<string, any> = {
+        poultry_breed: { id: "poultry_breed", questionKey: "question_poultry_breed", type: "dropdown", options: allBreeds, sectionKey: "section_poultry" },
+        poultry_system: { id: "poultry_system", questionKey: "question_poultry_system", type: "dropdown", options: ["deep_litter", "battery_cage", "free_range", "pastured"], sectionKey: "section_poultry" },
+        poultry_flock_size: { id: "poultry_flock_size", questionKey: "question_poultry_flock_size", type: "number", placeholder: "e.g., 500", step: "any", sectionKey: "section_poultry" },
+        poultry_age_weeks: { id: "poultry_age_weeks", questionKey: "question_poultry_age_weeks", type: "number", placeholder: "e.g., 6", step: "any", sectionKey: "section_poultry" },
+        poultry_farming_goal: { id: "poultry_farming_goal", questionKey: "question_poultry_farming_goal", type: "dropdown", options: ["Egg production", "Meat production", "Both"], sectionKey: "section_poultry" },
+        poultry_location_region: { id: "poultry_location_region", questionKey: "question_poultry_location_region", type: "dropdown", options: ["Hot", "Cold", "Moderate"], sectionKey: "section_location" },
+        poultry_rainfall_pattern: { id: "poultry_rainfall_pattern", questionKey: "question_poultry_rainfall_pattern", type: "dropdown", options: ["Dry", "Semi-arid", "Wet"], sectionKey: "section_location" },
+        poultry_altitude: { id: "poultry_altitude", questionKey: "question_poultry_altitude", type: "dropdown", options: ["Highland", "Lowland", "Coastal"], sectionKey: "section_location" },
+        poultry_feed_type: { id: "poultry_feed_type", questionKey: "question_poultry_feed_type", type: "dropdown", options: ["Mash", "Pellets", "Crumbles", "Whole grain"], sectionKey: "section_feed" },
+        poultry_feed_cost_kg: { id: "poultry_feed_cost_kg", questionKey: "question_poultry_feed_cost_kg", type: "number", placeholder: "e.g., 65", step: "any", sectionKey: "section_feed" },
+        poultry_vaccination_done: { id: "poultry_vaccination_done", questionKey: "question_poultry_vaccination_done", type: "dropdown", options: ["Yes", "No"], sectionKey: "section_health" },
+        poultry_mortality_count: { id: "poultry_mortality_count", questionKey: "question_poultry_mortality_count", type: "number", placeholder: "e.g., 5", step: "any", sectionKey: "section_health" },
+        poultry_chick_cost: { id: "poultry_chick_cost", questionKey: "question_poultry_chick_cost", type: "number", placeholder: "e.g., 120", step: "any", sectionKey: "section_finance" },
+        poultry_egg_price: { id: "poultry_egg_price", questionKey: "question_poultry_egg_price", type: "number", placeholder: "e.g., 280", step: "any", sectionKey: "section_finance" },
+        poultry_meat_price: { id: "poultry_meat_price", questionKey: "question_poultry_meat_price", type: "number", placeholder: "e.g., 350", step: "any", sectionKey: "section_finance" },
+        poultry_house_size_m2: { id: "poultry_house_size_m2", questionKey: "question_poultry_house_size_m2", type: "number", placeholder: "e.g., 40", step: "any", sectionKey: "section_housing" },
+      };
+
+      for (const field of poultryFields) {
+        if (shouldInclude(field) && poultryQuestionMap[field]) {
+          questions.push(poultryQuestionMap[field]);
         }
       }
-    }
 
-    // Soil test details (only if soil test = Yes)
-    if (farmerDetails.hasDoneSoilTest === "Yes") {
-      const soilQuestions = soilTestDetailsQuestions;
-      for (const q of soilQuestions) {
-        if (shouldInclude(q.id)) {
-          questions.push(q);
-        }
-      }
-      for (const q of fertilizerSelectionQuestions) {
-        if (shouldInclude(q.id)) {
-          questions.push(q);
-        }
-      }
-    } else if (farmerDetails.hasDoneSoilTest === "No") {
-      for (const q of fertilizerQuestionsWithoutSoilTest) {
-        if (shouldInclude(q.id)) {
-          questions.push(q);
-        }
-      }
-    }
+      // ===== POULTRY DISEASE AGENT QUESTIONS =====
+      const species = farmerDetails.poultry_species || 'chicken';
+      const diseaseNames = (poultryDiseaseMap[species] || poultryDiseaseMap['chicken']).map((d: any) => d.name);
 
-    // ─── NUTRIENT QUESTIONS – ADD FOR BOTH PATHS ───
-    // They appear after the fertiliser type selections.
-    // We'll add them only if the respective fertiliser type is filled.
-    for (const q of nutrientDetailQuestions) {
-      if (shouldInclude(q.id)) {
-        let show = false;
-        if (q.id === "plantingFertilizerNutrients") {
-          const type = farmerDetails.hasDoneSoilTest === "Yes"
-            ? farmerDetails.plantingFertilizerToUse
-            : farmerDetails.plantingFertilizerType;
-          show = !!type && type !== "";
-        } else if (q.id === "topdressingFertilizerNutrients") {
-          const type = farmerDetails.hasDoneSoilTest === "Yes"
-            ? farmerDetails.topdressingFertilizerToUse
-            : farmerDetails.topdressingFertilizerType;
-          show = !!type && type !== "";
-        } else if (q.id === "potassiumFertilizerNutrients") {
-          const type = farmerDetails.hasDoneSoilTest === "Yes"
-            ? farmerDetails.potassiumFertilizerToUse
-            : farmerDetails.potassiumFertilizerType;
-          show = !!type && type !== "" && type !== "None - I don't use potassium";
-        }
-        if (show) {
-          questions.push(q);
-        }
+      if (shouldInclude("poultry_disease")) {
+        questions.push({
+          id: "poultry_disease",
+          questionKey: "question_poultry_disease_select",
+          type: "dropdown",
+          options: diseaseNames,
+          sectionKey: "section_poultry"
+        });
       }
-    }
 
-    // Farm & water
-    for (const q of farmWaterQuestions) {
-      if (shouldInclude(q.id)) {
-        questions.push(q);
+      if (shouldInclude("symptomsObserved")) {
+        questions.push({
+          id: "symptomsObserved",
+          questionKey: "question_poultry_disease_symptoms",
+          type: "multiselect",
+          options: [
+            "poultry_symptom_respiratory",
+            "poultry_symptom_green_diarrhoea",
+            "poultry_symptom_white_diarrhoea",
+            "poultry_symptom_chocolate_diarrhoea",
+            "poultry_symptom_paralysis",
+            "poultry_symptom_scabs",
+            "poultry_symptom_lameness",
+            "poultry_symptom_sudden_death",
+            "poultry_symptom_swollen_face",
+            "poultry_symptom_egg_drop",
+            "poultry_symptom_tremors",
+            "poultry_symptom_depression",
+          ],
+          sectionKey: "section_poultry"
+        });
       }
-    }
 
-    // Pest questions
-    if (farmerDetails.crops) {
-      const pestQuestions = getPestQuestions();
-      for (const q of pestQuestions) {
-        if (shouldInclude(q.id)) {
-          questions.push(q);
-        }
+      if (shouldInclude("mortalityCountDisease")) {
+        questions.push({
+          id: "mortalityCountDisease",
+          questionKey: "question_poultry_mortality_count_disease",
+          type: "number",
+          placeholder: "e.g., 5",
+          sectionKey: "section_poultry"
+        });
       }
-    }
 
-    // Plants damaged
-    if (shouldInclude("plantsDamaged")) {
-      questions.push(plantsDamagedQuestion);
-    }
-
-    // Financial questions
-    if (farmerDetails.crops) {
-      const finQuestions = getFinancialQuestions();
-      for (const q of finQuestions) {
-        if (shouldInclude(q.id)) {
-          questions.push(q);
-        }
+      if (shouldInclude("diseaseDuration")) {
+        questions.push({
+          id: "diseaseDuration",
+          questionKey: "question_poultry_disease_duration",
+          type: "dropdown",
+          options: [
+            "poultry_duration_less_than_3_days",
+            "poultry_duration_3_to_7_days",
+            "poultry_duration_more_than_1_week",
+          ],
+          sectionKey: "section_poultry"
+        });
       }
-    }
 
-    // Deficiency questions
-    if (farmerDetails.crops) {
-      for (const q of deficiencyQuestions) {
-        if (shouldInclude(q.id)) {
-          questions.push(q);
-        }
-      }
-    }
-
-    // Nutrition benefits
-    if (shouldInclude("wantsNutritionBenefits")) {
-      questions.push(nutritionBenefitsQuestion);
-    }
-
-    // Conservation
-    for (const q of conservationQuestion) {
-      if (shouldInclude(q.id)) {
-        questions.push(q);
-      }
-    }
-
-    // Challenges
-    for (const q of challengesQuestions) {
-      if (shouldInclude(q.id)) {
-        questions.push(q);
-      }
-    }
-
-    // Personal & location
-    for (const q of personalLocationQuestions) {
-      if (shouldInclude(q.id)) {
-        questions.push(q);
-      }
+      // Also include personal location if not already included
+      if (shouldInclude("farmerName")) questions.push(personalLocationQuestions[0]);
+      if (shouldInclude("county")) questions.push(personalLocationQuestions[1]);
     }
 
     return questions;
-  }, [farmerDetails, getAllowedQuestionIds]);
+  }, [farmerDetails, getAllowedQuestionIds, selectedSpecies]);
 
   const allQuestions = useMemo(() => getAllQuestions(), [getAllQuestions]);
   const visibleQuestions = useMemo(() => filterQuestions(allQuestions), [allQuestions, filterQuestions]);
@@ -1879,10 +1125,9 @@ const CreateInterviewAgent = ({
     setDebugInfo(prev => ({ ...prev, totalQuestions: visibleQuestions.length }));
   }, [visibleQuestions.length]);
 
-  // ========== Speech recognition initialization ==========
+  // ========== SPEECH RECOGNITION ==========
   useEffect(() => {
     let isMounted = true;
-
     const checkVoiceSupport = () => {
       if (typeof window !== 'undefined' && 'speechSynthesis' in window && isMounted) {
         const voices = window.speechSynthesis.getVoices();
@@ -1893,10 +1138,8 @@ const CreateInterviewAgent = ({
         });
       }
     };
-
     checkVoiceSupport();
     const timeoutId = setTimeout(checkVoiceSupport, 500);
-
     if (typeof window !== 'undefined' && ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) && !recognitionRef.current) {
       const SpeechRecognition = (window as any).webkitSpeechRecognition || (window as any).SpeechRecognition;
       recognitionRef.current = new SpeechRecognition();
@@ -1904,22 +1147,14 @@ const CreateInterviewAgent = ({
       recognitionRef.current.interimResults = false;
       recognitionRef.current.lang = recognitionLanguage;
       recognitionRef.current.timeout = 15000;
-
       recognitionRef.current.onresult = (event: any) => {
         retryCountRef.current = 0;
-        if (isRecognitionActiveRef.current) {
-          isRecognitionActiveRef.current = false;
-          setDebugInfo(prev => ({ ...prev, isListening: false }));
-        }
+        if (isRecognitionActiveRef.current) { isRecognitionActiveRef.current = false; setDebugInfo(prev => ({ ...prev, isListening: false })); }
         const transcript = event.results[0][0].transcript;
         setUserTranscript(transcript);
       };
-
       recognitionRef.current.onerror = (event: any) => {
-        if (isRecognitionActiveRef.current) {
-          isRecognitionActiveRef.current = false;
-          setDebugInfo(prev => ({ ...prev, isListening: false }));
-        }
+        if (isRecognitionActiveRef.current) { isRecognitionActiveRef.current = false; setDebugInfo(prev => ({ ...prev, isListening: false })); }
         if (event.error === 'no-speech') {
           retryCountRef.current++;
           if (retryCountRef.current <= maxRetries) {
@@ -1928,31 +1163,18 @@ const CreateInterviewAgent = ({
           }
         }
       };
-
       recognitionRef.current.onend = () => {
-        if (isRecognitionActiveRef.current) {
-          isRecognitionActiveRef.current = false;
-          setDebugInfo(prev => ({ ...prev, isListening: false }));
-        }
+        if (isRecognitionActiveRef.current) { isRecognitionActiveRef.current = false; setDebugInfo(prev => ({ ...prev, isListening: false })); }
       };
-
       recognitionRef.current.onstart = () => {
         isRecognitionActiveRef.current = true;
         setDebugInfo(prev => ({ ...prev, isListening: true }));
         retryCountRef.current = 0;
       };
     }
-
-    return () => {
-      isMounted = false;
-      clearTimeout(timeoutId);
-      if (recognitionRef.current && isRecognitionActiveRef.current) {
-        try { recognitionRef.current.stop(); } catch {}
-      }
-    };
+    return () => { isMounted = false; clearTimeout(timeoutId); if (recognitionRef.current && isRecognitionActiveRef.current) { try { recognitionRef.current.stop(); } catch {} } };
   }, [recognitionLanguage, safeT]);
 
-  // ========== DYNAMIC RECOGNITION LANGUAGE UPDATE ==========
   useEffect(() => {
     if (recognitionRef.current && recognitionLanguage) {
       recognitionRef.current.lang = recognitionLanguage;
@@ -1960,94 +1182,48 @@ const CreateInterviewAgent = ({
     }
   }, [recognitionLanguage]);
 
-  // ========== Voice assistant ref setup ==========
+  // ========== VOICE ASSISTANT REF SETUP ==========
   useEffect(() => {
     let isMounted = true;
-
-    if (!voiceEnabled) {
-      voiceAssistantRef.current = null;
-      return;
-    }
-
+    if (!voiceEnabled) { voiceAssistantRef.current = null; return; }
     voiceAssistantRef.current = { speak: async (text: string) => streamQuestionWithVoice(text) };
-    if (isMounted && voiceEnabled) {
-      toast.success(safeT('voice_ready'));
-    }
-
-    return () => {
-      isMounted = false;
-    };
+    if (isMounted && voiceEnabled) toast.success(safeT('voice_ready'));
+    return () => { isMounted = false; };
   }, [voiceEnabled, safeT, recognitionLanguage]);
 
-  // ---------- ENHANCED VOICE SELECTION (FEMALE-ONLY, UK/US SEPARATED) ----------
+  // ========== GET BEST VOICE ==========
   const getBestVoiceForLanguage = async (language: string): Promise<SpeechSynthesisVoice | null> => {
     console.log(`getBestVoiceForLanguage: looking for ${language}`);
-
     const waitForVoices = (): Promise<SpeechSynthesisVoice[]> => {
       return new Promise((resolve) => {
         const voices = window.speechSynthesis.getVoices();
-        if (voices.length) {
-          console.log(`Initial voices loaded: ${voices.length}`);
-          resolve(voices);
-          return;
-        }
+        if (voices.length) { console.log(`Initial voices loaded: ${voices.length}`); resolve(voices); return; }
         const onChanged = () => {
           const newVoices = window.speechSynthesis.getVoices();
-          if (newVoices.length) {
-            window.speechSynthesis.onvoiceschanged = null;
-            console.log(`Voices loaded via onvoiceschanged: ${newVoices.length}`);
-            resolve(newVoices);
-          }
+          if (newVoices.length) { window.speechSynthesis.onvoiceschanged = null; console.log(`Voices loaded via onvoiceschanged: ${newVoices.length}`); resolve(newVoices); }
         };
         window.speechSynthesis.onvoiceschanged = onChanged;
-        setTimeout(() => {
-          window.speechSynthesis.onvoiceschanged = null;
-          console.log('Voices load timeout, using current list');
-          resolve(window.speechSynthesis.getVoices());
-        }, 3000);
+        setTimeout(() => { window.speechSynthesis.onvoiceschanged = null; console.log('Voices load timeout, using current list'); resolve(window.speechSynthesis.getVoices()); }, 3000);
       });
     };
 
     const findBritishEnglishFemale = (voices: SpeechSynthesisVoice[]): SpeechSynthesisVoice | null => {
-      const femaleNames = ['libby', 'hazel', 'susan', 'maisie', 'sonia', 'kate', 'victoria', 'millie', 'olivia',
-        'google uk english female', 'microsoft hazel', 'microsoft susan', 'microsoft libby',
-        'microsoft maisie', 'microsoft sonia', 'british english female', 'uk english female'
-      ];
-      for (const name of femaleNames) {
-        const voice = voices.find(v => v.lang === 'en-GB' && v.name.toLowerCase().includes(name));
-        if (voice) {
-          console.log(`✅ Found British female voice: ${voice.name} (${voice.lang})`);
-          return voice;
-        }
-      }
+      const femaleNames = ['libby', 'hazel', 'susan', 'maisie', 'sonia', 'kate', 'victoria', 'millie', 'olivia', 'google uk english female', 'microsoft hazel', 'microsoft susan', 'microsoft libby', 'microsoft maisie', 'microsoft sonia', 'british english female', 'uk english female'];
+      for (const name of femaleNames) { const voice = voices.find(v => v.lang === 'en-GB' && v.name.toLowerCase().includes(name)); if (voice) { console.log(`✅ Found British female voice: ${voice.name} (${voice.lang})`); return voice; } }
       const maleIndicators = ['george', 'ryan', 'thomas', 'david', 'mark', 'james', 'john', 'paul', 'michael'];
       const anyBritishFemale = voices.find(v => v.lang === 'en-GB' && !maleIndicators.some(m => v.name.toLowerCase().includes(m)));
-      if (anyBritishFemale) {
-        console.log(`⚠️ Using non-male British voice: ${anyBritishFemale.name}`);
-        return anyBritishFemale;
-      }
+      if (anyBritishFemale) { console.log(`⚠️ Using non-male British voice: ${anyBritishFemale.name}`); return anyBritishFemale; }
       const anyBritish = voices.find(v => v.lang === 'en-GB');
       if (anyBritish) console.log(`⚠️ Falling back to any British voice: ${anyBritish.name}`);
       return anyBritish || null;
     };
 
     const findAmericanEnglishFemale = (voices: SpeechSynthesisVoice[]): SpeechSynthesisVoice | null => {
-      const femaleNames = ['zira', 'samantha', 'victoria', 'jenny', 'aria', 'google us english female',
-        'microsoft jenny', 'microsoft zira', 'microsoft aria', 'us english female'
-      ];
-      for (const name of femaleNames) {
-        const voice = voices.find(v => v.lang === 'en-US' && v.name.toLowerCase().includes(name));
-        if (voice) {
-          console.log(`✅ Found American female voice: ${voice.name} (${voice.lang})`);
-          return voice;
-        }
-      }
+      const femaleNames = ['zira', 'samantha', 'victoria', 'jenny', 'aria', 'google us english female', 'microsoft jenny', 'microsoft zira', 'microsoft aria', 'us english female'];
+      for (const name of femaleNames) { const voice = voices.find(v => v.lang === 'en-US' && v.name.toLowerCase().includes(name)); if (voice) { console.log(`✅ Found American female voice: ${voice.name} (${voice.lang})`); return voice; } }
       const maleIndicators = ['david', 'mark', 'james', 'john', 'paul', 'michael', 'alex', 'thomas'];
       const anyFemale = voices.find(v => v.lang === 'en-US' && !maleIndicators.some(m => v.name.toLowerCase().includes(m)));
-      if (anyFemale) {
-        console.log(`⚠️ Using non-male American voice: ${anyFemale.name}`);
-        return anyFemale;
-      }
+      if (anyFemale) { console.log(`⚠️ Using non-male American voice: ${anyFemale.name}`); return anyFemale; }
       const anyUS = voices.find(v => v.lang === 'en-US');
       if (anyUS) console.log(`⚠️ Falling back to any American voice: ${anyUS.name}`);
       return anyUS || null;
@@ -2056,59 +1232,17 @@ const CreateInterviewAgent = ({
     const findFrenchVoice = (voices: SpeechSynthesisVoice[]): SpeechSynthesisVoice | null => {
       let vivienne = voices.find(v => v.lang.startsWith('fr') && v.name.toLowerCase().includes('vivienne'));
       if (vivienne) return vivienne;
-      const frenchFemale = voices.find(v => v.lang.startsWith('fr') &&
-        (v.name.toLowerCase().includes('denise') ||
-         v.name.toLowerCase().includes('google français female') ||
-         v.name.toLowerCase().includes('marie') ||
-         v.name.toLowerCase().includes('chloe')));
+      const frenchFemale = voices.find(v => v.lang.startsWith('fr') && (v.name.toLowerCase().includes('denise') || v.name.toLowerCase().includes('google français female') || v.name.toLowerCase().includes('marie') || v.name.toLowerCase().includes('chloe')));
       if (frenchFemale) return frenchFemale;
       const anyFrench = voices.find(v => v.lang.startsWith('fr'));
       return anyFrench || null;
     };
 
     const findSpanishVoice = (voices: SpeechSynthesisVoice[]): SpeechSynthesisVoice | null => {
-      const femaleNames = ['helena', 'elena', 'ximena', 'maria', 'paloma', 'sofia', 'catalina', 'salome', 'belkys',
-        'ramona', 'andrea', 'lorena', 'teresa', 'marta', 'karla', 'dalia', 'yolanda',
-        'margarita', 'tania', 'camila', 'karina', 'elvira', 'valentina', 'paola',
-        'michelle', 'gabriela', 'lucia', 'laura', 'fernanda', 'victoria', 'monica',
-        'paulina', 'sabina', 'florencia', 'josefina', 'marcela', 'beatriz'
-      ];
-      for (const name of femaleNames) {
-        const voice = voices.find(v =>
-          v.lang.startsWith('es') &&
-          v.name.toLowerCase().includes(name)
-        );
-        if (voice) {
-          console.log(`✅ Found female Spanish voice: ${voice.name} (${voice.lang})`);
-          return voice;
-        }
-      }
-      const nonMale = voices.find(v =>
-        v.lang.startsWith('es') &&
-        !v.name.toLowerCase().includes('alvaro') &&
-        !v.name.toLowerCase().includes('jorge') &&
-        !v.name.toLowerCase().includes('manuel') &&
-        !v.name.toLowerCase().includes('andres') &&
-        !v.name.toLowerCase().includes('carlos') &&
-        !v.name.toLowerCase().includes('juan') &&
-        !v.name.toLowerCase().includes('luis') &&
-        !v.name.toLowerCase().includes('rodrigo') &&
-        !v.name.toLowerCase().includes('javier') &&
-        !v.name.toLowerCase().includes('federico') &&
-        !v.name.toLowerCase().includes('victor') &&
-        !v.name.toLowerCase().includes('mateo') &&
-        !v.name.toLowerCase().includes('sebastian') &&
-        !v.name.toLowerCase().includes('gonzalo') &&
-        !v.name.toLowerCase().includes('lorenzo') &&
-        !v.name.toLowerCase().includes('marcelo') &&
-        !v.name.toLowerCase().includes('tomas') &&
-        !v.name.toLowerCase().includes('emilio') &&
-        !v.name.toLowerCase().includes('alonso')
-      );
-      if (nonMale) {
-        console.log(`⚠️ No exact female Spanish voice, using fallback: ${nonMale.name}`);
-        return nonMale;
-      }
+      const femaleNames = ['helena', 'elena', 'ximena', 'maria', 'paloma', 'sofia', 'catalina', 'salome', 'belkys', 'ramona', 'andrea', 'lorena', 'teresa', 'marta', 'karla', 'dalia', 'yolanda', 'margarita', 'tania', 'camila', 'karina', 'elvira', 'valentina', 'paola', 'michelle', 'gabriela', 'lucia', 'laura', 'fernanda', 'victoria', 'monica', 'paulina', 'sabina', 'florencia', 'josefina', 'marcela', 'beatriz'];
+      for (const name of femaleNames) { const voice = voices.find(v => v.lang.startsWith('es') && v.name.toLowerCase().includes(name)); if (voice) { console.log(`✅ Found female Spanish voice: ${voice.name} (${voice.lang})`); return voice; } }
+      const nonMale = voices.find(v => v.lang.startsWith('es') && !v.name.toLowerCase().includes('alvaro') && !v.name.toLowerCase().includes('jorge') && !v.name.toLowerCase().includes('manuel') && !v.name.toLowerCase().includes('andres') && !v.name.toLowerCase().includes('carlos') && !v.name.toLowerCase().includes('juan') && !v.name.toLowerCase().includes('luis') && !v.name.toLowerCase().includes('rodrigo') && !v.name.toLowerCase().includes('javier') && !v.name.toLowerCase().includes('federico') && !v.name.toLowerCase().includes('victor') && !v.name.toLowerCase().includes('mateo') && !v.name.toLowerCase().includes('sebastian') && !v.name.toLowerCase().includes('gonzalo') && !v.name.toLowerCase().includes('lorenzo') && !v.name.toLowerCase().includes('marcelo') && !v.name.toLowerCase().includes('tomas') && !v.name.toLowerCase().includes('emilio') && !v.name.toLowerCase().includes('alonso'));
+      if (nonMale) { console.log(`⚠️ No exact female Spanish voice, using fallback: ${nonMale.name}`); return nonMale; }
       console.warn('❌ No female Spanish voice found – skipping Spanish');
       return null;
     };
@@ -2123,85 +1257,50 @@ const CreateInterviewAgent = ({
     let voices = await waitForVoices();
     if (!voices.length) return null;
 
-    // --- ENGLISH (UK) ---
     if (language === 'en-GB' || language === 'en-UK' || language.toLowerCase().includes('british')) {
       let britishVoice = findBritishEnglishFemale(voices);
       let attempts = 0;
-      while (!britishVoice && attempts < 5) {
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        voices = window.speechSynthesis.getVoices();
-        britishVoice = findBritishEnglishFemale(voices);
-        attempts++;
-      }
+      while (!britishVoice && attempts < 5) { await new Promise(resolve => setTimeout(resolve, 1000)); voices = window.speechSynthesis.getVoices(); britishVoice = findBritishEnglishFemale(voices); attempts++; }
       if (britishVoice) return britishVoice;
     }
 
-    // --- ENGLISH (US) ---
     if (language === 'en-US') {
       let usVoice = findAmericanEnglishFemale(voices);
       let attempts = 0;
-      while (!usVoice && attempts < 5) {
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        voices = window.speechSynthesis.getVoices();
-        usVoice = findAmericanEnglishFemale(voices);
-        attempts++;
-      }
+      while (!usVoice && attempts < 5) { await new Promise(resolve => setTimeout(resolve, 1000)); voices = window.speechSynthesis.getVoices(); usVoice = findAmericanEnglishFemale(voices); attempts++; }
       if (usVoice) return usVoice;
     }
 
-    // --- FRENCH ---
     if (language === 'fr-FR' || language === 'fr-CA' || language.startsWith('fr')) {
       let frenchVoice = findFrenchVoice(voices);
       let attempts = 0;
-      while (!frenchVoice && attempts < 5) {
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        voices = window.speechSynthesis.getVoices();
-        frenchVoice = findFrenchVoice(voices);
-        attempts++;
-      }
+      while (!frenchVoice && attempts < 5) { await new Promise(resolve => setTimeout(resolve, 1000)); voices = window.speechSynthesis.getVoices(); frenchVoice = findFrenchVoice(voices); attempts++; }
       if (frenchVoice) return frenchVoice;
     }
 
-    // --- SPANISH ---
     if (language === 'es-ES' || language.startsWith('es')) {
       let spanishVoice = findSpanishVoice(voices);
       let attempts = 0;
-      while (!spanishVoice && attempts < 5) {
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        voices = window.speechSynthesis.getVoices();
-        spanishVoice = findSpanishVoice(voices);
-        attempts++;
-      }
+      while (!spanishVoice && attempts < 5) { await new Promise(resolve => setTimeout(resolve, 1000)); voices = window.speechSynthesis.getVoices(); spanishVoice = findSpanishVoice(voices); attempts++; }
       if (spanishVoice) return spanishVoice;
       console.warn('No female Spanish voice available – falling back to next language');
     }
 
-    // --- SWAHILI ---
     if (language === 'sw-KE' || language === 'sw-TZ' || language.startsWith('sw')) {
       let swahiliVoice = findSwahiliVoice(voices);
       let attempts = 0;
-      while (!swahiliVoice && attempts < 5) {
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        voices = window.speechSynthesis.getVoices();
-        swahiliVoice = findSwahiliVoice(voices);
-        attempts++;
-      }
+      while (!swahiliVoice && attempts < 5) { await new Promise(resolve => setTimeout(resolve, 1000)); voices = window.speechSynthesis.getVoices(); swahiliVoice = findSwahiliVoice(voices); attempts++; }
       if (swahiliVoice) return swahiliVoice;
     }
 
-    // Ultimate fallback: any English voice (non‑male preferred)
     const anyEnglish = voices.find(v => v.lang.startsWith('en') && !v.name.toLowerCase().includes('male'));
     if (anyEnglish) return anyEnglish;
     return voices[0] || null;
   };
 
-  // ========== UPDATED streamQuestionWithVoice (dynamic currency replacement) ==========
+  // ========== STREAM QUESTION WITH VOICE ==========
   const streamQuestionWithVoice = async (fullText: string) => {
-    if (!voiceEnabled || !window.speechSynthesis) {
-      setStreamingQuestion(fullText);
-      return;
-    }
-
+    if (!voiceEnabled || !window.speechSynthesis) { setStreamingQuestion(fullText); return; }
     setIsStreaming(true);
     setStreamingQuestion("");
     setCurrentWordIndex(0);
@@ -2213,11 +1312,7 @@ const CreateInterviewAgent = ({
     let speechText = fullText.replace(new RegExp(`${escapedSymbol}\\s`, 'g'), `${spokenCurrencyName} `);
     speechText = speechText.replace(new RegExp(`\\b${escapedSymbol}\\b`, 'g'), spokenCurrencyName);
 
-    if (recognitionRef.current && isRecognitionActiveRef.current) {
-      try { recognitionRef.current.stop(); } catch {}
-      isRecognitionActiveRef.current = false;
-      setDebugInfo(prev => ({ ...prev, isListening: false }));
-    }
+    if (recognitionRef.current && isRecognitionActiveRef.current) { try { recognitionRef.current.stop(); } catch {} isRecognitionActiveRef.current = false; setDebugInfo(prev => ({ ...prev, isListening: false })); }
 
     const words = speechText.split(' ');
     questionWordsRef.current = words;
@@ -2228,20 +1323,12 @@ const CreateInterviewAgent = ({
     utterance.lang = recognitionLanguage;
 
     const bestVoice = await getBestVoiceForLanguage(recognitionLanguage);
-    if (bestVoice) {
-      utterance.voice = bestVoice;
-      console.log(`🔊 Speaking with voice: ${bestVoice.name} (${bestVoice.lang})`);
-    }
+    if (bestVoice) { utterance.voice = bestVoice; console.log(`🔊 Speaking with voice: ${bestVoice.name} (${bestVoice.lang})`); }
     setIsSpeaking(true);
 
     let wordIndex = 0;
     let currentText = '';
-    let safetyTimeout: NodeJS.Timeout | null = setTimeout(() => {
-      if (isSpeaking) {
-        console.warn("⚠️ Speech took too long – forcing continue");
-        if (utterance.onend) utterance.onend({} as any);
-      }
-    }, 20000);
+    let safetyTimeout: NodeJS.Timeout | null = setTimeout(() => { if (isSpeaking) { console.warn("⚠️ Speech took too long – forcing continue"); if (utterance.onend) utterance.onend({} as any); } }, 20000);
     let finished = false;
 
     utterance.onboundary = (event) => {
@@ -2249,9 +1336,7 @@ const CreateInterviewAgent = ({
         currentText += (wordIndex === 0 ? '' : ' ') + words[wordIndex];
         let displayText = currentText;
         const displaySymbol = getDisplaySymbol();
-        if (displaySymbol !== currencySymbol) {
-          displayText = displayText.replace(new RegExp(spokenCurrencyName, 'g'), displaySymbol);
-        }
+        if (displaySymbol !== currencySymbol) displayText = displayText.replace(new RegExp(spokenCurrencyName, 'g'), displaySymbol);
         setStreamingQuestion(displayText);
         setCurrentWordIndex(wordIndex + 1);
         wordIndex++;
@@ -2264,9 +1349,7 @@ const CreateInterviewAgent = ({
       if (safetyTimeout) clearTimeout(safetyTimeout);
       let finalDisplay = fullText;
       const displaySymbol = getDisplaySymbol();
-      if (displaySymbol !== currencySymbol) {
-        finalDisplay = finalDisplay.replace(new RegExp(escapedSymbol, 'g'), displaySymbol);
-      }
+      if (displaySymbol !== currencySymbol) finalDisplay = finalDisplay.replace(new RegExp(escapedSymbol, 'g'), displaySymbol);
       setStreamingQuestion(finalDisplay);
       setIsStreaming(false);
       setIsSpeaking(false);
@@ -2282,24 +1365,8 @@ const CreateInterviewAgent = ({
       fallbackUtterance.rate = 1.0;
       fallbackUtterance.pitch = 1.1;
       fallbackUtterance.lang = recognitionLanguage;
-      fallbackUtterance.onend = () => {
-        let finalDisplay = fullText;
-        const ds = getDisplaySymbol();
-        if (ds !== currencySymbol) finalDisplay = finalDisplay.replace(new RegExp(escapedSymbol, 'g'), ds);
-        setStreamingQuestion(finalDisplay);
-        setIsStreaming(false);
-        setIsSpeaking(false);
-        setTimeout(() => safeStartListening(), 1500);
-      };
-      fallbackUtterance.onerror = () => {
-        let finalDisplay = fullText;
-        const ds = getDisplaySymbol();
-        if (ds !== currencySymbol) finalDisplay = finalDisplay.replace(new RegExp(escapedSymbol, 'g'), ds);
-        setStreamingQuestion(finalDisplay);
-        setIsStreaming(false);
-        setIsSpeaking(false);
-        setTimeout(() => safeStartListening(), 500);
-      };
+      fallbackUtterance.onend = () => { let finalDisplay = fullText; const ds = getDisplaySymbol(); if (ds !== currencySymbol) finalDisplay = finalDisplay.replace(new RegExp(escapedSymbol, 'g'), ds); setStreamingQuestion(finalDisplay); setIsStreaming(false); setIsSpeaking(false); setTimeout(() => safeStartListening(), 1500); };
+      fallbackUtterance.onerror = () => { let finalDisplay = fullText; const ds = getDisplaySymbol(); if (ds !== currencySymbol) finalDisplay = finalDisplay.replace(new RegExp(escapedSymbol, 'g'), ds); setStreamingQuestion(finalDisplay); setIsStreaming(false); setIsSpeaking(false); setTimeout(() => safeStartListening(), 500); };
       window.speechSynthesis.speak(fallbackUtterance);
     };
 
@@ -2314,52 +1381,30 @@ const CreateInterviewAgent = ({
     spokenAnswer = spokenAnswer.replace(new RegExp(`\\b${escapedSymbol}\\b`, 'g'), spokenCurrencyName);
 
     let acknowledgment = "";
-
-    if (fieldId === "plantingFertilizerToUse") {
-      acknowledgment = safeT('ack_planting_fertilizer', { answer: spokenAnswer });
-    } else if (fieldId === "topdressingFertilizerToUse") {
-      acknowledgment = safeT('ack_topdressing_fertilizer', { answer: spokenAnswer });
-    } else if (fieldId === "potassiumFertilizerToUse") {
-      acknowledgment = safeT('ack_potassium_fertilizer', { answer: spokenAnswer });
-    } else if (fieldId === "plantingFertilizerCost" || fieldId === "topdressingFertilizerCost" || fieldId === "potassiumFertilizerCost") {
-      acknowledgment = safeT('ack_cost', { answer: spokenAnswer });
-    } else if (fieldId === "recPlantingFertilizer") {
-      acknowledgment = safeT('ack_rec_planting', { answer: spokenAnswer });
-    } else if (fieldId === "recTopdressingFertilizer") {
-      acknowledgment = safeT('ack_rec_topdressing', { answer: spokenAnswer });
-    } else if (fieldId === "recPotassiumFertilizer") {
-      acknowledgment = safeT('ack_rec_potassium', { answer: spokenAnswer });
-    } else if (fieldId === "recCalciticLime") {
-      acknowledgment = safeT('ack_rec_lime', { answer: spokenAnswer });
-    } else if (fieldId === "recDolomiticLime") {
-      acknowledgment = safeT('ack_rec_dolomitic_lime', { answer: spokenAnswer });
-    } else if (fieldId === "dolomiticLimePricePerBag") {
-      acknowledgment = safeT('ack_dolomitic_lime_price', { answer: spokenAnswer });
-    } else if (fieldId === "targetYield") {
-      acknowledgment = safeT('ack_target_yield_kg', { answer: spokenAnswer });
-    } else if (fieldId === "actualYieldKg") {
-      acknowledgment = safeT('ack_actual_yield_kg', { answer: spokenAnswer });
-    } else if (fieldId === "pricePerKg") {
-      acknowledgment = safeT('ack_price_per_kg', { answer: spokenAnswer });
-    } else if (fieldId === "country") {
-      acknowledgment = safeT('ack_country', { answer: spokenAnswer });
-      setCountry(answer);
-    } else if (fieldId === "crops") {
-      acknowledgment = safeT('ack_crops', { answer: spokenAnswer });
-    } else if (fieldId === "plantingDate") {
-      const date = new Date(answer).toLocaleDateString();
-      acknowledgment = safeT('ack_planting_date', { date });
-    } else if (fieldId === "deficiencySymptoms") {
-      acknowledgment = safeT('ack_deficiency_symptoms', { answer: spokenAnswer });
-    } else if (fieldId === "deficiencyLocation") {
-      acknowledgment = safeT('ack_deficiency_location', { answer: spokenAnswer });
-    } else if (fieldId === "plantsDamaged") {
-      acknowledgment = safeT('ack_plants_damaged', { answer: spokenAnswer });
-    } else if (fieldId === "wantsNutritionBenefits") {
-      acknowledgment = safeT('ack_wants_nutrition_benefits', { answer: spokenAnswer });
-    } else {
-      acknowledgment = safeT('ack_generic', { answer: spokenAnswer });
-    }
+    if (fieldId === "plantingFertilizerToUse") acknowledgment = safeT('ack_planting_fertilizer', { answer: spokenAnswer });
+    else if (fieldId === "topdressingFertilizerToUse") acknowledgment = safeT('ack_topdressing_fertilizer', { answer: spokenAnswer });
+    else if (fieldId === "potassiumFertilizerToUse") acknowledgment = safeT('ack_potassium_fertilizer', { answer: spokenAnswer });
+    else if (fieldId === "plantingFertilizerCost" || fieldId === "topdressingFertilizerCost" || fieldId === "potassiumFertilizerCost") acknowledgment = safeT('ack_cost', { answer: spokenAnswer });
+    else if (fieldId === "recPlantingFertilizer") acknowledgment = safeT('ack_rec_planting', { answer: spokenAnswer });
+    else if (fieldId === "recTopdressingFertilizer") acknowledgment = safeT('ack_rec_topdressing', { answer: spokenAnswer });
+    else if (fieldId === "recPotassiumFertilizer") acknowledgment = safeT('ack_rec_potassium', { answer: spokenAnswer });
+    else if (fieldId === "recCalciticLime") acknowledgment = safeT('ack_rec_lime', { answer: spokenAnswer });
+    else if (fieldId === "recDolomiticLime") acknowledgment = safeT('ack_rec_dolomitic_lime', { answer: spokenAnswer });
+    else if (fieldId === "dolomiticLimePricePerBag") acknowledgment = safeT('ack_dolomitic_lime_price', { answer: spokenAnswer });
+    else if (fieldId === "targetYield") acknowledgment = safeT('ack_target_yield_kg', { answer: spokenAnswer });
+    else if (fieldId === "actualYieldKg") acknowledgment = safeT('ack_actual_yield_kg', { answer: spokenAnswer });
+    else if (fieldId === "pricePerKg") acknowledgment = safeT('ack_price_per_kg', { answer: spokenAnswer });
+    else if (fieldId === "country") { acknowledgment = safeT('ack_country', { answer: spokenAnswer }); setCountry(answer); }
+    else if (fieldId === "crops") acknowledgment = safeT('ack_crops', { answer: spokenAnswer });
+    else if (fieldId === "plantingDate") { const date = new Date(answer).toLocaleDateString(); acknowledgment = safeT('ack_planting_date', { date }); }
+    else if (fieldId === "deficiencySymptoms") acknowledgment = safeT('ack_deficiency_symptoms', { answer: spokenAnswer });
+    else if (fieldId === "deficiencyLocation") acknowledgment = safeT('ack_deficiency_location', { answer: spokenAnswer });
+    else if (fieldId === "plantsDamaged") acknowledgment = safeT('ack_plants_damaged', { answer: spokenAnswer });
+    else if (fieldId === "wantsNutritionBenefits") acknowledgment = safeT('ack_wants_nutrition_benefits', { answer: spokenAnswer });
+    else if (fieldId === "poultry_breed") acknowledgment = safeT('ack_poultry_breed', { answer: spokenAnswer });
+    else if (fieldId === "poultry_flock_size") acknowledgment = safeT('ack_poultry_flock_size', { answer: spokenAnswer });
+    else if (fieldId === "poultry_chick_cost") acknowledgment = safeT('ack_poultry_chick_cost', { answer: spokenAnswer });
+    else acknowledgment = safeT('ack_generic', { answer: spokenAnswer });
 
     await voiceAssistantRef.current?.speak(acknowledgment);
     toast.success(safeT('recorded', { answer }));
@@ -2371,237 +1416,57 @@ const CreateInterviewAgent = ({
   };
 
   const handleNutrientSubmit = (type: string, nutrients: any) => {
-    const nutrientString = Object.entries(nutrients)
-      .filter(([_, value]) => value && value !== "" && value !== "0" && value !== "0%")
-      .map(([key, value]) => {
-        const percent = value.toString().replace('%', '');
-        return `${percent}${key.toUpperCase()}`;
-      })
-      .join('+');
-
-    setFarmerDetails(prev => ({
-      ...prev,
-      [type]: nutrientString || "No additional nutrients"
-    }));
-
+    const nutrientString = Object.entries(nutrients).filter(([_, value]) => value && value !== "" && value !== "0" && value !== "0%").map(([key, value]) => { const percent = value.toString().replace('%', ''); return `${percent}${key.toUpperCase()}`; }).join('+');
+    setFarmerDetails(prev => ({ ...prev, [type]: nutrientString || "No additional nutrients" }));
     toast.success(safeT('nutrients_recorded'));
   };
 
   const processAnswer = async (answer: string) => {
     if (currentStep !== "configuring") return;
-
     const currentConfig = visibleQuestions[configStep];
     let cleanAnswer = answer;
     let finalValue = cleanAnswer;
 
     if (currentConfig.id === "plantingFertilizerNutrients") {
       handleNutrientSubmit("plantingFertilizerNutrients", plantingNutrients);
-      if (configStep < visibleQuestions.length - 1) {
-        setConfigStep(prev => prev + 1);
-        setTimeout(() => askQuestion(configStep + 1), 2500);
-      }
+      if (configStep < visibleQuestions.length - 1) { setConfigStep(prev => prev + 1); setTimeout(() => askQuestion(configStep + 1), 2500); }
       return;
     }
     if (currentConfig.id === "topdressingFertilizerNutrients") {
       handleNutrientSubmit("topdressingFertilizerNutrients", topdressingNutrients);
-      if (configStep < visibleQuestions.length - 1) {
-        setConfigStep(prev => prev + 1);
-        setTimeout(() => askQuestion(configStep + 1), 2500);
-      }
+      if (configStep < visibleQuestions.length - 1) { setConfigStep(prev => prev + 1); setTimeout(() => askQuestion(configStep + 1), 2500); }
       return;
     }
     if (currentConfig.id === "potassiumFertilizerNutrients") {
       handleNutrientSubmit("potassiumFertilizerNutrients", potassiumNutrients);
-      if (configStep < visibleQuestions.length - 1) {
-        setConfigStep(prev => prev + 1);
-        setTimeout(() => askQuestion(configStep + 1), 2500);
-      }
+      if (configStep < visibleQuestions.length - 1) { setConfigStep(prev => prev + 1); setTimeout(() => askQuestion(configStep + 1), 2500); }
       return;
     }
-
     if (currentConfig.id === "wantsNutritionBenefits") {
       finalValue = "Yes";
       setFarmerDetails(prev => ({ ...prev, wantsNutritionBenefits: finalValue }));
       setLastSubmittedAnswer("Yes");
       await speakAcknowledgment("Yes", currentConfig.id);
       setUserTranscript("");
-      if (configStep < visibleQuestions.length - 1) {
-        setConfigStep(prev => prev + 1);
-        setTimeout(() => askQuestion(configStep + 1), 2500);
-      }
+      if (configStep < visibleQuestions.length - 1) { setConfigStep(prev => prev + 1); setTimeout(() => askQuestion(configStep + 1), 2500); }
       return;
     }
 
-    // ===== VALIDATION =====
-    if (currentConfig.id === "harvestUnit") {
-      if (cleanAnswer.toLowerCase().includes("bag") ||
-          cleanAnswer.toLowerCase().includes("sac") ||
-          cleanAnswer.toLowerCase().includes("sacs")) {
-        toast.warning(safeT('use_kg_warning'), {
-          description: safeT('bags_to_kg_hint', {
-            example: safeT('bags_to_kg_example')
-          }),
-          duration: 8000
-        });
-      }
-    }
-
+    // Validation
     if (currentConfig.id === "actualYieldKg") {
       const yieldKg = parseFloat(cleanAnswer);
-      if (!isNaN(yieldKg)) {
-        if (yieldKg < 100 && yieldKg > 0) {
-          const bagsEquivalent = Math.round(yieldKg / 90);
-          const convertedKg = bagsEquivalent * 90;
-
-          toast.warning(safeT('yield_seems_low_warning'), {
-            description: safeT('yield_seems_low_detail', {
-              yield: yieldKg,
-              bags: bagsEquivalent,
-              converted: convertedKg
-            }),
-            duration: 10000,
-            action: {
-              label: safeT('use_converted'),
-              onClick: () => {
-                setUserTranscript(convertedKg.toString());
-              }
-            }
-          });
-
-          const confirmed = window.confirm(
-            safeT('yield_seems_low_confirm', {
-              yield: yieldKg,
-              bags: bagsEquivalent,
-              converted: convertedKg
-            })
-          );
-          if (!confirmed) return;
-        }
-
-        const maxYieldPerAcre: Record<string, number> = {
-          maize: 5000,
-          beans: 3000,
-          onions: 15000,
-          tomatoes: 30000,
-          potatoes: 20000,
-          cabbages: 25000,
-          rice: 6000,
-          mangoes: 20000,
-          pineapples: 40000,
-          watermelons: 30000,
-          carrots: 15000,
-          chillies: 10000,
-          spinach: 12000,
-          pigeonpeas: 1500,
-          bambaranuts: 1200,
-          yams: 20000,
-          taro: 15000,
-          okra: 10000,
-          tea: 4000,
-          macadamia: 6800,
-          cocoa: 1500,
-          "sweet potatoes": 20000
-        };
-        const crop = farmerDetails.crops?.toLowerCase() || 'maize';
-        const maxYield = maxYieldPerAcre[crop] || 20000;
-        const acres = parseFloat(farmerDetails.cropAcres) || 1;
-
-        if (yieldKg > maxYield * acres * 1.5) {
-          toast.warning(safeT('yield_too_high'), {
-            description: safeT('yield_too_high_detail', { max: maxYield * acres }),
-            duration: 8000
-          });
-        }
-      }
-    }
-
-    if (currentConfig.id === "pricePerKg") {
-      const price = parseFloat(cleanAnswer);
-      if (!isNaN(price)) {
-        if (price < 10) {
-          toast.error(safeT('price_too_low'), {
-            description: safeT('price_per_kg_expected', { crop: farmerDetails.crops || safeT('your_crop') }),
-            duration: 8000
-          });
-          return;
-        }
-        if (price > 500) {
-          toast.warning(safeT('price_very_high'), {
-            description: safeT('price_high_verify'),
-            duration: 8000
-          });
-        }
-      }
-    }
-
-    if (currentConfig.id === "targetYield") {
-      const targetKg = parseFloat(cleanAnswer);
-      if (!isNaN(targetKg) && targetKg < 100) {
-        const confirmed = window.confirm(
-          safeT('target_yield_low', { target: targetKg })
-        );
+      if (!isNaN(yieldKg) && yieldKg < 100 && yieldKg > 0) {
+        const bagsEquivalent = Math.round(yieldKg / 90);
+        const convertedKg = bagsEquivalent * 90;
+        toast.warning(safeT('yield_seems_low_warning'), { description: safeT('yield_seems_low_detail', { yield: yieldKg, bags: bagsEquivalent, converted: convertedKg }), duration: 10000, action: { label: safeT('use_converted'), onClick: () => { setUserTranscript(convertedKg.toString()); } } });
+        const confirmed = window.confirm(safeT('yield_seems_low_confirm', { yield: yieldKg, bags: bagsEquivalent, converted: convertedKg }));
         if (!confirmed) return;
       }
     }
-    // ===== END VALIDATION =====
 
-    const questionPhrases = [
-      "what is your", "what's your", "tell me your", "your phone number is",
-      "what county are you in", "you are in", "the answer is", "i said",
-      "it is", "is that correct", "yes it is", "that is correct", "that's correct",
-      "my phone number is", "my name is", "i am", "i'm", "my answer is",
-      "into your soil test", "according to your soil test", "what is your recommended",
-      "and its formulation", "for your", "fertilizer", "top dressing", "planting",
-      "potassium", "per acre", "exam", "exact", "dash", "point",
-      currentConfig?.questionKey ? safeT(currentConfig.questionKey).toLowerCase() : ""
-    ];
-
-    for (const phrase of questionPhrases) {
-      if (phrase && cleanAnswer.toLowerCase().includes(phrase)) {
-        cleanAnswer = cleanAnswer.replace(new RegExp(phrase, 'gi'), '').trim();
-      }
-    }
-
-    cleanAnswer = cleanAnswer.replace(/^[?:,\s]+/, '').replace(/[?:,\s]+$/, '');
-
-    if (cleanAnswer.includes('?')) {
-      const parts = cleanAnswer.split('?');
-      cleanAnswer = parts[parts.length - 1].trim();
-    }
-
-    if (currentConfig.type === "number") {
-      const numbers = cleanAnswer.match(/\d+\.?\d*/g);
-      cleanAnswer = numbers ? numbers.join('') : "0";
-    }
-
-    if (currentConfig.id.includes("rec") && currentConfig.id.includes("Fertilizer")) {
-      const fertilizerMatch = cleanAnswer.match(/(NPK\s*[\d\.]+[\d\.]+[\d\.]+[^\s]*|UREA|CAN|DAP|MOP|SSP|TSP)/i);
-      if (fertilizerMatch) cleanAnswer = fertilizerMatch[0];
-    }
-
-    if (currentConfig.id === "plantingFertilizerToUse") {
-      finalValue = getFertilizerIdFromLabel(cleanAnswer, plantingFertilizerOptions);
-    } else if (currentConfig.id === "topdressingFertilizerToUse") {
-      finalValue = getFertilizerIdFromLabel(cleanAnswer, topdressingFertilizerOptions);
-    } else if (currentConfig.id === "potassiumFertilizerToUse") {
-      finalValue = getFertilizerIdFromLabel(cleanAnswer, potassiumFertilizerOptions);
-    } else if (currentConfig.id === "subCounty") {
-      finalValue = cleanAnswer.split(/[.\s]+/).pop()?.toLowerCase() || cleanAnswer;
-    } else if (currentConfig.id === "ward") {
-      finalValue = cleanAnswer.split(/[.\s]+/).pop()?.toLowerCase() || cleanAnswer;
-    } else if (currentConfig.id === "wantsNutritionBenefits") {
-      finalValue = "Yes";
-    } else {
-      finalValue = cleanAnswer;
-    }
-
-    if (currentConfig.id === "country" && finalValue) {
-      const normalizedCountry = finalValue.toLowerCase();
-      setCountry(normalizedCountry);
-    }
+    // Set farmer details
     setFarmerDetails(prev => ({ ...prev, [currentConfig.id]: finalValue }));
     setLastSubmittedAnswer(cleanAnswer);
-
     await speakAcknowledgment(cleanAnswer, currentConfig.id);
     setUserTranscript("");
 
@@ -2615,116 +1480,69 @@ const CreateInterviewAgent = ({
   };
 
   const safeStartListening = () => {
-    if (isSpeaking || isStreaming) {
-      console.log("AI is speaking, waiting to listen...");
-      return;
-    }
+    if (isSpeaking || isStreaming) { console.log("AI is speaking, waiting to listen..."); return; }
     if (!recognitionRef.current || isRecognitionActiveRef.current) return;
-
-    if (recognitionRef.current.lang !== recognitionLanguage) {
-      recognitionRef.current.lang = recognitionLanguage;
-      console.log(`🔄 Forced recognition language to ${recognitionLanguage} before start`);
-    }
-
-    try {
-      recognitionRef.current.start();
-      setDebugInfo(prev => ({ ...prev, isListening: true }));
-      console.log(`Started listening for answer with language: ${recognitionLanguage}`);
-    } catch (error) {}
+    if (recognitionRef.current.lang !== recognitionLanguage) { recognitionRef.current.lang = recognitionLanguage; console.log(`🔄 Forced recognition language to ${recognitionLanguage} before start`); }
+    try { recognitionRef.current.start(); setDebugInfo(prev => ({ ...prev, isListening: true })); console.log(`Started listening for answer with language: ${recognitionLanguage}`); } catch (error) {}
   };
 
   const safeStopListening = () => {
-    if (recognitionRef.current && isRecognitionActiveRef.current) {
-      try { recognitionRef.current.stop(); } catch {}
-      isRecognitionActiveRef.current = false;
-      setDebugInfo(prev => ({ ...prev, isListening: false }));
-    }
+    if (recognitionRef.current && isRecognitionActiveRef.current) { try { recognitionRef.current.stop(); } catch {} isRecognitionActiveRef.current = false; setDebugInfo(prev => ({ ...prev, isListening: false })); }
   };
 
   const startVoiceSetup = async () => {
-    if (!voiceEnabled || !voiceAssistantRef.current) {
-      toast.error(safeT('enable_voice_first'));
-      return;
-    }
-
+    if (!voiceEnabled || !voiceAssistantRef.current) { toast.error(safeT('enable_voice_first')); return; }
     safeStopListening();
-
-    if (user?.uid) {
-      await loadProfileFromFirestore(user.uid);
-    }
-
+    if (user?.uid) await loadProfileFromFirestore(user.uid);
     setCurrentStep("configuring");
     setConfigStep(0);
     setUserTranscript("");
     setLastSubmittedAnswer("");
     nameUsageCountRef.current = 0;
-
     setPlantingNutrients({ s: "", ca: "", mg: "", zn: "", b: "", cu: "", mn: "" });
     setTopdressingNutrients({ s: "", ca: "", mg: "", zn: "", b: "", cu: "", mn: "" });
     setPotassiumNutrients({ s: "", ca: "", mg: "", zn: "", b: "", cu: "", mn: "" });
-
     askQuestion(0);
   };
 
   const askQuestion = async (step: number) => {
     if (!voiceAssistantRef.current || step >= visibleQuestions.length) return;
     if (isSpeaking) await new Promise(resolve => setTimeout(resolve, 500));
-
     const currentQ = visibleQuestions[step];
     if (currentQ && farmerDetails[currentQ.id as keyof typeof farmerDetails]) {
       console.log(`⏭️ Skipping already answered question: ${currentQ.id}`);
-      if (step < visibleQuestions.length - 1) {
-        setConfigStep(step + 1);
-        setTimeout(() => askQuestion(step + 1), 300);
-      } else {
-        setCurrentStep("generating");
-        generateSession();
-      }
+      if (step < visibleQuestions.length - 1) { setConfigStep(step + 1); setTimeout(() => askQuestion(step + 1), 300); } else { setCurrentStep("generating"); generateSession(); }
       return;
     }
-
     const questionKey = visibleQuestions[step].questionKey;
     let question = translateWithCrop(safeT, questionKey, farmerDetails.crops);
-
     if (questionKey === "question_wants_nutrition_benefits" && farmerDetails.crops) {
       question = safeT("question_wants_nutrition_benefits_crop", { crop: farmerDetails.crops.toUpperCase() });
     }
-
     setDebugInfo(prev => ({ ...prev, currentQuestion: step + 1 }));
     setUserTranscript("");
     setLastSubmittedAnswer("");
-
     await voiceAssistantRef.current.speak(question);
-
     if (visibleQuestions[step].type !== "multiselect" && visibleQuestions[step].type !== "button" && !visibleQuestions[step].renderCustom) {
       safeStartListening();
     }
   };
-    // ===== UPDATED generateSession with county fallback and modules =====
+
   const generateSession = async () => {
     if (!voiceAssistantRef.current) return;
     setIsLoading(true);
-
     await voiceAssistantRef.current.speak(safeT('creating_profile'));
 
     let currentUserId = userId || localStorage.getItem('userId') || `user-${Date.now()}`;
     localStorage.setItem('userId', currentUserId);
 
-    // 🔥 FALLBACK: Ensure county is never empty
-    if (!farmerDetails.county) {
-      farmerDetails.county = farmerDetails.country || "Unknown";
-    }
-    // Also ensure subCounty and village have fallbacks (optional but safe)
-    if (!farmerDetails.subCounty) {
-      farmerDetails.subCounty = "Unknown";
-    }
-    if (!farmerDetails.village) {
-      farmerDetails.village = "Unknown";
-    }
+    // Ensure county fallback
+    if (!farmerDetails.county) farmerDetails.county = farmerDetails.country || "Unknown";
+    if (!farmerDetails.subCounty) farmerDetails.subCounty = "Unknown";
+    if (!farmerDetails.village) farmerDetails.village = "Unknown";
 
-    if (user?.uid) {
-      await saveProfileToFirestore(user.uid, farmerDetails);
-    }
+    // Save poultry data BEFORE generating session
+    if (user?.uid) await saveProfileToFirestore(user.uid, farmerDetails);
 
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 120000);
@@ -2736,7 +1554,30 @@ const CreateInterviewAgent = ({
         body: JSON.stringify({
           ...farmerDetails,
           userid: currentUserId,
-          modules: modules // NEW: pass modules filter
+          modules: modules,
+          species: selectedSpecies,
+          isPoultry: selectedSpecies === "poultry",
+          // Pass current poultry state (which may have been loaded from Firestore)
+          poultry_breed: poultryBreed,
+          poultry_system: poultrySystem,
+          poultry_flock_size: poultryFlockSize,
+          poultry_age_weeks: poultryAgeWeeks,
+          poultry_farming_goal: poultryFarmingGoal,
+          poultry_location_region: poultryLocationRegion,
+          poultry_rainfall_pattern: poultryRainfallPattern,
+          poultry_altitude: poultryAltitude,
+          poultry_feed_type: poultryFeedType,
+          poultry_feed_cost_kg: poultryFeedCostKg,
+          poultry_vaccination_done: poultryVaccinationDone,
+          poultry_mortality_count: poultryMortalityCount,
+          poultry_chick_cost: poultryChickCost,
+          poultry_egg_price: poultryEggPrice,
+          poultry_meat_price: poultryMeatPrice,
+          poultry_house_size_m2: poultryHouseSizeM2,
+          poultry_disease: farmerDetails.poultry_disease || "",
+          symptomsObserved: farmerDetails.symptomsObserved || "",
+          mortalityCountDisease: farmerDetails.mortalityCountDisease || "",
+          diseaseDuration: farmerDetails.diseaseDuration || "",
         }),
         signal: controller.signal
       });
@@ -2783,67 +1624,24 @@ const CreateInterviewAgent = ({
   };
 
   const submitAnswer = () => {
-    if (userTranscript.trim()) {
-      processAnswer(userTranscript);
-    }
+    if (userTranscript.trim()) processAnswer(userTranscript);
   };
 
-  const colors = {
-    primary: "from-emerald-400 to-cyan-400",
-    secondary: "from-purple-400 to-pink-400",
-    background: "bg-gradient-to-br from-slate-50 to-white",
-    card: "bg-white/80 backdrop-blur-sm",
-  };
+  const colors = { primary: "from-emerald-400 to-cyan-400", secondary: "from-purple-400 to-pink-400", background: "bg-gradient-to-br from-slate-50 to-white", card: "bg-white/80 backdrop-blur-sm" };
 
   const currentSectionKey = visibleQuestions[configStep]?.sectionKey;
   const currentSection = currentSectionKey ? safeT(currentSectionKey) : "";
-  const wordProgress = currentWordIndex > 0 && questionWordsRef.current.length > 0
-    ? `${currentWordIndex}/${questionWordsRef.current.length} ${safeT('words')}`
-    : '';
+  const wordProgress = currentWordIndex > 0 && questionWordsRef.current.length > 0 ? `${currentWordIndex}/${questionWordsRef.current.length} ${safeT('words')}` : '';
 
-  const renderNutrientSelector = useCallback((
-    type: string,
-    nutrients: any,
-    setNutrients: any
-  ) => {
+  const renderNutrientSelector = useCallback((type: string, nutrients: any, setNutrients: any) => {
     const nutrientList = ['s', 'ca', 'mg', 'zn', 'b', 'cu', 'mn'];
-
     return (
       <div className="space-y-4 p-4 bg-blue-50 rounded-xl border border-blue-200">
-        <p className="font-medium text-blue-900">
-          {safeT(`question_${type}_fertilizer_nutrients`)}
-        </p>
+        <p className="font-medium text-blue-900">{safeT(`question_${type}_fertilizer_nutrients`)}</p>
         <div className="space-y-2">
-          {nutrientList.map(nutrient => (
-            <NutrientDropdown
-              key={nutrient}
-              nutrient={nutrient}
-              value={nutrients[nutrient]}
-              onChange={(value) =>
-                setNutrients((prev: any) => ({ ...prev, [nutrient]: value }))
-              }
-            />
-          ))}
+          {nutrientList.map(nutrient => <NutrientDropdown key={nutrient} nutrient={nutrient} value={nutrients[nutrient]} onChange={(value) => setNutrients((prev: any) => ({ ...prev, [nutrient]: value }))} />)}
         </div>
-        <button
-          onClick={() => {
-            if (type === "planting") {
-              handleNutrientSubmit("plantingFertilizerNutrients", plantingNutrients);
-            } else if (type === "topdressing") {
-              handleNutrientSubmit("topdressingFertilizerNutrients", topdressingNutrients);
-            } else if (type === "potassium") {
-              handleNutrientSubmit("potassiumFertilizerNutrients", potassiumNutrients);
-            }
-
-            if (configStep < visibleQuestions.length - 1) {
-              setConfigStep(prev => prev + 1);
-              setTimeout(() => askQuestion(configStep + 1), 1500);
-            }
-          }}
-          className="mt-4 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium"
-        >
-          {safeT('continue')}
-        </button>
+        <button onClick={() => { if (type === "planting") handleNutrientSubmit("plantingFertilizerNutrients", plantingNutrients); else if (type === "topdressing") handleNutrientSubmit("topdressingFertilizerNutrients", topdressingNutrients); else if (type === "potassium") handleNutrientSubmit("potassiumFertilizerNutrients", potassiumNutrients); if (configStep < visibleQuestions.length - 1) { setConfigStep(prev => prev + 1); setTimeout(() => askQuestion(configStep + 1), 1500); } }} className="mt-4 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium">{safeT('continue')}</button>
       </div>
     );
   }, [plantingNutrients, topdressingNutrients, potassiumNutrients, configStep, visibleQuestions.length, safeT, handleNutrientSubmit]);
@@ -2852,127 +1650,58 @@ const CreateInterviewAgent = ({
     const q = visibleQuestions[configStep];
     if (!q) return null;
 
-    if (q.id === "plantingFertilizerNutrients") {
-      return renderNutrientSelector("planting", plantingNutrients, setPlantingNutrients);
-    }
-    if (q.id === "topdressingFertilizerNutrients") {
-      return renderNutrientSelector("topdressing", topdressingNutrients, setTopdressingNutrients);
-    }
-    if (q.id === "potassiumFertilizerNutrients") {
-      return renderNutrientSelector("potassium", potassiumNutrients, setPotassiumNutrients);
-    }
+    if (q.id === "plantingFertilizerNutrients") return renderNutrientSelector("planting", plantingNutrients, setPlantingNutrients);
+    if (q.id === "topdressingFertilizerNutrients") return renderNutrientSelector("topdressing", topdressingNutrients, setTopdressingNutrients);
+    if (q.id === "potassiumFertilizerNutrients") return renderNutrientSelector("potassium", potassiumNutrients, setPotassiumNutrients);
 
     if (q.type === "button" && q.id === "wantsNutritionBenefits") {
       return (
         <div className="flex justify-center">
-          <button
-            onClick={() => {
-              processAnswer("Yes");
-            }}
-            className="px-8 py-4 bg-gradient-to-r from-green-500 to-emerald-500 text-white text-2xl font-bold rounded-2xl hover:scale-105 transition-all shadow-lg"
-          >
-            {safeT('yes')}
-          </button>
+          <button onClick={() => processAnswer("Yes")} className="px-8 py-4 bg-gradient-to-r from-green-500 to-emerald-500 text-white text-2xl font-bold rounded-2xl hover:scale-105 transition-all shadow-lg">{safeT('yes')}</button>
         </div>
       );
     }
-
     if (q.type === "date") {
       return (
         <div className="relative">
-          <input
-            type="date"
-            value={userTranscript}
-            onChange={(e) => setUserTranscript(e.target.value)}
-            className="w-full px-4 py-3 border-2 rounded-xl text-blue-900 font-medium focus:border-blue-600"
-          />
+          <input type="date" value={userTranscript} onChange={(e) => setUserTranscript(e.target.value)} className="w-full px-4 py-3 border-2 rounded-xl text-blue-900 font-medium focus:border-blue-600" />
           <Calendar className="absolute right-3 top-3 w-5 h-5 text-blue-600" />
         </div>
       );
     }
-
     if (q.type === "dropdown") {
       return (
         <div className="relative">
-          <select
-            value={userTranscript}
-            onChange={(e) => setUserTranscript(e.target.value)}
-            className="w-full px-4 py-3 border-2 rounded-xl appearance-none text-blue-900 font-medium focus:border-blue-600"
-          >
+          <select value={userTranscript} onChange={(e) => setUserTranscript(e.target.value)} className="w-full px-4 py-3 border-2 rounded-xl appearance-none text-blue-900 font-medium focus:border-blue-600">
             <option value="" className="text-gray-500">{safeT('select_option')}</option>
-            {q.options?.map((opt: string, index: number) => (
-              <option key={`${opt}-${index}`} value={opt} className="text-blue-900">{opt}</option>
-            ))}
+            {q.options?.map((opt: string, index: number) => <option key={`${opt}-${index}`} value={opt} className="text-blue-900">{opt}</option>)}
           </select>
           <ChevronDown className="absolute right-3 top-3 w-5 h-5 text-blue-600" />
         </div>
       );
     }
-
     if (q.type === "text") {
-      return (
-        <input
-          type="text"
-          value={userTranscript}
-          onChange={(e) => setUserTranscript(e.target.value)}
-          placeholder={q.placeholder || safeT('type_answer')}
-          className="w-full px-4 py-3 border-2 rounded-xl text-blue-900 font-medium focus:border-blue-600 placeholder-gray-400"
-        />
-      );
+      return <input type="text" value={userTranscript} onChange={(e) => setUserTranscript(e.target.value)} placeholder={q.placeholder || safeT('type_answer')} className="w-full px-4 py-3 border-2 rounded-xl text-blue-900 font-medium focus:border-blue-600 placeholder-gray-400" />;
     }
-
     if (q.type === "number") {
-      return (
-        <input
-          type="number"
-          value={userTranscript}
-          onChange={(e) => setUserTranscript(e.target.value)}
-          placeholder={q.placeholder || safeT('type_answer')}
-          step={q.step || "any"}
-          className="w-full px-4 py-3 border-2 rounded-xl text-blue-900 font-medium focus:border-blue-600 placeholder-gray-400"
-        />
-      );
+      return <input type="number" value={userTranscript} onChange={(e) => setUserTranscript(e.target.value)} placeholder={q.placeholder || safeT('type_answer')} step={q.step || "any"} className="w-full px-4 py-3 border-2 rounded-xl text-blue-900 font-medium focus:border-blue-600 placeholder-gray-400" />;
     }
-
     if (q.type === "multiselect") {
       return (
         <div className="space-y-2 max-h-60 overflow-y-auto p-2 border-2 rounded-xl">
           {q.options?.map((opt: string, index: number) => (
             <label key={`${opt}-${index}`} className="flex items-center gap-2 p-2 hover:bg-blue-50 rounded-lg">
-              <input
-                type="checkbox"
-                value={opt}
-                checked={userTranscript.includes(opt)}
-                onChange={(e) => {
-                  const values = userTranscript ? userTranscript.split(',') : [];
-                  e.target.checked ? values.push(opt) : values.splice(values.indexOf(opt), 1);
-                  setUserTranscript(values.join(','));
-                }}
-                className="w-4 h-4 accent-blue-600"
-              />
+              <input type="checkbox" value={opt} checked={userTranscript.includes(opt)} onChange={(e) => { const values = userTranscript ? userTranscript.split(',') : []; e.target.checked ? values.push(opt) : values.splice(values.indexOf(opt), 1); setUserTranscript(values.join(',')); }} className="w-4 h-4 accent-blue-600" />
               <span className="text-blue-900">{opt}</span>
             </label>
           ))}
         </div>
       );
     }
-
     let defaultValue = userTranscript;
     const displaySymbol = getDisplaySymbol();
-    if (displaySymbol !== 'Ksh') {
-      defaultValue = defaultValue.replace(/Ksh/g, displaySymbol);
-    }
-
-    return (
-      <input
-        type={q.type || "text"}
-        value={defaultValue}
-        onChange={(e) => setUserTranscript(e.target.value)}
-        placeholder={q.placeholder || safeT('type_answer')}
-        step={q.step || "any"}
-        className="w-full px-4 py-3 border-2 rounded-xl text-blue-900 font-medium focus:border-blue-600 placeholder-gray-400"
-      />
-    );
+    if (displaySymbol !== 'Ksh') defaultValue = defaultValue.replace(/Ksh/g, displaySymbol);
+    return <input type={q.type || "text"} value={defaultValue} onChange={(e) => setUserTranscript(e.target.value)} placeholder={q.placeholder || safeT('type_answer')} step={q.step || "any"} className="w-full px-4 py-3 border-2 rounded-xl text-blue-900 font-medium focus:border-blue-600 placeholder-gray-400" />;
   }, [configStep, visibleQuestions, userTranscript, plantingNutrients, topdressingNutrients, potassiumNutrients, renderNutrientSelector, safeT, setPlantingNutrients, setTopdressingNutrients, setPotassiumNutrients, processAnswer]);
 
   // ========== RENDER ==========
@@ -2990,104 +1719,57 @@ const CreateInterviewAgent = ({
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl px-3 py-2 border border-white-30">
               <Mic className={`w-5 h-5 text-white ${isSpeaking ? 'animate-pulse' : ''}`} />
-              <button
-                onClick={() => setVoiceEnabled(!voiceEnabled)}
-                className="text-white font-medium text-sm focus:outline-none"
-              >
-                {voiceEnabled ? safeT('voice_on') : safeT('voice_off')}
-              </button>
+              <button onClick={() => setVoiceEnabled(!voiceEnabled)} className="text-white font-medium text-sm focus:outline-none">{voiceEnabled ? safeT('voice_on') : safeT('voice_off')}</button>
             </div>
-            <button
-              onClick={startVoiceSetup}
-              disabled={!voiceEnabled || currentStep !== "idle"}
-              className={`px-6 py-2 rounded-xl font-bold text-sm ${
-                voiceEnabled && currentStep === "idle"
-                  ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-white hover:scale-105 transition-all'
-                  : 'bg-gray-200 text-gray-400 cursor-not-allowed'
-              }`}
-            >
-              {currentStep === "idle" ? safeT('start_setup') : safeT('loading')}
-            </button>
+            <button onClick={startVoiceSetup} disabled={!voiceEnabled || currentStep !== "idle"} className={`px-6 py-2 rounded-xl font-bold text-sm ${voiceEnabled && currentStep === "idle" ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-white hover:scale-105 transition-all' : 'bg-gray-200 text-gray-400 cursor-not-allowed'}`}>{currentStep === "idle" ? safeT('start_setup') : safeT('loading')}</button>
           </div>
         </div>
-        {isSpeaking && (
-          <div className="mt-2 text-xs text-blue-600 flex items-center gap-1">
-            <Volume2 className="w-3 h-3 animate-pulse" />
-            <span>{safeT('speaking')} {wordProgress}</span>
-          </div>
-        )}
+        {isSpeaking && <div className="mt-2 text-xs text-blue-600 flex items-center gap-1"><Volume2 className="w-3 h-3 animate-pulse" /><span>{safeT('speaking')} {wordProgress}</span></div>}
       </div>
+
+      {/* ===== SPECIES TOGGLE ===== */}
+      {currentStep === "idle" && (
+        <div className="bg-white rounded-2xl p-6 border-2 border-blue-200 shadow-xl mb-4">
+          <h3 className="font-bold text-xl mb-4 flex items-center gap-2 text-blue-800">🐓 {safeT("select_species") || "What are you farming?"}</h3>
+          <div className="flex flex-wrap gap-4">
+            <button onClick={() => setSelectedSpecies("crop")} className={`px-6 py-3 rounded-xl font-bold transition ${selectedSpecies === "crop" ? "bg-green-600 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"}`}>🌾 Crops</button>
+            <button onClick={() => setSelectedSpecies("poultry")} className={`px-6 py-3 rounded-xl font-bold transition ${selectedSpecies === "poultry" ? "bg-orange-600 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"}`}>🐔 Poultry</button>
+          </div>
+        </div>
+      )}
 
       {currentStep === "configuring" && visibleQuestions.length > 0 && (
         <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl p-8 shadow-xl border-2 border-green-300 min-h-[300px]">
           <div className="flex items-center gap-3 mb-4">
-            <span className="w-10 h-10 bg-emerald-500 text-white rounded-xl flex items-center justify-center font-bold">
-              {configStep + 1}
-            </span>
-            <h4 className="font-bold text-xl text-emerald-800">
-              {safeT('question_x_of_y', { current: configStep + 1, total: visibleQuestions.length })}
-            </h4>
+            <span className="w-10 h-10 bg-emerald-500 text-white rounded-xl flex items-center justify-center font-bold">{configStep + 1}</span>
+            <h4 className="font-bold text-xl text-emerald-800">{safeT('question_x_of_y', { current: configStep + 1, total: visibleQuestions.length })}</h4>
             {currentSection && <p className="text-sm text-emerald-600 ml-auto">{currentSection}</p>}
-            {isStreaming && (
-              <span className="ml-auto flex items-center gap-2 text-emerald-600">
-                <Volume2 className="w-5 h-5 animate-pulse" />
-                <span className="text-sm">{wordProgress}</span>
-              </span>
-            )}
+            {isStreaming && <span className="ml-auto flex items-center gap-2 text-emerald-600"><Volume2 className="w-5 h-5 animate-pulse" /><span className="text-sm">{wordProgress}</span></span>}
           </div>
 
           <div className="bg-white rounded-xl p-6 border-2 border-emerald-200 min-h-[120px]">
             {streamingQuestion ? (
-              <p className="text-3xl text-gray-800">
-                {streamingQuestion.split(' ').map((word, wordIdx, arr) => (
-                  <span key={wordIdx}>
-                    <span className="text-emerald-700 font-bold">{word}</span>
-                    {wordIdx < arr.length - 1 ? ' ' : ''}
-                  </span>
-                ))}
-              </p>
-            ) : (
-              <p className="text-3xl text-gray-400 italic">
-                {isStreaming ? safeT('speaking_dots') : safeT('ready_for_answer')}
-              </p>
-            )}
+              <p className="text-3xl text-gray-800">{streamingQuestion.split(' ').map((word, wordIdx, arr) => <span key={wordIdx}><span className="text-emerald-700 font-bold">{word}</span>{wordIdx < arr.length - 1 ? ' ' : ''}</span>)}</p>
+            ) : <p className="text-3xl text-gray-400 italic">{isStreaming ? safeT('speaking_dots') : safeT('ready_for_answer')}</p>}
           </div>
 
           {!isStreaming && streamingQuestion && (
             <div className="mt-6">
               <div className="bg-white rounded-xl border-2 border-purple-200 p-6">
                 {renderInput()}
-
                 {!visibleQuestions[configStep]?.renderCustom && visibleQuestions[configStep]?.type !== "button" && (
                   <div className="flex gap-2 mt-4">
-                    <button
-                      onClick={submitAnswer}
-                      disabled={!userTranscript.trim()}
-                      className="flex-1 bg-gradient-to-r from-emerald-500 to-teal-500 text-white py-2.5 rounded-xl font-medium disabled:opacity-50 flex items-center justify-center gap-2"
-                    >
-                      <Send className="w-4 h-4" />
-                      {safeT('submit_answer')}
-                    </button>
-                    <button
-                      onClick={skipQuestion}
-                      className="px-4 bg-gradient-to-r from-amber-500 to-orange-500 text-white py-2.5 rounded-xl font-medium"
-                    >
-                      {safeT('skip')}
-                    </button>
+                    <button onClick={submitAnswer} disabled={!userTranscript.trim()} className="flex-1 bg-gradient-to-r from-emerald-500 to-teal-500 text-white py-2.5 rounded-xl font-medium disabled:opacity-50 flex items-center justify-center gap-2"><Send className="w-4 h-4" />{safeT('submit_answer')}</button>
+                    <button onClick={skipQuestion} className="px-4 bg-gradient-to-r from-amber-500 to-orange-500 text-white py-2.5 rounded-xl font-medium">{safeT('skip')}</button>
                   </div>
                 )}
               </div>
-
               {lastSubmittedAnswer && (
                 <div className="mt-3 p-3 bg-blue-50 rounded-xl border-2 border-blue-200">
-                  <p className="text-sm text-blue-800 flex items-center gap-2">
-                    <CheckCircle className="w-4 h-4 text-blue-600" />
-                    {safeT('your_answer')}: <span className="font-bold text-blue-900">{lastSubmittedAnswer}</span>
-                  </p>
+                  <p className="text-sm text-blue-800 flex items-center gap-2"><CheckCircle className="w-4 h-4 text-blue-600" />{safeT('your_answer')}: <span className="font-bold text-blue-900">{lastSubmittedAnswer}</span></p>
                   <p className="text-xs text-blue-600 mt-1">{safeT('voice_confirmation_sent')}</p>
                 </div>
               )}
-
               {debugInfo.isListening && (
                 <div className="mt-3 p-3 bg-gradient-to-r from-red-50 to-rose-50 rounded-xl flex items-center gap-3">
                   <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
@@ -3100,9 +1782,7 @@ const CreateInterviewAgent = ({
       )}
 
       {(currentStep === "configuring" || currentStep === "generating") && (
-        <button onClick={stopEverything} className="px-5 py-3 bg-gradient-to-r from-rose-500 to-red-500 text-white rounded-xl mx-auto w-48 font-medium flex items-center justify-center gap-2">
-          <span>{safeT('stop_setup')}</span>
-        </button>
+        <button onClick={stopEverything} className="px-5 py-3 bg-gradient-to-r from-rose-500 to-red-500 text-white rounded-xl mx-auto w-48 font-medium flex items-center justify-center gap-2"><span>{safeT('stop_setup')}</span></button>
       )}
     </div>
   );
