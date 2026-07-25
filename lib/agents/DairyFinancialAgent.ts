@@ -1,46 +1,45 @@
 // lib/agents/DairyFinancialAgent.ts
-import { BaseInterviewAgent, InterviewQuestion } from "./BaseInterviewAgent";
+import { BaseInterviewAgent, InterviewQuestion, FarmerContext } from "./BaseInterviewAgent";
 
 export class DairyFinancialAgent extends BaseInterviewAgent {
-  constructor() {
-    super();
-    this.questions = [
+  getAgentKey(): string {
+    return "DairyFinancialAgent";
+  }
+
+  getQuestions(context: FarmerContext): InterviewQuestion[] {
+    return [
       {
         id: "dairyFeedCostPerDay",
         type: "number",
-        label: "What is your total feed cost per cow per day?",
+        questionKey: "question_dairy_feed_cost_per_day",
         placeholder: "e.g., 150",
-        required: true,
+        step: "any",
+        sectionKey: "section_dairy_finance",
       },
       {
         id: "dairyMilkPrice",
         type: "number",
-        label: "What is the sale price per litre of milk?",
+        questionKey: "question_dairy_milk_price",
         placeholder: "e.g., 50",
-        required: true,
+        step: "any",
+        sectionKey: "section_dairy_finance",
       },
       {
         id: "dairyVetCostMonth",
         type: "number",
-        label: "What is your total veterinary cost per month?",
+        questionKey: "question_dairy_vet_cost_month",
         placeholder: "e.g., 2000",
-        required: false,
+        step: "any",
+        sectionKey: "section_dairy_finance",
       },
       {
         id: "dairyOtherCosts",
         type: "number",
-        label: "Other monthly costs (labour, water, transport, etc.)?",
+        questionKey: "question_dairy_other_costs",
         placeholder: "e.g., 3000",
-        required: false,
+        step: "any",
+        sectionKey: "section_dairy_finance",
       },
     ];
-  }
-
-  async generateRecommendation(): Promise<any> {
-    return {
-      agentType: "DairyFinancial",
-      collectedData: this.answers,
-      message: "Dairy financial details collected.",
-    };
   }
 }

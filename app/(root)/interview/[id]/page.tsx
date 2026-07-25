@@ -1,3 +1,4 @@
+// app/(root)/interview/[id]/page.tsx – UPDATED with poultry + dairy header
 import Image from "next/image";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
@@ -30,6 +31,8 @@ const InterviewDetails = async ({ params }: RouteParams) => {
   console.log("Farmer session data:", {
     exists: !!session,
     crops: session?.crops,
+    isPoultry: session?.isPoultry,
+    isDairy: session?.isDairy,
     county: session?.county,
     acres: session?.acres,
     recommendations: session?.recommendations?.length,
@@ -59,36 +62,68 @@ const InterviewDetails = async ({ params }: RouteParams) => {
 
   console.log("Feedback exists:", !!feedback);
 
+  // ===== DETECT SESSION TYPE =====
+  const isPoultry = session.isPoultry === true;
+  const isDairy = session.isDairy === true;
+  const isCrop = !isPoultry && !isDairy;
+
+  // ===== BUILD HEADER DATA =====
+  let headerEmoji = "🌾";
+  let headerTitle = "";
+  let headerSubtitle = "";
+  let headerDetails: { label: string; value: string | number }[] = [];
+
+  if (isCrop) {
+    headerEmoji = "🌾";
+    headerTitle = session.crops?.join(", ") || "Farm";
+    headerSubtitle = `${session.county || ""}${session.subCounty ? `, ${session.subCounty}` : ""}${session.village ? `, ${session.village}` : ""}`;
+    headerDetails = [
+      { label: "Acres", value: session.acres || session.cropAcres || session.cultivatedAcres || "?" },
+      { label: "Cattle", value: session.cattle || 0 },
+    ];
+  } else if (isPoultry) {
+    headerEmoji = "🐔";
+    headerTitle = session.poultry?.breed || "Poultry";
+    headerSubtitle = `${session.poultry?.system || ""}${session.county ? ` • ${session.county}` : ""}`;
+    headerDetails = [
+      { label: "Flock size", value: session.poultry?.flockSize || 0 },
+      { label: "Age", value: `${session.poultry?.ageWeeks || 0} weeks` },
+    ];
+  } else if (isDairy) {
+    headerEmoji = "🐄";
+    headerTitle = session.dairy?.breed || "Dairy";
+    const category = session.dairy?.cowCategory || "";
+    headerSubtitle = `${category}${session.county ? ` • ${session.county}` : ""}`;
+    headerDetails = [
+      { label: "Milk yield", value: `${session.dairy?.milkYieldPerDay || 0} L/day` },
+      { label: "Body weight", value: `${session.dairy?.bodyWeightKg || 0} kg` },
+    ];
+  }
+
   return (
     <>
       <div className="flex flex-row gap-4 justify-between bg-green-50 p-4 rounded-xl mb-4">
         <div className="flex flex-row gap-4 items-center max-sm:flex-col">
           <div className="flex flex-row gap-4 items-center">
             <div className="w-10 h-10 bg-green-600 rounded-full flex items-center justify-center text-white text-xl">
-              🌾
+              {headerEmoji}
             </div>
             <div>
               <h3 className="capitalize text-xl font-semibold text-green-800">
-                {session.crops?.join(", ")} Farm
+                {headerTitle}
               </h3>
               <p className="text-sm text-gray-600">
-                {session.county}{session.subCounty ? `, ${session.subCounty}` : ""}
-                {session.village ? `, ${session.village}` : ""}
+                {headerSubtitle}
               </p>
             </div>
           </div>
 
           <div className="flex gap-3 ml-4">
-            {session.acres && (
-              <span className="bg-white px-3 py-1 rounded-full text-sm">
-                📏 {session.acres} acres
+            {headerDetails.map((detail, idx) => (
+              <span key={idx} className="bg-white px-3 py-1 rounded-full text-sm">
+                {detail.label}: {detail.value}
               </span>
-            )}
-            {session.cattle > 0 && (
-              <span className="bg-white px-3 py-1 rounded-full text-sm">
-                🐄 {session.cattle} cattle
-              </span>
-            )}
+            ))}
           </div>
         </div>
 

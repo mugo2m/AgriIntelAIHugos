@@ -1,75 +1,61 @@
 // lib/agents/DairyCalfAgent.ts
-import { BaseInterviewAgent, InterviewQuestion } from "./BaseInterviewAgent";
+import { BaseInterviewAgent, InterviewQuestion, FarmerContext } from "./BaseInterviewAgent";
+
+const CALF_FEEDING_METHODS = ["bucket", "bottle", "dam", "other"];
+const CALF_HOUSING_TYPES = ["individual_pen", "group_pen", "tether", "other"];
+const CALF_HEALTH_ISSUES = ["diarrhoea", "cough", "dullness", "naval_infection", "none"];
 
 export class DairyCalfAgent extends BaseInterviewAgent {
-  constructor() {
-    super();
-    this.questions = [
+  getAgentKey(): string {
+    return "DairyCalfAgent";
+  }
+
+  getQuestions(context: FarmerContext): InterviewQuestion[] {
+    return [
       {
         id: "calfAgeWeeks",
         type: "number",
-        label: "What is the calf's age in weeks?",
+        questionKey: "question_dairy_calf_age_weeks",
         placeholder: "e.g., 4",
-        required: true,
+        step: "any",
+        sectionKey: "section_dairy_calf",
       },
       {
         id: "calfFeedingMethod",
-        type: "select",
-        label: "How is the calf fed?",
-        options: [
-          { value: "bucket", label: "Bucket" },
-          { value: "bottle", label: "Bottle" },
-          { value: "dam", label: "Dam (suckling)" },
-          { value: "other", label: "Other" },
-        ],
-        required: true,
+        type: "dropdown",
+        questionKey: "question_dairy_calf_feeding_method",
+        options: CALF_FEEDING_METHODS,
+        sectionKey: "section_dairy_calf",
       },
       {
         id: "calfMilkLitresPerDay",
         type: "number",
-        label: "How many litres of milk per day does the calf receive?",
+        questionKey: "question_dairy_calf_milk_litres_per_day",
         placeholder: "e.g., 6",
-        required: false,
+        step: "any",
+        sectionKey: "section_dairy_calf",
       },
       {
         id: "calfReceivedColostrum",
-        type: "boolean",
-        label: "Did the calf receive colostrum within the first 6 hours?",
-        required: true,
+        type: "dropdown",
+        questionKey: "question_dairy_calf_received_colostrum",
+        options: ["yes", "no"],
+        sectionKey: "section_dairy_calf",
       },
       {
         id: "calfHousingType",
-        type: "select",
-        label: "What type of housing is the calf in?",
-        options: [
-          { value: "individual_pen", label: "Individual pen" },
-          { value: "group_pen", label: "Group pen" },
-          { value: "tether", label: "Tether" },
-          { value: "other", label: "Other" },
-        ],
-        required: true,
+        type: "dropdown",
+        questionKey: "question_dairy_calf_housing_type",
+        options: CALF_HOUSING_TYPES,
+        sectionKey: "section_dairy_calf",
       },
       {
         id: "calfHealthIssues",
         type: "multiselect",
-        label: "Any health issues?",
-        options: [
-          { value: "diarrhoea", label: "Diarrhoea (scours)" },
-          { value: "cough", label: "Cough / pneumonia" },
-          { value: "dullness", label: "Dullness / lethargy" },
-          { value: "naval_infection", label: "Naval infection" },
-          { value: "none", label: "None" },
-        ],
-        required: false,
+        questionKey: "question_dairy_calf_health_issues",
+        options: CALF_HEALTH_ISSUES,
+        sectionKey: "section_dairy_calf",
       },
     ];
-  }
-
-  async generateRecommendation(): Promise<any> {
-    return {
-      agentType: "DairyCalf",
-      collectedData: this.answers,
-      message: "Calf rearing details collected.",
-    };
   }
 }

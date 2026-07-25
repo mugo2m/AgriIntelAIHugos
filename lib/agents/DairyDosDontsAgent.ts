@@ -1,32 +1,22 @@
 // lib/agents/DairyDosDontsAgent.ts
-import { BaseInterviewAgent, InterviewQuestion } from "./BaseInterviewAgent";
+import { BaseInterviewAgent, InterviewQuestion, FarmerContext } from "./BaseInterviewAgent";
+
+const MANAGEMENT_AREAS = ["calf_rearing", "feeding", "housing", "milking", "health", "breeding"];
 
 export class DairyDosDontsAgent extends BaseInterviewAgent {
-  constructor() {
-    super();
-    this.questions = [
+  getAgentKey(): string {
+    return "DairyDosDontsAgent";
+  }
+
+  getQuestions(context: FarmerContext): InterviewQuestion[] {
+    return [
       {
         id: "dairyManagementFocus",
         type: "multiselect",
-        label: "Which areas would you like dos and don'ts for?",
-        options: [
-          { value: "calf_rearing", label: "Calf rearing" },
-          { value: "feeding", label: "Feeding" },
-          { value: "housing", label: "Housing" },
-          { value: "milking", label: "Milking" },
-          { value: "health", label: "Health" },
-          { value: "breeding", label: "Breeding" },
-        ],
-        required: false,
+        questionKey: "question_dairy_management_focus",
+        options: MANAGEMENT_AREAS,
+        sectionKey: "section_dairy_management",
       },
     ];
-  }
-
-  async generateRecommendation(): Promise<any> {
-    return {
-      agentType: "DairyDosDonts",
-      collectedData: this.answers,
-      message: "Dairy Dos and Don'ts selection collected.",
-    };
   }
 }

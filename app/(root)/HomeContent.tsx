@@ -101,6 +101,45 @@ export default function HomeContent({ user, farmerSessions, recentQueries }: Hom
 
   const hasPastSessions = farmerSessions.length > 0;
 
+  // Helper to get session display info
+  const getSessionDisplay = (session: any) => {
+    if (session.isPoultry) {
+      return {
+        emoji: '🐔',
+        title: session.poultry?.breed || 'Poultry',
+        subtitle: session.poultry?.system || '',
+        details: [
+          { label: safeT('flock_size'), value: session.poultry?.flockSize || 0 },
+          { label: safeT('age_weeks'), value: session.poultry?.ageWeeks || 0 },
+        ],
+        linkText: safeT('ask_more'),
+      };
+    }
+    if (session.isDairy) {
+      return {
+        emoji: '🐄',
+        title: session.dairy?.breed || 'Dairy',
+        subtitle: session.dairy?.cowCategory || '',
+        details: [
+          { label: safeT('milk_per_day'), value: session.dairy?.milkYieldPerDay || 0 },
+          { label: safeT('body_weight'), value: session.dairy?.bodyWeightKg || 0 },
+        ],
+        linkText: safeT('ask_more'),
+      };
+    }
+    // Default: crops
+    return {
+      emoji: '🌾',
+      title: session.crops?.join(", ") || safeT('mixed_crops'),
+      subtitle: session.county || '',
+      details: [
+        { label: safeT('farm_size'), value: session.totalFarmSize || session.cultivatedAcres || session.acres || '?' },
+        { label: safeT('cattle'), value: session.cattle || 0 },
+      ],
+      linkText: safeT('ask_more'),
+    };
+  };
+
   return (
     <>
       {/* Offline Status Banner */}
@@ -124,14 +163,14 @@ export default function HomeContent({ user, farmerSessions, recentQueries }: Hom
           </p>
 
           <div className="flex flex-col sm:flex-row gap-3">
-            {/* NEW: Quick Recommendation Button */}
+            {/* Quick Recommendation Button */}
             <Button asChild className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white max-sm:w-full shadow-lg">
               <Link href="/recommendation">
                 🚀 {safeT('quick_recommendation') || "Quick Recommendation"}
               </Link>
             </Button>
 
-            {/* Existing: Full Session Button */}
+            {/* Full Session Button */}
             <Button asChild variant="outline" className="border-green-600 text-green-700 hover:bg-green-50 max-sm:w-full">
               <Link href="/generate">
                 📋 {safeT('full_health_check') || "Complete Farm Health Check"}
@@ -160,82 +199,83 @@ export default function HomeContent({ user, farmerSessions, recentQueries }: Hom
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {hasPastSessions ? (
-            farmerSessions.map((session) => (
-              <div
-                key={session.id}
-                className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all"
-              >
-                <div className="flex items-center gap-2 mb-3">
-                  <span className="text-2xl">🌾</span>
-                  <div>
-                    <h3 className="font-semibold text-gray-800 capitalize">
-                      {session.crops?.join(", ") || safeT('mixed_crops')}
-                    </h3>
-                    <p className="text-xs text-gray-500">
-                      {session.county}{session.subCounty ? `, ${session.subCounty}` : ""}
-                    </p>
+            farmerSessions.map((session) => {
+              const display = getSessionDisplay(session);
+              return (
+                <div
+                  key={session.id}
+                  className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all"
+                >
+                  <div className="flex items-center gap-2 mb-3">
+                    <span className="text-2xl">{display.emoji}</span>
+                    <div>
+                      <h3 className="font-semibold text-gray-800 capitalize">
+                        {display.title}
+                      </h3>
+                      <p className="text-xs text-gray-500">
+                        {display.subtitle}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2 text-sm mb-3">
+                    {display.details.map((detail, idx) => (
+                      <div key={idx}>
+                        <span className="text-gray-500">{detail.label}:</span>
+                        <span className="ml-1 font-medium">{detail.value}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Display warnings if they exist (crop sessions only) */}
+                  {!session.isPoultry && !session.isDairy && session.metadata?.warnings && (
+                    <div className="mt-2 mb-2 space-y-1">
+                      {session.metadata.warnings.yield?.map((warning: string, i: number) => (
+                        <p key={`yield-${i}`} className="text-xs text-amber-600 flex items-start gap-1">
+                          <span>⚠️</span>
+                          <span>{warning}</span>
+                        </p>
+                      ))}
+                      {session.metadata.warnings.price?.map((warning: string, i: number) => (
+                        <p key={`price-${i}`} className="text-xs text-amber-600 flex items-start gap-1">
+                          <span>⚠️</span>
+                          <span>{warning}</span>
+                        </p>
+                      ))}
+                      {session.metadata.warnings.spacing?.map((warning: string, i: number) => (
+                        <p key={`spacing-${i}`} className="text-xs text-amber-600 flex items-start gap-1">
+                          <span>⚠️</span>
+                          <span>{warning}</span>
+                        </p>
+                      ))}
+                    </div>
+                  )}
+
+                  {session.id === farmerSessions[0]?.id && recentQueries.length > 0 && (
+                    <div className="mt-3 pt-3 border-t border-gray-100">
+                      <p className="text-xs text-gray-500 mb-2">{safeT('recent_questions')}:</p>
+                      {recentQueries.map((q, i) => (
+                        <p key={i} className="text-sm text-gray-700 truncate">
+                          "{q.question.substring(0, 30)}..."
+                        </p>
+                      ))}
+                    </div>
+                  )}
+
+                  <div className="mt-4 flex justify-between items-center">
+                    <span className="text-xs text-gray-400">
+                      {formatSessionDate(session.createdAt)}
+                    </span>
+                    <Link
+                      href={`/interview/${session.id}`}
+                      className="text-sm bg-green-100 text-green-700 px-3 py-1 rounded-full hover:bg-green-200 transition-colors"
+                    >
+                      {display.linkText} →
+                    </Link>
                   </div>
                 </div>
-
-                <div className="grid grid-cols-2 gap-2 text-sm mb-3">
-                  <div>
-                    <span className="text-gray-500">{safeT('farm_size')}:</span>
-                    <span className="ml-1 font-medium">{session.totalFarmSize || session.cultivatedAcres || session.acres || "?"} {safeT('acres')}</span>
-                  </div>
-                  <div>
-                    <span className="text-gray-500">{safeT('cattle')}:</span>
-                    <span className="ml-1 font-medium">{session.cattle || 0}</span>
-                  </div>
-                </div>
-
-                {/* Display warnings if they exist */}
-                {session.metadata?.warnings && (
-                  <div className="mt-2 mb-2 space-y-1">
-                    {session.metadata.warnings.yield?.map((warning: string, i: number) => (
-                      <p key={`yield-${i}`} className="text-xs text-amber-600 flex items-start gap-1">
-                        <span>⚠️</span>
-                        <span>{warning}</span>
-                      </p>
-                    ))}
-                    {session.metadata.warnings.price?.map((warning: string, i: number) => (
-                      <p key={`price-${i}`} className="text-xs text-amber-600 flex items-start gap-1">
-                        <span>⚠️</span>
-                        <span>{warning}</span>
-                      </p>
-                    ))}
-                    {session.metadata.warnings.spacing?.map((warning: string, i: number) => (
-                      <p key={`spacing-${i}`} className="text-xs text-amber-600 flex items-start gap-1">
-                        <span>⚠️</span>
-                        <span>{warning}</span>
-                      </p>
-                    ))}
-                  </div>
-                )}
-
-                {session.id === farmerSessions[0]?.id && recentQueries.length > 0 && (
-                  <div className="mt-3 pt-3 border-t border-gray-100">
-                    <p className="text-xs text-gray-500 mb-2">{safeT('recent_questions')}:</p>
-                    {recentQueries.map((q, i) => (
-                      <p key={i} className="text-sm text-gray-700 truncate">
-                        "{q.question.substring(0, 30)}..."
-                      </p>
-                    ))}
-                  </div>
-                )}
-
-                <div className="mt-4 flex justify-between items-center">
-                  <span className="text-xs text-gray-400">
-                    {formatSessionDate(session.createdAt)}
-                  </span>
-                  <Link
-                    href={`/interview/${session.id}`}
-                    className="text-sm bg-green-100 text-green-700 px-3 py-1 rounded-full hover:bg-green-200 transition-colors"
-                  >
-                    {safeT('ask_more')} →
-                  </Link>
-                </div>
-              </div>
-            ))
+              );
+            })
           ) : (
             <div className="col-span-3 text-center py-8 bg-gray-50 rounded-lg">
               <p className="text-gray-500">{safeT('no_sessions')}</p>
@@ -270,7 +310,7 @@ export default function HomeContent({ user, farmerSessions, recentQueries }: Hom
         </div>
       </section>
 
-      {/* How It Works – Text color fixed to dark blue */}
+      {/* How It Works */}
       <section className="flex flex-col gap-6 mt-8">
         <h2 className="text-2xl font-semibold text-blue-900">🎯 {safeT('how_it_works')}</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

@@ -1,60 +1,51 @@
 // lib/agents/DairyBreedingAgent.ts
-import { BaseInterviewAgent, InterviewQuestion } from "./BaseInterviewAgent";
+import { BaseInterviewAgent, InterviewQuestion, FarmerContext } from "./BaseInterviewAgent";
+
+const BREEDING_METHODS = ["ai", "bull", "both"];
+const REPRODUCTIVE_PROBLEMS = ["repeat_breeding", "abortion", "retained_placenta", "none"];
 
 export class DairyBreedingAgent extends BaseInterviewAgent {
-  constructor() {
-    super();
-    this.questions = [
+  getAgentKey(): string {
+    return "DairyBreedingAgent";
+  }
+
+  getQuestions(context: FarmerContext): InterviewQuestion[] {
+    return [
       {
         id: "daysSinceCalving",
         type: "number",
-        label: "How many days since last calving?",
+        questionKey: "question_dairy_days_since_calving",
         placeholder: "e.g., 60",
-        required: true,
+        step: "any",
+        sectionKey: "section_dairy_breeding",
       },
       {
         id: "heatObserved",
-        type: "boolean",
-        label: "Has the cow shown signs of heat (oestrus)?",
-        required: true,
+        type: "dropdown",
+        questionKey: "question_dairy_heat_observed",
+        options: ["yes", "no"],
+        sectionKey: "section_dairy_breeding",
       },
       {
         id: "lastInseminationDate",
         type: "date",
-        label: "When was the last insemination (if any)?",
-        required: false,
+        questionKey: "question_dairy_last_insemination_date",
+        sectionKey: "section_dairy_breeding",
       },
       {
         id: "breedingMethod",
-        type: "select",
-        label: "What breeding method do you use?",
-        options: [
-          { value: "ai", label: "Artificial insemination (AI)" },
-          { value: "bull", label: "Natural bull" },
-          { value: "both", label: "Both" },
-        ],
-        required: true,
+        type: "dropdown",
+        questionKey: "question_dairy_breeding_method",
+        options: BREEDING_METHODS,
+        sectionKey: "section_dairy_breeding",
       },
       {
         id: "reproductiveProblems",
         type: "multiselect",
-        label: "Any reproductive problems?",
-        options: [
-          { value: "repeat_breeding", label: "Repeat breeding" },
-          { value: "abortion", label: "Abortion" },
-          { value: "retained_placenta", label: "Retained placenta" },
-          { value: "none", label: "None" },
-        ],
-        required: false,
+        questionKey: "question_dairy_reproductive_problems",
+        options: REPRODUCTIVE_PROBLEMS,
+        sectionKey: "section_dairy_breeding",
       },
     ];
-  }
-
-  async generateRecommendation(): Promise<any> {
-    return {
-      agentType: "DairyBreeding",
-      collectedData: this.answers,
-      message: "Breeding details collected.",
-    };
   }
 }

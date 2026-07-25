@@ -1,36 +1,33 @@
 // lib/agents/DairyParasiteAgent.ts
-import { BaseInterviewAgent, InterviewQuestion } from "./BaseInterviewAgent";
+import { BaseInterviewAgent, InterviewQuestion, FarmerContext } from "./BaseInterviewAgent";
+
+const PARASITE_SIGNS = [
+  "visible_ticks",
+  "visible_lice",
+  "skin_irritation",
+  "anaemia",
+  "diarrhoea_parasite",
+  "weight_loss",
+  "bottle_jaw",
+  "cough_parasite",
+  "flies_swarming",
+  "mange_lesions",
+];
 
 export class DairyParasiteAgent extends BaseInterviewAgent {
-  constructor() {
-    super();
-    this.questions = [
+  getAgentKey(): string {
+    return "DairyParasiteAgent";
+  }
+
+  getQuestions(context: FarmerContext): InterviewQuestion[] {
+    return [
       {
         id: "dairyParasiteSigns",
         type: "multiselect",
-        label: "What signs of parasites are you seeing?",
-        options: [
-          { value: "visible_ticks", label: "Visible ticks" },
-          { value: "visible_lice", label: "Visible lice" },
-          { value: "skin_irritation", label: "Skin irritation / hair loss" },
-          { value: "anaemia", label: "Anaemia (pale mucous membranes)" },
-          { value: "diarrhoea_parasite", label: "Diarrhoea (may be black)" },
-          { value: "weight_loss", label: "Weight loss" },
-          { value: "bottle_jaw", label: "Bottle jaw (submandibular oedema)" },
-          { value: "cough_parasite", label: "Cough (lungworms)" },
-          { value: "flies_swarming", label: "Swarming flies" },
-          { value: "mange_lesions", label: "Skin lesions / crusts" },
-        ],
-        required: true,
+        questionKey: "question_dairy_parasite_signs",
+        options: PARASITE_SIGNS,
+        sectionKey: "section_dairy_health",
       },
     ];
-  }
-
-  async generateRecommendation(): Promise<any> {
-    return {
-      agentType: "DairyParasite",
-      collectedData: this.answers,
-      message: "Parasite signs collected.",
-    };
   }
 }

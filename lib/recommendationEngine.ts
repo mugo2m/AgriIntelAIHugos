@@ -1,7 +1,4 @@
-// lib/recommendationEngine.ts – COMPLETE with crop + poultry
-// ALL FALLBACKS ADDED: feed, vaccination, financial, housing, breed, sourcing
-// FULL CROP PATH – all modules (soil, lime, fertilizer, gross margin, disease, pest, deficiency, conservation, post‑harvest, business, nutrition, reminder)
-
+// lib/recommendationEngine.ts – Part 1 (Final – all fixes applied)
 import { COUNTRY_CURRENCY_MAP } from '@/lib/config/currency';
 import { cropPestDiseaseMap, PestDisease } from '@/lib/data/pestDiseaseMapping';
 import swTranslations from '../public/locales/sw/common.json';
@@ -25,7 +22,10 @@ import {
 } from '@/lib/agents/utils/poultryUtils';
 import { poultryDiseaseMap } from '@/lib/data/poultryDiseaseMap';
 
-// ===== HELPERS =====
+// ===== DAIRY UTILITIES =====
+import { dairyPestDiseaseMap, DairyPestDisease } from '@/lib/data/dairyHealthMapping';
+
+// ===== HELPERS (unchanged) =====
 const safeT = (translation: any, fallback: string, ...args: any[]): string => {
   if (typeof translation === 'function') return translation(...args);
   let result = (translation as string) || fallback;
@@ -341,6 +341,7 @@ interface RecommendationInput {
   modules?: string[];
   isPoultry?: boolean;
   poultrySpecies?: string;
+  isDairy?: boolean;
 }
 
 type ModuleKey =
@@ -372,7 +373,20 @@ type ModuleKey =
   | 'poultry_biosecurity'
   | 'poultry_breed_advice'
   | 'poultry_sourcing'
-  | 'bird_damage';
+  | 'bird_damage'
+  | 'dairy_health_analysis'
+  | 'dairy_financial'
+  | 'dairy_management'
+  | 'dairy_breeding'
+  | 'dairy_calf'
+  | 'dairy_concentrate'
+  | 'dairy_feed'
+  | 'dairy_housing'
+  | 'dairy_milk'
+  | 'dairy_parasite'
+  | 'dairy_business'
+  | 'dairy_dos_donts'
+  | 'dairy_reminders';
 
 const moduleKeyMap: Record<string, ModuleKey> = {
   'confidence_label': 'confidence',
@@ -403,6 +417,19 @@ const moduleKeyMap: Record<string, ModuleKey> = {
   'poultry_breed_advice': 'poultry_breed_advice',
   'poultry_sourcing': 'poultry_sourcing',
   'bird_damage': 'bird_damage',
+  'dairy_health_analysis': 'dairy_health_analysis',
+  'dairy_financial': 'dairy_financial',
+  'dairy_management': 'dairy_management',
+  'dairy_breeding': 'dairy_breeding',
+  'dairy_calf': 'dairy_calf',
+  'dairy_concentrate': 'dairy_concentrate',
+  'dairy_feed': 'dairy_feed',
+  'dairy_housing': 'dairy_housing',
+  'dairy_milk': 'dairy_milk',
+  'dairy_parasite': 'dairy_parasite',
+  'dairy_business': 'dairy_business',
+  'dairy_dos_donts': 'dairy_dos_donts',
+  'dairy_reminders': 'dairy_reminders',
 };
 
 interface RecommendationOutput {
@@ -412,7 +439,7 @@ interface RecommendationOutput {
   structuredFinancialAdvice: any;
 }
 
-// ===== FALLBACKS =====
+// ===== POULTRY FALLBACKS =====
 const FALLBACK_VACCINES = [
   { disease: 'Newcastle Disease', ageDays: 1, route: 'Eye drop', costPerBird: 0.50 },
   { disease: 'Gumboro (IBD)', ageDays: 14, route: 'Drinking water', costPerBird: 0.30 },
@@ -469,7 +496,7 @@ const FALLBACK_HATCHERY = {
   phone: 'Contact local agrovet',
 };
 
-// ===== POULTRY GENERATOR =====
+// ===== POULTRY GENERATOR (COMPLETE) =====
 async function generatePoultryRecommendations(
   farmerData: any,
   modules?: string[]
@@ -686,14 +713,1080 @@ async function generatePoultryRecommendations(
   };
 }
 
-// ===== MAIN EXPORT =====
+// ===== ENHANCED DAIRY GENERATOR (FINAL – all fixes applied) =====
+async function generateDairyRecommendations(
+  farmerData: any,
+  modules?: string[]
+): Promise<RecommendationOutput> {
+  const structuredList: any[] = [];
+  const list: string[] = [];
+  const country = farmerData.country || 'kenya';
+  const language = farmerData.language || 'en';
+  const isSwahili = language === 'sw';
+  const isFrench = language === 'fr';
+  const isSpanish = language === 'es';
+
+  const formatCurrency = (amount: number): string => {
+    const currency = COUNTRY_CURRENCY_MAP[country] || COUNTRY_CURRENCY_MAP.kenya;
+    const symbol = farmerData.currencySymbol || currency.symbol;
+    const formattedAmount = new Intl.NumberFormat(currency.locale, {
+      style: 'decimal',
+      minimumFractionDigits: currency.decimalPlaces,
+      maximumFractionDigits: currency.decimalPlaces
+    }).format(amount);
+    return currency.position === 'before' ? `${symbol} ${formattedAmount}` : `${formattedAmount} ${symbol}`;
+  };
+  const currencySymbol = farmerData.currencySymbol || COUNTRY_CURRENCY_MAP[country]?.symbol || 'Ksh';
+
+  const shouldInclude = (key: string): boolean => {
+    if (!modules || modules.length === 0) return true;
+    if (modules.includes('complete')) return true;
+    const moduleKey = moduleKeyMap[key];
+    if (moduleKey) return modules.includes(moduleKey);
+    return modules.includes(key);
+  };
+
+  const addToStructuredList = (key: string, params: any) => {
+    if (shouldInclude(key)) {
+      structuredList.push({ key, params });
+    }
+  };
+
+  const addToList = (content: string) => {
+    if (content && content.trim()) list.push(content);
+  };
+
+  // 1. Confidence
+  if (shouldInclude('confidence_label')) {
+    const label = isSwahili ? '🟡 IMANI: Wastani (kutokana na ushauri wa mhudumu wa ugani)' :
+                   isFrench ? '🟡 CONFIANCE: Moyenne (basée sur les conseils du vulgarisateur)' :
+                   isSpanish ? '🟡 CONFIANZA: Media (basada en el consejo del extensionista)' :
+                   '🟡 Confidence: Medium (based on extension officer advice)';
+    addToStructuredList('confidence_label', { content: label });
+    addToList(label);
+  }
+
+  // 2. Health Analysis – DISEASE
+  if (shouldInclude('dairy_health_analysis')) {
+    const selectedDisease = farmerData.dairyDiseaseSelect || farmerData.dairy_disease || farmerData.selectedDisease;
+    const symptoms = farmerData.dairySymptoms || [];
+    const mortality = parseInt(farmerData.dairyMortalityCount) || 0;
+    const duration = farmerData.dairyHealthDuration || '';
+
+    const allDiseases = dairyPestDiseaseMap.dairy || [];
+    let matchedDiseases: DairyPestDisease[] = [];
+
+    if (selectedDisease) {
+      matchedDiseases = allDiseases.filter(d => d.name.toLowerCase() === selectedDisease.toLowerCase());
+    } else if (symptoms && symptoms.length) {
+      matchedDiseases = allDiseases.filter(d =>
+        d.symptoms.some(s => symptoms.some((sym: string) => s.toLowerCase().includes(sym.toLowerCase())))
+      );
+    }
+
+    if (matchedDiseases.length === 0 && selectedDisease) {
+      const content = isSwahili ? `🏥 MAGONJWA YA NG'OMBE: Ugonjwa "${selectedDisease}" haujapatikana. Tafadhali wasiliana na daktari wa mifugo.` :
+                       isFrench ? `🏥 MALADIES BOVINES : La maladie "${selectedDisease}" n'est pas dans notre base. Consultez un vétérinaire.` :
+                       isSpanish ? `🏥 ENFERMEDADES BOVINAS: La enfermedad "${selectedDisease}" no está en nuestra base. Consulte a un veterinario.` :
+                       `🏥 DAIRY DISEASE: "${selectedDisease}" not found. Please consult a veterinarian.`;
+      addToStructuredList('dairy_health_analysis', { content });
+      addToList(content);
+    } else if (matchedDiseases.length > 0) {
+      let content = '';
+      for (const disease of matchedDiseases) {
+        content += `🐄 **${disease.name.toUpperCase()}**\n`;
+        content += `📋 Symptoms: ${disease.symptoms.join(', ')}\n`;
+        if (disease.chemicalControls && disease.chemicalControls.length) {
+          content += `🧪 Chemical Treatments:\n`;
+          for (const chem of disease.chemicalControls) {
+            content += `• ${chem.productName} (${chem.activeIngredient})\n`;
+            content += `  Dose: ${chem.rate}\n`;
+            content += `  Application: ${chem.applicationMethod}\n`;
+            content += `  Timing: ${chem.timing}\n`;
+            if (chem.safetyInterval) content += `  Withdrawal: ${chem.safetyInterval}\n`;
+            const status = chem.status === 'restricted' ? '⚠️ RESTRICTED' :
+                           chem.status === 'banned' ? '❌ BANNED' :
+                           '✅ Active';
+            content += `  Status: ${status}\n\n`;
+          }
+        }
+        if (disease.organicControls && disease.organicControls.length) {
+          content += `🌱 Organic/Natural Options:\n`;
+          for (const org of disease.organicControls) {
+            content += `• ${org.method}\n`;
+            if (org.preparation) content += `  Prep: ${org.preparation}\n`;
+            if (org.application) content += `  Apply: ${org.application}\n\n`;
+          }
+        }
+        if (disease.culturalControls && disease.culturalControls.length) {
+          content += `📋 Cultural Controls:\n`;
+          for (const control of disease.culturalControls) {
+            content += `• ${control}\n`;
+          }
+          content += `\n`;
+        }
+        if (disease.businessNote) {
+          content += `💼 ${disease.businessNote}\n\n`;
+        }
+      }
+      if (mortality > 0) {
+        content += `⚠️ You reported ${mortality} cow(s) dead. **URGENT:** Escalate to a veterinarian immediately.\n`;
+      }
+      if (duration) {
+        const durationText = isSwahili ? `Muda wa dalili: ${duration}` :
+                             isFrench ? `Durée des symptômes : ${duration}` :
+                             isSpanish ? `Duración de los síntomas: ${duration}` :
+                             `Duration of symptoms: ${duration}`;
+        content += durationText + '\n';
+      }
+      addToStructuredList('dairy_health_analysis', { content });
+      addToList(content);
+    } else {
+      const content = isSwahili ? '🏥 Hakuna magonjwa yanayolingana. Wasiliana na daktari wa mifugo.' :
+                       isFrench ? '🏥 Aucune maladie correspondante. Consultez un vétérinaire.' :
+                       isSpanish ? '🏥 Ninguna enfermedad coincide. Consulte a un veterinario.' :
+                       '🏥 No matching diseases. Please consult a veterinarian.';
+      addToStructuredList('dairy_health_analysis', { content });
+      addToList(content);
+    }
+  }
+
+  // 3. Financial Analysis (Enhanced)
+  if (shouldInclude('dairy_financial')) {
+    const milkYield = parseFloat(farmerData.dairyMilkYieldPerDay) || 10;
+    const milkPrice = parseFloat(farmerData.dairyMilkPricePerLitre) || 40;
+    const feedCost = parseFloat(farmerData.dairyFeedCostPerDay) || 100;
+    const vetCost = parseFloat(farmerData.dairyVetCostPerMonth) || 500;
+    const otherCosts = parseFloat(farmerData.dairyOtherCosts) || 0;
+
+    const dailyRevenue = milkYield * milkPrice;
+    const dailyVetCost = vetCost / 30;
+    const dailyCost = feedCost + dailyVetCost + otherCosts;
+    const dailyProfit = dailyRevenue - dailyCost;
+    const monthlyProfit = dailyProfit * 30;
+    const yearlyProfit = monthlyProfit * 12;
+
+    let content = isSwahili ? `💰 UCHAMBUZI WA KIFEDHA WA NG'OMBE WA MAZIWA\n` :
+                   isFrench ? `💰 ANALYSE FINANCIÈRE DE LA VACHE LAITIÈRE\n` :
+                   isSpanish ? `💰 ANÁLISIS FINANCIERO DE LA VACA LECHERA\n` :
+                   `💰 DAIRY FINANCIAL ANALYSIS\n`;
+
+    content += isSwahili ? `Maziwa kwa siku: ${milkYield} L @ ${formatCurrency(milkPrice)}/L = ${formatCurrency(dailyRevenue)}/siku\n` :
+                isFrench ? `Lait par jour : ${milkYield} L @ ${formatCurrency(milkPrice)}/L = ${formatCurrency(dailyRevenue)}/jour\n` :
+                isSpanish ? `Leche por día: ${milkYield} L @ ${formatCurrency(milkPrice)}/L = ${formatCurrency(dailyRevenue)}/día\n` :
+                `Milk per day: ${milkYield} L @ ${formatCurrency(milkPrice)}/L = ${formatCurrency(dailyRevenue)}/day\n`;
+
+    content += isSwahili ? `Gharama za kila siku: Malisho ${formatCurrency(feedCost)} + Matibabu ${formatCurrency(dailyVetCost)} + Nyingine ${formatCurrency(otherCosts)} = ${formatCurrency(dailyCost)}\n` :
+                isFrench ? `Coûts quotidiens : Alimentation ${formatCurrency(feedCost)} + Soins vétérinaires ${formatCurrency(dailyVetCost)} + Autres ${formatCurrency(otherCosts)} = ${formatCurrency(dailyCost)}\n` :
+                isSpanish ? `Costos diarios: Alimentación ${formatCurrency(feedCost)} + Veterinaria ${formatCurrency(dailyVetCost)} + Otros ${formatCurrency(otherCosts)} = ${formatCurrency(dailyCost)}\n` :
+                `Daily costs: Feed ${formatCurrency(feedCost)} + Vet ${formatCurrency(dailyVetCost)} + Other ${formatCurrency(otherCosts)} = ${formatCurrency(dailyCost)}\n`;
+
+    content += isSwahili ? `Faida ya kila siku: ${formatCurrency(dailyProfit)}\n` :
+                isFrench ? `Bénéfice quotidien : ${formatCurrency(dailyProfit)}\n` :
+                isSpanish ? `Ganancia diaria: ${formatCurrency(dailyProfit)}\n` :
+                `Daily profit: ${formatCurrency(dailyProfit)}\n`;
+
+    content += isSwahili ? `Faida ya mwezi: ${formatCurrency(monthlyProfit)}\nFaida ya mwaka: ${formatCurrency(yearlyProfit)}\n\n` :
+                isFrench ? `Bénéfice mensuel : ${formatCurrency(monthlyProfit)}\nBénéfice annuel : ${formatCurrency(yearlyProfit)}\n\n` :
+                isSpanish ? `Ganancia mensual: ${formatCurrency(monthlyProfit)}\nGanancia anual: ${formatCurrency(yearlyProfit)}\n\n` :
+                `Monthly profit: ${formatCurrency(monthlyProfit)}\nYearly profit: ${formatCurrency(yearlyProfit)}\n\n`;
+
+    if (dailyProfit < 0) {
+      content += isSwahili ? `🔴 ONYO: Unapoteza ${formatCurrency(Math.abs(dailyProfit))} kwa siku! Tafuta njia za kupunguza gharama au kuongeza uzalishaji wa maziwa.` :
+                  isFrench ? `🔴 ATTENTION : Vous perdez ${formatCurrency(Math.abs(dailyProfit))} par jour ! Cherchez à réduire les coûts ou augmenter la production laitière.` :
+                  isSpanish ? `🔴 ADVERTENCIA: ¡Está perdiendo ${formatCurrency(Math.abs(dailyProfit))} al día! Busque formas de reducir costos o aumentar la producción de leche.` :
+                  `🔴 WARNING: You're losing ${formatCurrency(Math.abs(dailyProfit))} per day! Find ways to reduce costs or increase milk production.\n`;
+    } else if (dailyProfit > 0 && dailyProfit < 100) {
+      content += isSwahili ? `🟡 Faida yako ni ndogo (${formatCurrency(dailyProfit)}/siku). Ongeza maziwa kwa lita 2-3/siku au punguza gharama za malisho.` :
+                  isFrench ? `🟡 Votre bénéfice est faible (${formatCurrency(dailyProfit)}/jour). Augmentez le lait de 2-3 L/jour ou réduisez les coûts d'alimentation.` :
+                  isSpanish ? `🟡 Su ganancia es baja (${formatCurrency(dailyProfit)}/día). Aumente la leche en 2-3 L/día o reduzca los costos de alimentación.` :
+                  `🟡 Your profit is low (${formatCurrency(dailyProfit)}/day). Increase milk by 2-3 L/day or reduce feed costs.\n`;
+    } else if (dailyProfit >= 200) {
+      content += isSwahili ? `🟢 Faida bora! Unaweza kuongeza kundi lako au kuwekeza katika ubora wa malisho ili kuongeza faida zaidi.` :
+                  isFrench ? `🟢 Excellent bénéfice ! Vous pouvez agrandir votre troupeau ou investir dans une meilleure alimentation.` :
+                  isSpanish ? `🟢 ¡Excelente ganancia! Puede expandir su hato o invertir en mejor alimentación.` :
+                  `🟢 Excellent profit! Consider expanding your herd or investing in better feed quality.\n`;
+    }
+
+    content += isSwahili ? `\n💡 KUMBUKA: Faida inaweza kuongezeka kwa kudhibiti magonjwa, kuboresha malisho, na kupunguza gharama zisizo za lazima.` :
+                isFrench ? `\n💡 RAPPELEZ-VOUS : Le bénéfice augmente avec le contrôle des maladies, une meilleure alimentation et la réduction des coûts inutiles.` :
+                isSpanish ? `\n💡 RECUERDE: La ganancia aumenta con el control de enfermedades, mejor alimentación y reducción de costos innecesarios.` :
+                `\n💡 REMEMBER: Profit increases with disease control, better feed, and reducing unnecessary costs.`;
+
+    addToStructuredList('dairy_financial', { content });
+    addToList(content);
+  }
+
+  // 4. Dairy Management Tips (Enhanced)
+  if (shouldInclude('dairy_management')) {
+    let content = isSwahili ? `🌾 USIMAMIZI WA NG'OMBE WA MAZIWA – HATUA MAALUM\n` :
+                   isFrench ? `🌾 GESTION DES VACHES LAITIÈRES – ACTIONS SPÉCIFIQUES\n` :
+                   isSpanish ? `🌾 MANEJO DE VACAS LECHERAS – ACCIONES ESPECÍFICAS\n` :
+                   `🌾 DAIRY CATTLE MANAGEMENT – SPECIFIC ACTIONS\n`;
+
+    content += isSwahili ? `\n✅ MAJI: Hakikisha maji safi na ya kutosha (lita 80-120/ng'ombe/siku).` :
+                isFrench ? `\n✅ EAU : Assurez une eau propre et abondante (80-120 L/vache/jour).` :
+                isSpanish ? `\n✅ AGUA: Asegure agua limpia y abundante (80-120 L/vaca/día).` :
+                `\n✅ WATER: Ensure clean, abundant water (80-120 L/cow/day).\n`;
+
+    content += isSwahili ? `\n✅ MALISHO: Toa malisho bora (nyasi 20-30 kg + mchanganyiko 3-5 kg kwa siku).\n✅ REKODI: Andika uzalishaji wa maziwa, gharama, na matibabu kila siku.\n✅ USAFI: Safisha zizi na vifaa vya kukamulia kila siku.` :
+                isFrench ? `\n✅ ALIMENTATION : Fournissez des aliments de qualité (20-30 kg fourrage + 3-5 kg concentré/jour).\n✅ REGISTRES : Notez la production, les coûts et les traitements quotidiennement.\n✅ HYGIÈNE : Nettoyez l'étable et le matériel de traite chaque jour.` :
+                isSpanish ? `\n✅ ALIMENTACIÓN: Proporcione alimentos de calidad (20-30 kg forraje + 3-5 kg concentrado/día).\n✅ REGISTROS: Anote producción, costos y tratamientos diariamente.\n✅ HIGIENE: Limpie el establo y equipo de ordeño cada día.` :
+                `\n✅ FEED: Provide quality feed (20-30 kg forage + 3-5 kg concentrate/day).\n✅ RECORDS: Track milk production, costs, and treatments daily.\n✅ HYGIENE: Clean barn and milking equipment daily.\n`;
+
+    content += isSwahili ? `\n⚠️ KUKAMUA: Kamua mara 2 kwa siku kwa ratiba sawa. Hakikisha mikono safi na viwete vikavu.` :
+                isFrench ? `\n⚠️ TRAITE: Traite 2 fois par jour à heures fixes. Lavez-vous les mains et séchez les mamelles.` :
+                isSpanish ? `\n⚠️ ORDEÑO: Ordeñe 2 veces al día a horas fijas. Lávese las manos y seque las ubres.` :
+                `\n⚠️ MILKING: Milk twice daily at fixed times. Wash hands and dry udders.\n`;
+
+    addToStructuredList('dairy_management', { content });
+    addToList(content);
+  }
+
+  // 5. Dairy Breeding (FIXED – contradiction)
+  if (shouldInclude('dairy_breeding')) {
+    const daysSinceCalving = parseInt(farmerData.dairyDaysSinceCalving) || 0;
+    const heatObserved = farmerData.dairyHeatObserved || '';
+    const lastInsemination = farmerData.dairyLastInseminationDate || '';
+    const breedingMethod = farmerData.dairyBreedingMethod || '';
+    const reproProblems = farmerData.dairyReproductiveProblems || '';
+
+    let content = isSwahili ? `🐄 USHAURI WA UZAZI\n` :
+                   isFrench ? `🐄 CONSEILS DE REPRODUCTION\n` :
+                   isSpanish ? `🐄 CONSEJOS DE REPRODUCCIÓN\n` :
+                   `🐄 BREEDING ADVICE\n`;
+
+    if (daysSinceCalving > 0) {
+      content += isSwahili ? `Siku tangu kuzaa: ${daysSinceCalving}\n` :
+                  isFrench ? `Jours depuis le vêlage: ${daysSinceCalving}\n` :
+                  isSpanish ? `Días desde el parto: ${daysSinceCalving}\n` :
+                  `Days since calving: ${daysSinceCalving}\n`;
+
+      if (daysSinceCalving < 40) {
+        content += isSwahili ? `⏳ Bado mapema kwa insemination (subiri hadi siku 40-60). Mpe muda wa kupona.\n` :
+                    isFrench ? `⏳ Trop tôt pour l'insémination (attendre 40-60 jours). Laissez-la récupérer.\n` :
+                    isSpanish ? `⏳ Demasiado temprano para inseminar (esperar 40-60 días). Déjela recuperarse.\n` :
+                    `⏳ Too early for insemination (wait until 40-60 days). Let her recover.\n`;
+      } else if (daysSinceCalving >= 40 && daysSinceCalving <= 60 && heatObserved === 'yes') {
+        content += isSwahili ? `✅ Muda mzuri wa insemination! Tazama dalili za joto.\n` :
+                    isFrench ? `✅ Moment idéal pour l'insémination! Observez les signes de chaleur.\n` :
+                    isSpanish ? `✅ ¡Momento ideal para inseminar! Observe los signos de celo.\n` :
+                    `✅ Ideal time for insemination! Watch for heat signs.\n`;
+      } else if (daysSinceCalving > 90 && heatObserved !== 'yes') {
+        content += isSwahili ? `⚠️ Imepita siku 90 bila joto. Mpe daktari wa mifugo kuangalia afya ya uzazi.\n` :
+                    isFrench ? `⚠️ Plus de 90 jours sans chaleurs. Consultez un vétérinaire.\n` :
+                    isSpanish ? `⚠️ Más de 90 días sin celo. Consulte a un veterinario.\n` :
+                    `⚠️ Over 90 days with no heat. Consult a vet for reproductive health check.\n`;
+      }
+    }
+
+    // ----- FIXED HEAT ADVICE -----
+    if (heatObserved === 'yes' && daysSinceCalving >= 40) {
+      content += isSwahili ? `🔴 Dalili za joto zimeonekana – insemination inapendekezwa ndani ya saa 12-24.\n` :
+                  isFrench ? `🔴 Signes de chaleurs observés – insémination recommandée dans les 12-24 heures.\n` :
+                  isSpanish ? `🔴 Señales de celo observadas – insemine dentro de 12-24 horas.\n` :
+                  `🔴 Heat signs observed – inseminate within 12-24 hours.\n`;
+    } else if (heatObserved === 'yes' && daysSinceCalving < 40) {
+      content += isSwahili ? `⏳ Joto limeonekana lakini bado mapema (siku ${daysSinceCalving}). Subiri hadi siku 40-60 kwa insemination.\n` :
+                  isFrench ? `⏳ Des chaleurs sont observées mais trop tôt (${daysSinceCalving} jours). Attendez 40-60 jours pour l'insémination.\n` :
+                  isSpanish ? `⏳ Se observa celo pero es demasiado temprano (${daysSinceCalving} días). Espere 40-60 días para inseminar.\n` :
+                  `⏳ Heat observed but too early (${daysSinceCalving} days). Wait until 40-60 days for insemination.\n`;
+    }
+
+    if (breedingMethod) {
+      content += isSwahili ? `Njia ya kuzalisha: ${breedingMethod}\n` :
+                  isFrench ? `Méthode de reproduction: ${breedingMethod}\n` :
+                  isSpanish ? `Método de reproducción: ${breedingMethod}\n` :
+                  `Breeding method: ${breedingMethod}\n`;
+    }
+
+    if (reproProblems && reproProblems !== 'none') {
+      content += isSwahili ? `⚠️ Matatizo ya uzazi: ${reproProblems}. Tafuta ushauri wa mtaalamu.\n` :
+                  isFrench ? `⚠️ Problèmes de reproduction: ${reproProblems}. Consultez un spécialiste.\n` :
+                  isSpanish ? `⚠️ Problemas reproductivos: ${reproProblems}. Consulte a un especialista.\n` :
+                  `⚠️ Reproductive problems: ${reproProblems}. Seek specialist advice.\n`;
+    }
+
+    content += isSwahili ? `\n📋 MAPENDEKEZO:\n• Rekodi mzunguko wa joto kila siku\n• Fanya insemination saa 12-24 baada ya joto\n• Check-up ya uzazi baada ya siku 30` :
+                isFrench ? `\n📋 RECOMMANDATIONS:\n• Enregistrez le cycle de chaleur quotidiennement\n• Insémination 12-24 heures après les chaleurs\n• Contrôle de reproduction à 30 jours` :
+                isSpanish ? `\n📋 RECOMENDACIONES:\n• Registre el ciclo de celo diariamente\n• Insemine 12-24 horas después del celo\n• Control reproductivo a los 30 días` :
+                `\n📋 RECOMMENDATIONS:\n• Record heat cycle daily\n• Inseminate 12-24 hours after heat\n• Reproductive check-up at 30 days`;
+
+    addToStructuredList('dairy_breeding', { content });
+    addToList(content);
+  }
+
+  // 6. Dairy Calf (FIXED idealMilk scoping)
+  if (shouldInclude('dairy_calf')) {
+    const age = parseInt(farmerData.calfAgeWeeks) || 0;
+    const feeding = farmerData.calfFeedingMethod || '';
+    const milkLitres = parseFloat(farmerData.calfMilkLitresPerDay) || 0;
+    const colostrum = farmerData.calfReceivedColostrum || '';
+    const housing = farmerData.calfHousingType || '';
+    const health = farmerData.calfHealthIssues || '';
+
+    let idealMilk = 0;
+
+    let content = isSwahili ? `🐄 USHAURI WA ULEZI WA NDAMA\n` :
+                   isFrench ? `🐄 CONSEILS D'ÉLEVAGE DU VEAU\n` :
+                   isSpanish ? `🐄 CONSEJOS DE CRÍA DE TERNEROS\n` :
+                   `🐄 CALF REARING ADVICE\n`;
+
+    if (age > 0) content += isSwahili ? `Umri: ${age} wiki\n` : isFrench ? `Âge: ${age} semaines\n` : isSpanish ? `Edad: ${age} semanas\n` : `Age: ${age} weeks\n`;
+    if (feeding) content += isSwahili ? `Njia ya kulisha: ${feeding}\n` : isFrench ? `Méthode d'alimentation: ${feeding}\n` : isSpanish ? `Método de alimentación: ${feeding}\n` : `Feeding method: ${feeding}\n`;
+    if (milkLitres > 0) content += isSwahili ? `Maziwa kwa siku: ${milkLitres} L\n` : isFrench ? `Lait par jour: ${milkLitres} L\n` : isSpanish ? `Leche por día: ${milkLitres} L\n` : `Milk per day: ${milkLitres} L\n`;
+    if (colostrum) content += isSwahili ? `Colostrum katika saa 6 za kwanza: ${colostrum}\n` : isFrench ? `Colostrum dans les 6 premières heures: ${colostrum}\n` : isSpanish ? `Calostro en las primeras 6 horas: ${colostrum}\n` : `Colostrum within first 6 hours: ${colostrum}\n`;
+    if (housing) content += isSwahili ? `Aina ya makazi: ${housing}\n` : isFrench ? `Type de logement: ${housing}\n` : isSpanish ? `Tipo de alojamiento: ${housing}\n` : `Housing type: ${housing}\n`;
+    if (health && health !== 'none') content += isSwahili ? `Matatizo ya afya: ${health}\n` : isFrench ? `Problèmes de santé: ${health}\n` : isSpanish ? `Problemas de salud: ${health}\n` : `Health issues: ${health}\n`;
+
+    if (age <= 4) {
+      idealMilk = Math.round(age * 1.5 + 3);
+      if (milkLitres > 0 && milkLitres < idealMilk) {
+        content += isSwahili ? `\n🔴 MUHIMU: Ndama wa wiki ${age} anahitaji ${idealMilk} L maziwa kwa siku.\nUnampa ${milkLitres} L – hii ni chini sana!\n✅ Ongeza hadi ${idealMilk} L/siku ili kuzuia udumavu na magonjwa.\n` :
+                    isFrench ? `\n🔴 CRITIQUE: Le veau de ${age} semaines a besoin de ${idealMilk} L de lait par jour.\nVous donnez ${milkLitres} L – c'est trop peu!\n✅ Augmentez à ${idealMilk} L/jour pour éviter le retard de croissance.\n` :
+                    isSpanish ? `\n🔴 CRÍTICO: El ternero de ${age} semanas necesita ${idealMilk} L de leche al día.\nEstá dando ${milkLitres} L – ¡es muy poco!\n✅ Aumente a ${idealMilk} L/día para evitar retraso en el crecimiento.\n` :
+                    `\n🔴 CRITICAL: A ${age}-week-old calf needs ${idealMilk} L of milk per day.\nYou're feeding ${milkLitres} L – this is too low!\n✅ Increase to ${idealMilk} L/day to prevent stunted growth.\n`;
+      }
+    }
+
+    if (colostrum === 'no' || colostrum === 'false') {
+      content += isSwahili ? `\n⚠️ Kolostramu ndani ya saa 6 ni MUHIMU kwa kinga.\nWasiliana na daktari wa mifugo kwa kibadala cha kolostramu.\n` :
+                  isFrench ? `\n⚠️ Le colostrum dans les 6 premières heures est ESSENTIEL pour l'immunité.\nConsultez un vétérinaire pour des substituts.\n` :
+                  isSpanish ? `\n⚠️ El calostro en las primeras 6 horas es ESENCIAL para la inmunidad.\nConsulte a un veterinario para sucedáneos.\n` :
+                  `\n⚠️ Colostrum within 6 hours is ESSENTIAL for immunity.\nConsult your vet about colostrum replacers.\n`;
+    }
+
+    if (housing === 'individual_pen') {
+      content += isSwahili ? `✅ Banda la mtu binafsi linafaa kwa umri huu – weka safi na kavu.\n` :
+                  isFrench ? `✅ Le box individuel est idéal à cet âge – gardez-le propre et sec.\n` :
+                  isSpanish ? `✅ El corral individual es ideal a esta edad – manténgalo limpio y seco.\n` :
+                  `✅ Individual pen is ideal at this age – keep it clean and dry.\n`;
+    } else if (housing === 'group_pen') {
+      content += isSwahili ? `⚠️ Banda la pamoja ni hatari kwa ndama chini ya wiki 8.\nTumia banda la mtu binafsi ili kupunguza kuenea kwa magonjwa.\n` :
+                  isFrench ? `⚠️ Le box collectif est risqué pour les veaux de moins de 8 semaines.\nUtilisez un box individuel pour réduire la propagation des maladies.\n` :
+                  isSpanish ? `⚠️ El corral grupal es riesgoso para terneros menores de 8 semanas.\nUse corral individual para reducir la propagación de enfermedades.\n` :
+                  `⚠️ Group pens are risky for calves under 8 weeks.\nUse individual pens to reduce disease spread.\n`;
+    }
+
+    if (health && health !== 'none') {
+      content += isSwahili ? `\n⚠️ Matatizo ya afya yameripotiwa: ${health}.\nWasiliana na daktari wa mifugo mara moja.\n` :
+                  isFrench ? `\n⚠️ Problèmes de santé signalés: ${health}.\nConsultez un vétérinaire immédiatement.\n` :
+                  isSpanish ? `\n⚠️ Problemas de salud reportados: ${health}.\nConsulte a un veterinario inmediatamente.\n` :
+                  `\n⚠️ Health issues reported: ${health}.\nConsult a veterinarian immediately.\n`;
+    }
+
+    content += isSwahili ? `\n📋 MPANGO WA HATUA:\n1. Lishe: ${Math.max(4, idealMilk || 4)} L maziwa/siku + maji safi\n2. Nyongeza: Weka malisho bora na madini\n3. Afya: Angalia dalili za ugonjwa kila siku\n4. Usafi: Safisha banda na vifaa kila siku\n\n💡 Faida: Ulezi mzuri huongeza uzito wa mwisho kwa kg 100+ – thamani ya Ksh 15,000+ kwa ng'ombe!` :
+                isFrench ? `\n📋 PLAN D'ACTION:\n1. Alimentation: ${Math.max(4, idealMilk || 4)} L lait/jour + eau propre\n2. Compléments: Aliments de qualité + minéraux\n3. Santé: Surveillez les signes de maladie quotidiennement\n4. Hygiène: Nettoyez le box et les outils chaque jour\n\n💡 Avantage: Un bon élevage ajoute 100+ kg au poids adulte – valeur de Ksh 15,000+ par vache!` :
+                isSpanish ? `\n📋 PLAN DE ACCIÓN:\n1. Alimentación: ${Math.max(4, idealMilk || 4)} L leche/día + agua limpia\n2. Suplementos: Alimentos de calidad + minerales\n3. Salud: Monitoree signos de enfermedad a diario\n4. Higiene: Limpie corral y herramientas cada día\n\n💡 Beneficio: Buena cría añade 100+ kg al peso adulto – valor de Ksh 15,000+ por vaca!` :
+                `\n📋 ACTION PLAN:\n1. Feed: ${Math.max(4, idealMilk || 4)} L milk/day + clean water\n2. Supplements: Quality feed + minerals\n3. Health: Check for disease signs daily\n4. Hygiene: Clean pen and tools daily\n\n💡 Business Impact: Proper calf rearing adds 100+ kg to mature weight – worth Ksh 15,000+ per cow!`;
+
+    addToStructuredList('dairy_calf', { content });
+    addToList(content);
+  }
+
+  // 7. Dairy Concentrate (FIXED – sanity check & contextual calcium)
+  if (shouldInclude('dairy_concentrate')) {
+    const brand = farmerData.dairyConcentrateBrand || '';
+    const product = farmerData.dairyConcentrateProduct || '';
+    const inclusion = parseFloat(farmerData.dairyConcentrateInclusion) || 0;
+    const maize = parseFloat(farmerData.dairyConcentrateMaizeKg) || 0;
+    const salt = parseFloat(farmerData.dairyConcentrateSaltKg) || 0;
+    const calciumSource = farmerData.dairyConcentrateCalciumSource || '';
+    const calciumKg = parseFloat(farmerData.dairyConcentrateCalciumKg) || 0;
+
+    let content = isSwahili ? `🧪 MFUMO WA MCHANGANYIKO WA MAZIWA\n` :
+                   isFrench ? `🧪 FORMULATION DU CONCENTRÉ LAITIER\n` :
+                   isSpanish ? `🧪 FORMULACIÓN DEL CONCENTRADO LÁCTEO\n` :
+                   `🧪 DAIRY CONCENTRATE FORMULATION\n`;
+
+    if (brand) content += isSwahili ? `Chapa: ${brand}\n` : isFrench ? `Marque: ${brand}\n` : isSpanish ? `Marca: ${brand}\n` : `Brand: ${brand}\n`;
+    if (product) content += isSwahili ? `Bidhaa: ${product}\n` : isFrench ? `Produit: ${product}\n` : isSpanish ? `Producto: ${product}\n` : `Product: ${product}\n`;
+    if (inclusion > 0) content += isSwahili ? `Kiasi cha mchanganyiko: ${inclusion} kg/ng'ombe/siku\n` : isFrench ? `Quantité de concentré: ${inclusion} kg/vache/jour\n` : isSpanish ? `Cantidad de concentrado: ${inclusion} kg/vaca/día\n` : `Concentrate amount: ${inclusion} kg/cow/day\n`;
+    if (maize > 0) content += isSwahili ? `Mahindi: ${maize} kg/ng'ombe/siku\n` : isFrench ? `Maïs: ${maize} kg/vache/jour\n` : isSpanish ? `Maíz: ${maize} kg/vaca/día\n` : `Maize: ${maize} kg/cow/day\n`;
+    if (salt > 0) content += isSwahili ? `Chumvi: ${salt} kg/ng'ombe/siku\n` : isFrench ? `Sel: ${salt} kg/vache/jour\n` : isSpanish ? `Sal: ${salt} kg/vaca/día\n` : `Salt: ${salt} kg/cow/day\n`;
+    if (calciumSource) content += isSwahili ? `Chanzo cha kalsiamu: ${calciumSource}\n` : isFrench ? `Source de calcium: ${calciumSource}\n` : isSpanish ? `Fuente de calcio: ${calciumSource}\n` : `Calcium source: ${calciumSource}\n`;
+    if (calciumKg > 0) content += isSwahili ? `Kiasi cha kalsiamu: ${calciumKg} kg/ng'ombe/siku\n` : isFrench ? `Quantité de calcium: ${calciumKg} kg/vache/jour\n` : isSpanish ? `Cantidad de calcio: ${calciumKg} kg/vaca/día\n` : `Calcium amount: ${calciumKg} kg/cow/day\n`;
+
+    if (inclusion > 0 && maize > 0) {
+      const totalMix = inclusion + maize;
+      const concentrateRatio = (inclusion / totalMix * 100).toFixed(0);
+      const maizeRatio = (maize / totalMix * 100).toFixed(0);
+      content += isSwahili ? `\n📊 UWIANO WA MCHANGANYIKO: ${concentrateRatio}% mchanganyiko, ${maizeRatio}% mahindi.\n` :
+                  isFrench ? `\n📊 PROPORTION DU MÉLANGE: ${concentrateRatio}% concentré, ${maizeRatio}% maïs.\n` :
+                  isSpanish ? `\n📊 PROPORCIÓN DE MEZCLA: ${concentrateRatio}% concentrado, ${maizeRatio}% maíz.\n` :
+                  `\n📊 MIX RATIO: ${concentrateRatio}% concentrate, ${maizeRatio}% maize.\n`;
+
+      if (parseInt(concentrateRatio) < 30) {
+        content += isSwahili ? `⚠️ Mchanganyiko wako una koncentrati kidogo (chini ya 30%). Ongeza koncentrati hadi 40-50% kwa uzalishaji bora wa maziwa.\n` :
+                    isFrench ? `⚠️ Votre mélange a trop peu de concentré (moins de 30%). Augmentez à 40-50% pour une meilleure production.\n` :
+                    isSpanish ? `⚠️ Su mezcla tiene muy poco concentrado (menos del 30%). Aumente a 40-50% para mejor producción.\n` :
+                    `⚠️ Your mix is low on concentrate (under 30%). Increase to 40-50% for better milk production.\n`;
+      } else if (parseInt(concentrateRatio) > 60) {
+        content += isSwahili ? `⚠️ Mchanganyiko wako una koncentrati nyingi (zaidi ya 60%). Hii inaweza kusababisha asidi tumboni. Punguza hadi 40-50%.\n` :
+                    isFrench ? `⚠️ Votre mélange a trop de concentré (plus de 60%). Cela peut causer une acidose ruminale. Réduisez à 40-50%.\n` :
+                    isSpanish ? `⚠️ Su mezcla tiene demasiado concentrado (más del 60%). Esto puede causar acidosis ruminal. Reduzca a 40-50%.\n` :
+                    `⚠️ Your mix is high on concentrate (over 60%). This can cause rumen acidosis. Reduce to 40-50%.\n`;
+      } else {
+        content += isSwahili ? `✅ Uwiano mzuri! Endelea kwa uwiano huu.\n` :
+                    isFrench ? `✅ Bon rapport! Continuez avec ce ratio.\n` :
+                    isSpanish ? `✅ ¡Buena proporción! Continúe con esta relación.\n` :
+                    `✅ Good ratio! Continue with this mix.\n`;
+      }
+    }
+
+    // ----- SANITY CHECK (total feed > 30 kg) -----
+    const totalConcentrate = inclusion + maize;
+    if (totalConcentrate > 30) {
+      content += isSwahili ? `⚠️ Jumla ya mchanganyiko (${totalConcentrate} kg) ni kubwa sana. Punguza hadi 20-30 kg/siku ili kuepuka asidi tumboni na kupunguza gharama.\n` :
+                  isFrench ? `⚠️ La quantité totale de mélange (${totalConcentrate} kg) est trop élevée. Réduisez à 20-30 kg/jour pour éviter l'acidose ruminale et réduire les coûts.\n` :
+                  isSpanish ? `⚠️ La cantidad total de mezcla (${totalConcentrate} kg) es muy alta. Reduzca a 20-30 kg/día para evitar acidosis ruminal y reducir costos.\n` :
+                  `⚠️ Total mix (${totalConcentrate} kg) is too high. Reduce to 20-30 kg/day to avoid rumen acidosis and cut costs.\n`;
+    }
+
+    if (salt > 0 && salt < 0.05) {
+      content += isSwahili ? `⚠️ Chumvi kidogo sana (${salt} kg). Ongeza hadi 0.05-0.1 kg/ng'ombe/siku.\n` :
+                  isFrench ? `⚠️ Trop peu de sel (${salt} kg). Augmentez à 0.05-0.1 kg/vache/jour.\n` :
+                  isSpanish ? `⚠️ Muy poca sal (${salt} kg). Aumente a 0.05-0.1 kg/vaca/día.\n` :
+                  `⚠️ Too little salt (${salt} kg). Increase to 0.05-0.1 kg/cow/day.\n`;
+    }
+
+    if (calciumSource === 'none' || !calciumSource) {
+      content += isSwahili ? `⚠️ Hakuna chanzo cha kalsiamu! Ongeza limestone au DCP ili kuzuia ugonjwa wa mifupa na kupungua maziwa.\n` :
+                  isFrench ? `⚠️ Pas de source de calcium! Ajoutez du calcaire ou du DCP pour prévenir les maladies osseuses et la baisse de production.\n` :
+                  isSpanish ? `⚠️ ¡Sin fuente de calcio! Agregue caliza o DCP para prevenir enfermedades óseas y caída de producción.\n` :
+                  `⚠️ No calcium source! Add limestone or DCP to prevent bone disease and milk drop.\n`;
+    } else {
+      // ----- CONTEXTUAL CALCIUM ADVICE -----
+      content += isSwahili ? `✅ Unaendelea kutumia ${calciumSource}. Hakikisha unatoa 0.1-0.2 kg/ng'ombe/siku.\n` :
+                  isFrench ? `✅ Vous utilisez déjà ${calciumSource}. Assurez-vous de fournir 0.1-0.2 kg/vache/jour.\n` :
+                  isSpanish ? `✅ Ya está usando ${calciumSource}. Asegure 0.1-0.2 kg/vaca/día.\n` :
+                  `✅ You're already using ${calciumSource}. Ensure you provide 0.1-0.2 kg/cow/day.\n`;
+    }
+
+    content += isSwahili ? `\n📋 MAPENDEKEZO:\n• Hakikisha mchanganyiko una 40-50% koncentrati\n• Salt: 0.05-0.1 kg/ng'ombe/siku\n• Calcium: 0.1-0.2 kg/ng'ombe/siku\n• Vitamin pre-mix: 50-100g/ng'ombe/siku` :
+                isFrench ? `\n📋 RECOMMANDATIONS:\n• Assurez 40-50% de concentré dans le mélange\n• Sel: 0.05-0.1 kg/vache/jour\n• Calcium: 0.1-0.2 kg/vache/jour\n• Prémix vitaminé: 50-100g/vache/jour` :
+                isSpanish ? `\n📋 RECOMENDACIONES:\n• Asegure 40-50% de concentrado en la mezcla\n• Sal: 0.05-0.1 kg/vaca/día\n• Calcio: 0.1-0.2 kg/vaca/día\n• Premezcla vitamínica: 50-100g/vaca/día` :
+                `\n📋 RECOMMENDATIONS:\n• Ensure 40-50% concentrate in the mix\n• Salt: 0.05-0.1 kg/cow/day\n• Calcium: 0.1-0.2 kg/cow/day\n• Vitamin pre-mix: 50-100g/cow/day`;
+
+    addToStructuredList('dairy_concentrate', { content });
+    addToList(content);
+  }
+
+  // 8. Dairy Feed (TMR – Enhanced)
+  if (shouldInclude('dairy_feed')) {
+    const forages = farmerData.dairyAvailableForages || '';
+    const grains = farmerData.dairyAvailableGrains || '';
+    const proteins = farmerData.dairyAvailableProtein || '';
+    const minerals = farmerData.dairyAvailableMinerals || '';
+    const quantity = parseFloat(farmerData.dairyQuantityToMix) || 0;
+
+    let content = isSwahili ? `🌾 MAPENDEKEZO YA MALISHO (TMR)\n` :
+                   isFrench ? `🌾 RECOMMANDATIONS ALIMENTAIRES (TMR)\n` :
+                   isSpanish ? `🌾 RECOMENDACIONES DE ALIMENTACIÓN (TMR)\n` :
+                   `🌾 FEED RECOMMENDATIONS (TMR)\n`;
+
+    if (forages) content += isSwahili ? `Nyasi zilizopo: ${forages}\n` : isFrench ? `Fourrages disponibles: ${forages}\n` : isSpanish ? `Forrajes disponibles: ${forages}\n` : `Forages available: ${forages}\n`;
+    if (grains) content += isSwahili ? `Nafaka: ${grains}\n` : isFrench ? `Céréales: ${grains}\n` : isSpanish ? `Granos: ${grains}\n` : `Grains: ${grains}\n`;
+    if (proteins) content += isSwahili ? `Vyanzo vya protini: ${proteins}\n` : isFrench ? `Sources de protéines: ${proteins}\n` : isSpanish ? `Fuentes de proteína: ${proteins}\n` : `Protein sources: ${proteins}\n`;
+    if (minerals) content += isSwahili ? `Madini na viungio: ${minerals}\n` : isFrench ? `Minéraux et additifs: ${minerals}\n` : isSpanish ? `Minerales y aditivos: ${minerals}\n` : `Minerals and additives: ${minerals}\n`;
+    if (quantity > 0) content += isSwahili ? `Kiasi cha mchanganyiko: ${quantity} kg/siku\n` : isFrench ? `Quantité de mélange: ${quantity} kg/jour\n` : isSpanish ? `Cantidad de mezcla: ${quantity} kg/día\n` : `Mix quantity: ${quantity} kg/day\n`;
+
+    const hasForage = forages && forages.length > 0;
+    const hasGrain = grains && grains.length > 0;
+    const hasProtein = proteins && proteins.length > 0;
+    const hasMineral = minerals && minerals.length > 0;
+
+    if (!hasForage) {
+      content += isSwahili ? `\n🔴 MUHIMU: Hakuna nyasi zilizoorodheshwa! Nyasi (50-60% ya TMR) ni muhimu kwa afya ya ng'ombe.\n` :
+                  isFrench ? `\n🔴 CRITIQUE: Pas de fourrages listés! Les fourrages (50-60% du TMR) sont essentiels pour la santé.\n` :
+                  isSpanish ? `\n🔴 CRÍTICO: ¡No hay forrajes listados! Los forrajes (50-60% del TMR) son esenciales para la salud.\n` :
+                  `\n🔴 CRITICAL: No forages listed! Forages (50-60% of TMR) are essential for cow health.\n`;
+    }
+
+    if (!hasGrain && !hasProtein) {
+      content += isSwahili ? `⚠️ Hakuna nafaka au protini! Hii inapunguza uzalishaji wa maziwa. Ongeza angalau moja.\n` :
+                  isFrench ? `⚠️ Pas de céréales ni de protéines! Cela réduit la production laitière. Ajoutez au moins un.\n` :
+                  isSpanish ? `⚠️ ¡Sin granos ni proteínas! Esto reduce la producción de leche. Agregue al menos uno.\n` :
+                  `⚠️ No grains or proteins! This reduces milk production. Add at least one.\n`;
+    }
+
+    if (!hasMineral) {
+      content += isSwahili ? `⚠️ Hakuna madini! Madini ni muhimu kwa ubora wa maziwa na afya ya ng'ombe.\n` :
+                  isFrench ? `⚠️ Pas de minéraux! Les minéraux sont importants pour la qualité du lait et la santé.\n` :
+                  isSpanish ? `⚠️ ¡Sin minerales! Los minerales son importantes para la calidad de la leche y la salud.\n` :
+                  `⚠️ No minerals! Minerals are important for milk quality and cow health.\n`;
+    }
+
+    if (hasForage && hasGrain && hasProtein && hasMineral) {
+      content += isSwahili ? `✅ Mchanganyiko mzuri! Hakikisha uwiano: 50-60% nyasi, 20-30% nafaka, 15-20% protini, 2-5% madini.\n` :
+                  isFrench ? `✅ Bon mélange! Assurez les ratios: 50-60% fourrages, 20-30% céréales, 15-20% protéines, 2-5% minéraux.\n` :
+                  isSpanish ? `✅ ¡Buena mezcla! Asegure las proporciones: 50-60% forrajes, 20-30% granos, 15-20% proteínas, 2-5% minerales.\n` :
+                  `✅ Good mix! Ensure ratios: 50-60% forages, 20-30% grains, 15-20% proteins, 2-5% minerals.\n`;
+    }
+
+    content += isSwahili ? `\n📋 MPANGO WA KULISHA:\n1. Nyasi: kilo 20-30 kwa siku (msingi wa chakula)\n2. Nafaka: kilo 3-5 kwa siku (nishati)\n3. Protini: kilo 1-2 kwa siku (maziwa)\n4. Madini: 100-200g kwa siku (ubora)\n\n💡 Faida: Mchanganyiko mzuri huongeza maziwa kwa lita 5-10 kwa siku!` :
+                isFrench ? `\n📋 PLAN D'ALIMENTATION:\n1. Fourrages: 20-30 kg/jour (base de l'alimentation)\n2. Céréales: 3-5 kg/jour (énergie)\n3. Protéines: 1-2 kg/jour (lait)\n4. Minéraux: 100-200g/jour (qualité)\n\n💡 Avantage: Un bon TMR augmente le lait de 5-10 L/jour!` :
+                isSpanish ? `\n📋 PLAN DE ALIMENTACIÓN:\n1. Forrajes: 20-30 kg/día (base de la alimentación)\n2. Granos: 3-5 kg/día (energía)\n3. Proteínas: 1-2 kg/día (leche)\n4. Minerales: 100-200g/día (calidad)\n\n💡 Beneficio: ¡Un buen TMR aumenta la leche en 5-10 L/día!` :
+                `\n📋 FEEDING PLAN:\n1. Forages: 20-30 kg/day (feed base)\n2. Grains: 3-5 kg/day (energy)\n3. Proteins: 1-2 kg/day (milk)\n4. Minerals: 100-200g/day (quality)\n\n💡 Benefit: Good TMR increases milk by 5-10 L/day!`;
+
+    addToStructuredList('dairy_feed', { content });
+    addToList(content);
+  }
+
+  // 9. Dairy Feed Per Day (FIXED idealConcentrate scoping)
+  if (shouldInclude('dairy_feed')) {
+    const forageType = farmerData.dairyForageType || '';
+    const forageKg = parseFloat(farmerData.dairyForageKgPerDay) || 0;
+    const concentrateType = farmerData.dairyConcentrateType || '';
+    const concentrateKg = parseFloat(farmerData.dairyConcentrateKgPerDay) || 0;
+    const milkYield = parseFloat(farmerData.dairyMilkYield) || 0;
+
+    let idealConcentrate = 0;
+
+    let content = isSwahili ? `🍽️ MPANGO WA MALISHO KWA SIKU\n` :
+                   isFrench ? `🍽️ PLAN D'ALIMENTATION QUOTIDIENNE\n` :
+                   isSpanish ? `🍽️ PLAN DE ALIMENTACIÓN DIARIA\n` :
+                   `🍽️ DAILY FEED PLAN\n`;
+
+    if (forageType) content += isSwahili ? `Aina ya nyasi: ${forageType}\n` : isFrench ? `Type de fourrage: ${forageType}\n` : isSpanish ? `Tipo de forraje: ${forageType}\n` : `Forage type: ${forageType}\n`;
+    if (forageKg > 0) content += isSwahili ? `Nyasi kwa siku: ${forageKg} kg\n` : isFrench ? `Fourrage par jour: ${forageKg} kg\n` : isSpanish ? `Forraje por día: ${forageKg} kg\n` : `Forage per day: ${forageKg} kg\n`;
+    if (concentrateType) content += isSwahili ? `Aina ya mchanganyiko: ${concentrateType}\n` : isFrench ? `Type de concentré: ${concentrateType}\n` : isSpanish ? `Tipo de concentrado: ${concentrateType}\n` : `Concentrate type: ${concentrateType}\n`;
+    if (concentrateKg > 0) content += isSwahili ? `Mchanganyiko kwa siku: ${concentrateKg} kg\n` : isFrench ? `Concentré par jour: ${concentrateKg} kg\n` : isSpanish ? `Concentrado por día: ${concentrateKg} kg\n` : `Concentrate per day: ${concentrateKg} kg\n`;
+    if (milkYield > 0) content += isSwahili ? `Maziwa kwa siku: ${milkYield} L\n` : isFrench ? `Lait par jour: ${milkYield} L\n` : isSpanish ? `Leche por día: ${milkYield} L\n` : `Milk per day: ${milkYield} L\n`;
+
+    if (milkYield > 0) {
+      idealConcentrate = Math.round(milkYield * 0.3);
+      if (concentrateKg > 0 && concentrateKg < idealConcentrate * 0.7) {
+        content += isSwahili ? `\n⚠️ Mchanganyiko wako ni mdogo kwa uzalishaji wa ${milkYield} L maziwa.\nInapendekezwa: ${idealConcentrate} kg mchanganyiko kwa siku (mbali na nyasi).\nOngeza koncentrati ili kuongeza maziwa.\n` :
+                    isFrench ? `\n⚠️ Votre concentré est insuffisant pour ${milkYield} L de lait.\nRecommandé: ${idealConcentrate} kg de concentré par jour (en plus du fourrage).\nAugmentez le concentré pour augmenter la production.\n` :
+                    isSpanish ? `\n⚠️ Su concentrado es bajo para ${milkYield} L de leche.\nRecomendado: ${idealConcentrate} kg de concentrado por día (además del forraje).\nAumente el concentrado para aumentar la producción.\n` :
+                    `\n⚠️ Your concentrate is low for ${milkYield} L of milk.\nRecommended: ${idealConcentrate} kg concentrate per day (plus forage).\nIncrease concentrate to boost milk production.\n`;
+      } else if (concentrateKg > idealConcentrate * 1.3) {
+        content += isSwahili ? `\n⚠️ Mchanganyiko wako ni mwingi (${concentrateKg} kg) kwa ${milkYield} L maziwa.\nPunguza hadi ${idealConcentrate} kg/siku ili kupunguza gharama na kuzuia asidi tumboni.\n` :
+                    isFrench ? `\n⚠️ Votre concentré est élevé (${concentrateKg} kg) pour ${milkYield} L de lait.\nRéduisez à ${idealConcentrate} kg/jour pour réduire les coûts et éviter l'acidose.\n` :
+                    isSpanish ? `\n⚠️ Su concentrado es alto (${concentrateKg} kg) para ${milkYield} L de leche.\nReduzca a ${idealConcentrate} kg/día para reducir costos y evitar acidosis.\n` :
+                    `\n⚠️ Your concentrate is high (${concentrateKg} kg) for ${milkYield} L of milk.\nReduce to ${idealConcentrate} kg/day to cut costs and avoid acidosis.\n`;
+      } else if (concentrateKg > 0) {
+        content += isSwahili ? `✅ Kiasi cha mchanganyiko kinafaa kwa uzalishaji wako!\n` :
+                    isFrench ? `✅ La quantité de concentré est adaptée à votre production!\n` :
+                    isSpanish ? `✅ ¡La cantidad de concentrado es adecuada para su producción!\n` :
+                    `✅ Concentrate amount is appropriate for your production!\n`;
+      }
+    }
+
+    if (forageKg > 0 && forageKg < 15) {
+      content += isSwahili ? `⚠️ Nyasi ${forageKg} kg ni chache sana. Ongeza hadi 20-30 kg/siku kwa afya bora ya ng'ombe.\n` :
+                  isFrench ? `⚠️ ${forageKg} kg de fourrage est trop peu. Augmentez à 20-30 kg/jour pour une meilleure santé.\n` :
+                  isSpanish ? `⚠️ ${forageKg} kg de forraje es muy poco. Aumente a 20-30 kg/día para mejor salud.\n` :
+                  `⚠️ ${forageKg} kg of forage is too low. Increase to 20-30 kg/day for better cow health.\n`;
+    }
+
+    content += isSwahili ? `\n📋 MUONGOZO WA KULISHA:\n• Nyasi: 20-30 kg/siku (asili ya chakula)\n• Mchanganyiko: ${idealConcentrate || 4}-${Math.round((idealConcentrate || 4) * 1.3)} kg/siku (kulingana na maziwa)\n• Maji safi: lita 80-120/siku\n• Usawa: Endelea kurekebisha kulingana na uzalishaji wa maziwa` :
+                isFrench ? `\n📋 GUIDE D'ALIMENTATION:\n• Fourrage: 20-30 kg/jour (base de l'alimentation)\n• Concentré: ${idealConcentrate || 4}-${Math.round((idealConcentrate || 4) * 1.3)} kg/jour (selon la production)\n• Eau propre: 80-120 L/jour\n• Ajustez selon la production laitière` :
+                isSpanish ? `\n📋 GUÍA DE ALIMENTACIÓN:\n• Forraje: 20-30 kg/día (base de la alimentación)\n• Concentrado: ${idealConcentrate || 4}-${Math.round((idealConcentrate || 4) * 1.3)} kg/día (según producción)\n• Agua limpia: 80-120 L/día\n• Ajuste según producción de leche` :
+                `\n📋 FEEDING GUIDE:\n• Forage: 20-30 kg/day (feed base)\n• Concentrate: ${idealConcentrate || 4}-${Math.round((idealConcentrate || 4) * 1.3)} kg/day (based on yield)\n• Clean water: 80-120 L/day\n• Adjust based on milk production`;
+
+    addToStructuredList('dairy_feed', { content });
+    addToList(content);
+  }
+
+  // 10. Dairy Housing (FIXED thresholds & ventilation context)
+  if (shouldInclude('dairy_housing')) {
+    const housingType = farmerData.dairyHousingType || '';
+    const cowsHoused = parseInt(farmerData.numberOfCowsHoused) || 0;
+    const floorSpace = parseFloat(farmerData.floorSpacePerCowM2) || 0;
+    const ventilation = farmerData.dairyVentilationRating || '';
+    const bedding = farmerData.beddingType || '';
+
+    let content = isSwahili ? `🏠 USHAURI WA MAKAZI\n` :
+                   isFrench ? `🏠 CONSEILS DE LOGEMENT\n` :
+                   isSpanish ? `🏠 CONSEJOS DE ALOJAMIENTO\n` :
+                   `🏠 HOUSING ADVICE\n`;
+
+    if (housingType) content += isSwahili ? `Aina ya makazi: ${housingType}\n` : isFrench ? `Type de logement: ${housingType}\n` : isSpanish ? `Tipo de alojamiento: ${housingType}\n` : `Housing type: ${housingType}\n`;
+    if (cowsHoused > 0) content += isSwahili ? `Ng'ombe wanaoishi: ${cowsHoused}\n` : isFrench ? `Vaches logées: ${cowsHoused}\n` : isSpanish ? `Vacas alojadas: ${cowsHoused}\n` : `Cows housed: ${cowsHoused}\n`;
+    if (floorSpace > 0) content += isSwahili ? `Nafasi ya sakafu: ${floorSpace} m²/ng'ombe\n` : isFrench ? `Espace au sol: ${floorSpace} m²/vache\n` : isSpanish ? `Espacio de piso: ${floorSpace} m²/vaca\n` : `Floor space: ${floorSpace} m²/cow\n`;
+    if (ventilation) content += isSwahili ? `Uingizaji hewa: ${ventilation}\n` : isFrench ? `Ventilation: ${ventilation}\n` : isSpanish ? `Ventilación: ${ventilation}\n` : `Ventilation: ${ventilation}\n`;
+    if (bedding) content += isSwahili ? `Aina ya matandiko: ${bedding}\n` : isFrench ? `Type de litière: ${bedding}\n` : isSpanish ? `Tipo de cama: ${bedding}\n` : `Bedding type: ${bedding}\n`;
+
+    // ----- FIXED THRESHOLDS -----
+    if (floorSpace > 0 && floorSpace < 3) {
+      content += isSwahili ? `\n🔴 MUHIMU: Nafasi ${floorSpace} m² ni chini sana! Minimum ni 3 m²/ng'ombe.\nOngeza nafasi ili kuzuia msongo, majeraha, na kupungua maziwa.\n` :
+                  isFrench ? `\n🔴 CRITIQUE: ${floorSpace} m² est trop peu! Minimum 3 m²/vache.\nAugmentez l'espace pour éviter le stress, les blessures et la baisse de production.\n` :
+                  isSpanish ? `\n🔴 CRÍTICO: ${floorSpace} m² es muy poco! Mínimo 3 m²/vaca.\nAumente el espacio para evitar estrés, lesiones y caída de producción.\n` :
+                  `\n🔴 CRITICAL: ${floorSpace} m² is too low! Minimum is 3 m²/cow.\nIncrease space to prevent stress, injuries, and milk drop.\n`;
+    } else if (floorSpace >= 3 && floorSpace < 4.5) {
+      content += isSwahili ? `🟡 Nafasi ni nzuri (${floorSpace} m²). Nafasi bora ni 4-5 m²/ng'ombe kwa faraja zaidi.\n` :
+                  isFrench ? `🟡 L'espace est bon (${floorSpace} m²). Idéal: 4-5 m²/vache pour plus de confort.\n` :
+                  isSpanish ? `🟡 El espacio es bueno (${floorSpace} m²). Ideal: 4-5 m²/vaca para más confort.\n` :
+                  `🟡 Space is good (${floorSpace} m²). Ideal is 4-5 m²/cow for more comfort.\n`;
+    } else if (floorSpace >= 4.5) {
+      content += isSwahili ? `✅ Nafasi bora! Hii inasaidia afya na uzalishaji wa maziwa.\n` :
+                  isFrench ? `✅ Excellent espace! Cela favorise la santé et la production laitière.\n` :
+                  isSpanish ? `✅ ¡Excelente espacio! Esto favorece la salud y la producción de leche.\n` :
+                  `✅ Excellent space! This supports cow health and milk production.\n`;
+    }
+
+    // ----- VENTILATION CONTEXT -----
+    if (ventilation === 'poor') {
+      content += isSwahili ? `⚠️ Uingizaji hewa mbovu! Hii husababisha magonjwa ya mapafu na kupungua maziwa.\nFungua madirisha au weka feni za uingizaji hewa.\n` :
+                  isFrench ? `⚠️ Mauvaise ventilation! Cela cause des maladies respiratoires et une baisse de production.\nOuvrez les fenêtres ou installez des ventilateurs.\n` :
+                  isSpanish ? `⚠️ ¡Mala ventilación! Esto causa enfermedades respiratorias y caída de producción.\nAbra ventanas o instale ventiladores.\n` :
+                  `⚠️ Poor ventilation! This causes respiratory diseases and milk drop.\nOpen windows or install fans.\n`;
+    } else if (ventilation === 'average') {
+      content += isSwahili ? `🟡 Uingizaji hewa wa wastani. Ongeza madirisha au feni ili kuboresha hadi 'nzuri'.\n` :
+                  isFrench ? `🟡 Ventilation moyenne. Améliorez en ajoutant des fenêtres ou des ventilateurs pour atteindre 'bonne'.\n` :
+                  isSpanish ? `🟡 Ventilación media. Mejore agregando ventanas o ventiladores para alcanzar 'buena'.\n` :
+                  `🟡 Average ventilation. Improve by adding windows or fans to reach 'good' status.\n`;
+    } else if (ventilation === 'good') {
+      content += isSwahili ? `✅ Uingizaji hewa mzuri – hii ni muhimu kwa afya ya ng'ombe.\n` :
+                  isFrench ? `✅ Bonne ventilation – essentielle pour la santé des vaches.\n` :
+                  isSpanish ? `✅ Buena ventilación – esencial para la salud de las vacas.\n` :
+                  `✅ Good ventilation – essential for cow health.\n`;
+    }
+
+    if (!bedding || bedding === 'none') {
+      content += isSwahili ? `⚠️ Hakuna matandiko! Weka matandiko (majani, mchanga, au vumbi) ili kupunguza majeraha na kuongeza faraja.\n` :
+                  isFrench ? `⚠️ Pas de litière! Ajoutez de la litière (paille, sable, sciure) pour réduire les blessures et améliorer le confort.\n` :
+                  isSpanish ? `⚠️ ¡Sin cama! Agregue cama (paja, arena, aserrín) para reducir lesiones y mejorar el confort.\n` :
+                  `⚠️ No bedding! Add bedding (straw, sand, sawdust) to reduce injuries and improve comfort.\n`;
+    }
+
+    content += isSwahili ? `\n📋 MAPENDEKEZO:\n• Nafasi: 4-5 m²/ng'ombe\n• Uingizaji hewa: mzuri (madirisha au feni)\n• Matandiko: 10-15 cm ya majani au vumbi\n• Usafi: Safisha kila siku ili kuzuia magonjwa` :
+                isFrench ? `\n📋 RECOMMANDATIONS:\n• Espace: 4-5 m²/vache\n• Ventilation: bonne (fenêtres ou ventilateurs)\n• Litière: 10-15 cm de paille ou sciure\n• Hygiène: Nettoyez quotidiennement pour éviter les maladies` :
+                isSpanish ? `\n📋 RECOMENDACIONES:\n• Espacio: 4-5 m²/vaca\n• Ventilación: buena (ventanas o ventiladores)\n• Cama: 10-15 cm de paja o aserrín\n• Higiene: Limpie diariamente para evitar enfermedades` :
+                `\n📋 RECOMMENDATIONS:\n• Space: 4-5 m²/cow\n• Ventilation: good (windows or fans)\n• Bedding: 10-15 cm straw or sawdust\n• Hygiene: Clean daily to prevent disease`;
+
+    addToStructuredList('dairy_housing', { content });
+    addToList(content);
+  }
+
+  // 11. Dairy Milk Production (FIXED – yield sanity, protein warning, fat context)
+  if (shouldInclude('dairy_milk')) {
+    const yieldCur = parseFloat(farmerData.milkYieldCurrent) || 0;
+    const fat = parseFloat(farmerData.milkFatPercent) || 0;
+    const protein = parseFloat(farmerData.milkProteinPercent) || 0;
+    const dim = parseInt(farmerData.daysInMilk) || 0;
+    const parity = farmerData.parity || '';
+
+    let content = isSwahili ? `🥛 UCHAMBUZI WA MAZIWA\n` :
+                   isFrench ? `🥛 ANALYSE DU LAIT\n` :
+                   isSpanish ? `🥛 ANÁLISIS DE LECHE\n` :
+                   `🥛 MILK ANALYSIS\n`;
+
+    if (yieldCur > 0) content += isSwahili ? `Maziwa kwa siku: ${yieldCur} L\n` : isFrench ? `Lait par jour: ${yieldCur} L\n` : isSpanish ? `Leche por día: ${yieldCur} L\n` : `Milk per day: ${yieldCur} L\n`;
+    if (fat > 0) content += isSwahili ? `Mafuta ya maziwa: ${fat}%\n` : isFrench ? `Matière grasse: ${fat}%\n` : isSpanish ? `Grasa láctea: ${fat}%\n` : `Milk fat: ${fat}%\n`;
+    if (protein > 0) content += isSwahili ? `Protini ya maziwa: ${protein}%\n` : isFrench ? `Protéine du lait: ${protein}%\n` : isSpanish ? `Proteína de la leche: ${protein}%\n` : `Milk protein: ${protein}%\n`;
+    if (dim > 0) content += isSwahili ? `Siku za kukamua: ${dim}\n` : isFrench ? `Jours en lactation: ${dim}\n` : isSpanish ? `Días en lactancia: ${dim}\n` : `Days in milk: ${dim}\n`;
+    if (parity) content += isSwahili ? `Mzunguko wa ng'ombe: ${parity}\n` : isFrench ? `Parité: ${parity}\n` : isSpanish ? `Paridad: ${parity}\n` : `Parity: ${parity}\n`;
+
+    // ----- YIELD SANITY -----
+    if (yieldCur > 50) {
+      content += isSwahili ? `⚠️ Maziwa ${yieldCur} L ni mengi sana! Thibitisha kipimo. Maksimumi ni ~50 L/siku.\n` :
+                  isFrench ? `⚠️ ${yieldCur} L de lait est trop élevé! Vérifiez la mesure. Le maximum est d'environ 50 L/jour.\n` :
+                  isSpanish ? `⚠️ ${yieldCur} L de leche es demasiado alto! Verifique la medición. El máximo es ~50 L/día.\n` :
+                  `⚠️ ${yieldCur} L of milk is too high! Verify measurement. Maximum is ~50 L/day.\n`;
+    }
+
+    // ----- FAT CONTEXT -----
+    if (fat > 0 && fat < 3.5) {
+      content += isSwahili ? `\n⚠️ Mafuta ya maziwa ni chini (${fat}%). Ongeza nyasi au punguza nafaka ili kuongeza mafuta.\n` :
+                  isFrench ? `\n⚠️ La matière grasse est basse (${fat}%). Augmentez les fourrages ou réduisez les céréales.\n` :
+                  isSpanish ? `\n⚠️ La grasa láctea es baja (${fat}%). Aumente los forrajes o reduzca los granos.\n` :
+                  `\n⚠️ Milk fat is low (${fat}%). Increase forages or reduce grains to boost fat.\n`;
+    } else if (fat > 4.5) {
+      content += isSwahili ? `🟢 Mafuta mazuri! Hii inaonyesha malisho bora.\n` :
+                  isFrench ? `🟢 Bonne matière grasse! Cela indique une bonne alimentation.\n` :
+                  isSpanish ? `🟢 ¡Buena grasa! Esto indica buena alimentación.\n` :
+                  `🟢 Good fat! This indicates good feeding.\n`;
+    }
+
+    // ----- PROTEIN WARNING -----
+    if (protein > 0) {
+      if (protein > 4.5) {
+        content += isSwahili ? `⚠️ Protini ni ya juu sana (${protein}%). Inaweza kuashiria upungufu wa maji au ugonjwa. Wasiliana na daktari wa mifugo.\n` :
+                    isFrench ? `⚠️ La protéine est trop élevée (${protein}%). Peut indiquer une déshydratation ou une maladie. Consultez un vétérinaire.\n` :
+                    isSpanish ? `⚠️ La proteína es demasiado alta (${protein}%). Puede indicar deshidratación o enfermedad. Consulte a un veterinario.\n` :
+                    `⚠️ Protein is too high (${protein}%). May indicate dehydration or disease. Consult a vet.\n`;
+      } else if (protein < 2.5) {
+        content += isSwahili ? `⚠️ Protini ni chini (${protein}%). Ongeza protini katika malisho (soya, sunflower cake).\n` :
+                    isFrench ? `⚠️ La protéine est basse (${protein}%). Augmentez les protéines dans l'alimentation (soja, tourteau de tournesol).\n` :
+                    isSpanish ? `⚠️ La proteína es baja (${protein}%). Aumente la proteína en la alimentación (soya, torta de girasol).\n` :
+                    `⚠️ Protein is low (${protein}%). Increase protein in feed (soybean meal, sunflower cake).\n`;
+      }
+    }
+
+    // ----- DIM CONTEXT -----
+    if (dim > 0) {
+      if (dim < 30) {
+        content += isSwahili ? `\n⏳ Ng'ombe katika mwanzo wa kukamua (siku ${dim}). Uzalishaji utaongezeka hadi siku 60-90.\n` :
+                    isFrench ? `\n⏳ Vache en début de lactation (${dim} jours). La production augmentera jusqu'à 60-90 jours.\n` :
+                    isSpanish ? `\n⏳ Vaca en inicio de lactancia (${dim} días). La producción aumentará hasta los 60-90 días.\n` :
+                    `\n⏳ Cow in early lactation (day ${dim}). Production will increase until 60-90 days.\n`;
+      } else if (dim > 200) {
+        content += isSwahili ? `\n⏳ Ng'ombe katika mwisho wa kukamua (siku ${dim}). Maziwa yatapungua. Jitayarishe kwa kukausha.\n` :
+                    isFrench ? `\n⏳ Vache en fin de lactation (${dim} jours). Le lait diminuera. Préparez-vous pour le tarissement.\n` :
+                    isSpanish ? `\n⏳ Vaca en final de lactancia (${dim} días). La leche disminuirá. Prepárese para el secado.\n` :
+                    `\n⏳ Cow in late lactation (day ${dim}). Milk will decline. Prepare for drying off.\n`;
+      }
+    }
+
+    content += isSwahili ? `\n📋 LENGO LA MAZIWA:\n• Mafuta: 3.5-4.5% (ideal)\n• Protini: 3.0-3.5% (ideal)\n• Uzalishaji: Lita 15-25 kwa siku (kulingana na aina)\n• Fuatilia mafuta na protini kila mwezi` :
+                isFrench ? `\n📋 OBJECTIFS LAITIERS:\n• Matière grasse: 3.5-4.5% (idéal)\n• Protéine: 3.0-3.5% (idéal)\n• Production: 15-25 L/jour (selon la race)\n• Suivez la matière grasse et les protéines chaque mois` :
+                isSpanish ? `\n📋 OBJETIVOS LÁCTEOS:\n• Grasa: 3.5-4.5% (ideal)\n• Proteína: 3.0-3.5% (ideal)\n• Producción: 15-25 L/día (según raza)\n• Monitoree grasa y proteína cada mes` :
+                `\n📋 MILK TARGETS:\n• Fat: 3.5-4.5% (ideal)\n• Protein: 3.0-3.5% (ideal)\n• Yield: 15-25 L/day (depending on breed)\n• Monitor fat and protein monthly`;
+
+    addToStructuredList('dairy_milk', { content });
+    addToList(content);
+  }
+
+  // 12. Dairy Parasite (Enhanced)
+  if (shouldInclude('dairy_parasite')) {
+    const signs = farmerData.dairyParasiteSigns || '';
+    if (signs) {
+      let content = isSwahili ? `🐛 UDHIBITI WA VIMELEA\nDalili zilizoripotiwa: ${signs}\n\n` :
+                     isFrench ? `🐛 LUTTE CONTRE LES PARASITES\nSignes signalés: ${signs}\n\n` :
+                     isSpanish ? `🐛 CONTROL DE PARÁSITOS\nSeñales reportadas: ${signs}\n\n` :
+                     `🐛 PARASITE CONTROL\nSigns reported: ${signs}\n\n`;
+
+      const signList = signs.split(',').map(s => s.trim());
+
+      if (signList.some(s => s === 'visible_ticks' || s === 'visible_lice')) {
+        content += isSwahili ? `✅ WADUDU WA NJE: Tumia Cypermethrin pour-on (5ml/10kg) au Amitraz dip (0.5%) kila wiki 2-3.\n` :
+                    isFrench ? `✅ PARASITES EXTERNES: Utilisez Cyperméthrine pour-on (5ml/10kg) ou bain Amitraz (0.5%) toutes les 2-3 semaines.\n` :
+                    isSpanish ? `✅ PARÁSITOS EXTERNOS: Use Cipermetrina pour-on (5ml/10kg) o baño Amitraz (0.5%) cada 2-3 semanas.\n` :
+                    `✅ EXTERNAL PARASITES: Use Cypermethrin pour-on (5ml/10kg) or Amitraz dip (0.5%) every 2-3 weeks.\n`;
+      }
+
+      if (signList.some(s => s === 'anaemia' || s === 'weight_loss' || s === 'bottle_jaw')) {
+        content += isSwahili ? `⚠️ DALILI ZA MINYOO: Tumia Albendazole (10mg/kg) au Ivermectin (0.2mg/kg) kwa minyoo ya ndani.\n` :
+                    isFrench ? `⚠️ SIGNES DE VERS: Utilisez Albendazole (10mg/kg) ou Ivermectine (0.2mg/kg) pour les vers internes.\n` :
+                    isSpanish ? `⚠️ SIGNOS DE GUSANOS: Use Albendazol (10mg/kg) o Ivermectina (0.2mg/kg) para gusanos internos.\n` :
+                    `⚠️ WORM SIGNS: Use Albendazole (10mg/kg) or Ivermectin (0.2mg/kg) for internal worms.\n`;
+      }
+
+      if (signList.some(s => s === 'diarrhoea_parasite' || s === 'weight_loss')) {
+        content += isSwahili ? `⚠️ DIAREA NA MINYOO: Tumia Fenbendazole (7.5mg/kg) au Levamisole (7.5mg/kg) kwa minyoo ya matumbo.\n` :
+                    isFrench ? `⚠️ DIARRHÉE ET VERS: Utilisez Fenbendazole (7.5mg/kg) ou Lévamisole (7.5mg/kg) pour les vers intestinaux.\n` :
+                    isSpanish ? `⚠️ DIARREA Y GUSANOS: Use Fenbendazol (7.5mg/kg) o Levamisol (7.5mg/kg) para gusanos intestinales.\n` :
+                    `⚠️ DIARRHOEA & WORMS: Use Fenbendazole (7.5mg/kg) or Levamisole (7.5mg/kg) for intestinal worms.\n`;
+      }
+
+      if (signList.some(s => s === 'cough_parasite')) {
+        content += isSwahili ? `⚠️ KIKOHOZI CHA MINYOO: Tumia Ivermectin (0.2mg/kg) kwa minyoo ya mapafu.\n` :
+                    isFrench ? `⚠️ TOUX PARASITAIRE: Utilisez Ivermectine (0.2mg/kg) pour les vers pulmonaires.\n` :
+                    isSpanish ? `⚠️ TOS PARASITARIA: Use Ivermectina (0.2mg/kg) para gusanos pulmonares.\n` :
+                    `⚠️ LUNGWORM COUGH: Use Ivermectin (0.2mg/kg) for lungworms.\n`;
+      }
+
+      if (signList.some(s => s === 'mange_lesions' || s === 'skin_irritation')) {
+        content += isSwahili ? `⚠️ KIDUMA CHA NGOZI: Tumia Ivermectin (0.2mg/kg) au Sulfur lime dip (2.5%) kwa ukurutu.\n` :
+                    isFrench ? `⚠️ LÉSIONS CUTANÉES: Utilisez Ivermectine (0.2mg/kg) ou bain de chaux sulfurée (2.5%) pour la gale.\n` :
+                    isSpanish ? `⚠️ LESIONES CUTÁNEAS: Use Ivermectina (0.2mg/kg) o baño de cal sulfurada (2.5%) para la sarna.\n` :
+                    `⚠️ SKIN LESIONS: Use Ivermectin (0.2mg/kg) or Sulfur lime dip (2.5%) for mange.\n`;
+      }
+
+      content += isSwahili ? `\n📋 MPANGO WA UDHIBITI:\n1. Deworming: Fanya kila baada ya wiki 3-4\n2. Kupe: Tumia pour-on kila wiki 2-3\n3. Usafi: Safisha zizi na uondoe mavi kila siku\n4. Mzunguko wa malisho: Badilisha malisho ili kupunguza minyoo` :
+                  isFrench ? `\n📋 PLAN DE LUTTE:\n1. Vermifuge: Tous les 3-4 semaines\n2. Tiques: Pour-on toutes les 2-3 semaines\n3. Hygiène: Nettoyez l'étable et enlevez le fumier quotidiennement\n4. Rotation des pâturages` :
+                  isSpanish ? `\n📋 PLAN DE CONTROL:\n1. Desparasitación: Cada 3-4 semanas\n2. Garrapatas: Pour-on cada 2-3 semanas\n3. Higiene: Limpie el establo y retire estiércol diariamente\n4. Rotación de pastos` :
+                  `\n📋 CONTROL PLAN:\n1. Deworming: Every 3-4 weeks\n2. Ticks: Pour-on every 2-3 weeks\n3. Hygiene: Clean barn and remove manure daily\n4. Pasture rotation`;
+
+      addToStructuredList('dairy_parasite', { content });
+      addToList(content);
+    }
+  }
+
+  // 13. Dairy Deficiency (Enhanced)
+  if (shouldInclude('deficiency_analysis')) {
+    const symptoms = farmerData.dairyDeficiencySymptoms || '';
+    if (symptoms) {
+      let content = isSwahili ? `🔬 UCHAMBUZI WA UPUNGUFU WA VIRUTUBISHO\nDalili zilizoripotiwa: ${symptoms}\n\n` :
+                     isFrench ? `🔬 ANALYSE DES CARENCES NUTRITIONNELLES\nSymptômes signalés: ${symptoms}\n\n` :
+                     isSpanish ? `🔬 ANÁLISIS DE DEFICIENCIA DE NUTRIENTES\nSíntomas reportados: ${symptoms}\n\n` :
+                     `🔬 NUTRIENT DEFICIENCY ANALYSIS\nSymptoms reported: ${symptoms}\n\n`;
+
+      const symptomList = symptoms.split(',').map(s => s.trim());
+
+      if (symptomList.some(s => s === 'stiff_gait' || s === 'muscle_tremors')) {
+        content += isSwahili ? `⚠️ DALILI ZA MAGNESIAMU (Mg): Ongeza magnesium oxide (50-100g/ng'ombe/siku) au Epsom salt.\n` :
+                    isFrench ? `⚠️ SIGNES DE MAGNÉSIUM (Mg): Augmentez l'oxyde de magnésium (50-100g/vache/jour) ou le sel d'Epsom.\n` :
+                    isSpanish ? `⚠️ SIGNOS DE MAGNESIO (Mg): Aumente el óxido de magnesio (50-100g/vaca/día) o la sal de Epsom.\n` :
+                    `⚠️ MAGNESIUM SIGNS: Increase magnesium oxide (50-100g/cow/day) or Epsom salt.\n`;
+      }
+
+      if (symptomList.some(s => s === 'poor_appetite' || s === 'weight_loss')) {
+        content += isSwahili ? `⚠️ DALILI ZA PROTEINI AU NISHATI: Ongeza protini (soya, sunflower cake) na nishati (maize, molasses).\n` :
+                    isFrench ? `⚠️ SIGNES DE PROTÉINES OU D'ÉNERGIE: Augmentez les protéines (soja, tourteau de tournesol) et l'énergie (maïs, mélasse).\n` :
+                    isSpanish ? `⚠️ SIGNOS DE PROTEÍNAS O ENERGÍA: Aumente proteínas (soya, torta de girasol) y energía (maíz, melaza).\n` :
+                    `⚠️ PROTEIN OR ENERGY SIGNS: Increase protein (soybean meal, sunflower cake) and energy (maize, molasses).\n`;
+      }
+
+      if (symptomList.some(s => s === 'rough_coat' || s === 'anaemia')) {
+        content += isSwahili ? `⚠️ DALILI ZA ZINC AU SHABA: Ongeza zinc (Zn) na copper (Cu) kupitia pre-mix ya madini.\n` :
+                    isFrench ? `⚠️ SIGNES DE ZINC OU CUIVRE: Augmentez le zinc (Zn) et le cuivre (Cu) via un prémix minéral.\n` :
+                    isSpanish ? `⚠️ SIGNOS DE ZINC O COBRE: Aumente zinc (Zn) y cobre (Cu) a través de un premezcla mineral.\n` :
+                    `⚠️ ZINC OR COPPER SIGNS: Increase zinc (Zn) and copper (Cu) via mineral pre-mix.\n`;
+      }
+
+      if (symptomList.some(s => s === 'nervous_signs' || s === 'staggering')) {
+        content += isSwahili ? `⚠️ DALILI ZA MAGNESIAMU AU KALSIMU: Ongeza magnesium oxide na limestone flour.\n` :
+                    isFrench ? `⚠️ SIGNES DE MAGNÉSIUM OU CALCIUM: Augmentez l'oxyde de magnésium et la farine de calcaire.\n` :
+                    isSpanish ? `⚠️ SIGNOS DE MAGNESIO O CALCIO: Aumente óxido de magnesio y harina de caliza.\n` :
+                    `⚠️ MAGNESIUM OR CALCIUM SIGNS: Increase magnesium oxide and limestone flour.\n`;
+      }
+
+      if (symptomList.some(s => s === 'reduced_milk_fat')) {
+        content += isSwahili ? `⚠️ MAFUTA YA MAZIWA YAMEPUNGUA: Hakikisha ng'ombe anapata nyasi za kutosha (20-30 kg/siku) na madini.\n` :
+                    isFrench ? `⚠️ MATIÈRE GRASSE DU LAIT BASSE: Assurez suffisamment de fourrage (20-30 kg/jour) et de minéraux.\n` :
+                    isSpanish ? `⚠️ GRASA LÁCTEA BAJA: Asegure suficiente forraje (20-30 kg/día) y minerales.\n` :
+                    `⚠️ LOW MILK FAT: Ensure adequate forage (20-30 kg/day) and minerals.\n`;
+      }
+
+      if (symptomList.some(s => s === 'scours' || s === 'diarrhoea')) {
+        content += isSwahili ? `⚠️ KUHARA: Hii inaweza kuwa dalili ya upungufu wa virutubisho au minyoo. Wasiliana na daktari wa mifugo.\n` :
+                    isFrench ? `⚠️ DIARRHÉE: Cela peut être un signe de carence ou de vers. Consultez un vétérinaire.\n` :
+                    isSpanish ? `⚠️ DIARREA: Puede ser signo de deficiencia o gusanos. Consulte a un veterinario.\n` :
+                    `⚠️ DIARRHOEA: This may be a sign of deficiency or worms. Consult a vet.\n`;
+      }
+
+      content += isSwahili ? `\n📋 MAPENDEKEZO YA LISHE:\n• Tumia pre-mix ya madini kila siku\n• Ongeza nyasi bora na maji safi\n• Fuatilia afya ya ng'ombe kila siku\n• Wasiliana na daktari wa mifugo kwa uchambuzi wa damu` :
+                  isFrench ? `\n📋 RECOMMANDATIONS NUTRITIONNELLES:\n• Utilisez un prémix minéral quotidien\n• Améliorez les fourrages et l'eau\n• Surveillez la santé quotidiennement\n• Consultez un vétérinaire pour un bilan sanguin` :
+                  isSpanish ? `\n📋 RECOMENDACIONES NUTRICIONALES:\n• Use un premezcla mineral diaria\n• Mejore forrajes y agua\n• Monitoree la salud diariamente\n• Consulte a un veterinario para análisis de sangre` :
+                  `\n📋 NUTRITIONAL RECOMMENDATIONS:\n• Use mineral pre-mix daily\n• Improve forages and water\n• Monitor cow health daily\n• Consult vet for blood analysis`;
+
+      addToStructuredList('deficiency_analysis', { content });
+      addToList(content);
+    }
+  }
+
+  // 14. Dairy Business (Enhanced)
+  if (shouldInclude('dairy_business')) {
+    const interests = farmerData.dairyBusinessInterest || '';
+    if (interests) {
+      let content = isSwahili ? `💼 USHAURI WA BIASHARA YA NG'OMBE WA MAZIWA\nMada zinazokuvutia: ${interests}\n\n` :
+                     isFrench ? `💼 CONSEILS COMMERCIAUX POUR LA LAITERIE\nSujets d'intérêt: ${interests}\n\n` :
+                     isSpanish ? `💼 ASESORAMIENTO COMERCIAL PARA LECHERÍA\nTemas de interés: ${interests}\n\n` :
+                     `💼 DAIRY BUSINESS ADVICE\nTopics of interest: ${interests}\n\n`;
+
+      const interestList = interests.split(',').map(s => s.trim());
+
+      if (interestList.includes('bulk_buying')) {
+        content += isSwahili ? `📦 UNUNUZI WA JUMLA: Nunua malisho na madini kwa pamoja na wakulima wengine.\nOkoa 15-25% kwa gharama!\n` :
+                    isFrench ? `📦 ACHAT EN VRAC: Achetez les aliments et minéraux en groupe avec d'autres agriculteurs.\nÉconomisez 15-25%!\n` :
+                    isSpanish ? `📦 COMPRA AL POR MAYOR: Compre alimentos y minerales en grupo con otros agricultores.\n¡Ahorre 15-25%!\n` :
+                    `📦 BULK BUYING: Buy feed and minerals together with other farmers.\nSave 15-25%!\n`;
+      }
+
+      if (interestList.includes('cooperative')) {
+        content += isSwahili ? `🤝 USHIRIKA: Jiunge na ushirika wa wakulima wa maziwa.\nPata bei bora na usafirishaji wa pamoja.\n` :
+                    isFrench ? `🤝 COOPÉRATIVE: Rejoignez une coopérative laitière.\nObtenez de meilleurs prix et un transport partagé.\n` :
+                    isSpanish ? `🤝 COOPERATIVA: Únase a una cooperativa lechera.\nObtenga mejores precios y transporte compartido.\n` :
+                    `🤝 COOPERATIVE: Join a dairy cooperative.\nGet better prices and shared transport.\n`;
+      }
+
+      if (interestList.includes('value_addition')) {
+        content += isSwahili ? `🧀 ONGEZA THAMANI: Tengeneza mtindi, jibini, au maziwa ya lala kwa bei ya juu.\nFaida inaweza kuongezeka mara 2-3!\n` :
+                    isFrench ? `🧀 VALORISATION: Fabriquez du yaourt, du fromage ou du lait fermenté pour un meilleur prix.\nLe bénéfice peut être multiplié par 2-3!\n` :
+                    isSpanish ? `🧀 AGREGUE VALOR: Haga yogur, queso o leche fermentada para mejor precio.\n¡La ganancia puede aumentar 2-3 veces!\n` :
+                    `🧀 VALUE ADDITION: Make yogurt, cheese, or fermented milk for higher price.\nProfit can increase 2-3x!\n`;
+      }
+
+      if (interestList.includes('scaling')) {
+        content += isSwahili ? `📈 PANUA KUNDI: Anza na ng'ombe 5-10, ongeza polepole.\nKila ng'ombe anayeweza kukamua huongeza faida ya ${formatCurrency(50000)}/mwaka.\n` :
+                    isFrench ? `📈 AGRANDISSEMENT: Commencez avec 5-10 vaches, augmentez progressivement.\nChaque vache laitière ajoute ${formatCurrency(50000)} de bénéfice par an.\n` :
+                    isSpanish ? `📈 ESCALAR: Comience con 5-10 vacas, aumente gradualmente.\nCada vaca lechera agrega ${formatCurrency(50000)} de ganancia al año.\n` :
+                    `📈 SCALING: Start with 5-10 cows, increase gradually.\nEach milking cow adds ${formatCurrency(50000)} profit per year.\n`;
+      }
+
+      if (interestList.includes('cost_reduction')) {
+        content += isSwahili ? `💰 PUNGUZA GHARAMA: Tumia malisho ya ndani, nunua kwa jumla, na punguza upotevu.\nOkoa ${formatCurrency(20000)} kwa mwaka kwa ng'ombe 10!\n` :
+                    isFrench ? `💰 RÉDUCTION DES COÛTS: Utilisez des aliments locaux, achetez en vrac, réduisez le gaspillage.\nÉconomisez ${formatCurrency(20000)} par an pour 10 vaches!\n` :
+                    isSpanish ? `💰 REDUCCIÓN DE COSTOS: Use alimentos locales, compre al por mayor, reduzca desperdicios.\n¡Ahorre ${formatCurrency(20000)} al año por 10 vacas!\n` :
+                    `💰 COST REDUCTION: Use local feeds, buy in bulk, reduce waste.\nSave ${formatCurrency(20000)} per year for 10 cows!\n`;
+      }
+
+      content += isSwahili ? `\n📋 HATUA ZA BIASHARA:\n1. Jumuika na wakulima wengine\n2. Nunua malisho kwa pamoja\n3. Uza maziwa kwa pamoja\n4. Fuatilia gharama na mapato kila mwezi` :
+                  isFrench ? `\n📋 ÉTAPES COMMERCIALES:\n1. Regroupez-vous avec d'autres agriculteurs\n2. Achetez les aliments en groupe\n3. Vendez le lait ensemble\n4. Suivez les coûts et les revenus mensuellement` :
+                  isSpanish ? `\n📋 PASOS DE NEGOCIO:\n1. Agrupe con otros agricultores\n2. Compre alimentos en conjunto\n3. Venda leche en conjunto\n4. Monitoree costos e ingresos mensualmente` :
+                  `\n📋 BUSINESS STEPS:\n1. Group with other farmers\n2. Buy feed together\n3. Sell milk together\n4. Track costs and income monthly`;
+
+      addToStructuredList('dairy_business', { content });
+      addToList(content);
+    }
+  }
+
+  // 15. Dairy Dos and Don'ts (Enhanced) – now receives dairyManagementFocus
+  if (shouldInclude('dairy_dos_donts')) {
+    const focus = farmerData.dairyManagementFocus || '';
+    if (focus) {
+      let content = isSwahili ? `✅❌ DOS AND DON'TS KWA NG'OMBE WA MAZIWA\nMaeneo yaliyochaguliwa: ${focus}\n\n` :
+                     isFrench ? `✅❌ DOS AND DON'TS POUR LA LAITERIE\nDomaines sélectionnés: ${focus}\n\n` :
+                     isSpanish ? `✅❌ DOS AND DON'TS PARA LECHERÍA\nÁreas seleccionadas: ${focus}\n\n` :
+                     `✅❌ DAIRY DOS AND DON'TS\nSelected areas: ${focus}\n\n`;
+
+      const focusList = focus.split(',').map(s => s.trim());
+
+      if (focusList.includes('calf_rearing')) {
+        content += isSwahili ? `📌 NDAMA:\n✅ Hakikisha kolostramu ndani ya saa 6\n✅ Weka banda safi na kavu\n❌ Usiwape maji ya baridi\n❌ Usiwape maziwa ya ng'ombe mgonjwa\n\n` :
+                    isFrench ? `📌 VEAU:\n✅ Assurez le colostrum dans les 6 heures\n✅ Gardez le box propre et sec\n❌ Ne donnez pas d'eau froide\n❌ Ne donnez pas de lait de vache malade\n\n` :
+                    isSpanish ? `📌 TERNERO:\n✅ Asegure calostro en las 6 horas\n✅ Mantenga el corral limpio y seco\n❌ No dé agua fría\n❌ No dé leche de vaca enferma\n\n` :
+                    `📌 CALF:\n✅ Ensure colostrum within 6 hours\n✅ Keep pen clean and dry\n❌ Don't give cold water\n❌ Don't give milk from sick cow\n\n`;
+      }
+
+      if (focusList.includes('feeding')) {
+        content += isSwahili ? `📌 MALISHO:\n✅ Toa malisho bora na maji safi\n✅ Weka ratiba ya kulisha mara 2-3 kwa siku\n❌ Usibadilishe chakula ghafla\n❌ Usitumie malisho yenye ukungu\n\n` :
+                    isFrench ? `📌 ALIMENTATION:\n✅ Fournissez des aliments de qualité et de l'eau propre\n✅ Respectez un horaire d'alimentation 2-3 fois par jour\n❌ Ne changez pas l'alimentation brusquement\n❌ N'utilisez pas d'aliments moisis\n\n` :
+                    isSpanish ? `📌 ALIMENTACIÓN:\n✅ Proporcione alimentos de calidad y agua limpia\n✅ Mantenga un horario de alimentación 2-3 veces al día\n❌ No cambie la alimentación bruscamente\n❌ No use alimentos con moho\n\n` :
+                    `📌 FEEDING:\n✅ Provide quality feed and clean water\n✅ Feed 2-3 times daily on schedule\n❌ Don't change feed suddenly\n❌ Don't use mouldy feed\n\n`;
+      }
+
+      if (focusList.includes('housing')) {
+        content += isSwahili ? `📌 MAKAZI:\n✅ Hakikisha nafasi ya kutosha na uingizaji hewa\n✅ Weka matandiko safi na kavu\n❌ Usiweke ng'ombe katika mazingira machafu\n❌ Usiruhusu msongamano wa ng'ombe\n\n` :
+                    isFrench ? `📌 LOGEMENT:\n✅ Assurez espace suffisant et ventilation\n✅ Utilisez une litière propre et sèche\n❌ Ne gardez pas les vaches dans un environnement sale\n❌ Évitez la surpopulation\n\n` :
+                    isSpanish ? `📌 ALOJAMIENTO:\n✅ Asegure espacio suficiente y ventilación\n✅ Use cama limpia y seca\n❌ No mantenga vacas en ambiente sucio\n❌ Evite la sobrepoblación\n\n` :
+                    `📌 HOUSING:\n✅ Ensure adequate space and ventilation\n✅ Use clean, dry bedding\n❌ Don't keep cows in dirty conditions\n❌ Avoid overcrowding\n\n`;
+      }
+
+      if (focusList.includes('milking')) {
+        content += isSwahili ? `📌 KUKAMUA:\n✅ Safisha viwete kabla na baada ya kukamua\n✅ Kamua kwa ratiba sawa (mara 2 kwa siku)\n❌ Usikamue kwa mikono michafu\n❌ Usikamue ng'ombe mgonjwa mwishoni\n\n` :
+                    isFrench ? `📌 TRAITE:\n✅ Nettoyez les mamelles avant et après la traite\n✅ Traite à heures fixes (2 fois par jour)\n❌ Ne trayez pas avec les mains sales\n❌ Ne trayez pas la vache malade en dernier\n\n` :
+                    isSpanish ? `📌 ORDEÑO:\n✅ Limpie las ubres antes y después del ordeño\n✅ Ordeñe a horas fijas (2 veces al día)\n❌ No ordeñe con las manos sucias\n❌ No ordeñe la vaca enferma al final\n\n` :
+                    `📌 MILKING:\n✅ Clean udders before and after milking\n✅ Milk at fixed times (twice daily)\n❌ Don't milk with dirty hands\n❌ Don't milk sick cow last\n\n`;
+      }
+
+      if (focusList.includes('health')) {
+        content += isSwahili ? `📌 AFYA:\n✅ Fuatilia dalili za magonjwa kila siku\n✅ Weka rekodi za afya na matibabu\n❌ Usisubiri hadi ugonjwa uwe mbaya\n❌ Usitumie dawa bila ushauri wa mifugo\n\n` :
+                    isFrench ? `📌 SANTÉ:\n✅ Surveillez les signes de maladie quotidiennement\n✅ Tenez des registres de santé et de traitements\n❌ N'attendez pas que la maladie s'aggrave\n❌ N'utilisez pas de médicaments sans avis vétérinaire\n\n` :
+                    isSpanish ? `📌 SALUD:\n✅ Monitoree los signos de enfermedad a diario\n✅ Mantenga registros de salud y tratamientos\n❌ No espere hasta que la enfermedad empeore\n❌ No use medicamentos sin consejo veterinario\n\n` :
+                    `📌 HEALTH:\n✅ Monitor disease signs daily\n✅ Keep health and treatment records\n❌ Don't wait until disease worsens\n❌ Don't use drugs without vet advice\n\n`;
+      }
+
+      if (focusList.includes('breeding')) {
+        content += isSwahili ? `📌 UZAZI:\n✅ Rekodi mzunguko wa joto kila siku\n✅ Fanya insemination saa 12-24 baada ya joto\n❌ Usiweke fahali kwa muda mrefu bila kudhibiti\n❌ Usisahau kumchunguza ng'ombe baada ya kuzaa\n\n` :
+                    isFrench ? `📌 REPRODUCTION:\n✅ Enregistrez le cycle de chaleur quotidiennement\n✅ Insémination 12-24 heures après les chaleurs\n❌ Ne laissez pas le taureau sans surveillance\n❌ N'oubliez pas le contrôle post-partum\n\n` :
+                    isSpanish ? `📌 REPRODUCCIÓN:\n✅ Registre el ciclo de celo diariamente\n✅ Insemine 12-24 horas después del celo\n❌ No deje el toro sin control\n❌ No olvide el control post-parto\n\n` :
+                    `📌 BREEDING:\n✅ Record heat cycle daily\n✅ Inseminate 12-24 hours after heat\n❌ Don't leave bull unsupervised\n❌ Don't forget post-calving check\n\n`;
+      }
+
+      addToStructuredList('dairy_dos_donts', { content });
+      addToList(content);
+    }
+  }
+
+  // 16. Dairy Reminders (FIXED – date-based warnings)
+  if (shouldInclude('dairy_reminders')) {
+    const lastDeworm = farmerData.dairyLastDeworming || '';
+    const lastHoof = farmerData.dairyLastHoofTrimming || '';
+    const lastVacc = farmerData.dairyLastVaccination || '';
+    const nextVacc = farmerData.dairyNextVaccinationDue || '';
+    const topics = farmerData.dairyReminderTopics || '';
+
+    if (lastDeworm || lastHoof || lastVacc || nextVacc || topics) {
+      let content = isSwahili ? `📅 VIKUMBUSHO VYA USIMAMIZI WA NG'OMBE\n` :
+                     isFrench ? `📅 RAPPELS DE GESTION DES VACHES\n` :
+                     isSpanish ? `📅 RECORDATORIOS DE MANEJO DE VACAS\n` :
+                     `📅 COW MANAGEMENT REMINDERS\n`;
+
+      if (lastDeworm) content += isSwahili ? `Deworming ya mwisho: ${lastDeworm}\n` : isFrench ? `Dernier vermifuge: ${lastDeworm}\n` : isSpanish ? `Última desparasitación: ${lastDeworm}\n` : `Last deworming: ${lastDeworm}\n`;
+      if (lastHoof) content += isSwahili ? `Kukata kwato kwa mwisho: ${lastHoof}\n` : isFrench ? `Dernier parage: ${lastHoof}\n` : isSpanish ? `Último recorte de pezuñas: ${lastHoof}\n` : `Last hoof trimming: ${lastHoof}\n`;
+      if (lastVacc) content += isSwahili ? `Chanjo ya mwisho: ${lastVacc}\n` : isFrench ? `Dernière vaccination: ${lastVacc}\n` : isSpanish ? `Última vacunación: ${lastVacc}\n` : `Last vaccination: ${lastVacc}\n`;
+      if (nextVacc) content += isSwahili ? `Chanjo inayofuata inatarajiwa: ${nextVacc}\n` : isFrench ? `Prochaine vaccination due: ${nextVacc}\n` : isSpanish ? `Próxima vacunación programada: ${nextVacc}\n` : `Next vaccination due: ${nextVacc}\n`;
+      if (topics) content += isSwahili ? `Mada za vikumbusho: ${topics}\n` : isFrench ? `Sujets de rappels: ${topics}\n` : isSpanish ? `Temas de recordatorios: ${topics}\n` : `Reminder topics: ${topics}\n`;
+
+      // ----- DATE-BASED WARNINGS -----
+      const today = new Date();
+      const oneYearAgo = new Date(today); oneYearAgo.setFullYear(today.getFullYear() - 1);
+      const threeMonthsAgo = new Date(today); threeMonthsAgo.setMonth(today.getMonth() - 3);
+      const thirtyDaysLater = new Date(today); thirtyDaysLater.setDate(today.getDate() + 30);
+
+      if (lastHoof && new Date(lastHoof) < oneYearAgo) {
+        content += isSwahili ? `⚠️ Kukata kwato kumechelewa (zaidi ya mwaka). Panga mara moja.\n` :
+                    isFrench ? `⚠️ Le parage des sabots est en retard (plus d'un an). Planifiez-le immédiatement.\n` :
+                    isSpanish ? `⚠️ El recorte de pezuñas está retrasado (más de un año). Planifíquelo inmediatamente.\n` :
+                    `⚠️ Hoof trimming is overdue (more than a year). Schedule it immediately.\n`;
+      }
+      if (lastDeworm && new Date(lastDeworm) < threeMonthsAgo) {
+        content += isSwahili ? `⚠️ Deworming imechelewa (zaidi ya miezi 3). Fanya haraka.\n` :
+                    isFrench ? `⚠️ Le vermifuge est en retard (plus de 3 mois). Faites-le rapidement.\n` :
+                    isSpanish ? `⚠️ La desparasitación está retrasada (más de 3 meses). Hágalo rápidamente.\n` :
+                    `⚠️ Deworming is overdue (more than 3 months). Do it soon.\n`;
+      }
+      if (nextVacc && new Date(nextVacc) < thirtyDaysLater) {
+        content += isSwahili ? `🔔 Chanjo inayofuata inakaribia (chini ya siku 30). Jitayarishe.\n` :
+                    isFrench ? `🔔 La prochaine vaccination est proche (moins de 30 jours). Préparez-vous.\n` :
+                    isSpanish ? `🔔 La próxima vacunación está cerca (menos de 30 días). Prepárese.\n` :
+                    `🔔 Next vaccination is coming soon (less than 30 days). Prepare.\n`;
+      }
+
+      // Default reminders if no specific dates
+      if (!lastDeworm && !lastHoof && !lastVacc && !nextVacc) {
+        const now = new Date();
+        const nextDeworm = new Date(now);
+        nextDeworm.setMonth(now.getMonth() + 1);
+        const nextHoof = new Date(now);
+        nextHoof.setMonth(now.getMonth() + 2);
+        const nextVaccDate = new Date(now);
+        nextVaccDate.setMonth(now.getMonth() + 6);
+
+        content += isSwahili ? `\n📌 VIKUMBUSHO VILIVYOPENDEKEZWA:\n• Deworming inayofuata: ${nextDeworm.toLocaleDateString()}\n• Kukata kwato: ${nextHoof.toLocaleDateString()}\n• Chanjo inayofuata: ${nextVaccDate.toLocaleDateString()}\n` :
+                    isFrench ? `\n📌 RAPPELS RECOMMANDÉS:\n• Prochain vermifuge: ${nextDeworm.toLocaleDateString()}\n• Prochain parage: ${nextHoof.toLocaleDateString()}\n• Prochaine vaccination: ${nextVaccDate.toLocaleDateString()}\n` :
+                    isSpanish ? `\n📌 RECORDATORIOS RECOMENDADOS:\n• Próxima desparasitación: ${nextDeworm.toLocaleDateString()}\n• Próximo recorte: ${nextHoof.toLocaleDateString()}\n• Próxima vacunación: ${nextVaccDate.toLocaleDateString()}\n` :
+                    `\n📌 RECOMMENDED REMINDERS:\n• Next deworming: ${nextDeworm.toLocaleDateString()}\n• Next hoof trimming: ${nextHoof.toLocaleDateString()}\n• Next vaccination: ${nextVaccDate.toLocaleDateString()}\n`;
+      }
+
+      content += isSwahili ? `\n💡 KUMBUKA: Weka kalenda ya vikumbusho ili usisahau matibabu na matengenezo ya ng'ombe wako.\nPanga kila kitu mapema na fuatilia kwa ufanisi.` :
+                  isFrench ? `\n💡 RAPPELEZ-VOUS: Tenez un calendrier de rappels pour ne pas oublier les traitements et l'entretien.\nPlanifiez à l'avance et suivez efficacement.` :
+                  isSpanish ? `\n💡 RECUERDE: Mantenga un calendario de recordatorios para no olvidar tratamientos y mantenimiento.\nPlanifique con anticipación y haga seguimiento efectivo.` :
+                  `\n💡 REMEMBER: Keep a reminder calendar to never miss treatments and maintenance.\nPlan ahead and track effectively.`;
+
+      addToStructuredList('dairy_reminders', { content });
+      addToList(content);
+    }
+  }
+
+  // 17. Reminder (general soil test)
+  if (shouldInclude('reminder')) {
+    const content = isSwahili ? "Chunguza udongo wako kila mwaka ili kuweka biashara yako yenye faida." :
+                     isFrench ? "Testez votre sol chaque année pour garder votre entreprise rentable." :
+                     isSpanish ? "Analice su suelo anualmente para mantener su empresa rentable." :
+                     "Test your soil yearly to keep your enterprise profitable.";
+    addToStructuredList('reminder', { content });
+    addToList(content);
+  }
+
+  return {
+    list,
+    financialAdvice: isSwahili ? "Tazama uchambuzi wa kifedha hapo juu ili kuongeza faida yako." :
+                     isFrench ? "Voyez l'analyse financière ci-dessus pour maximiser votre profit." :
+                     isSpanish ? "Vea el análisis financiero arriba para maximizar su ganancia." :
+                     "See financial analysis above to maximize your profit.",
+    structuredList,
+    structuredFinancialAdvice: null,
+  };
+}
+// ===== END OF PART 1 =====
+// lib/recommendationEngine.ts – Part 2 (Main Export + Full Crop Logic)
+
+// =============================================================
+// MAIN EXPORT – supports crop, poultry, and dairy
+// =============================================================
 export async function generateRecommendations(input: RecommendationInput): Promise<RecommendationOutput> {
+  // ---- DAIRY PATH ----
+  if (input.isDairy) {
+    return generateDairyRecommendations(input.farmerData, input.modules);
+  }
+
   // ---- POULTRY PATH ----
   if (input.isPoultry) {
     return generatePoultryRecommendations(input.farmerData, input.modules);
   }
 
-  // ---- CROP PATH (full logic) ----
+  // ---- CROP PATH (full original logic) ----
+  // The following code is the complete crop generation logic from the original file.
+  // It has been copied verbatim. All modules (soil, lime, fertilizer, gross margin,
+  // disease, pest, deficiency, conservation, post‑harvest, business, nutrition, reminder)
+  // are included here exactly as they were in the original.
+
   const structuredList: any[] = [];
   const { hasSoilTest, soilAnalysis, fertilizerPlan, crop, farmerData, modules } = input;
   const lowerCrop = crop.toLowerCase();
@@ -1736,7 +2829,7 @@ Moving from Medium to High could put an extra ${formatCurrency(highMargin - medi
     addToStructuredList({ key: 'reminder', params: { content: reminderText } });
   }
 
-  // ===== BUILD FINAL OUTPUT =====
+  // ===== BUILD FINAL OUTPUT FOR CROP =====
   const list = structuredList.map(item => item.params?.content || '').filter(c => c);
   const financialAdvice = isSwahili ? "Tazama uchambuzi wa kifedha hapo juu ili kuongeza faida yako." :
                          isFrench ? "Voyez l'analyse financière ci-dessus pour maximiser votre profit." :
@@ -1746,3 +2839,4 @@ Moving from Medium to High could put an extra ${formatCurrency(highMargin - medi
 
   return { list, financialAdvice, structuredList, structuredFinancialAdvice };
 }
+// ===== END OF PART 2 =====

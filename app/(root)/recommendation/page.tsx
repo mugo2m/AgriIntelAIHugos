@@ -1,5 +1,4 @@
-// app/(root)/recommendation/page.tsx – COMPLETE
-// Entry point for all recommendations – Crops + Poultry
+// app/(root)/recommendation/page.tsx – COMPLETE (crop + poultry + all dairy agents)
 "use client";
 
 import { useState } from "react";
@@ -19,12 +18,12 @@ interface RecommendationOption {
   agents: string[];
   modules: string[];
   color: string;
-  category?: "crops" | "poultry" | "both";
+  category?: "crops" | "poultry" | "dairy" | "both";
 }
 
 const OPTIONS: RecommendationOption[] = [
   // ============================================================
-  // CROP OPTIONS
+  // CROP OPTIONS (unchanged – all original)
   // ============================================================
   {
     id: "fertilizer",
@@ -128,14 +127,14 @@ const OPTIONS: RecommendationOption[] = [
   },
 
   // ============================================================
-  // POULTRY OPTIONS (FIXED: using PoultryDiseaseAgent instead of DiseaseInterviewAgent)
+  // POULTRY OPTIONS (unchanged – all original)
   // ============================================================
   {
     id: "poultry_disease",
     label: "Poultry Disease Management",
     emoji: "🐔",
     description: "Identify poultry diseases and get treatment options (vaccination, antibiotics, biosecurity)",
-    agents: ["PoultrySetupAgent", "PoultryDiseaseAgent"], // ✅ FIXED
+    agents: ["PoultrySetupAgent", "PoultryDiseaseAgent"],
     modules: ["confidence", "poultry_disease_management", "bird_damage", "reminder"],
     color: "from-orange-500 to-red-600",
     category: "poultry"
@@ -145,7 +144,7 @@ const OPTIONS: RecommendationOption[] = [
     label: "Complete Poultry Health Check",
     emoji: "🩺",
     description: "Full health assessment including diseases, parasites, nutrition, and financial analysis",
-    agents: ["PoultrySetupAgent", "PoultryDiseaseAgent"], // ✅ FIXED
+    agents: ["PoultrySetupAgent", "PoultryDiseaseAgent"],
     modules: ["confidence", "poultry_disease_management", "poultry_feed", "poultry_vaccination", "poultry_financial", "poultry_housing", "poultry_biosecurity", "poultry_breed_advice", "poultry_sourcing", "bird_damage", "reminder"],
     color: "from-amber-500 to-orange-600",
     category: "poultry"
@@ -220,6 +219,160 @@ const OPTIONS: RecommendationOption[] = [
     color: "from-teal-500 to-cyan-600",
     category: "poultry"
   },
+
+  // ============================================================
+  // DAIRY OPTIONS – all 15 agents now available
+  // ============================================================
+  {
+    id: "dairy_health",
+    label: "Dairy Health & Disease Management",
+    emoji: "🐄",
+    description: "Identify dairy diseases and get chemical, organic, and cultural treatment options",
+    agents: ["DairySetupAgent", "DairyHealthAgent"],
+    modules: ["confidence", "dairy_health_analysis", "dairy_financial", "dairy_management", "reminder"],
+    color: "from-blue-500 to-cyan-600",
+    category: "dairy"
+  },
+  {
+    id: "dairy_breeding",
+    label: "Dairy Breeding & Reproduction",
+    emoji: "🧬",
+    description: "Get advice on heat detection, insemination timing, and reproductive health",
+    agents: ["DairySetupAgent", "DairyBreedingAgent"],
+    modules: ["confidence", "dairy_breeding", "reminder"],
+    color: "from-pink-500 to-rose-600",
+    category: "dairy"
+  },
+  {
+    id: "dairy_calf",
+    label: "Dairy Calf Rearing",
+    emoji: "🐄",
+    description: "Colostrum management, feeding, housing, and health care for calves",
+    agents: ["DairySetupAgent", "DairyCalfAgent"],
+    modules: ["confidence", "dairy_calf", "reminder"],
+    color: "from-green-500 to-emerald-600",
+    category: "dairy"
+  },
+  {
+    id: "dairy_concentrate",
+    label: "Dairy Concentrate Formulation",
+    emoji: "🧪",
+    description: "Build a balanced concentrate mix with correct protein, energy, and minerals",
+    agents: ["DairySetupAgent", "DairyConcentrateAgent"],
+    modules: ["confidence", "dairy_concentrate", "reminder"],
+    color: "from-purple-500 to-indigo-600",
+    category: "dairy"
+  },
+  {
+    id: "dairy_feed",
+    label: "Dairy Feed Formulation (TMR)",
+    emoji: "🌾",
+    description: "Create a total mixed ration using your available forages, grains, proteins, and minerals",
+    agents: ["DairySetupAgent", "DairyFeedAgent"],
+    modules: ["confidence", "dairy_feed", "reminder"],
+    color: "from-yellow-500 to-amber-600",
+    category: "dairy"
+  },
+  {
+    id: "dairy_feed_per_day",
+    label: "Dairy Daily Feed Planning",
+    emoji: "🍽️",
+    description: "Plan daily forage and concentrate amounts based on milk yield",
+    agents: ["DairySetupAgent", "DairyFeedPerDayAgent"],
+    modules: ["confidence", "dairy_feed", "reminder"], // Uses the same module key; engine will detect which data is present
+    color: "from-teal-500 to-cyan-600",
+    category: "dairy"
+  },
+  {
+    id: "dairy_financial",
+    label: "Dairy Financial Analysis",
+    emoji: "💰",
+    description: "Calculate daily profit per cow, feed costs, and veterinary expenses",
+    agents: ["DairySetupAgent", "DairyFinancialAgent"],
+    modules: ["confidence", "dairy_financial", "reminder"],
+    color: "from-amber-500 to-yellow-600",
+    category: "dairy"
+  },
+  {
+    id: "dairy_housing",
+    label: "Dairy Housing Advice",
+    emoji: "🏠",
+    description: "Get recommendations on space, ventilation, bedding, and cow comfort",
+    agents: ["DairySetupAgent", "DairyHousingAgent"],
+    modules: ["confidence", "dairy_housing", "reminder"],
+    color: "from-red-500 to-rose-600",
+    category: "dairy"
+  },
+  {
+    id: "dairy_milk",
+    label: "Dairy Milk Production Analysis",
+    emoji: "🥛",
+    description: "Analyze milk yield, fat and protein percentages, and lactation curve",
+    agents: ["DairySetupAgent", "DairyMilkAgent"],
+    modules: ["confidence", "dairy_milk", "reminder"],
+    color: "from-blue-500 to-sky-600",
+    category: "dairy"
+  },
+  {
+    id: "dairy_parasite",
+    label: "Dairy Parasite Control",
+    emoji: "🐛",
+    description: "Identify and control ticks, lice, worms, and other parasites",
+    agents: ["DairySetupAgent", "DairyParasiteAgent"],
+    modules: ["confidence", "dairy_parasite", "reminder"],
+    color: "from-orange-500 to-red-600",
+    category: "dairy"
+  },
+  {
+    id: "dairy_deficiency",
+    label: "Dairy Nutritional Deficiency",
+    emoji: "🔬",
+    description: "Diagnose mineral and vitamin deficiencies from symptoms",
+    agents: ["DairySetupAgent", "DairyDeficiencyAgent"],
+    modules: ["confidence", "deficiency_analysis", "reminder"],
+    color: "from-cyan-500 to-blue-600",
+    category: "dairy"
+  },
+  {
+    id: "dairy_business",
+    label: "Dairy Business Advice",
+    emoji: "📈",
+    description: "Bulk buying, group marketing, value addition, and cost reduction strategies",
+    agents: ["DairySetupAgent", "DairyBusinessAgent"],
+    modules: ["confidence", "dairy_business", "reminder"],
+    color: "from-violet-500 to-purple-600",
+    category: "dairy"
+  },
+  {
+    id: "dairy_dosdonts",
+    label: "Dairy Dos and Don'ts",
+    emoji: "✅❌",
+    description: "Best practices for calf rearing, feeding, housing, milking, health, and breeding",
+    agents: ["DairySetupAgent", "DairyDosDontsAgent"],
+    modules: ["confidence", "dairy_dos_donts", "reminder"],
+    color: "from-indigo-500 to-blue-600",
+    category: "dairy"
+  },
+  {
+    id: "dairy_reminders",
+    label: "Dairy Reminders & Calendar",
+    emoji: "📅",
+    description: "Set reminders for deworming, hoof trimming, vaccination, and AI scheduling",
+    agents: ["DairySetupAgent", "DairyReminderAgent"],
+    modules: ["confidence", "dairy_reminders", "reminder"],
+    color: "from-pink-500 to-rose-600",
+    category: "dairy"
+  },
+  {
+    id: "dairy_complete",
+    label: "Complete Dairy Herd Check",
+    emoji: "📋",
+    description: "Full health, nutrition, breeding, housing, financial, and management assessment",
+    agents: ["DairySetupAgent", "DairyHealthAgent", "DairyBreedingAgent", "DairyCalfAgent", "DairyConcentrateAgent", "DairyFeedAgent", "DairyFeedPerDayAgent", "DairyFinancialAgent", "DairyHousingAgent", "DairyMilkAgent", "DairyParasiteAgent", "DairyDeficiencyAgent", "DairyBusinessAgent", "DairyDosDontsAgent", "DairyReminderAgent"],
+    modules: ["complete"],
+    color: "from-indigo-600 to-blue-700",
+    category: "dairy"
+  },
 ];
 
 export default function RecommendationPage() {
@@ -227,7 +380,7 @@ export default function RecommendationPage() {
   const { t, ready, isOnline } = useOfflineTranslation();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [activeCategory, setActiveCategory] = useState<"all" | "crops" | "poultry">("all");
+  const [activeCategory, setActiveCategory] = useState<"all" | "crops" | "poultry" | "dairy">("all");
 
   const safeT = (key: string, params?: any): string => {
     try {
@@ -249,11 +402,9 @@ export default function RecommendationPage() {
 
   const handleSelect = (option: RecommendationOption) => {
     setLoading(true);
-
     localStorage.setItem("selectedRecommendation", option.id);
     localStorage.setItem("recommendationAgents", JSON.stringify(option.agents));
     localStorage.setItem("recommendationModules", JSON.stringify(option.modules));
-
     router.push("/interview-flow");
   };
 
@@ -282,7 +433,7 @@ export default function RecommendationPage() {
       </div>
 
       {/* Category Filter */}
-      <div className="flex gap-2 bg-gray-100 p-1 rounded-xl self-start">
+      <div className="flex gap-2 bg-gray-100 p-1 rounded-xl self-start flex-wrap">
         <button
           onClick={() => setActiveCategory("all")}
           className={`px-4 py-2 rounded-lg text-sm font-medium transition ${
@@ -306,6 +457,14 @@ export default function RecommendationPage() {
           }`}
         >
           🐔 {safeT("poultry") || "Poultry"}
+        </button>
+        <button
+          onClick={() => setActiveCategory("dairy")}
+          className={`px-4 py-2 rounded-lg text-sm font-medium transition ${
+            activeCategory === "dairy" ? "bg-white text-blue-700 shadow" : "text-gray-600 hover:bg-gray-200"
+          }`}
+        >
+          🐄 {safeT("dairy") || "Dairy"}
         </button>
       </div>
 
@@ -331,6 +490,11 @@ export default function RecommendationPage() {
             {option.category === "poultry" && (
               <span className="inline-block mt-2 text-xs bg-orange-100 text-orange-700 px-2 py-1 rounded-full ml-2">
                 🐔 Poultry
+              </span>
+            )}
+            {option.category === "dairy" && (
+              <span className="inline-block mt-2 text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full ml-2">
+                🐄 Dairy
               </span>
             )}
             {option.category === "crops" && option.id !== "complete" && (

@@ -1,7 +1,8 @@
 // lib/feedFormulation.ts
-// Complete Poultry Feed Formulation Engine with Substitution Logic
+// Complete Poultry Feed Formulation Engine with Price‑Based Substitution
 // This module calculates custom feed formulations based on breed, stage, quantity,
-// available ingredients, custom prices, and automatically substitutes missing ingredients.
+// available ingredients, custom prices, and automatically substitutes missing ingredients
+// by choosing the cheapest available alternative in each nutritional group.
 
 export interface Ingredient {
   name: string;
@@ -33,6 +34,8 @@ export interface FeedResult {
 // ========== DEFAULT INGREDIENT PRICES (KES per kg) ==========
 const DEFAULT_INGREDIENT_PRICES: Record<string, number> = {
   'broken maize': 40,
+  'maize bran': 25,      // NEW
+  'maize germ': 30,      // NEW
   'sorghum': 38,
   'millet': 35,
   'cassava': 25,
@@ -44,6 +47,7 @@ const DEFAULT_INGREDIENT_PRICES: Record<string, number> = {
   'groundnut cake': 120,
   'cottonseed cake': 100,
   'wheat bran': 30,
+  'rice bran': 28,
   'lime': 20,
   'dcp': 120,
   'premix': 300,
@@ -67,22 +71,20 @@ const COUNTRY_PRICE_MULTIPLIERS: Record<string, number> = {
   'nigeria': 1.3,
   'ghana': 1.25,
   'ethiopia': 1.2,
+  // Add Sweden (SEK) – we treat SEK as base with multiplier 1.0 (or adjust as needed)
+  'sweden': 1.0,
 };
 
 // ========== SUBSTITUTION MAP ==========
-// For each primary ingredient, a list of alternatives with nutritional factors.
+// Each primary ingredient has a list of possible substitutes.
 // factor = multiplier to adjust the percentage to match nutrient density.
-// Example: omena has less protein than fish meal, so factor 1.2 means use 20% more.
+// The engine will choose the cheapest available substitute based on effective cost.
 const SUBSTITUTIONS: Record<string, { substitute: string; factor: number; note?: string }[]> = {
+  // PROTEIN GROUP
   'fish meal': [
     { substitute: 'omena', factor: 1.2, note: 'Omena is lower in protein; increase by 20%.' },
     { substitute: 'meat and bone meal', factor: 1.1 },
     { substitute: 'soya bean meal', factor: 1.3 },
-  ],
-  'broken maize': [
-    { substitute: 'sorghum', factor: 0.95, note: 'Sorghum has slightly lower energy; increase by 5%.' },
-    { substitute: 'millet', factor: 0.95 },
-    { substitute: 'cassava', factor: 1.2 },
   ],
   'soya bean meal': [
     { substitute: 'sunflower cake', factor: 1.3 },
@@ -93,10 +95,20 @@ const SUBSTITUTIONS: Record<string, { substitute: string; factor: number; note?:
     { substitute: 'groundnut cake', factor: 0.9 },
     { substitute: 'cottonseed cake', factor: 0.8 },
   ],
+  // ENERGY/CARBOHYDRATE GROUP
+  'broken maize': [
+    { substitute: 'sorghum', factor: 0.95, note: 'Sorghum has slightly lower energy; increase by 5%.' },
+    { substitute: 'millet', factor: 0.95 },
+    { substitute: 'cassava', factor: 1.2 },
+    { substitute: 'maize bran', factor: 1.1 },   // NEW
+    { substitute: 'maize germ', factor: 0.9 },   // NEW (higher fat, but lower starch)
+  ],
   'wheat bran': [
     { substitute: 'rice bran', factor: 1.0 },
-    { substitute: 'maize germ meal', factor: 0.9 },
+    { substitute: 'maize bran', factor: 1.0 },
+    { substitute: 'maize germ', factor: 0.8 },
   ],
+  // MINERAL GROUP
   'lime': [
     { substitute: 'oyster shell grit', factor: 1.0 },
   ],
@@ -440,7 +452,7 @@ const NUTRITION_TARGETS: Record<string, { protein: number; calcium: number; ener
   'finisher': { protein: 20, calcium: 0.7, energy: 2900 },
 };
 
-// ========== SUBSTITUTION ENGINE ==========
+// ========== PRICE-BASED SUBSTITUTION ENGINE ==========
 function applySubstitutions(
   formula: FeedFormula,
   availableIngredients: string[],
@@ -457,33 +469,48 @@ function applySubstitutions(
     // If the ingredient is already available, keep it.
     if (availableSet.has(normalizedIng)) continue;
 
-    // Otherwise, try to substitute
+    // Otherwise, try to substitute with the cheapest available alternative
     const substitutionChain = SUBSTITUTIONS[normalizedIng];
     if (!substitutionChain) {
       // No substitution available – keep it, but mark as unavailable later.
       continue;
     }
 
-    // Find the first substitute that is available
-    let foundSubstitute = false;
-    for (const sub of substitutionChain) {
-      const subNormalized = sub.substitute.toLowerCase().trim();
-      if (availableSet.has(subNormalized)) {
-        // Apply substitution: replace ingredient with substitute, adjust by factor.
-        const adjustedPercent = percent * sub.factor;
-        // Remove the original ingredient and add the substitute
-        delete adjustedFormula[ingredient];
-        adjustedFormula[sub.substitute] = (adjustedFormula[sub.substitute] || 0) + adjustedPercent;
-        substitutionsMade.push(`${ingredient} → ${sub.substitute} (factor ${sub.factor})`);
-        foundSubstitute = true;
-        break;
-      }
-    }
+    // Find all available substitutes in the chain
+    const candidates = substitutionChain
+      .map(sub => {
+        const subNormalized = sub.substitute.toLowerCase().trim();
+        if (availableSet.has(subNormalized)) {
+          const pricePerKg = getIngredientPrice(sub.substitute, country, customPrices);
+          const effectiveCost = pricePerKg * sub.factor; // because we need to use more or less of the substitute
+          return {
+            ...sub,
+            pricePerKg,
+            effectiveCost,
+            normalized: subNormalized,
+          };
+        }
+        return null;
+      })
+      .filter((c): c is NonNullable<typeof c> => c !== null);
 
-    if (!foundSubstitute) {
-      // No substitute available – keep the original ingredient (but we'll show warning later)
+    if (candidates.length === 0) {
+      // No substitute available – keep the original ingredient (will show warning later)
       continue;
     }
+
+    // Sort by effective cost (lowest first)
+    candidates.sort((a, b) => a.effectiveCost - b.effectiveCost);
+    const best = candidates[0];
+
+    // Apply substitution: replace ingredient with substitute, adjust by factor.
+    const adjustedPercent = percent * best.factor;
+    // Remove the original ingredient and add the substitute
+    delete adjustedFormula[ingredient];
+    adjustedFormula[best.substitute] = (adjustedFormula[best.substitute] || 0) + adjustedPercent;
+    substitutionsMade.push(
+      `${ingredient} → ${best.substitute} (factor ${best.factor}) – cheapest at ${best.pricePerKg.toFixed(2)}/kg`
+    );
   }
 
   // Normalize percentages so they sum to 100%
@@ -495,13 +522,10 @@ function applySubstitutions(
     }
   }
 
-  // Ensure calcium for layers is at least 3.5%
-  // (this is a safety check – will be handled by nutritional targets)
-
   return { adjustedFormula, substitutionsMade };
 }
 
-// ========== MAIN FORMULATION FUNCTION (UPDATED WITH SUBSTITUTION) ==========
+// ========== MAIN FORMULATION FUNCTION (UPDATED) ==========
 export function formulateFeed(params: {
   breed: string;
   stage: string;
@@ -538,7 +562,7 @@ export function formulateFeed(params: {
     throw new Error(`Unsupported stage: ${stage} for breed ${breed}. Supported stages are: ${Object.keys(breedFormulas).join(', ')}`);
   }
 
-  // Apply substitutions based on available ingredients
+  // Apply substitutions based on available ingredients (now with price optimization)
   const { adjustedFormula, substitutionsMade } = applySubstitutions(
     formula,
     availableIngredients,
@@ -568,35 +592,16 @@ export function formulateFeed(params: {
     };
   });
 
-  // Subtract available ingredients (reduce needed quantity by 50% if farmer has some)
-  const adjustedIngredients = ingredients.map(ing => {
-    const hasIngredient = availableIngredients.some(avail =>
-      avail.toLowerCase().includes(ing.name.toLowerCase())
-    );
-    if (hasIngredient) {
-      const reducedAmount = ing.amountKg * 0.5; // farmer has half the needed amount
-      const reducedCost = reducedAmount * ing.pricePerKg;
-      return {
-        ...ing,
-        amountKg: parseFloat(reducedAmount.toFixed(3)),
-        cost: parseFloat(reducedCost.toFixed(2)),
-        available: true,
-      };
-    }
-    return ing;
-  });
-
   // Remove ingredients with zero amount (can happen if available covers all)
-  const finalIngredients = adjustedIngredients.filter(ing => ing.amountKg > 0.01);
+  const finalIngredients = ingredients.filter(ing => ing.amountKg > 0.01);
 
   // Calculate total cost
   const totalCost = finalIngredients.reduce((sum, ing) => sum + ing.cost, 0);
 
   // Build structured list for display/voice
   const ingredientLines = finalIngredients.map(ing => {
-    const availText = ing.available ? ' (you have some)' : '';
     const subText = ing.isSubstitute ? ` (substitute for ${ing.originalName})` : '';
-    return `${ing.name}${subText}: ${ing.amountKg.toFixed(2)} kg (${ing.cost.toFixed(2)})${availText}`;
+    return `${ing.name}${subText}: ${ing.amountKg.toFixed(2)} kg (${ing.cost.toFixed(2)})`;
   });
 
   // Nutritional summary – use the targets (since substitutions are factor-adjusted)
@@ -611,10 +616,16 @@ export function formulateFeed(params: {
     warnings.push("⚠️ Withdraw coccidiostat 5–7 days before slaughter if used.");
   }
   if (finalIngredients.length === 0) {
-    warnings.push("⚠️ You seem to have all ingredients already – you may not need to buy anything!");
+    warnings.push("⚠️ No ingredients – you may not need to buy anything!");
   }
   if (substitutionsMade.length > 0) {
     warnings.push(`⚠️ Substitutions made: ${substitutionsMade.join('; ')}. Nutritional balance may differ slightly.`);
+  }
+  // Check for any ingredient that is not available and has no substitute
+  for (const ing of finalIngredients) {
+    if (!availableIngredients.some(avail => avail.toLowerCase().includes(ing.name.toLowerCase())) && !ing.isSubstitute) {
+      warnings.push(`⚠️ ${ing.name} is not available and no substitute was found. You will need to purchase it.`);
+    }
   }
 
   // Mixing instructions

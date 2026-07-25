@@ -1,7 +1,4 @@
-// app/api/vapi/generate/route.ts – FULLY UPDATED
-// Supports both crops and poultry via the same recommendation engine
-// Poultry path uses generateRecommendations (with isPoultry: true)
-
+// app/api/vapi/generate/route.ts – COMPLETE (crops + poultry + dairy with all fields)
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/firebase/admin";
 import { soilTestInterpreter } from "@/lib/soilTestInterpreter";
@@ -11,7 +8,7 @@ import { getSpacingOptions } from "@/lib/data/spacing";
 import { getPlantingAdvice, getPlantingAdviceText } from "@/lib/data/plantingDates";
 import { COUNTRY_CURRENCY_MAP } from "@/lib/config/currency";
 
-console.log("Farmer Session Generation Route Loaded - v7.0 (Unified Engine)");
+console.log("Farmer Session Generation Route Loaded - v8.2 (All Dairy Fields Fixed)");
 
 const withTimeout = <T>(promise: Promise<T>, ms: number, errorMessage: string = "Operation timed out"): Promise<T> => {
   let timeoutId: NodeJS.Timeout;
@@ -48,6 +45,9 @@ function getCacheKey(inputs: any): string {
     poultry_system,
     poultry_flock_size,
     poultry_age_weeks,
+    isDairy,
+    dairy_breed,
+    dairy_cow_category,
   } = inputs;
   return JSON.stringify({
     lang: userLanguage,
@@ -72,6 +72,9 @@ function getCacheKey(inputs: any): string {
     poultry_system,
     poultry_flock_size,
     poultry_age_weeks,
+    isDairy,
+    dairy_breed,
+    dairy_cow_category,
   });
 }
 
@@ -165,7 +168,7 @@ function parseNPK(fertilizerName: string): { n: number; p: number; k: number } {
   return { n: 0, p: 0, k: 0 };
 }
 
-// ========== BUILD EXTENSION PLAN ==========
+// ========== BUILD EXTENSION PLAN (No Soil Test) ==========
 function buildExtensionFertilizerPlan(
   plantingFertilizerType: string,
   plantingFertilizerQuantity: number,
@@ -418,10 +421,12 @@ function addLineBreaksForVoice(recommendations: any): any {
   return recommendations;
 }
 
-// ========== MAIN POST ==========
+// =============================================================
+// MAIN POST HANDLER
+// =============================================================
 export async function POST(request: NextRequest) {
   try {
-    console.log("🚀🚀🚀 USING V7.0 ROUTE (Unified Engine) 🚀🚀🚀");
+    console.log("🚀🚀🚀 USING V8.2 ROUTE (All Dairy Fields Fixed) 🚀🚀🚀");
     const body = await request.json();
     const cookieLanguage = request.cookies.get('preferred-language')?.value;
     const bodyLanguage = body.language;
@@ -429,7 +434,7 @@ export async function POST(request: NextRequest) {
     console.log(`🌐 Generating recommendations in language: ${userLanguage}`);
 
     const {
-      // Common fields
+      // Common fields (all species)
       farmerName, phoneNumber, subCounty, ward, village, totalFarmSize, cultivatedAcres, waterSources,
       crops, cropVarieties, cropAcres, plantingDate, seedSource, spacing, seedRate,
       usePlantingFertilizer, plantingFertilizerType, plantingFertilizerQuantity,
@@ -477,6 +482,87 @@ export async function POST(request: NextRequest) {
       poultry_egg_price,
       poultry_meat_price,
       poultry_house_size_m2,
+      poultry_disease,
+      poultry_disease_symptoms,
+      poultry_mortality_count_disease,
+      poultry_disease_duration,
+
+      // ===== DAIRY FIELDS (ALL AGENTS) =====
+      isDairy,
+      dairyCowCategory,
+      dairyBodyWeightKg,
+      dairyBreed,
+      dairyDiseaseSelect,               // <-- ADDED (disease dropdown)
+      dairySymptoms,
+      dairyMortalityCount,
+      dairyHealthDuration,
+      dairyMilkYieldPerDay,
+      dairyMilkPricePerLitre,
+      dairyFeedCostPerDay,
+      dairyVetCostPerMonth,
+      // DairyBreedingAgent
+      dairyDaysSinceCalving,            // <-- ADDED
+      dairyHeatObserved,                // <-- ADDED
+      dairyLastInseminationDate,        // <-- ADDED
+      dairyBreedingMethod,              // <-- ADDED
+      dairyReproductiveProblems,        // <-- ADDED
+      // DairyBusinessAgent
+      dairyBusinessInterest,            // <-- ADDED
+      // DairyCalfAgent
+      calfAgeWeeks,
+      calfFeedingMethod,
+      calfMilkLitresPerDay,
+      calfReceivedColostrum,
+      calfHousingType,
+      calfHealthIssues,
+      // DairyConcentrateAgent
+      dairyConcentrateBrand,
+      dairyConcentrateProduct,
+      dairyConcentrateInclusion,
+      dairyConcentrateMaizeKg,
+      dairyConcentrateSaltKg,
+      dairyConcentrateCalciumSource,
+      dairyConcentrateCalciumKg,
+      // DairyDeficiencyAgent
+      dairyDeficiencySymptoms,          // <-- ADDED
+      // DairyDosDontsAgent
+      dairyManagementFocus,             // <-- ADDED
+      // DairyFeedAgent
+      dairyAvailableForages,
+      dairyAvailableGrains,
+      dairyAvailableProtein,
+      dairyAvailableMinerals,
+      dairyQuantityToMix,
+      // DairyFeedPerDayAgent
+      dairyForageType,
+      dairyForageKgPerDay,
+      dairyConcentrateType,
+      dairyConcentrateKgPerDay,
+      dairyMilkYield,
+      // DairyFinancialAgent (some overlap with setup, but we capture all)
+      dairyMilkPrice,
+      dairyVetCostMonth,
+      dairyOtherCosts,
+      // DairyHousingAgent
+      dairyHousingType,
+      numberOfCowsHoused,
+      floorSpacePerCowM2,
+      dairyVentilationRating,
+      beddingType,
+      // DairyMilkAgent
+      milkYieldCurrent,
+      milkFatPercent,
+      milkProteinPercent,
+      daysInMilk,
+      parity,
+      // DairyParasiteAgent
+      dairyParasiteSigns,               // <-- ADDED
+      // DairyReminderAgent
+      dairyLastDeworming,
+      dairyLastHoofTrimming,
+      dairyLastVaccination,
+      dairyNextVaccinationDue,
+      dairyReminderTopics,
     } = body;
 
     // Basic validation (userid is always required)
@@ -488,7 +574,224 @@ export async function POST(request: NextRequest) {
     const currencyConfig = getCurrencyForCountry(country);
 
     // ============================================================
-    // POULTRY PATH – uses generateRecommendations with isPoultry: true
+    // DAIRY PATH
+    // ============================================================
+    if (isDairy) {
+      console.log(`🐄 Generating dairy recommendations for breed: ${dairyBreed}, category: ${dairyCowCategory}`);
+
+      // Build farmerData for the recommendation engine (include all fields)
+      const farmerData = {
+        farmerName: farmerName || 'Farmer',
+        country: country || 'kenya',
+        language: userLanguage,
+        currencySymbol: currencyConfig.symbol,
+        currencyName: currencyConfig.name,
+        county: county || '',
+        // Dairy core
+        dairyCowCategory: dairyCowCategory || 'lactating',
+        dairyBodyWeightKg: parseFloat(dairyBodyWeightKg) || 500,
+        dairyBreed: dairyBreed || 'fh',
+        dairyDiseaseSelect: dairyDiseaseSelect || '',
+        dairySymptoms: dairySymptoms ? (typeof dairySymptoms === 'string' ? dairySymptoms.split(',').map((s: string) => s.trim()) : dairySymptoms) : [],
+        dairyMortalityCount: parseInt(dairyMortalityCount) || 0,
+        dairyHealthDuration: dairyHealthDuration || 'less_than_3_days',
+        dairyMilkYieldPerDay: parseFloat(dairyMilkYieldPerDay) || 10,
+        dairyMilkPricePerLitre: parseFloat(dairyMilkPricePerLitre) || 40,
+        dairyFeedCostPerDay: parseFloat(dairyFeedCostPerDay) || 100,
+        dairyVetCostPerMonth: parseFloat(dairyVetCostPerMonth) || 500,
+        // Breeding
+        dairyDaysSinceCalving: dairyDaysSinceCalving || '',
+        dairyHeatObserved: dairyHeatObserved || '',
+        dairyLastInseminationDate: dairyLastInseminationDate || '',
+        dairyBreedingMethod: dairyBreedingMethod || '',
+        dairyReproductiveProblems: dairyReproductiveProblems || '',
+        // Business
+        dairyBusinessInterest: dairyBusinessInterest || '',
+        // Calf
+        calfAgeWeeks: calfAgeWeeks || '',
+        calfFeedingMethod: calfFeedingMethod || '',
+        calfMilkLitresPerDay: calfMilkLitresPerDay || '',
+        calfReceivedColostrum: calfReceivedColostrum || '',
+        calfHousingType: calfHousingType || '',
+        calfHealthIssues: calfHealthIssues || '',
+        // Concentrate
+        dairyConcentrateBrand: dairyConcentrateBrand || '',
+        dairyConcentrateProduct: dairyConcentrateProduct || '',
+        dairyConcentrateInclusion: dairyConcentrateInclusion || '',
+        dairyConcentrateMaizeKg: dairyConcentrateMaizeKg || '',
+        dairyConcentrateSaltKg: dairyConcentrateSaltKg || '',
+        dairyConcentrateCalciumSource: dairyConcentrateCalciumSource || '',
+        dairyConcentrateCalciumKg: dairyConcentrateCalciumKg || '',
+        // Deficiency
+        dairyDeficiencySymptoms: dairyDeficiencySymptoms || '',
+        // DosDonts
+        dairyManagementFocus: dairyManagementFocus || '',
+        // Feed
+        dairyAvailableForages: dairyAvailableForages || '',
+        dairyAvailableGrains: dairyAvailableGrains || '',
+        dairyAvailableProtein: dairyAvailableProtein || '',
+        dairyAvailableMinerals: dairyAvailableMinerals || '',
+        dairyQuantityToMix: dairyQuantityToMix || '',
+        // FeedPerDay
+        dairyForageType: dairyForageType || '',
+        dairyForageKgPerDay: dairyForageKgPerDay || '',
+        dairyConcentrateType: dairyConcentrateType || '',
+        dairyConcentrateKgPerDay: dairyConcentrateKgPerDay || '',
+        dairyMilkYield: dairyMilkYield || '',
+        // Financial (extra)
+        dairyMilkPrice: dairyMilkPrice || '',
+        dairyVetCostMonth: dairyVetCostMonth || '',
+        dairyOtherCosts: dairyOtherCosts || '',
+        // Housing
+        dairyHousingType: dairyHousingType || '',
+        numberOfCowsHoused: numberOfCowsHoused || '',
+        floorSpacePerCowM2: floorSpacePerCowM2 || '',
+        dairyVentilationRating: dairyVentilationRating || '',
+        beddingType: beddingType || '',
+        // Milk
+        milkYieldCurrent: milkYieldCurrent || '',
+        milkFatPercent: milkFatPercent || '',
+        milkProteinPercent: milkProteinPercent || '',
+        daysInMilk: daysInMilk || '',
+        parity: parity || '',
+        // Parasite
+        dairyParasiteSigns: dairyParasiteSigns || '',
+        // Reminder
+        dairyLastDeworming: dairyLastDeworming || '',
+        dairyLastHoofTrimming: dairyLastHoofTrimming || '',
+        dairyLastVaccination: dairyLastVaccination || '',
+        dairyNextVaccinationDue: dairyNextVaccinationDue || '',
+        dairyReminderTopics: dairyReminderTopics || '',
+      };
+
+      // Call the recommendation engine
+      let recommendationsOutput = await withTimeout(
+        generateRecommendations({
+          hasSoilTest: false,
+          soilAnalysis: null,
+          fertilizerPlan: null,
+          crop: '',
+          crops: [],
+          farmerData: farmerData,
+          modules: modules || [],
+          isPoultry: false,
+          isDairy: true,
+        }),
+        600000,
+        "Recommendation generation timed out after 600 seconds"
+      );
+
+      // Post-process: add line breaks for voice
+      recommendationsOutput = addLineBreaksForVoice(recommendationsOutput);
+
+      // Save session
+      const sessionRef = db.collection("farmer_sessions").doc();
+      const sessionId = sessionRef.id;
+
+      const farmerSession = {
+        id: sessionId,
+        userId: userid,
+        language: userLanguage,
+        farmerName,
+        phoneNumber,
+        county,
+        subCounty,
+        ward,
+        village,
+        country: country || 'kenya',
+        species: "dairy",
+        isDairy: true,
+        dairy: {
+          cowCategory: dairyCowCategory,
+          bodyWeightKg: parseFloat(dairyBodyWeightKg) || 500,
+          breed: dairyBreed,
+          diseaseSelect: dairyDiseaseSelect || '',
+          symptoms: dairySymptoms,
+          mortalityCount: parseInt(dairyMortalityCount) || 0,
+          healthDuration: dairyHealthDuration,
+          milkYieldPerDay: parseFloat(dairyMilkYieldPerDay) || 10,
+          milkPricePerLitre: parseFloat(dairyMilkPricePerLitre) || 40,
+          feedCostPerDay: parseFloat(dairyFeedCostPerDay) || 100,
+          vetCostPerMonth: parseFloat(dairyVetCostPerMonth) || 500,
+          // Additional fields
+          daysSinceCalving: dairyDaysSinceCalving || '',
+          heatObserved: dairyHeatObserved || '',
+          lastInseminationDate: dairyLastInseminationDate || '',
+          breedingMethod: dairyBreedingMethod || '',
+          reproductiveProblems: dairyReproductiveProblems || '',
+          businessInterest: dairyBusinessInterest || '',
+          calfAgeWeeks: calfAgeWeeks || '',
+          calfFeedingMethod: calfFeedingMethod || '',
+          calfMilkLitresPerDay: calfMilkLitresPerDay || '',
+          calfReceivedColostrum: calfReceivedColostrum || '',
+          calfHousingType: calfHousingType || '',
+          calfHealthIssues: calfHealthIssues || '',
+          concentrateBrand: dairyConcentrateBrand || '',
+          concentrateProduct: dairyConcentrateProduct || '',
+          concentrateInclusion: dairyConcentrateInclusion || '',
+          concentrateMaizeKg: dairyConcentrateMaizeKg || '',
+          concentrateSaltKg: dairyConcentrateSaltKg || '',
+          concentrateCalciumSource: dairyConcentrateCalciumSource || '',
+          concentrateCalciumKg: dairyConcentrateCalciumKg || '',
+          deficiencySymptoms: dairyDeficiencySymptoms || '',
+          managementFocus: dairyManagementFocus || '',
+          availableForages: dairyAvailableForages || '',
+          availableGrains: dairyAvailableGrains || '',
+          availableProtein: dairyAvailableProtein || '',
+          availableMinerals: dairyAvailableMinerals || '',
+          quantityToMix: dairyQuantityToMix || '',
+          forageType: dairyForageType || '',
+          forageKgPerDay: dairyForageKgPerDay || '',
+          concentrateType: dairyConcentrateType || '',
+          concentrateKgPerDay: dairyConcentrateKgPerDay || '',
+          milkYield: dairyMilkYield || '',
+          milkPrice: dairyMilkPrice || '',
+          vetCostMonth: dairyVetCostMonth || '',
+          otherCosts: dairyOtherCosts || '',
+          housingType: dairyHousingType || '',
+          numberOfCowsHoused: numberOfCowsHoused || '',
+          floorSpacePerCowM2: floorSpacePerCowM2 || '',
+          ventilationRating: dairyVentilationRating || '',
+          beddingType: beddingType || '',
+          milkYieldCurrent: milkYieldCurrent || '',
+          milkFatPercent: milkFatPercent || '',
+          milkProteinPercent: milkProteinPercent || '',
+          daysInMilk: daysInMilk || '',
+          parity: parity || '',
+          parasiteSigns: dairyParasiteSigns || '',
+          lastDeworming: dairyLastDeworming || '',
+          lastHoofTrimming: dairyLastHoofTrimming || '',
+          lastVaccination: dairyLastVaccination || '',
+          nextVaccinationDue: dairyNextVaccinationDue || '',
+          reminderTopics: dairyReminderTopics || '',
+        },
+        recommendations: recommendationsOutput.list || [],
+        financialAdvice: recommendationsOutput.financialAdvice || null,
+        structuredList: recommendationsOutput.structuredList || [],
+        structuredFinancialAdvice: recommendationsOutput.structuredFinancialAdvice || null,
+        metadata: {
+          createdAt: new Date().toISOString(),
+          source: "dairy-v8.2-all-fields",
+          version: "8.2"
+        }
+      };
+
+      await sessionRef.set(farmerSession);
+      console.log(`✅ Saved dairy session ${sessionId} for breed ${dairyBreed}. Recommendations count: ${recommendationsOutput.structuredList?.length || 0}`);
+
+      return NextResponse.json({
+        success: true,
+        sessionId: sessionId,
+        structuredList: recommendationsOutput.structuredList || [],
+        structuredFinancialAdvice: recommendationsOutput.structuredFinancialAdvice || null,
+        financialAdvice: recommendationsOutput.financialAdvice || null,
+        recommendations: recommendationsOutput.list || [],
+        welcomeMessage: `Welcome ${farmerName || "Farmer"}! I've prepared your dairy recommendations for ${dairyBreed}.`
+      }, { status: 200 });
+    }
+
+    // ============================================================
+    // POULTRY PATH
     // ============================================================
     if (isPoultry) {
       console.log(`🐔 Generating poultry recommendations for breed: ${poultry_breed}, system: ${poultry_system}, flock: ${poultry_flock_size}`);
@@ -504,25 +807,25 @@ export async function POST(request: NextRequest) {
         // Poultry fields
         poultry_breed: poultry_breed || 'Sussex',
         poultry_system: poultry_system || 'deep_litter',
-        poultry_flock_size: poultry_flock_size || 100,
-        poultry_age_weeks: poultry_age_weeks || 0,
+        poultry_flock_size: parseInt(poultry_flock_size) || 100,
+        poultry_age_weeks: parseInt(poultry_age_weeks) || 0,
         poultry_farming_goal: poultry_farming_goal || 'Both',
         poultry_location_region: poultry_location_region || 'Moderate',
         poultry_rainfall_pattern: poultry_rainfall_pattern || 'Wet',
         poultry_altitude: poultry_altitude || 'Lowland',
         poultry_feed_type: poultry_feed_type || 'Mash',
-        poultry_feed_cost_kg: poultry_feed_cost_kg || 65,
+        poultry_feed_cost_kg: parseFloat(poultry_feed_cost_kg) || 65,
         poultry_vaccination_done: poultry_vaccination_done || 'No',
-        poultry_mortality_count: poultry_mortality_count || 0,
-        poultry_chick_cost: poultry_chick_cost || 120,
-        poultry_egg_price: poultry_egg_price || 280,
-        poultry_meat_price: poultry_meat_price || 350,
-        poultry_house_size_m2: poultry_house_size_m2 || 40,
-        // Disease fields (collected by PoultryDiseaseAgent)
-        poultry_disease: body.poultry_disease || '',
-        symptomsObserved: body.symptomsObserved || '',
-        mortalityCountDisease: body.mortalityCountDisease || '',
-        diseaseDuration: body.diseaseDuration || '',
+        poultry_mortality_count: parseInt(poultry_mortality_count) || 0,
+        poultry_chick_cost: parseFloat(poultry_chick_cost) || 120,
+        poultry_egg_price: parseFloat(poultry_egg_price) || 280,
+        poultry_meat_price: parseFloat(poultry_meat_price) || 350,
+        poultry_house_size_m2: parseFloat(poultry_house_size_m2) || 40,
+        // Disease fields
+        poultry_disease: poultry_disease || '',
+        poultry_disease_symptoms: poultry_disease_symptoms || '',
+        poultry_mortality_count_disease: parseInt(poultry_mortality_count_disease) || 0,
+        poultry_disease_duration: poultry_disease_duration || '',
       };
 
       // Call the recommendation engine
@@ -565,24 +868,24 @@ export async function POST(request: NextRequest) {
         poultry: {
           breed: poultry_breed,
           system: poultry_system,
-          flockSize: poultry_flock_size,
-          ageWeeks: poultry_age_weeks,
+          flockSize: parseInt(poultry_flock_size) || 100,
+          ageWeeks: parseInt(poultry_age_weeks) || 0,
           farmingGoal: poultry_farming_goal,
           locationRegion: poultry_location_region,
           rainfallPattern: poultry_rainfall_pattern,
           altitude: poultry_altitude,
           feedType: poultry_feed_type,
-          feedCostKg: poultry_feed_cost_kg,
+          feedCostKg: parseFloat(poultry_feed_cost_kg) || 65,
           vaccinationDone: poultry_vaccination_done,
-          mortalityCount: poultry_mortality_count,
-          chickCost: poultry_chick_cost,
-          eggPrice: poultry_egg_price,
-          meatPrice: poultry_meat_price,
-          houseSizeM2: poultry_house_size_m2,
-          disease: body.poultry_disease || '',
-          symptomsObserved: body.symptomsObserved || '',
-          mortalityCountDisease: body.mortalityCountDisease || '',
-          diseaseDuration: body.diseaseDuration || '',
+          mortalityCount: parseInt(poultry_mortality_count) || 0,
+          chickCost: parseFloat(poultry_chick_cost) || 120,
+          eggPrice: parseFloat(poultry_egg_price) || 280,
+          meatPrice: parseFloat(poultry_meat_price) || 350,
+          houseSizeM2: parseFloat(poultry_house_size_m2) || 40,
+          disease: poultry_disease || '',
+          diseaseSymptoms: poultry_disease_symptoms || '',
+          mortalityCountDisease: parseInt(poultry_mortality_count_disease) || 0,
+          diseaseDuration: poultry_disease_duration || '',
         },
         recommendations: recommendationsOutput.list || [],
         financialAdvice: recommendationsOutput.financialAdvice || null,
@@ -590,8 +893,8 @@ export async function POST(request: NextRequest) {
         structuredFinancialAdvice: recommendationsOutput.structuredFinancialAdvice || null,
         metadata: {
           createdAt: new Date().toISOString(),
-          source: "poultry-v7.0-unified-engine",
-          version: "7.0"
+          source: "poultry-v8.2-all-fields",
+          version: "8.2"
         }
       };
 
@@ -830,7 +1133,8 @@ export async function POST(request: NextRequest) {
       soilTestPH, soilTestP, soilTestK, actualYieldKg: validatedYieldKg,
       pricePerKg: validatedPricePerKg, totalCosts, country, plantsDamaged,
       deficiencySymptoms, deficiencyLocation, spacing, storageMethod, wantsNutritionBenefits,
-      isPoultry: false, poultry_breed: null, poultry_system: null, poultry_flock_size: null, poultry_age_weeks: null
+      isPoultry: false, poultry_breed: null, poultry_system: null, poultry_flock_size: null, poultry_age_weeks: null,
+      isDairy: false, dairy_breed: null, dairy_cow_category: null
     });
 
     if (cache.has(cacheKey)) {
@@ -1020,7 +1324,7 @@ export async function POST(request: NextRequest) {
         warnings: { yield: yieldWarnings, price: priceWarnings, spacing: spacingWarning ? [spacingWarning] : [] },
         createdAt: new Date().toISOString(),
         source: "logic-based",
-        version: "7.0"
+        version: "8.2"
       }
     };
 
@@ -1049,7 +1353,7 @@ export async function POST(request: NextRequest) {
 export async function GET() {
   return NextResponse.json({
     status: "operational",
-    message: "Farmer Session Generation API - v7.0: Unified Engine for Crops + Poultry",
-    version: "7.0"
+    message: "Farmer Session Generation API - v8.2: All Dairy Fields Fixed",
+    version: "8.2"
   });
 }

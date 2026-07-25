@@ -1,52 +1,72 @@
 // lib/agents/DairySetupAgent.ts
-import { BaseInterviewAgent, InterviewQuestion } from "./BaseInterviewAgent";
+import { BaseInterviewAgent, InterviewQuestion, FarmerContext } from "./BaseInterviewAgent";
+
+const DAIRY_CATEGORIES = ["lactating", "dry", "heifer", "calf"];
+const DAIRY_BREEDS = ["fh", "ayrshire", "jersey", "guernsey", "sahiwal", "zebu", "cross"];
 
 export class DairySetupAgent extends BaseInterviewAgent {
-  constructor() {
-    super();
-    this.questions = [
-      {
-        id: "cowCategory",
-        type: "select",
-        label: "What category is this cow?",
-        options: [
-          { value: "lactating", label: "Lactating cow" },
-          { value: "dry", label: "Dry cow" },
-          { value: "heifer", label: "Heifer" },
-          { value: "calf", label: "Calf" },
-        ],
-        required: true,
-      },
-      {
-        id: "bodyWeightKg",
-        type: "number",
-        label: "What is the average body weight in kilograms?",
-        placeholder: "e.g., 500",
-        required: true,
-      },
-      {
-        id: "breedDairy",
-        type: "select",
-        label: "Which breed is this cow?",
-        options: [
-          { value: "fh", label: "Friesian (Holstein)" },
-          { value: "ayrshire", label: "Ayrshire" },
-          { value: "jersey", label: "Jersey" },
-          { value: "guernsey", label: "Guernsey" },
-          { value: "sahiwal", label: "Sahiwal" },
-          { value: "zebu", label: "Zebu" },
-          { value: "cross", label: "Crossbreed" },
-        ],
-        required: true,
-      },
-    ];
+  getAgentKey(): string {
+    return "DairySetupAgent";
   }
 
-  async generateRecommendation(): Promise<any> {
-    return {
-      agentType: "DairySetup",
-      collectedData: this.answers,
-      message: "Dairy setup details collected.",
-    };
+  getQuestions(context: FarmerContext): InterviewQuestion[] {
+    return [
+      // Core details
+      {
+        id: "dairyCowCategory",
+        type: "dropdown",
+        questionKey: "question_dairy_cow_category",
+        options: DAIRY_CATEGORIES,
+        sectionKey: "section_dairy",
+      },
+      {
+        id: "dairyBodyWeightKg",
+        type: "number",
+        questionKey: "question_dairy_body_weight_kg",
+        placeholder: "e.g., 500",
+        step: "any",
+        sectionKey: "section_dairy",
+      },
+      {
+        id: "dairyBreed",
+        type: "dropdown",
+        questionKey: "question_dairy_breed",
+        options: DAIRY_BREEDS,
+        sectionKey: "section_dairy",
+      },
+      // Financial / production
+      {
+        id: "dairyMilkYieldPerDay",
+        type: "number",
+        questionKey: "question_dairy_milk_yield_per_day",
+        placeholder: "e.g., 10",
+        step: "any",
+        sectionKey: "section_dairy",
+      },
+      {
+        id: "dairyMilkPricePerLitre",
+        type: "number",
+        questionKey: "question_dairy_milk_price_per_litre",
+        placeholder: "e.g., 40",
+        step: "any",
+        sectionKey: "section_dairy",
+      },
+      {
+        id: "dairyFeedCostPerDay",
+        type: "number",
+        questionKey: "question_dairy_feed_cost_per_day",
+        placeholder: "e.g., 100",
+        step: "any",
+        sectionKey: "section_dairy",
+      },
+      {
+        id: "dairyVetCostPerMonth",
+        type: "number",
+        questionKey: "question_dairy_vet_cost_per_month",
+        placeholder: "e.g., 500",
+        step: "any",
+        sectionKey: "section_dairy",
+      },
+    ];
   }
 }

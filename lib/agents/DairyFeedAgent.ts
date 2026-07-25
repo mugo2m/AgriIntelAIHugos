@@ -1,84 +1,54 @@
 // lib/agents/DairyFeedAgent.ts
-import { BaseInterviewAgent, InterviewQuestion } from "./BaseInterviewAgent";
+import { BaseInterviewAgent, InterviewQuestion, FarmerContext } from "./BaseInterviewAgent";
+
+const FORAGES = ["napier_grass", "rhodes_hay", "lucerne_hay", "maize_silage", "oat_hay", "desmodium", "banana_leaves", "maize_stover"];
+const GRAINS = ["maize", "sorghum", "millet", "wheat_bran", "pollard", "rice_bran", "molasses"];
+const PROTEINS = ["soybean_meal", "sunflower_cake", "cottonseed_cake", "groundnut_cake", "canola_meal", "fishmeal"];
+const MINERALS = ["salt", "limestone", "dcp", "magnesium_oxide", "dairy_premix", "sodium_bicarbonate"];
 
 export class DairyFeedAgent extends BaseInterviewAgent {
-  constructor() {
-    super();
-    this.questions = [
+  getAgentKey(): string {
+    return "DairyFeedAgent";
+  }
+
+  getQuestions(context: FarmerContext): InterviewQuestion[] {
+    return [
       {
         id: "dairyAvailableForages",
         type: "multiselect",
-        label: "Which forages do you have available?",
-        options: [
-          { value: "napier_grass", label: "Napier grass" },
-          { value: "rhodes_hay", label: "Rhodes hay" },
-          { value: "lucerne_hay", label: "Lucerne hay" },
-          { value: "maize_silage", label: "Maize silage" },
-          { value: "oat_hay", label: "Oat hay" },
-          { value: "desmodium", label: "Desmodium" },
-          { value: "banana_leaves", label: "Banana leaves" },
-          { value: "maize_stover", label: "Maize stover" },
-        ],
-        required: true,
+        questionKey: "question_dairy_available_forages",
+        options: FORAGES,
+        sectionKey: "section_dairy_feed",
       },
       {
         id: "dairyAvailableGrains",
         type: "multiselect",
-        label: "Which grains or energy sources do you have?",
-        options: [
-          { value: "maize", label: "Maize" },
-          { value: "sorghum", label: "Sorghum" },
-          { value: "millet", label: "Millet" },
-          { value: "wheat_bran", label: "Wheat bran" },
-          { value: "pollard", label: "Pollard" },
-          { value: "rice_bran", label: "Rice bran" },
-          { value: "molasses", label: "Molasses" },
-        ],
-        required: false,
+        questionKey: "question_dairy_available_grains",
+        options: GRAINS,
+        sectionKey: "section_dairy_feed",
       },
       {
         id: "dairyAvailableProtein",
         type: "multiselect",
-        label: "Which protein sources do you have?",
-        options: [
-          { value: "soybean_meal", label: "Soybean meal" },
-          { value: "sunflower_cake", label: "Sunflower cake" },
-          { value: "cottonseed_cake", label: "Cottonseed cake" },
-          { value: "groundnut_cake", label: "Groundnut cake" },
-          { value: "canola_meal", label: "Canola meal" },
-          { value: "fishmeal", label: "Fishmeal" },
-        ],
-        required: false,
+        questionKey: "question_dairy_available_protein",
+        options: PROTEINS,
+        sectionKey: "section_dairy_feed",
       },
       {
         id: "dairyAvailableMinerals",
         type: "multiselect",
-        label: "Which minerals and additives do you have?",
-        options: [
-          { value: "salt", label: "Salt" },
-          { value: "limestone", label: "Limestone flour" },
-          { value: "dcp", label: "DCP" },
-          { value: "magnesium_oxide", label: "Magnesium oxide" },
-          { value: "dairy_premix", label: "Dairy premix" },
-          { value: "sodium_bicarbonate", label: "Sodium bicarbonate" },
-        ],
-        required: false,
+        questionKey: "question_dairy_available_minerals",
+        options: MINERALS,
+        sectionKey: "section_dairy_feed",
       },
       {
         id: "dairyQuantityToMix",
         type: "number",
-        label: "How many kilograms of total mixed ration do you want to mix per day?",
+        questionKey: "question_dairy_quantity_to_mix",
         placeholder: "e.g., 40",
-        required: false,
+        step: "any",
+        sectionKey: "section_dairy_feed",
       },
     ];
-  }
-
-  async generateRecommendation(): Promise<any> {
-    return {
-      agentType: "DairyFeed",
-      collectedData: this.answers,
-      message: "Dairy feed formulation details collected.",
-    };
   }
 }

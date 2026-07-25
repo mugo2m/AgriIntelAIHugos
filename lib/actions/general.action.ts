@@ -1,5 +1,5 @@
 ﻿// lib/actions/general.action.ts
-// VERSION: 2.0 – Fully compatible with "No Soil Test" path (extensionInputs stored in session)
+// VERSION: 3.2 – Full dairy agent data in session summaries
 "use server";
 
 import { db } from "@/firebase/admin";
@@ -262,7 +262,7 @@ function estimateCosts(category: string, level: 'low' | 'medium' | 'high'): { se
 
 // 🌾 Calculate gross margin based on crop defaults (supports all 219 crops)
 function calculateGrossMargin(session: any) {
-  if (!session) return null;
+  if (!session || session.isPoultry || session.isDairy) return null; // Only for crops
 
   const crop = session.crops?.[0] || 'maize';
   const lowerCrop = crop.toLowerCase();
@@ -321,7 +321,7 @@ function getFinancialRecommendation(level: string, low: any, medium: any, high: 
   }
 }
 
-// 🌾 ENHANCED: Generate farmer session summary
+// 🌾 ENHANCED: Generate farmer session summary (supports crops, poultry, dairy with all agent data)
 export async function generateFarmerSessionSummary(params: {
   sessionId: string;
   userId: string;
@@ -362,11 +362,19 @@ export async function generateFarmerSessionSummary(params: {
       region: session?.county
     });
 
-    const grossMargin = calculateGrossMargin(session);
+    // Determine if session is crop, poultry, or dairy
+    const isCrop = !session.isPoultry && !session.isDairy;
+    const isPoultry = session.isPoultry === true;
+    const isDairy = session.isDairy === true;
 
-    // Process soil test data if available
+    let grossMargin = null;
+    if (isCrop) {
+      grossMargin = calculateGrossMargin(session);
+    }
+
+    // Process soil test data if available (crops only)
     let soilTestSummary = null;
-    if (session.soilTest) {
+    if (isCrop && session.soilTest) {
       const ageStatus = soilTestInterpreter.getTestAgeStatus(session.soilTest.testAge || 0);
       soilTestSummary = {
         ...session.soilTest,
@@ -389,15 +397,34 @@ export async function generateFarmerSessionSummary(params: {
 
         const model = genAI.getGenerativeModel({ model: "models/gemini-2.5-flash" });
 
-        const financialContext = grossMargin ? `
+        // Build context based on species
+        let speciesContext = "";
+        let financialContext = "";
+        let soilContext = "";
+        let damageContext = "";
+        let extensionContext = "";
+
+        if (isCrop) {
+          speciesContext = `
+FARMER DETAILS (Crop):
+- Name: ${session.farmerName || "Not specified"}
+- Crops: ${session?.crops?.join(", ") || "Not specified"}
+- Location: ${session?.county || "Not specified"}
+- Farm size: ${session?.cultivatedAcres || session?.acres || "Not specified"} acres
+- Management level: ${session?.managementLevel || "Not specified"}
+- Soil test done: ${session.soilTest ? "Yes" : "No"}
+`;
+          if (grossMargin) {
+            financialContext = `
 GROSS MARGIN ANALYSIS:
 - Low input: ${formatCurrencyForCountry(grossMargin.low.grossMargin, country)}
 - Medium input: ${formatCurrencyForCountry(grossMargin.medium.grossMargin, country)}
 - High input: ${formatCurrencyForCountry(grossMargin.high.grossMargin, country)}
 - Farmer's current level: ${session.managementLevel || "Medium input"}
-` : "";
-
-        const soilContext = soilTestSummary ? `
+`;
+          }
+          if (soilTestSummary) {
+            soilContext = `
 SOIL TEST SUMMARY:
 - Date: ${soilTestSummary.testDate}
 - Status: ${soilTestSummary.ageStatus?.message}
@@ -408,31 +435,65 @@ SOIL TEST SUMMARY:
 - Planting Nutrients: ${soilTestSummary.plantingNutrients ? JSON.stringify(soilTestSummary.plantingNutrients) : 'Not specified'}
 - Topdressing Nutrients: ${soilTestSummary.topdressingNutrients ? JSON.stringify(soilTestSummary.topdressingNutrients) : 'Not specified'}
 - Potassium Nutrients: ${soilTestSummary.potassiumNutrients ? JSON.stringify(soilTestSummary.potassiumNutrients) : 'Not specified'}
-` : "";
-
-        const damageContext = session.plantsDamaged ? `
+`;
+          }
+          if (session.plantsDamaged) {
+            damageContext = `
 DAMAGE REPORT:
 - Plants damaged beyond recovery: ${session.plantsDamaged} plants
-` : "";
-
-        // Include extension inputs if present (no soil test)
-        const extensionContext = session.extensionInputs ? `
+`;
+          }
+          if (session.extensionInputs) {
+            extensionContext = `
 EXTENSION OFFICER INPUTS (No Soil Test):
 - Planting Fertilizer: ${session.extensionInputs.plantingFertilizerType || "Not specified"} at ${session.extensionInputs.plantingFertilizerQuantity || 0} kg/acre
 - Topdressing Fertilizer: ${session.extensionInputs.topdressingFertilizerType || "Not specified"} at ${session.extensionInputs.topdressingFertilizerQuantity || 0} kg/acre
 - Potassium Fertilizer: ${session.extensionInputs.potassiumFertilizerType || "Not specified"} at ${session.extensionInputs.potassiumFertilizerQuantity || 0} kg/acre
-` : "";
+`;
+          }
+        } else if (isPoultry) {
+          speciesContext = `
+FARMER DETAILS (Poultry):
+- Name: ${session.farmerName || "Not specified"}
+- Breed: ${session.poultry?.breed || "Not specified"}
+- System: ${session.poultry?.system || "Not specified"}
+- Flock size: ${session.poultry?.flockSize || 0} birds
+- Age: ${session.poultry?.ageWeeks || 0} weeks
+- Farming goal: ${session.poultry?.farmingGoal || "Not specified"}
+- Location: ${session?.county || "Not specified"}
+- Feed type: ${session.poultry?.feedType || "Not specified"}
+- Vaccination done: ${session.poultry?.vaccinationDone || "No"}
+- Mortality count: ${session.poultry?.mortalityCount || 0}
+`;
+        } else if (isDairy) {
+          // Build dairy details from all available agent data
+          const dairy = session.dairy || {};
+          const details: string[] = [];
+          for (const [key, value] of Object.entries(dairy)) {
+            if (value !== undefined && value !== null && value !== "") {
+              if (Array.isArray(value)) {
+                details.push(`- ${key}: ${value.join(', ')}`);
+              } else if (typeof value === 'object') {
+                details.push(`- ${key}: ${JSON.stringify(value)}`);
+              } else {
+                details.push(`- ${key}: ${value}`);
+              }
+            }
+          }
+          const dairyDetails = details.length ? details.join('\n') : 'No specific details provided.';
+
+          speciesContext = `
+FARMER DETAILS (Dairy):
+- Name: ${session.farmerName || "Not specified"}
+- Location: ${session?.county || "Not specified"}
+${dairyDetails}
+`;
+        }
 
         const prompt = `
 You are an agricultural extension officer. Based on this farmer's Q&A session, provide a comprehensive summary.
 
-FARMER DETAILS:
-- Name: ${session.farmerName || "Not specified"}
-- Crops: ${session?.crops?.join(", ") || "Not specified"}
-- Location: ${session?.county || "Not specified"}
-- Farm size: ${session?.cultivatedAcres || session?.acres || "Not specified"} acres
-- Management level: ${session?.managementLevel || "Not specified"}
-- Soil test done: ${session.soilTest ? "Yes" : "No"}
+${speciesContext}
 
 ${soilContext}
 ${extensionContext}
@@ -446,13 +507,13 @@ RETRIEVED KNOWLEDGE:
 ${knowledgeContext || "No specific knowledge retrieved."}
 
 INSTRUCTIONS:
-1. Summarize what the farmer learned in 3-4 sentences
-2. Provide 3 follow-up recommendations
-3. Include financial advice based on their questions
-4. If soil test data exists, highlight key findings
-5. If extension inputs exist (no soil test), acknowledge them and provide advice based on those inputs
-6. If damage reports exist, acknowledge them and provide recovery advice
-7. Emphasize farming as a BUSINESS - every input should maximize profit
+1. Summarize what the farmer learned in 3-4 sentences.
+2. Provide 3 follow-up recommendations tailored to their enterprise (crops, poultry, or dairy).
+3. Include financial advice based on their questions and enterprise type.
+4. If soil test data exists (crops only), highlight key findings.
+5. If extension inputs exist (no soil test), acknowledge them and provide advice based on those inputs.
+6. If damage reports exist, acknowledge them and provide recovery advice.
+7. Emphasize farming as a BUSINESS - every input should maximize profit.
 
 Return as JSON:
 {
@@ -483,19 +544,71 @@ Return as JSON:
     }
 
     if (!summary) {
-      summary = {
-        summary: `You asked ${qaPairs.length} questions about your farm. Based on agronomic guidelines, focus on optimizing your inputs for maximum profit.`,
-        recommendations: [
+      // Fallback summary based on species
+      let fallbackSummary = "";
+      let fallbackRecommendations: string[] = [];
+      let fallbackFinancialAdvice = "";
+      let fallbackSoilTestAdvice = "";
+      let fallbackDamageAdvice = "";
+      let fallbackExtensionAdvice = "";
+      let fallbackTopics: string[] = [];
+      let fallbackNextSteps = "";
+
+      if (isCrop) {
+        fallbackSummary = `You asked ${qaPairs.length} questions about your crop farm. Based on agronomic guidelines, focus on optimizing your inputs for maximum profit.`;
+        fallbackRecommendations = [
           `Learn more about pest management for your crops using integrated methods`,
           `Ask about optimal planting times for your location`,
           `Explore soil testing options in your area for precision fertilizer recommendations`
-        ],
-        financialAdvice: grossMargin?.recommendation || "Track all input costs (seeds, fertilizer, labour) to calculate your actual profit margins. Farming is a BUSINESS!",
-        soilTestAdvice: soilTestSummary ? `Your soil test from ${soilTestSummary.testDate} shows ${soilTestSummary.phRating} pH and ${soilTestSummary.phosphorusRating} phosphorus.` : "Consider doing a soil test for precise fertilizer recommendations - it can save you up to 30% on fertilizer costs!",
-        damageAdvice: session.plantsDamaged ? `You reported ${session.plantsDamaged} plants damaged beyond recovery. Consider reviewing your pest and disease management strategies.` : "",
-        extensionAdvice: session.extensionInputs ? `You provided extension officer recommendations: ${session.extensionInputs.plantingFertilizerType} at ${session.extensionInputs.plantingFertilizerQuantity} kg/acre.` : "",
-        topics: session?.crops || ["general farming"],
-        nextSteps: "Continue asking questions about your specific crops to maximize profitability."
+        ];
+        fallbackFinancialAdvice = grossMargin?.recommendation || "Track all input costs (seeds, fertilizer, labour) to calculate your actual profit margins. Farming is a BUSINESS!";
+        fallbackSoilTestAdvice = soilTestSummary ? `Your soil test from ${soilTestSummary.testDate} shows ${soilTestSummary.phRating} pH and ${soilTestSummary.phosphorusRating} phosphorus.` : "Consider doing a soil test for precise fertilizer recommendations - it can save you up to 30% on fertilizer costs!";
+        fallbackDamageAdvice = session.plantsDamaged ? `You reported ${session.plantsDamaged} plants damaged beyond recovery. Consider reviewing your pest and disease management strategies.` : "";
+        fallbackExtensionAdvice = session.extensionInputs ? `You provided extension officer recommendations: ${session.extensionInputs.plantingFertilizerType} at ${session.extensionInputs.plantingFertilizerQuantity} kg/acre.` : "";
+        fallbackTopics = session?.crops || ["general farming"];
+        fallbackNextSteps = "Continue asking questions about your specific crops to maximize profitability.";
+      } else if (isPoultry) {
+        fallbackSummary = `You asked ${qaPairs.length} questions about your poultry enterprise. Based on best practices, focus on biosecurity, feed quality, and vaccination to maximize productivity.`;
+        fallbackRecommendations = [
+          `Review your biosecurity protocols to prevent disease introduction`,
+          `Optimize feed formulation for your breed and age`,
+          `Consider a regular vaccination schedule to protect your flock`
+        ];
+        fallbackFinancialAdvice = `Track all costs (feed, vaccination, medication, housing) and revenue (egg/meat sales) to calculate your profit per bird. Every shilling saved is a shilling earned.`;
+        fallbackSoilTestAdvice = "";
+        fallbackDamageAdvice = session.poultry?.mortalityCount > 0 ? `You reported ${session.poultry.mortalityCount} bird losses. Consider a post-mortem examination to identify the cause.` : "";
+        fallbackExtensionAdvice = "";
+        fallbackTopics = ["poultry farming"];
+        fallbackNextSteps = "Continue asking about specific poultry health, nutrition, and management issues.";
+      } else if (isDairy) {
+        const dairy = session.dairy || {};
+        // Build a concise summary from available data
+        const breed = dairy.breed ? `(${dairy.breed})` : '';
+        const category = dairy.cowCategory ? ` - ${dairy.cowCategory}` : '';
+        const disease = dairy.diseaseSelect ? ` for ${dairy.diseaseSelect}` : '';
+        fallbackSummary = `You asked ${qaPairs.length} questions about your dairy operation${disease}. Focus on herd health, nutrition, and milk quality to maximize profitability.`;
+        fallbackRecommendations = [
+          `Implement a routine health monitoring program for early disease detection`,
+          `Optimize feed ration for milk production and cow health`,
+          `Maintain strict milking hygiene to prevent mastitis`
+        ];
+        fallbackFinancialAdvice = `Analyze your milk production per cow, feed costs, and veterinary expenses to calculate daily profit. Consider group purchasing of feed and medicines to reduce costs.`;
+        fallbackSoilTestAdvice = "";
+        fallbackDamageAdvice = dairy.mortalityCount > 0 ? `You reported ${dairy.mortalityCount} cow deaths. Review your herd health management immediately.` : "";
+        fallbackExtensionAdvice = "";
+        fallbackTopics = ["dairy farming"];
+        fallbackNextSteps = "Continue asking about dairy health, nutrition, reproduction, and business management.";
+      }
+
+      summary = {
+        summary: fallbackSummary,
+        recommendations: fallbackRecommendations,
+        financialAdvice: fallbackFinancialAdvice,
+        soilTestAdvice: fallbackSoilTestAdvice,
+        damageAdvice: fallbackDamageAdvice,
+        extensionAdvice: fallbackExtensionAdvice,
+        topics: fallbackTopics,
+        nextSteps: fallbackNextSteps
       };
     }
 
@@ -546,9 +659,9 @@ export async function getFarmerSessionById(id: string, language: string = 'en'):
         const sessionDoc = await db.collection("farmer_sessions").doc(id).get();
         const data = sessionDoc.data();
 
-        // ✅ Only add Bungoma defaults if grossMarginAnalysis is missing AND it's an old session
-        if (data && !data.grossMarginAnalysis && data.crops && data.crops.length > 0) {
-          console.log("📊 Adding default gross margin for old session (no real data)");
+        // ✅ Only add gross margin if crop session and missing
+        if (data && !data.grossMarginAnalysis && data.crops && data.crops.length > 0 && !data.isPoultry && !data.isDairy) {
+          console.log("📊 Adding default gross margin for old crop session (no real data)");
           data.grossMarginAnalysis = calculateGrossMargin(data);
         } else if (data && data.grossMarginAnalysis) {
           console.log("✅ Using existing gross margin data from farmer's actual inputs");
@@ -581,7 +694,6 @@ export async function getFarmerSessionsByUserId(userId: string): Promise<any[]> 
   console.log(`🔍 [DEBUG] Fetching sessions for userId: ${userId}`);
 
   try {
-    // First, get all sessions without orderBy to see what's in the database
     const sessionsWithoutOrder = await db
       .collection("farmer_sessions")
       .where("userId", "==", userId)
@@ -589,46 +701,28 @@ export async function getFarmerSessionsByUserId(userId: string): Promise<any[]> 
 
     console.log(`🔍 [DEBUG] Total sessions found in DB: ${sessionsWithoutOrder.size}`);
 
-    // Log all sessions found
-    sessionsWithoutOrder.docs.forEach((doc, index) => {
-      const data = doc.data();
-      console.log(`🔍 [DEBUG] Session ${index + 1}:`, {
-        id: doc.id,
-        crops: data.crops,
-        farmerName: data.farmerName,
-        createdAt: data.createdAt,
-        createdAtType: typeof data.createdAt,
-        userId: data.userId
-      });
-    });
-
-    // Convert all sessions to array and sort manually to handle mixed date types
     let allSessions = sessionsWithoutOrder.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
     }));
 
-    // Manual sorting to handle both string and timestamp dates
+    // Manual sorting to handle mixed date types
     allSessions.sort((a, b) => {
       let dateA: Date;
       let dateB: Date;
 
-      // Convert a.createdAt to Date
       if (a.createdAt) {
         if (a.createdAt.toDate && typeof a.createdAt.toDate === 'function') {
-          // Firestore Timestamp
           dateA = a.createdAt.toDate();
         } else if (typeof a.createdAt === 'string') {
-          // String date
           dateA = new Date(a.createdAt);
         } else {
-          dateA = new Date(0); // fallback
+          dateA = new Date(0);
         }
       } else {
         dateA = new Date(0);
       }
 
-      // Convert b.createdAt to Date
       if (b.createdAt) {
         if (b.createdAt.toDate && typeof b.createdAt.toDate === 'function') {
           dateB = b.createdAt.toDate();
@@ -641,20 +735,11 @@ export async function getFarmerSessionsByUserId(userId: string): Promise<any[]> 
         dateB = new Date(0);
       }
 
-      return dateB.getTime() - dateA.getTime(); // descending order
+      return dateB.getTime() - dateA.getTime();
     });
 
     console.log(`🔍 [DEBUG] After manual sort: ${allSessions.length} sessions`);
-    allSessions.forEach((session, index) => {
-      console.log(`🔍 [DEBUG] Sorted session ${index + 1}:`, {
-        id: session.id,
-        crops: session.crops,
-        farmerName: session.farmerName,
-        createdAt: session.createdAt
-      });
-    });
 
-    // Cache the sorted results
     return await CacheManager.getOrSet(
       `user-sessions:${userId}`,
       async () => {
@@ -755,7 +840,7 @@ export async function saveFarmerQuery(params: {
   }
 }
 
-// 🌾 Get fertilizer recommendations from soil test
+// 🌾 Get fertilizer recommendations from soil test (crops only)
 export async function getFertilizerRecommendations(params: {
   sessionId: string;
   userId: string;

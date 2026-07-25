@@ -1,55 +1,46 @@
 // lib/agents/DairyReminderAgent.ts
-import { BaseInterviewAgent, InterviewQuestion } from "./BaseInterviewAgent";
+import { BaseInterviewAgent, InterviewQuestion, FarmerContext } from "./BaseInterviewAgent";
+
+const REMINDER_TOPICS = ["deworming", "hoof_trimming", "vaccination", "ai_scheduling", "biosecurity"];
 
 export class DairyReminderAgent extends BaseInterviewAgent {
-  constructor() {
-    super();
-    this.questions = [
+  getAgentKey(): string {
+    return "DairyReminderAgent";
+  }
+
+  getQuestions(context: FarmerContext): InterviewQuestion[] {
+    return [
       {
         id: "dairyLastDeworming",
         type: "date",
-        label: "When was the last deworming?",
-        required: false,
+        questionKey: "question_dairy_last_deworming",
+        sectionKey: "section_dairy_reminders",
       },
       {
         id: "dairyLastHoofTrimming",
         type: "date",
-        label: "When was the last hoof trimming?",
-        required: false,
+        questionKey: "question_dairy_last_hoof_trimming",
+        sectionKey: "section_dairy_reminders",
       },
       {
         id: "dairyLastVaccination",
         type: "date",
-        label: "When was the last vaccination?",
-        required: false,
+        questionKey: "question_dairy_last_vaccination",
+        sectionKey: "section_dairy_reminders",
       },
       {
         id: "dairyNextVaccinationDue",
         type: "date",
-        label: "When is the next vaccination due?",
-        required: false,
+        questionKey: "question_dairy_next_vaccination_due",
+        sectionKey: "section_dairy_reminders",
       },
       {
         id: "dairyReminderTopics",
         type: "multiselect",
-        label: "What reminders would you like?",
-        options: [
-          { value: "deworming", label: "Deworming" },
-          { value: "hoof_trimming", label: "Hoof trimming" },
-          { value: "vaccination", label: "Vaccination" },
-          { value: "ai_scheduling", label: "AI scheduling" },
-          { value: "biosecurity", label: "Biosecurity" },
-        ],
-        required: false,
+        questionKey: "question_dairy_reminder_topics",
+        options: REMINDER_TOPICS,
+        sectionKey: "section_dairy_reminders",
       },
     ];
-  }
-
-  async generateRecommendation(): Promise<any> {
-    return {
-      agentType: "DairyReminder",
-      collectedData: this.answers,
-      message: "Dairy reminder settings collected.",
-    };
   }
 }

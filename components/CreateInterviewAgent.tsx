@@ -1,8 +1,4 @@
-﻿// components/CreateInterviewAgent.tsx – FULL COMPLETE FILE
-// FIXED: Poultry data now loads and saves to Firestore
-// All poultry state variables are restored when profile is loaded
-// This prevents questions from being skipped with empty data
-
+﻿// components/CreateInterviewAgent.tsx – COMPLETE (with ref fix)
 "use client";
 
 import { useState, useEffect, useRef, useMemo, useCallback } from "react";
@@ -64,6 +60,9 @@ import { useAuth } from "@/lib/hooks/useAuth";
 
 // ===== POULTRY DISEASE MAP =====
 import { poultryDiseaseMap } from "@/lib/data/poultryDiseaseMap";
+
+// ===== DAIRY DISEASE MAP (for dropdown) =====
+import { dairyPestDiseaseMap } from "@/lib/data/dairyHealthMapping";
 
 interface CreateInterviewAgentProps {
   userName: string;
@@ -401,8 +400,10 @@ const CreateInterviewAgent = ({ userName, userId, profileImage, filter = "comple
   const [recognitionLanguage, setRecognitionLanguage] = useState('en-US');
   const nameUsageCountRef = useRef(0);
 
+  // ========== SPECIES SELECTION ==========
+  const [selectedSpecies, setSelectedSpecies] = useState<"crop" | "poultry" | "dairy">("crop");
+
   // ========== POULTRY STATE ==========
-  const [selectedSpecies, setSelectedSpecies] = useState<"crop" | "poultry">("crop");
   const [poultryBreed, setPoultryBreed] = useState<string>("");
   const [poultrySystem, setPoultrySystem] = useState<string>("deep_litter");
   const [poultryFlockSize, setPoultryFlockSize] = useState<number>(0);
@@ -420,10 +421,25 @@ const CreateInterviewAgent = ({ userName, userId, profileImage, filter = "comple
   const [poultryMeatPrice, setPoultryMeatPrice] = useState<number>(350);
   const [poultryHouseSizeM2, setPoultryHouseSizeM2] = useState<number>(40);
 
-  // ========== AUTO-DETECT POULTRY FROM FILTER ==========
+  // ========== DAIRY STATE ==========
+  const [dairyCowCategory, setDairyCowCategory] = useState<string>("lactating");
+  const [dairyBodyWeightKg, setDairyBodyWeightKg] = useState<number>(500);
+  const [dairyBreed, setDairyBreed] = useState<string>("fh");
+  const [dairyDiseaseSelect, setDairyDiseaseSelect] = useState<string>("");
+  const [dairySymptoms, setDairySymptoms] = useState<string[]>([]);
+  const [dairyMortalityCount, setDairyMortalityCount] = useState<number>(0);
+  const [dairyHealthDuration, setDairyHealthDuration] = useState<string>("less_than_3_days");
+  const [dairyMilkYieldPerDay, setDairyMilkYieldPerDay] = useState<number>(10);
+  const [dairyMilkPricePerLitre, setDairyMilkPricePerLitre] = useState<number>(40);
+  const [dairyFeedCostPerDay, setDairyFeedCostPerDay] = useState<number>(100);
+  const [dairyVetCostPerMonth, setDairyVetCostPerMonth] = useState<number>(500);
+
+  // ========== AUTO-DETECT FROM FILTER ==========
   useEffect(() => {
     if (filter && filter.startsWith("poultry_")) {
       setSelectedSpecies("poultry");
+    } else if (filter && filter.startsWith("dairy_")) {
+      setSelectedSpecies("dairy");
     } else if (filter && filter.startsWith("crop_")) {
       setSelectedSpecies("crop");
     }
@@ -515,6 +531,58 @@ const CreateInterviewAgent = ({ userName, userId, profileImage, filter = "comple
     symptomsObserved: "",
     mortalityCountDisease: "",
     diseaseDuration: "",
+    // Dairy fields (added for all agents)
+    dairyDiseaseSelect: "",
+    dairyDaysSinceCalving: "",
+    dairyHeatObserved: "",
+    dairyLastInseminationDate: "",
+    dairyBreedingMethod: "",
+    dairyReproductiveProblems: "",
+    dairyBusinessInterest: "",
+    calfAgeWeeks: "",
+    calfFeedingMethod: "",
+    calfMilkLitresPerDay: "",
+    calfReceivedColostrum: "",
+    calfHousingType: "",
+    calfHealthIssues: "",
+    dairyConcentrateBrand: "",
+    dairyConcentrateProduct: "",
+    dairyConcentrateInclusion: "",
+    dairyConcentrateMaizeKg: "",
+    dairyConcentrateSaltKg: "",
+    dairyConcentrateCalciumSource: "",
+    dairyConcentrateCalciumKg: "",
+    dairyDeficiencySymptoms: "",
+    dairyManagementFocus: "",
+    dairyAvailableForages: "",
+    dairyAvailableGrains: "",
+    dairyAvailableProtein: "",
+    dairyAvailableMinerals: "",
+    dairyQuantityToMix: "",
+    dairyForageType: "",
+    dairyForageKgPerDay: "",
+    dairyConcentrateType: "",
+    dairyConcentrateKgPerDay: "",
+    dairyMilkYield: "",
+    dairyMilkPrice: "",
+    dairyVetCostMonth: "",
+    dairyOtherCosts: "",
+    dairyHousingType: "",
+    numberOfCowsHoused: "",
+    floorSpacePerCowM2: "",
+    dairyVentilationRating: "",
+    beddingType: "",
+    milkYieldCurrent: "",
+    milkFatPercent: "",
+    milkProteinPercent: "",
+    daysInMilk: "",
+    parity: "",
+    dairyParasiteSigns: "",
+    dairyLastDeworming: "",
+    dairyLastHoofTrimming: "",
+    dairyLastVaccination: "",
+    dairyNextVaccinationDue: "",
+    dairyReminderTopics: "",
   });
 
   const [plantingNutrients, setPlantingNutrients] = useState({ s: "", ca: "", mg: "", zn: "", b: "", cu: "", mn: "" });
@@ -561,7 +629,7 @@ const CreateInterviewAgent = ({ userName, userId, profileImage, filter = "comple
     if (recognitionRef.current) recognitionRef.current.lang = voiceLang;
   }, [i18n.language, currentStep]);
 
-  // ========== FIREBASE PROFILE FUNCTIONS (FIXED) ==========
+  // ========== FIREBASE PROFILE FUNCTIONS ==========
   const loadProfileFromFirestore = useCallback(async (uid: string) => {
     try {
       const docRef = doc(db, "farmers", uid);
@@ -573,7 +641,7 @@ const CreateInterviewAgent = ({ userName, userId, profileImage, filter = "comple
         // Load crop fields
         setFarmerDetails(prev => ({ ...prev, ...profile }));
 
-        // ===== LOAD POULTRY FIELDS =====
+        // Load poultry fields
         if (profile.poultry) {
           const p = profile.poultry;
           setPoultryBreed(p.breed || "");
@@ -592,8 +660,6 @@ const CreateInterviewAgent = ({ userName, userId, profileImage, filter = "comple
           setPoultryEggPrice(p.eggPrice || 280);
           setPoultryMeatPrice(p.meatPrice || 350);
           setPoultryHouseSizeM2(p.houseSizeM2 || 40);
-
-          // Also update farmerDetails poultry fields for the generate call
           setFarmerDetails(prev => ({
             ...prev,
             poultry_breed: p.breed || "",
@@ -615,6 +681,77 @@ const CreateInterviewAgent = ({ userName, userId, profileImage, filter = "comple
           }));
         }
 
+        // ===== LOAD DAIRY FIELDS =====
+        if (profile.dairy) {
+          const d = profile.dairy;
+          setDairyCowCategory(d.cowCategory || "lactating");
+          setDairyBodyWeightKg(d.bodyWeightKg || 500);
+          setDairyBreed(d.breed || "fh");
+          setDairyDiseaseSelect(d.diseaseSelect || "");
+          setDairySymptoms(d.symptoms || []);
+          setDairyMortalityCount(d.mortalityCount || 0);
+          setDairyHealthDuration(d.healthDuration || "less_than_3_days");
+          setDairyMilkYieldPerDay(d.milkYieldPerDay || 10);
+          setDairyMilkPricePerLitre(d.milkPricePerLitre || 40);
+          setDairyFeedCostPerDay(d.feedCostPerDay || 100);
+          setDairyVetCostPerMonth(d.vetCostPerMonth || 500);
+          // Load all other dairy fields into farmerDetails
+          setFarmerDetails(prev => ({
+            ...prev,
+            dairyDiseaseSelect: d.diseaseSelect || "",
+            dairyDaysSinceCalving: d.daysSinceCalving || "",
+            dairyHeatObserved: d.heatObserved || "",
+            dairyLastInseminationDate: d.lastInseminationDate || "",
+            dairyBreedingMethod: d.breedingMethod || "",
+            dairyReproductiveProblems: d.reproductiveProblems || "",
+            dairyBusinessInterest: d.businessInterest || "",
+            calfAgeWeeks: d.calfAgeWeeks || "",
+            calfFeedingMethod: d.calfFeedingMethod || "",
+            calfMilkLitresPerDay: d.calfMilkLitresPerDay || "",
+            calfReceivedColostrum: d.calfReceivedColostrum || "",
+            calfHousingType: d.calfHousingType || "",
+            calfHealthIssues: d.calfHealthIssues || "",
+            dairyConcentrateBrand: d.concentrateBrand || "",
+            dairyConcentrateProduct: d.concentrateProduct || "",
+            dairyConcentrateInclusion: d.concentrateInclusion || "",
+            dairyConcentrateMaizeKg: d.concentrateMaizeKg || "",
+            dairyConcentrateSaltKg: d.concentrateSaltKg || "",
+            dairyConcentrateCalciumSource: d.concentrateCalciumSource || "",
+            dairyConcentrateCalciumKg: d.concentrateCalciumKg || "",
+            dairyDeficiencySymptoms: d.deficiencySymptoms || "",
+            dairyManagementFocus: d.managementFocus || "",
+            dairyAvailableForages: d.availableForages || "",
+            dairyAvailableGrains: d.availableGrains || "",
+            dairyAvailableProtein: d.availableProtein || "",
+            dairyAvailableMinerals: d.availableMinerals || "",
+            dairyQuantityToMix: d.quantityToMix || "",
+            dairyForageType: d.forageType || "",
+            dairyForageKgPerDay: d.forageKgPerDay || "",
+            dairyConcentrateType: d.concentrateType || "",
+            dairyConcentrateKgPerDay: d.concentrateKgPerDay || "",
+            dairyMilkYield: d.milkYield || "",
+            dairyMilkPrice: d.milkPrice || "",
+            dairyVetCostMonth: d.vetCostMonth || "",
+            dairyOtherCosts: d.otherCosts || "",
+            dairyHousingType: d.housingType || "",
+            numberOfCowsHoused: d.numberOfCowsHoused || "",
+            floorSpacePerCowM2: d.floorSpacePerCowM2 || "",
+            dairyVentilationRating: d.ventilationRating || "",
+            beddingType: d.beddingType || "",
+            milkYieldCurrent: d.milkYieldCurrent || "",
+            milkFatPercent: d.milkFatPercent || "",
+            milkProteinPercent: d.milkProteinPercent || "",
+            daysInMilk: d.daysInMilk || "",
+            parity: d.parity || "",
+            dairyParasiteSigns: d.parasiteSigns || "",
+            dairyLastDeworming: d.lastDeworming || "",
+            dairyLastHoofTrimming: d.lastHoofTrimming || "",
+            dairyLastVaccination: d.lastVaccination || "",
+            dairyNextVaccinationDue: d.nextVaccinationDue || "",
+            dairyReminderTopics: d.reminderTopics || "",
+          }));
+        }
+
         console.log("✅ Loaded farmer profile from Firestore");
         return true;
       }
@@ -629,7 +766,6 @@ const CreateInterviewAgent = ({ userName, userId, profileImage, filter = "comple
     try {
       const docRef = doc(db, "farmers", uid);
 
-      // Build the profile object with ALL poultry fields
       const profile = {
         ...details,
         poultry: {
@@ -653,6 +789,71 @@ const CreateInterviewAgent = ({ userName, userId, profileImage, filter = "comple
           symptomsObserved: details.symptomsObserved || "",
           mortalityCountDisease: details.mortalityCountDisease || "",
           diseaseDuration: details.diseaseDuration || "",
+        },
+        // ===== DAIRY ===== (all fields from all agents)
+        dairy: {
+          cowCategory: dairyCowCategory,
+          bodyWeightKg: dairyBodyWeightKg,
+          breed: dairyBreed,
+          diseaseSelect: details.dairyDiseaseSelect || dairyDiseaseSelect,
+          symptoms: dairySymptoms,
+          mortalityCount: dairyMortalityCount,
+          healthDuration: dairyHealthDuration,
+          milkYieldPerDay: dairyMilkYieldPerDay,
+          milkPricePerLitre: dairyMilkPricePerLitre,
+          feedCostPerDay: dairyFeedCostPerDay,
+          vetCostPerMonth: dairyVetCostPerMonth,
+          // Additional fields from other agents
+          daysSinceCalving: details.dairyDaysSinceCalving || "",
+          heatObserved: details.dairyHeatObserved || "",
+          lastInseminationDate: details.dairyLastInseminationDate || "",
+          breedingMethod: details.dairyBreedingMethod || "",
+          reproductiveProblems: details.dairyReproductiveProblems || "",
+          businessInterest: details.dairyBusinessInterest || "",
+          calfAgeWeeks: details.calfAgeWeeks || "",
+          calfFeedingMethod: details.calfFeedingMethod || "",
+          calfMilkLitresPerDay: details.calfMilkLitresPerDay || "",
+          calfReceivedColostrum: details.calfReceivedColostrum || "",
+          calfHousingType: details.calfHousingType || "",
+          calfHealthIssues: details.calfHealthIssues || "",
+          concentrateBrand: details.dairyConcentrateBrand || "",
+          concentrateProduct: details.dairyConcentrateProduct || "",
+          concentrateInclusion: details.dairyConcentrateInclusion || "",
+          concentrateMaizeKg: details.dairyConcentrateMaizeKg || "",
+          concentrateSaltKg: details.dairyConcentrateSaltKg || "",
+          concentrateCalciumSource: details.dairyConcentrateCalciumSource || "",
+          concentrateCalciumKg: details.dairyConcentrateCalciumKg || "",
+          deficiencySymptoms: details.dairyDeficiencySymptoms || "",
+          managementFocus: details.dairyManagementFocus || "",
+          availableForages: details.dairyAvailableForages || "",
+          availableGrains: details.dairyAvailableGrains || "",
+          availableProtein: details.dairyAvailableProtein || "",
+          availableMinerals: details.dairyAvailableMinerals || "",
+          quantityToMix: details.dairyQuantityToMix || "",
+          forageType: details.dairyForageType || "",
+          forageKgPerDay: details.dairyForageKgPerDay || "",
+          concentrateType: details.dairyConcentrateType || "",
+          concentrateKgPerDay: details.dairyConcentrateKgPerDay || "",
+          milkYield: details.dairyMilkYield || "",
+          milkPrice: details.dairyMilkPrice || "",
+          vetCostMonth: details.dairyVetCostMonth || "",
+          otherCosts: details.dairyOtherCosts || "",
+          housingType: details.dairyHousingType || "",
+          numberOfCowsHoused: details.numberOfCowsHoused || "",
+          floorSpacePerCowM2: details.floorSpacePerCowM2 || "",
+          ventilationRating: details.dairyVentilationRating || "",
+          beddingType: details.beddingType || "",
+          milkYieldCurrent: details.milkYieldCurrent || "",
+          milkFatPercent: details.milkFatPercent || "",
+          milkProteinPercent: details.milkProteinPercent || "",
+          daysInMilk: details.daysInMilk || "",
+          parity: details.parity || "",
+          parasiteSigns: details.dairyParasiteSigns || "",
+          lastDeworming: details.dairyLastDeworming || "",
+          lastHoofTrimming: details.dairyLastHoofTrimming || "",
+          lastVaccination: details.dairyLastVaccination || "",
+          nextVaccinationDue: details.dairyNextVaccinationDue || "",
+          reminderTopics: details.dairyReminderTopics || "",
         }
       };
 
@@ -668,7 +869,11 @@ const CreateInterviewAgent = ({ userName, userId, profileImage, filter = "comple
     poultryFarmingGoal, poultryLocationRegion, poultryRainfallPattern,
     poultryAltitude, poultryFeedType, poultryFeedCostKg,
     poultryVaccinationDone, poultryMortalityCount, poultryChickCost,
-    poultryEggPrice, poultryMeatPrice, poultryHouseSizeM2
+    poultryEggPrice, poultryMeatPrice, poultryHouseSizeM2,
+    dairyCowCategory, dairyBodyWeightKg, dairyBreed, dairyDiseaseSelect,
+    dairySymptoms, dairyMortalityCount, dairyHealthDuration,
+    dairyMilkYieldPerDay, dairyMilkPricePerLitre, dairyFeedCostPerDay,
+    dairyVetCostPerMonth
   ]);
 
   useEffect(() => {
@@ -688,6 +893,22 @@ const CreateInterviewAgent = ({ userName, userId, profileImage, filter = "comple
     GAPInterviewAgent: ["productionChallenges", "marketingChallenges", "climateChallenges", "financialChallenges"],
     PoultrySetupAgent: ["poultry_breed", "poultry_system", "poultry_flock_size", "poultry_age_weeks", "poultry_farming_goal", "poultry_location_region", "poultry_rainfall_pattern", "poultry_altitude", "poultry_feed_type", "poultry_feed_cost_kg", "poultry_vaccination_done", "poultry_mortality_count", "poultry_chick_cost", "poultry_egg_price", "poultry_meat_price", "poultry_house_size_m2"],
     PoultryDiseaseAgent: ["poultry_disease", "symptomsObserved", "mortalityCountDisease", "diseaseDuration"],
+    // DAIRY AGENTS (15 total)
+    DairySetupAgent: ["dairyCowCategory", "dairyBodyWeightKg", "dairyBreed", "dairyMilkYieldPerDay", "dairyMilkPricePerLitre", "dairyFeedCostPerDay", "dairyVetCostPerMonth"],
+    DairyHealthAgent: ["dairyDiseaseSelect", "dairySymptoms", "dairyMortalityCount", "dairyHealthDuration"],
+    DairyBreedingAgent: ["dairyDaysSinceCalving", "dairyHeatObserved", "dairyLastInseminationDate", "dairyBreedingMethod", "dairyReproductiveProblems"],
+    DairyBusinessAgent: ["dairyBusinessInterest"],
+    DairyCalfAgent: ["calfAgeWeeks", "calfFeedingMethod", "calfMilkLitresPerDay", "calfReceivedColostrum", "calfHousingType", "calfHealthIssues"],
+    DairyConcentrateAgent: ["dairyConcentrateBrand", "dairyConcentrateProduct", "dairyConcentrateInclusion", "dairyConcentrateMaizeKg", "dairyConcentrateSaltKg", "dairyConcentrateCalciumSource", "dairyConcentrateCalciumKg"],
+    DairyDeficiencyAgent: ["dairyDeficiencySymptoms"],
+    DairyDosDontsAgent: ["dairyManagementFocus"],
+    DairyFeedAgent: ["dairyAvailableForages", "dairyAvailableGrains", "dairyAvailableProtein", "dairyAvailableMinerals", "dairyQuantityToMix"],
+    DairyFeedPerDayAgent: ["dairyForageType", "dairyForageKgPerDay", "dairyConcentrateType", "dairyConcentrateKgPerDay", "dairyMilkYield"],
+    DairyFinancialAgent: ["dairyFeedCostPerDay", "dairyMilkPrice", "dairyVetCostMonth", "dairyOtherCosts"],
+    DairyHousingAgent: ["dairyHousingType", "numberOfCowsHoused", "floorSpacePerCowM2", "dairyVentilationRating", "beddingType"],
+    DairyMilkAgent: ["milkYieldCurrent", "milkFatPercent", "milkProteinPercent", "daysInMilk", "parity"],
+    DairyParasiteAgent: ["dairyParasiteSigns"],
+    DairyReminderAgent: ["dairyLastDeworming", "dairyLastHoofTrimming", "dairyLastVaccination", "dairyNextVaccinationDue", "dairyReminderTopics"],
   };
 
   const getAllowedQuestionIds = useCallback((): string[] => {
@@ -901,7 +1122,7 @@ const CreateInterviewAgent = ({ userName, userId, profileImage, filter = "comple
     });
   }, [farmerDetails]);
 
-  // ========== GET ALL QUESTIONS (CROP + POULTRY) ==========
+  // ========== GET ALL QUESTIONS (with dairy) ==========
   const getAllQuestions = useCallback(() => {
     let questions: any[] = [];
     const allowedIds = getAllowedQuestionIds();
@@ -1000,7 +1221,6 @@ const CreateInterviewAgent = ({ userName, userId, profileImage, filter = "comple
 
     // ===== POULTRY PATH =====
     if (selectedSpecies === "poultry") {
-      // These are the IDs that PoultrySetupAgent returns
       const poultryFields = [
         "poultry_breed", "poultry_system", "poultry_flock_size", "poultry_age_weeks",
         "poultry_farming_goal", "poultry_location_region", "poultry_rainfall_pattern",
@@ -1048,7 +1268,7 @@ const CreateInterviewAgent = ({ userName, userId, profileImage, filter = "comple
         }
       }
 
-      // ===== POULTRY DISEASE AGENT QUESTIONS =====
+      // Poultry disease questions
       const species = farmerDetails.poultry_species || 'chicken';
       const diseaseNames = (poultryDiseaseMap[species] || poultryDiseaseMap['chicken']).map((d: any) => d.name);
 
@@ -1109,13 +1329,236 @@ const CreateInterviewAgent = ({ userName, userId, profileImage, filter = "comple
         });
       }
 
-      // Also include personal location if not already included
+      // Include personal location if not already included
+      if (shouldInclude("farmerName")) questions.push(personalLocationQuestions[0]);
+      if (shouldInclude("county")) questions.push(personalLocationQuestions[1]);
+    }
+
+    // ===== DAIRY PATH =====
+    if (selectedSpecies === "dairy") {
+      // Dairy setup questions
+      const dairySetupQuestions = [
+        { id: "dairyCowCategory", questionKey: "question_dairy_cow_category", type: "dropdown", options: ["lactating", "dry", "heifer", "calf"], sectionKey: "section_dairy" },
+        { id: "dairyBodyWeightKg", questionKey: "question_dairy_body_weight_kg", type: "number", placeholder: "e.g., 500", step: "any", sectionKey: "section_dairy" },
+        { id: "dairyBreed", questionKey: "question_dairy_breed", type: "dropdown", options: ["fh", "ayrshire", "jersey", "guernsey", "sahiwal", "zebu", "cross"], sectionKey: "section_dairy" },
+        { id: "dairyMilkYieldPerDay", questionKey: "question_dairy_milk_yield_per_day", type: "number", placeholder: "e.g., 10", step: "any", sectionKey: "section_dairy" },
+        { id: "dairyMilkPricePerLitre", questionKey: "question_dairy_milk_price_per_litre", type: "number", placeholder: "e.g., 40", step: "any", sectionKey: "section_dairy" },
+        { id: "dairyFeedCostPerDay", questionKey: "question_dairy_feed_cost_per_day", type: "number", placeholder: "e.g., 100", step: "any", sectionKey: "section_dairy" },
+        { id: "dairyVetCostPerMonth", questionKey: "question_dairy_vet_cost_per_month", type: "number", placeholder: "e.g., 500", step: "any", sectionKey: "section_dairy" },
+      ];
+      for (const q of dairySetupQuestions) if (shouldInclude(q.id)) questions.push(q);
+
+      // Dairy disease selection (dropdown)
+      if (shouldInclude("dairyDiseaseSelect")) {
+        const allDiseases = dairyPestDiseaseMap.dairy || [];
+        const diseaseNames = allDiseases.map((d: any) => d.name).sort();
+        questions.push({
+          id: "dairyDiseaseSelect",
+          questionKey: "question_dairy_disease_select",
+          type: "dropdown",
+          options: diseaseNames,
+          sectionKey: "section_dairy",
+        });
+      }
+
+      // Dairy health questions (symptoms, mortality, duration)
+      const dairyHealthQuestions = [
+        { id: "dairySymptoms", questionKey: "question_dairy_symptoms", type: "multiselect", options: ["swollen_udder", "milk_changes", "recumbent", "fever", "coughing", "diarrhoea", "lameness", "bloat", "ketosis", "abortion"], sectionKey: "section_dairy" },
+        { id: "dairyMortalityCount", questionKey: "question_dairy_mortality_count", type: "number", placeholder: "e.g., 1", step: "any", sectionKey: "section_dairy" },
+        { id: "dairyHealthDuration", questionKey: "question_dairy_health_duration", type: "dropdown", options: ["less_than_3_days", "3_to_7_days", "more_than_1_week"], sectionKey: "section_dairy" },
+      ];
+      for (const q of dairyHealthQuestions) if (shouldInclude(q.id)) questions.push(q);
+
+      // ----- DairyBreedingAgent -----
+      if (shouldInclude("dairyDaysSinceCalving")) {
+        questions.push({ id: "dairyDaysSinceCalving", questionKey: "question_dairy_days_since_calving", type: "number", placeholder: "e.g., 60", step: "any", sectionKey: "section_dairy_breeding" });
+      }
+      if (shouldInclude("dairyHeatObserved")) {
+        questions.push({ id: "dairyHeatObserved", questionKey: "question_dairy_heat_observed", type: "dropdown", options: ["yes", "no"], sectionKey: "section_dairy_breeding" });
+      }
+      if (shouldInclude("dairyLastInseminationDate")) {
+        questions.push({ id: "dairyLastInseminationDate", questionKey: "question_dairy_last_insemination_date", type: "date", sectionKey: "section_dairy_breeding" });
+      }
+      if (shouldInclude("dairyBreedingMethod")) {
+        questions.push({ id: "dairyBreedingMethod", questionKey: "question_dairy_breeding_method", type: "dropdown", options: ["ai", "bull", "both"], sectionKey: "section_dairy_breeding" });
+      }
+      if (shouldInclude("dairyReproductiveProblems")) {
+        questions.push({ id: "dairyReproductiveProblems", questionKey: "question_dairy_reproductive_problems", type: "multiselect", options: ["repeat_breeding", "abortion", "retained_placenta", "none"], sectionKey: "section_dairy_breeding" });
+      }
+
+      // ----- DairyBusinessAgent -----
+      if (shouldInclude("dairyBusinessInterest")) {
+        questions.push({ id: "dairyBusinessInterest", questionKey: "question_dairy_business_interest", type: "multiselect", options: ["bulk_buying", "cooperative", "value_addition", "scaling", "cost_reduction"], sectionKey: "section_dairy_business" });
+      }
+
+      // ----- DairyCalfAgent -----
+      if (shouldInclude("calfAgeWeeks")) {
+        questions.push({ id: "calfAgeWeeks", questionKey: "question_dairy_calf_age_weeks", type: "number", placeholder: "e.g., 4", step: "any", sectionKey: "section_dairy_calf" });
+      }
+      if (shouldInclude("calfFeedingMethod")) {
+        questions.push({ id: "calfFeedingMethod", questionKey: "question_dairy_calf_feeding_method", type: "dropdown", options: ["bucket", "bottle", "dam", "other"], sectionKey: "section_dairy_calf" });
+      }
+      if (shouldInclude("calfMilkLitresPerDay")) {
+        questions.push({ id: "calfMilkLitresPerDay", questionKey: "question_dairy_calf_milk_litres_per_day", type: "number", placeholder: "e.g., 6", step: "any", sectionKey: "section_dairy_calf" });
+      }
+      if (shouldInclude("calfReceivedColostrum")) {
+        questions.push({ id: "calfReceivedColostrum", questionKey: "question_dairy_calf_received_colostrum", type: "dropdown", options: ["yes", "no"], sectionKey: "section_dairy_calf" });
+      }
+      if (shouldInclude("calfHousingType")) {
+        questions.push({ id: "calfHousingType", questionKey: "question_dairy_calf_housing_type", type: "dropdown", options: ["individual_pen", "group_pen", "tether", "other"], sectionKey: "section_dairy_calf" });
+      }
+      if (shouldInclude("calfHealthIssues")) {
+        questions.push({ id: "calfHealthIssues", questionKey: "question_dairy_calf_health_issues", type: "multiselect", options: ["diarrhoea", "cough", "dullness", "naval_infection", "none"], sectionKey: "section_dairy_calf" });
+      }
+
+      // ----- DairyConcentrateAgent -----
+      if (shouldInclude("dairyConcentrateBrand")) {
+        questions.push({ id: "dairyConcentrateBrand", questionKey: "question_dairy_concentrate_brand", type: "dropdown", options: ["koudijs", "unga", "afrimach", "jubaili", "farmers_choice", "royal_dutch", "hendrix", "intraco", "cargill"], sectionKey: "section_dairy_feed" });
+      }
+      if (shouldInclude("dairyConcentrateProduct")) {
+        questions.push({ id: "dairyConcentrateProduct", questionKey: "question_dairy_concentrate_product", type: "dropdown", options: ["16pc", "18pc", "layer", "dairy_meal"], sectionKey: "section_dairy_feed" });
+      }
+      if (shouldInclude("dairyConcentrateInclusion")) {
+        questions.push({ id: "dairyConcentrateInclusion", questionKey: "question_dairy_concentrate_inclusion", type: "number", placeholder: "e.g., 3", step: "any", sectionKey: "section_dairy_feed" });
+      }
+      if (shouldInclude("dairyConcentrateMaizeKg")) {
+        questions.push({ id: "dairyConcentrateMaizeKg", questionKey: "question_dairy_concentrate_maize_kg", type: "number", placeholder: "e.g., 2", step: "any", sectionKey: "section_dairy_feed" });
+      }
+      if (shouldInclude("dairyConcentrateSaltKg")) {
+        questions.push({ id: "dairyConcentrateSaltKg", questionKey: "question_dairy_concentrate_salt_kg", type: "number", placeholder: "e.g., 0.05", step: "any", sectionKey: "section_dairy_feed" });
+      }
+      if (shouldInclude("dairyConcentrateCalciumSource")) {
+        questions.push({ id: "dairyConcentrateCalciumSource", questionKey: "question_dairy_concentrate_calcium_source", type: "dropdown", options: ["limestone", "dcp", "oyster_shell", "none"], sectionKey: "section_dairy_feed" });
+      }
+      if (shouldInclude("dairyConcentrateCalciumKg")) {
+        questions.push({ id: "dairyConcentrateCalciumKg", questionKey: "question_dairy_concentrate_calcium_kg", type: "number", placeholder: "e.g., 0.1", step: "any", sectionKey: "section_dairy_feed" });
+      }
+
+      // ----- DairyDeficiencyAgent -----
+      if (shouldInclude("dairyDeficiencySymptoms")) {
+        questions.push({ id: "dairyDeficiencySymptoms", questionKey: "question_dairy_deficiency_symptoms", type: "multiselect", options: ["stiff_gait", "poor_appetite", "rough_coat", "muscle_tremors", "scours", "nervous_signs", "reduced_milk_fat", "anaemia", "leg_weakness", "reproductive_problems"], sectionKey: "section_dairy_nutrition" });
+      }
+
+      // ----- DairyDosDontsAgent -----
+      if (shouldInclude("dairyManagementFocus")) {
+        questions.push({ id: "dairyManagementFocus", questionKey: "question_dairy_management_focus", type: "multiselect", options: ["calf_rearing", "feeding", "housing", "milking", "health", "breeding"], sectionKey: "section_dairy_management" });
+      }
+
+      // ----- DairyFeedAgent -----
+      if (shouldInclude("dairyAvailableForages")) {
+        questions.push({ id: "dairyAvailableForages", questionKey: "question_dairy_available_forages", type: "multiselect", options: ["napier_grass", "rhodes_hay", "lucerne_hay", "maize_silage", "oat_hay", "desmodium", "banana_leaves", "maize_stover"], sectionKey: "section_dairy_feed" });
+      }
+      if (shouldInclude("dairyAvailableGrains")) {
+        questions.push({ id: "dairyAvailableGrains", questionKey: "question_dairy_available_grains", type: "multiselect", options: ["maize", "sorghum", "millet", "wheat_bran", "pollard", "rice_bran", "molasses"], sectionKey: "section_dairy_feed" });
+      }
+      if (shouldInclude("dairyAvailableProtein")) {
+        questions.push({ id: "dairyAvailableProtein", questionKey: "question_dairy_available_protein", type: "multiselect", options: ["soybean_meal", "sunflower_cake", "cottonseed_cake", "groundnut_cake", "canola_meal", "fishmeal"], sectionKey: "section_dairy_feed" });
+      }
+      if (shouldInclude("dairyAvailableMinerals")) {
+        questions.push({ id: "dairyAvailableMinerals", questionKey: "question_dairy_available_minerals", type: "multiselect", options: ["salt", "limestone", "dcp", "magnesium_oxide", "dairy_premix", "sodium_bicarbonate"], sectionKey: "section_dairy_feed" });
+      }
+      if (shouldInclude("dairyQuantityToMix")) {
+        questions.push({ id: "dairyQuantityToMix", questionKey: "question_dairy_quantity_to_mix", type: "number", placeholder: "e.g., 40", step: "any", sectionKey: "section_dairy_feed" });
+      }
+
+      // ----- DairyFeedPerDayAgent -----
+      if (shouldInclude("dairyForageType")) {
+        questions.push({ id: "dairyForageType", questionKey: "question_dairy_forage_type", type: "dropdown", options: ["napier_grass", "rhodes_hay", "lucerne_hay", "maize_silage", "oat_hay", "desmodium"], sectionKey: "section_dairy_feed" });
+      }
+      if (shouldInclude("dairyForageKgPerDay")) {
+        questions.push({ id: "dairyForageKgPerDay", questionKey: "question_dairy_forage_kg_per_day", type: "number", placeholder: "e.g., 30", step: "any", sectionKey: "section_dairy_feed" });
+      }
+      if (shouldInclude("dairyConcentrateType")) {
+        questions.push({ id: "dairyConcentrateType", questionKey: "question_dairy_concentrate_type", type: "dropdown", options: ["commercial_dairy", "home_mix", "none"], sectionKey: "section_dairy_feed" });
+      }
+      if (shouldInclude("dairyConcentrateKgPerDay")) {
+        questions.push({ id: "dairyConcentrateKgPerDay", questionKey: "question_dairy_concentrate_kg_per_day", type: "number", placeholder: "e.g., 4", step: "any", sectionKey: "section_dairy_feed" });
+      }
+      if (shouldInclude("dairyMilkYield")) {
+        questions.push({ id: "dairyMilkYield", questionKey: "question_dairy_milk_yield", type: "number", placeholder: "e.g., 15", step: "any", sectionKey: "section_dairy_production" });
+      }
+
+      // ----- DairyFinancialAgent -----
+      if (shouldInclude("dairyFeedCostPerDay")) {
+        // Already covered in setup, skip
+      }
+      if (shouldInclude("dairyMilkPrice")) {
+        // Already covered in setup, skip
+      }
+      if (shouldInclude("dairyVetCostMonth")) {
+        questions.push({ id: "dairyVetCostMonth", questionKey: "question_dairy_vet_cost_month", type: "number", placeholder: "e.g., 2000", step: "any", sectionKey: "section_dairy_finance" });
+      }
+      if (shouldInclude("dairyOtherCosts")) {
+        questions.push({ id: "dairyOtherCosts", questionKey: "question_dairy_other_costs", type: "number", placeholder: "e.g., 3000", step: "any", sectionKey: "section_dairy_finance" });
+      }
+
+      // ----- DairyHousingAgent -----
+      if (shouldInclude("dairyHousingType")) {
+        questions.push({ id: "dairyHousingType", questionKey: "question_dairy_housing_type", type: "dropdown", options: ["zero_grazing", "free_stall", "tie_stall", "pasture_shelter"], sectionKey: "section_dairy_housing" });
+      }
+      if (shouldInclude("numberOfCowsHoused")) {
+        questions.push({ id: "numberOfCowsHoused", questionKey: "question_dairy_number_of_cows_housed", type: "number", placeholder: "e.g., 10", step: "any", sectionKey: "section_dairy_housing" });
+      }
+      if (shouldInclude("floorSpacePerCowM2")) {
+        questions.push({ id: "floorSpacePerCowM2", questionKey: "question_dairy_floor_space_per_cow_m2", type: "number", placeholder: "e.g., 4", step: "any", sectionKey: "section_dairy_housing" });
+      }
+      if (shouldInclude("dairyVentilationRating")) {
+        questions.push({ id: "dairyVentilationRating", questionKey: "question_dairy_ventilation_rating", type: "dropdown", options: ["good", "average", "poor"], sectionKey: "section_dairy_housing" });
+      }
+      if (shouldInclude("beddingType")) {
+        questions.push({ id: "beddingType", questionKey: "question_dairy_bedding_type", type: "dropdown", options: ["straw", "sand", "sawdust", "none"], sectionKey: "section_dairy_housing" });
+      }
+
+      // ----- DairyMilkAgent -----
+      if (shouldInclude("milkYieldCurrent")) {
+        questions.push({ id: "milkYieldCurrent", questionKey: "question_dairy_milk_yield_current", type: "number", placeholder: "e.g., 15", step: "any", sectionKey: "section_dairy_production" });
+      }
+      if (shouldInclude("milkFatPercent")) {
+        questions.push({ id: "milkFatPercent", questionKey: "question_dairy_milk_fat_percent", type: "number", placeholder: "e.g., 4.0", step: "any", sectionKey: "section_dairy_production" });
+      }
+      if (shouldInclude("milkProteinPercent")) {
+        questions.push({ id: "milkProteinPercent", questionKey: "question_dairy_milk_protein_percent", type: "number", placeholder: "e.g., 3.2", step: "any", sectionKey: "section_dairy_production" });
+      }
+      if (shouldInclude("daysInMilk")) {
+        questions.push({ id: "daysInMilk", questionKey: "question_dairy_days_in_milk", type: "number", placeholder: "e.g., 120", step: "any", sectionKey: "section_dairy_production" });
+      }
+      if (shouldInclude("parity")) {
+        questions.push({ id: "parity", questionKey: "question_dairy_parity", type: "dropdown", options: ["1", "2", "3", "4+"], sectionKey: "section_dairy_production" });
+      }
+
+      // ----- DairyParasiteAgent -----
+      if (shouldInclude("dairyParasiteSigns")) {
+        questions.push({ id: "dairyParasiteSigns", questionKey: "question_dairy_parasite_signs", type: "multiselect", options: ["visible_ticks", "visible_lice", "skin_irritation", "anaemia", "diarrhoea_parasite", "weight_loss", "bottle_jaw", "cough_parasite", "flies_swarming", "mange_lesions"], sectionKey: "section_dairy_health" });
+      }
+
+      // ----- DairyReminderAgent -----
+      if (shouldInclude("dairyLastDeworming")) {
+        questions.push({ id: "dairyLastDeworming", questionKey: "question_dairy_last_deworming", type: "date", sectionKey: "section_dairy_reminders" });
+      }
+      if (shouldInclude("dairyLastHoofTrimming")) {
+        questions.push({ id: "dairyLastHoofTrimming", questionKey: "question_dairy_last_hoof_trimming", type: "date", sectionKey: "section_dairy_reminders" });
+      }
+      if (shouldInclude("dairyLastVaccination")) {
+        questions.push({ id: "dairyLastVaccination", questionKey: "question_dairy_last_vaccination", type: "date", sectionKey: "section_dairy_reminders" });
+      }
+      if (shouldInclude("dairyNextVaccinationDue")) {
+        questions.push({ id: "dairyNextVaccinationDue", questionKey: "question_dairy_next_vaccination_due", type: "date", sectionKey: "section_dairy_reminders" });
+      }
+      if (shouldInclude("dairyReminderTopics")) {
+        questions.push({ id: "dairyReminderTopics", questionKey: "question_dairy_reminder_topics", type: "multiselect", options: ["deworming", "hoof_trimming", "vaccination", "ai_scheduling", "biosecurity"], sectionKey: "section_dairy_reminders" });
+      }
+
+      // Include personal location if not already included
       if (shouldInclude("farmerName")) questions.push(personalLocationQuestions[0]);
       if (shouldInclude("county")) questions.push(personalLocationQuestions[1]);
     }
 
     return questions;
   }, [farmerDetails, getAllowedQuestionIds, selectedSpecies]);
+
+  // ============================================================
+  // CONTINUED – PART 2
+  // ============================================================
 
   const allQuestions = useMemo(() => getAllQuestions(), [getAllQuestions]);
   const visibleQuestions = useMemo(() => filterQuestions(allQuestions), [allQuestions, filterQuestions]);
@@ -1125,6 +1568,11 @@ const CreateInterviewAgent = ({ userName, userId, profileImage, filter = "comple
     setDebugInfo(prev => ({ ...prev, totalQuestions: visibleQuestions.length }));
   }, [visibleQuestions.length]);
 
+  // ========== REF FOR DAIRY MANAGEMENT FOCUS ==========
+  const lastDairyManagementFocusRef = useRef("");
+  const lastDairyParasiteSignsRef = useRef("");
+  const lastDairyDeficiencySymptomsRef = useRef("");
+  const lastDairyBusinessInterestRef = useRef("");
   // ========== SPEECH RECOGNITION ==========
   useEffect(() => {
     let isMounted = true;
@@ -1421,63 +1869,82 @@ const CreateInterviewAgent = ({ userName, userId, profileImage, filter = "comple
     toast.success(safeT('nutrients_recorded'));
   };
 
-  const processAnswer = async (answer: string) => {
-    if (currentStep !== "configuring") return;
-    const currentConfig = visibleQuestions[configStep];
-    let cleanAnswer = answer;
-    let finalValue = cleanAnswer;
+const processAnswer = async (answer: string) => {
+  if (currentStep !== "configuring") return;
+  const currentConfig = visibleQuestions[configStep];
+  console.log('🔍 processAnswer called for:', currentConfig.id, 'answer:', answer);
+  let cleanAnswer = answer;
+  let finalValue = cleanAnswer;
 
-    if (currentConfig.id === "plantingFertilizerNutrients") {
-      handleNutrientSubmit("plantingFertilizerNutrients", plantingNutrients);
-      if (configStep < visibleQuestions.length - 1) { setConfigStep(prev => prev + 1); setTimeout(() => askQuestion(configStep + 1), 2500); }
-      return;
-    }
-    if (currentConfig.id === "topdressingFertilizerNutrients") {
-      handleNutrientSubmit("topdressingFertilizerNutrients", topdressingNutrients);
-      if (configStep < visibleQuestions.length - 1) { setConfigStep(prev => prev + 1); setTimeout(() => askQuestion(configStep + 1), 2500); }
-      return;
-    }
-    if (currentConfig.id === "potassiumFertilizerNutrients") {
-      handleNutrientSubmit("potassiumFertilizerNutrients", potassiumNutrients);
-      if (configStep < visibleQuestions.length - 1) { setConfigStep(prev => prev + 1); setTimeout(() => askQuestion(configStep + 1), 2500); }
-      return;
-    }
-    if (currentConfig.id === "wantsNutritionBenefits") {
-      finalValue = "Yes";
-      setFarmerDetails(prev => ({ ...prev, wantsNutritionBenefits: finalValue }));
-      setLastSubmittedAnswer("Yes");
-      await speakAcknowledgment("Yes", currentConfig.id);
-      setUserTranscript("");
-      if (configStep < visibleQuestions.length - 1) { setConfigStep(prev => prev + 1); setTimeout(() => askQuestion(configStep + 1), 2500); }
-      return;
-    }
+  // ===== CAPTURE DAIRY MODULE ANSWERS IN REFS =====
+  if (currentConfig.id === "dairyManagementFocus") {
+    lastDairyManagementFocusRef.current = finalValue;
+    console.log('📌 Stored dairyManagementFocus in ref:', lastDairyManagementFocusRef.current);
+  }
+  if (currentConfig.id === "dairyParasiteSigns") {
+    lastDairyParasiteSignsRef.current = finalValue;
+    console.log('📌 Stored dairyParasiteSigns in ref:', lastDairyParasiteSignsRef.current);
+  }
+  if (currentConfig.id === "dairyDeficiencySymptoms") {
+    lastDairyDeficiencySymptomsRef.current = finalValue;
+    console.log('📌 Stored dairyDeficiencySymptoms in ref:', lastDairyDeficiencySymptomsRef.current);
+  }
+  if (currentConfig.id === "dairyBusinessInterest") {
+    lastDairyBusinessInterestRef.current = finalValue;
+    console.log('📌 Stored dairyBusinessInterest in ref:', lastDairyBusinessInterestRef.current);
+  }
 
-    // Validation
-    if (currentConfig.id === "actualYieldKg") {
-      const yieldKg = parseFloat(cleanAnswer);
-      if (!isNaN(yieldKg) && yieldKg < 100 && yieldKg > 0) {
-        const bagsEquivalent = Math.round(yieldKg / 90);
-        const convertedKg = bagsEquivalent * 90;
-        toast.warning(safeT('yield_seems_low_warning'), { description: safeT('yield_seems_low_detail', { yield: yieldKg, bags: bagsEquivalent, converted: convertedKg }), duration: 10000, action: { label: safeT('use_converted'), onClick: () => { setUserTranscript(convertedKg.toString()); } } });
-        const confirmed = window.confirm(safeT('yield_seems_low_confirm', { yield: yieldKg, bags: bagsEquivalent, converted: convertedKg }));
-        if (!confirmed) return;
-      }
-    }
-
-    // Set farmer details
-    setFarmerDetails(prev => ({ ...prev, [currentConfig.id]: finalValue }));
-    setLastSubmittedAnswer(cleanAnswer);
-    await speakAcknowledgment(cleanAnswer, currentConfig.id);
+  if (currentConfig.id === "plantingFertilizerNutrients") {
+    handleNutrientSubmit("plantingFertilizerNutrients", plantingNutrients);
+    if (configStep < visibleQuestions.length - 1) { setConfigStep(prev => prev + 1); setTimeout(() => askQuestion(configStep + 1), 2500); }
+    return;
+  }
+  if (currentConfig.id === "topdressingFertilizerNutrients") {
+    handleNutrientSubmit("topdressingFertilizerNutrients", topdressingNutrients);
+    if (configStep < visibleQuestions.length - 1) { setConfigStep(prev => prev + 1); setTimeout(() => askQuestion(configStep + 1), 2500); }
+    return;
+  }
+  if (currentConfig.id === "potassiumFertilizerNutrients") {
+    handleNutrientSubmit("potassiumFertilizerNutrients", potassiumNutrients);
+    if (configStep < visibleQuestions.length - 1) { setConfigStep(prev => prev + 1); setTimeout(() => askQuestion(configStep + 1), 2500); }
+    return;
+  }
+  if (currentConfig.id === "wantsNutritionBenefits") {
+    finalValue = "Yes";
+    setFarmerDetails(prev => ({ ...prev, wantsNutritionBenefits: finalValue }));
+    setLastSubmittedAnswer("Yes");
+    await speakAcknowledgment("Yes", currentConfig.id);
     setUserTranscript("");
+    if (configStep < visibleQuestions.length - 1) { setConfigStep(prev => prev + 1); setTimeout(() => askQuestion(configStep + 1), 2500); }
+    return;
+  }
 
-    if (configStep < visibleQuestions.length - 1) {
-      setConfigStep(prev => prev + 1);
-      setTimeout(() => askQuestion(configStep + 1), 2500);
-    } else {
-      setCurrentStep("generating");
-      generateSession();
+  // Validation
+  if (currentConfig.id === "actualYieldKg") {
+    const yieldKg = parseFloat(cleanAnswer);
+    if (!isNaN(yieldKg) && yieldKg < 100 && yieldKg > 0) {
+      const bagsEquivalent = Math.round(yieldKg / 90);
+      const convertedKg = bagsEquivalent * 90;
+      toast.warning(safeT('yield_seems_low_warning'), { description: safeT('yield_seems_low_detail', { yield: yieldKg, bags: bagsEquivalent, converted: convertedKg }), duration: 10000, action: { label: safeT('use_converted'), onClick: () => { setUserTranscript(convertedKg.toString()); } } });
+      const confirmed = window.confirm(safeT('yield_seems_low_confirm', { yield: yieldKg, bags: bagsEquivalent, converted: convertedKg }));
+      if (!confirmed) return;
     }
-  };
+  }
+
+  // Set farmer details
+  setFarmerDetails(prev => ({ ...prev, [currentConfig.id]: finalValue }));
+  setLastSubmittedAnswer(cleanAnswer);
+  await speakAcknowledgment(cleanAnswer, currentConfig.id);
+  setUserTranscript("");
+
+  if (configStep < visibleQuestions.length - 1) {
+    setConfigStep(prev => prev + 1);
+    setTimeout(() => askQuestion(configStep + 1), 2500);
+  } else {
+    setCurrentStep("generating");
+    generateSession();
+  }
+};
 
   const safeStartListening = () => {
     if (isSpeaking || isStreaming) { console.log("AI is speaking, waiting to listen..."); return; }
@@ -1528,6 +1995,7 @@ const CreateInterviewAgent = ({ userName, userId, profileImage, filter = "comple
     }
   };
 
+  // ========== generateSession ==========
   const generateSession = async () => {
     if (!voiceAssistantRef.current) return;
     setIsLoading(true);
@@ -1541,44 +2009,141 @@ const CreateInterviewAgent = ({ userName, userId, profileImage, filter = "comple
     if (!farmerDetails.subCounty) farmerDetails.subCounty = "Unknown";
     if (!farmerDetails.village) farmerDetails.village = "Unknown";
 
-    // Save poultry data BEFORE generating session
+    // Save poultry and dairy data BEFORE generating session
     if (user?.uid) await saveProfileToFirestore(user.uid, farmerDetails);
 
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 120000);
 
+    // ===== PAYLOAD – always use ref for dairyManagementFocus =====
+    const payload = {
+      ...farmerDetails,
+      // Override dairyManagementFocus with the ref value if present
+      dairyManagementFocus: lastDairyManagementFocusRef.current || farmerDetails.dairyManagementFocus || "",
+      userid: currentUserId,
+      modules: modules,
+      species: selectedSpecies,
+      isPoultry: selectedSpecies === "poultry",
+      isDairy: selectedSpecies === "dairy",
+      // Poultry fields
+      poultry_breed: poultryBreed,
+      poultry_system: poultrySystem,
+      poultry_flock_size: poultryFlockSize,
+      poultry_age_weeks: poultryAgeWeeks,
+      poultry_farming_goal: poultryFarmingGoal,
+      poultry_location_region: poultryLocationRegion,
+      poultry_rainfall_pattern: poultryRainfallPattern,
+      poultry_altitude: poultryAltitude,
+      poultry_feed_type: poultryFeedType,
+      poultry_feed_cost_kg: poultryFeedCostKg,
+      poultry_vaccination_done: poultryVaccinationDone,
+      poultry_mortality_count: poultryMortalityCount,
+      poultry_chick_cost: poultryChickCost,
+      poultry_egg_price: poultryEggPrice,
+      poultry_meat_price: poultryMeatPrice,
+      poultry_house_size_m2: poultryHouseSizeM2,
+      poultry_disease: farmerDetails.poultry_disease || "",
+      symptomsObserved: farmerDetails.symptomsObserved || "",
+      mortalityCountDisease: farmerDetails.mortalityCountDisease || "",
+      diseaseDuration: farmerDetails.diseaseDuration || "",
+      // DAIRY fields (all 15 agents)
+dairyCowCategory,
+dairyBodyWeightKg,
+dairyBreed,
+dairyDiseaseSelect,
+dairySymptoms: dairySymptoms.join(','),
+dairyMortalityCount,
+dairyHealthDuration,
+dairyMilkYieldPerDay,
+dairyMilkPricePerLitre,
+dairyFeedCostPerDay,
+dairyVetCostPerMonth,
+
+// DairyBreedingAgent
+dairyDaysSinceCalving: farmerDetails.dairyDaysSinceCalving || "",
+dairyHeatObserved: farmerDetails.dairyHeatObserved || "",
+dairyLastInseminationDate: farmerDetails.dairyLastInseminationDate || "",
+dairyBreedingMethod: farmerDetails.dairyBreedingMethod || "",
+dairyReproductiveProblems: farmerDetails.dairyReproductiveProblems || "",
+
+// DairyBusinessAgent – override with ref
+dairyBusinessInterest: lastDairyBusinessInterestRef.current || farmerDetails.dairyBusinessInterest || "",
+
+// DairyCalfAgent
+calfAgeWeeks: farmerDetails.calfAgeWeeks || "",
+calfFeedingMethod: farmerDetails.calfFeedingMethod || "",
+calfMilkLitresPerDay: farmerDetails.calfMilkLitresPerDay || "",
+calfReceivedColostrum: farmerDetails.calfReceivedColostrum || "",
+calfHousingType: farmerDetails.calfHousingType || "",
+calfHealthIssues: farmerDetails.calfHealthIssues || "",
+
+// DairyConcentrateAgent
+dairyConcentrateBrand: farmerDetails.dairyConcentrateBrand || "",
+dairyConcentrateProduct: farmerDetails.dairyConcentrateProduct || "",
+dairyConcentrateInclusion: farmerDetails.dairyConcentrateInclusion || "",
+dairyConcentrateMaizeKg: farmerDetails.dairyConcentrateMaizeKg || "",
+dairyConcentrateSaltKg: farmerDetails.dairyConcentrateSaltKg || "",
+dairyConcentrateCalciumSource: farmerDetails.dairyConcentrateCalciumSource || "",
+dairyConcentrateCalciumKg: farmerDetails.dairyConcentrateCalciumKg || "",
+
+// DairyDeficiencyAgent – override with ref
+dairyDeficiencySymptoms: lastDairyDeficiencySymptomsRef.current || farmerDetails.dairyDeficiencySymptoms || "",
+
+// DairyDosDontsAgent – override with ref
+dairyManagementFocus: lastDairyManagementFocusRef.current || farmerDetails.dairyManagementFocus || "",
+
+// DairyFeedAgent
+dairyAvailableForages: farmerDetails.dairyAvailableForages || "",
+dairyAvailableGrains: farmerDetails.dairyAvailableGrains || "",
+dairyAvailableProtein: farmerDetails.dairyAvailableProtein || "",
+dairyAvailableMinerals: farmerDetails.dairyAvailableMinerals || "",
+dairyQuantityToMix: farmerDetails.dairyQuantityToMix || "",
+
+// DairyFeedPerDayAgent
+dairyForageType: farmerDetails.dairyForageType || "",
+dairyForageKgPerDay: farmerDetails.dairyForageKgPerDay || "",
+dairyConcentrateType: farmerDetails.dairyConcentrateType || "",
+dairyConcentrateKgPerDay: farmerDetails.dairyConcentrateKgPerDay || "",
+dairyMilkYield: farmerDetails.dairyMilkYield || "",
+
+// DairyFinancialAgent (some already covered, adding extras)
+dairyMilkPrice: farmerDetails.dairyMilkPrice || "",
+dairyVetCostMonth: farmerDetails.dairyVetCostMonth || "",
+dairyOtherCosts: farmerDetails.dairyOtherCosts || "",
+
+// DairyHousingAgent
+dairyHousingType: farmerDetails.dairyHousingType || "",
+numberOfCowsHoused: farmerDetails.numberOfCowsHoused || "",
+floorSpacePerCowM2: farmerDetails.floorSpacePerCowM2 || "",
+dairyVentilationRating: farmerDetails.dairyVentilationRating || "",
+beddingType: farmerDetails.beddingType || "",
+
+// DairyMilkAgent
+milkYieldCurrent: farmerDetails.milkYieldCurrent || "",
+milkFatPercent: farmerDetails.milkFatPercent || "",
+milkProteinPercent: farmerDetails.milkProteinPercent || "",
+daysInMilk: farmerDetails.daysInMilk || "",
+parity: farmerDetails.parity || "",
+
+// DairyParasiteAgent – override with ref
+dairyParasiteSigns: lastDairyParasiteSignsRef.current || farmerDetails.dairyParasiteSigns || "",
+
+// DairyReminderAgent
+dairyLastDeworming: farmerDetails.dairyLastDeworming || "",
+dairyLastHoofTrimming: farmerDetails.dairyLastHoofTrimming || "",
+dairyLastVaccination: farmerDetails.dairyLastVaccination || "",
+dairyNextVaccinationDue: farmerDetails.dairyNextVaccinationDue || "",
+dairyReminderTopics: farmerDetails.dairyReminderTopics || "",
+    };
+    console.log('📦 API Payload:', JSON.stringify(payload, null, 2));
+
+
+
     try {
       const response = await fetch("/api/vapi/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ...farmerDetails,
-          userid: currentUserId,
-          modules: modules,
-          species: selectedSpecies,
-          isPoultry: selectedSpecies === "poultry",
-          // Pass current poultry state (which may have been loaded from Firestore)
-          poultry_breed: poultryBreed,
-          poultry_system: poultrySystem,
-          poultry_flock_size: poultryFlockSize,
-          poultry_age_weeks: poultryAgeWeeks,
-          poultry_farming_goal: poultryFarmingGoal,
-          poultry_location_region: poultryLocationRegion,
-          poultry_rainfall_pattern: poultryRainfallPattern,
-          poultry_altitude: poultryAltitude,
-          poultry_feed_type: poultryFeedType,
-          poultry_feed_cost_kg: poultryFeedCostKg,
-          poultry_vaccination_done: poultryVaccinationDone,
-          poultry_mortality_count: poultryMortalityCount,
-          poultry_chick_cost: poultryChickCost,
-          poultry_egg_price: poultryEggPrice,
-          poultry_meat_price: poultryMeatPrice,
-          poultry_house_size_m2: poultryHouseSizeM2,
-          poultry_disease: farmerDetails.poultry_disease || "",
-          symptomsObserved: farmerDetails.symptomsObserved || "",
-          mortalityCountDisease: farmerDetails.mortalityCountDisease || "",
-          diseaseDuration: farmerDetails.diseaseDuration || "",
-        }),
+        body: JSON.stringify(payload),
         signal: controller.signal
       });
       clearTimeout(timeoutId);
@@ -1730,10 +2295,11 @@ const CreateInterviewAgent = ({ userName, userId, profileImage, filter = "comple
       {/* ===== SPECIES TOGGLE ===== */}
       {currentStep === "idle" && (
         <div className="bg-white rounded-2xl p-6 border-2 border-blue-200 shadow-xl mb-4">
-          <h3 className="font-bold text-xl mb-4 flex items-center gap-2 text-blue-800">🐓 {safeT("select_species") || "What are you farming?"}</h3>
+          <h3 className="font-bold text-xl mb-4 flex items-center gap-2 text-blue-800">{safeT("select_species") || "What are you farming?"}</h3>
           <div className="flex flex-wrap gap-4">
             <button onClick={() => setSelectedSpecies("crop")} className={`px-6 py-3 rounded-xl font-bold transition ${selectedSpecies === "crop" ? "bg-green-600 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"}`}>🌾 Crops</button>
             <button onClick={() => setSelectedSpecies("poultry")} className={`px-6 py-3 rounded-xl font-bold transition ${selectedSpecies === "poultry" ? "bg-orange-600 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"}`}>🐔 Poultry</button>
+            <button onClick={() => setSelectedSpecies("dairy")} className={`px-6 py-3 rounded-xl font-bold transition ${selectedSpecies === "dairy" ? "bg-blue-600 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"}`}>🐄 Dairy</button>
           </div>
         </div>
       )}

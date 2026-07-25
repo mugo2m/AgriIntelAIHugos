@@ -1,3 +1,4 @@
+// components/InterviewCard.tsx – UPDATED with poultry + dairy support
 import dayjs from "dayjs";
 import Link from "next/link";
 import Image from "next/image";
@@ -8,7 +9,7 @@ import DisplayTechIcons from "./DisplayTechIcons";
 import { cn, getRandomInterviewCover } from "@/lib/utils";
 import { getFeedbackByInterviewId } from "@/lib/actions/general.action";
 
-// Updated interface to handle both interview and farmer session data
+// Updated interface to handle all session types
 interface FarmerSessionCardProps {
   id?: string;
   userId?: string;
@@ -16,13 +17,31 @@ interface FarmerSessionCardProps {
   type?: string;          // For backward compatibility
   techstack?: string[];   // For backward compatibility
   createdAt?: string;
-  // New farmer session fields
+  // Crop fields
   crops?: string[];
   county?: string;
   acres?: number;
   cattle?: number;
+  // Poultry fields
+  isPoultry?: boolean;
+  poultry?: {
+    breed?: string;
+    system?: string;
+    flockSize?: number;
+    ageWeeks?: number;
+  };
+  // Dairy fields
+  isDairy?: boolean;
+  dairy?: {
+    breed?: string;
+    cowCategory?: string;
+    milkYieldPerDay?: number;
+    bodyWeightKg?: number;
+  };
+  // Common fields
   queryCount?: number;
   lastQueryAt?: string;
+  species?: string;
 }
 
 const InterviewCard = async ({
@@ -32,13 +51,21 @@ const InterviewCard = async ({
   type,
   techstack,
   createdAt,
-  // New farmer fields
+  // Crop fields
   crops,
   county,
   acres,
   cattle,
+  // Poultry fields
+  isPoultry,
+  poultry,
+  // Dairy fields
+  isDairy,
+  dairy,
+  // Common
   queryCount,
   lastQueryAt,
+  species,
 }: FarmerSessionCardProps) => {
 
   console.log("Card DEBUG - id:", id, "userId:", userId);
@@ -52,57 +79,96 @@ const InterviewCard = async ({
         }).catch(() => null)
       : null;
 
-  // Determine if this is a farmer session (has crops) or interview (has role)
-  const isFarmerSession = crops && crops.length > 0;
+  // ===== DETECT SESSION TYPE =====
+  const isCropSession = crops && crops.length > 0;
+  const isPoultrySession = isPoultry === true || species === 'poultry';
+  const isDairySession = isDairy === true || species === 'dairy';
+  const isFarmerSession = isCropSession || isPoultrySession || isDairySession;
 
   const formattedDate = dayjs(
     feedback?.createdAt || createdAt || lastQueryAt || Date.now()
   ).format("MMM D, YYYY");
 
-  // Farmer Session Card
+  // ===== FARMER SESSION CARD (Crop, Poultry, or Dairy) =====
   if (isFarmerSession) {
+    // ===== DETERMINE DISPLAY DATA =====
+    let emoji = "🌾";
+    let badgeText = "Farm Session";
+    let title = "";
+    let subtitle = "";
+    let icon = "🌱";
+    let detailItems: { label: string; value: string | number }[] = [];
+
+    if (isCropSession) {
+      emoji = "🌾";
+      badgeText = "Farm Session";
+      title = crops?.join(", ") || "Farm";
+      subtitle = county || "Unknown location";
+      icon = "🌱";
+      detailItems = [
+        { label: "Acres", value: acres || "?" },
+        { label: "Cattle", value: cattle || 0 },
+      ];
+    } else if (isPoultrySession) {
+      emoji = "🐔";
+      badgeText = "Poultry Session";
+      title = poultry?.breed || "Poultry";
+      subtitle = `${poultry?.system || ""}${county ? ` • ${county}` : ""}`;
+      icon = "🐔";
+      detailItems = [
+        { label: "Flock size", value: poultry?.flockSize || 0 },
+        { label: "Age", value: `${poultry?.ageWeeks || 0} weeks` },
+      ];
+    } else if (isDairySession) {
+      emoji = "🐄";
+      badgeText = "Dairy Session";
+      title = dairy?.breed || "Dairy";
+      const category = dairy?.cowCategory || "";
+      subtitle = `${category}${county ? ` • ${county}` : ""}`;
+      icon = "🐄";
+      detailItems = [
+        { label: "Milk yield", value: `${dairy?.milkYieldPerDay || 0} L/day` },
+        { label: "Body weight", value: `${dairy?.bodyWeightKg || 0} kg` },
+      ];
+    }
+
     return (
       <div className="card-border w-[360px] max-sm:w-full min-h-96 hover:shadow-lg transition-all">
         <div className="card-interview bg-gradient-to-br from-green-50 to-white">
           <div>
-            {/* Farm Badge */}
+            {/* Badge */}
             <div className="absolute top-0 right-0 w-fit px-4 py-2 rounded-bl-lg bg-green-600">
-              <p className="badge-text text-white">🌾 Farm Session</p>
+              <p className="badge-text text-white">{emoji} {badgeText}</p>
             </div>
 
-            {/* Farm Icon */}
+            {/* Icon */}
             <div className="w-[90px] h-[90px] rounded-full bg-green-100 flex items-center justify-center text-4xl">
-              🌱
+              {icon}
             </div>
 
-            {/* Farm Details */}
+            {/* Title */}
             <h3 className="mt-5 capitalize text-green-800 font-semibold">
-              {crops?.join(", ")} Farm
+              {title}
             </h3>
 
-            {/* Location & Stats */}
+            {/* Subtitle / Location */}
             <div className="flex flex-row gap-5 mt-3">
               <div className="flex flex-row gap-2">
                 <Image src="/location.svg" width={22} height={22} alt="location" />
-                <p className="text-sm">{county || "Unknown location"}</p>
+                <p className="text-sm">{subtitle || "Unknown location"}</p>
               </div>
-
-              {acres && (
-                <div className="flex flex-row gap-2 items-center">
-                  <Image src="/ruler.svg" width={22} height={22} alt="acres" />
-                  <p className="text-sm">{acres} acres</p>
-                </div>
-              )}
             </div>
 
-            {/* Additional Stats */}
-            <div className="flex flex-wrap gap-2 mt-3 text-xs text-gray-600">
-              {cattle > 0 && (
-                <span className="bg-blue-50 px-2 py-1 rounded">🐄 {cattle} cattle</span>
-              )}
-              {queryCount > 0 && (
-                <span className="bg-purple-50 px-2 py-1 rounded">
-                  💬 {queryCount} questions asked
+            {/* Detail Items */}
+            <div className="flex flex-wrap gap-3 mt-3 text-sm text-gray-600">
+              {detailItems.map((item, idx) => (
+                <span key={idx} className="bg-white px-3 py-1 rounded-full shadow-sm">
+                  {item.label}: {item.value}
+                </span>
+              ))}
+              {queryCount && queryCount > 0 && (
+                <span className="bg-purple-50 px-3 py-1 rounded-full shadow-sm">
+                  💬 {queryCount} questions
                 </span>
               )}
             </div>
@@ -114,8 +180,7 @@ const InterviewCard = async ({
           </div>
 
           <div className="flex flex-row justify-between mt-4">
-            <div className="flex-1" /> {/* Spacer */}
-
+            <div className="flex-1" />
             <Button className="btn-primary bg-green-600 hover:bg-green-700">
               <Link href={`/interview/${id}`}>
                 Ask Questions →
@@ -127,7 +192,7 @@ const InterviewCard = async ({
     );
   }
 
-  // Original Interview Card (for backward compatibility)
+  // ===== ORIGINAL INTERVIEW CARD (Backward Compatibility) =====
   const normalizedType = /mix/gi.test(type || "") ? "Mixed" : type || "Technical";
 
   const badgeColor =

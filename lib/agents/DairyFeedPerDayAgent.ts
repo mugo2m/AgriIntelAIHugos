@@ -1,64 +1,54 @@
 // lib/agents/DairyFeedPerDayAgent.ts
-import { BaseInterviewAgent, InterviewQuestion } from "./BaseInterviewAgent";
+import { BaseInterviewAgent, InterviewQuestion, FarmerContext } from "./BaseInterviewAgent";
+
+const FORAGE_TYPES = ["napier_grass", "rhodes_hay", "lucerne_hay", "maize_silage", "oat_hay", "desmodium"];
+const CONCENTRATE_TYPES = ["commercial_dairy", "home_mix", "none"];
 
 export class DairyFeedPerDayAgent extends BaseInterviewAgent {
-  constructor() {
-    super();
-    this.questions = [
+  getAgentKey(): string {
+    return "DairyFeedPerDayAgent";
+  }
+
+  getQuestions(context: FarmerContext): InterviewQuestion[] {
+    return [
       {
         id: "dairyForageType",
-        type: "select",
-        label: "What type of forage do you feed?",
-        options: [
-          { value: "napier_grass", label: "Napier grass" },
-          { value: "rhodes_hay", label: "Rhodes hay" },
-          { value: "lucerne_hay", label: "Lucerne hay" },
-          { value: "maize_silage", label: "Maize silage" },
-          { value: "oat_hay", label: "Oat hay" },
-          { value: "desmodium", label: "Desmodium" },
-        ],
-        required: true,
+        type: "dropdown",
+        questionKey: "question_dairy_forage_type",
+        options: FORAGE_TYPES,
+        sectionKey: "section_dairy_feed",
       },
       {
         id: "dairyForageKgPerDay",
         type: "number",
-        label: "How many kilograms of forage do you feed per cow per day?",
+        questionKey: "question_dairy_forage_kg_per_day",
         placeholder: "e.g., 30",
-        required: true,
+        step: "any",
+        sectionKey: "section_dairy_feed",
       },
       {
         id: "dairyConcentrateType",
-        type: "select",
-        label: "What type of concentrate do you feed?",
-        options: [
-          { value: "commercial_dairy", label: "Commercial dairy concentrate" },
-          { value: "home_mix", label: "Home‑mixed concentrate" },
-          { value: "none", label: "None" },
-        ],
-        required: true,
+        type: "dropdown",
+        questionKey: "question_dairy_concentrate_type",
+        options: CONCENTRATE_TYPES,
+        sectionKey: "section_dairy_feed",
       },
       {
         id: "dairyConcentrateKgPerDay",
         type: "number",
-        label: "How many kilograms of concentrate per cow per day?",
+        questionKey: "question_dairy_concentrate_kg_per_day",
         placeholder: "e.g., 4",
-        required: false,
+        step: "any",
+        sectionKey: "section_dairy_feed",
       },
       {
         id: "dairyMilkYield",
         type: "number",
-        label: "What is the current milk yield per cow per day (litres)?",
+        questionKey: "question_dairy_milk_yield",
         placeholder: "e.g., 15",
-        required: false,
+        step: "any",
+        sectionKey: "section_dairy_production",
       },
     ];
-  }
-
-  async generateRecommendation(): Promise<any> {
-    return {
-      agentType: "DairyFeedPerDay",
-      collectedData: this.answers,
-      message: "Daily feed details collected.",
-    };
   }
 }

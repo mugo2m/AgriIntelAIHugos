@@ -1,87 +1,70 @@
 // lib/agents/DairyConcentrateAgent.ts
-import { BaseInterviewAgent, InterviewQuestion } from "./BaseInterviewAgent";
+import { BaseInterviewAgent, InterviewQuestion, FarmerContext } from "./BaseInterviewAgent";
+
+const CONCENTRATE_BRANDS = ["koudijs", "unga", "afrimach", "jubaili", "farmers_choice", "royal_dutch", "hendrix", "intraco", "cargill"];
+const CONCENTRATE_PRODUCTS = ["16pc", "18pc", "layer", "dairy_meal"];
+const CALCIUM_SOURCES = ["limestone", "dcp", "oyster_shell", "none"];
 
 export class DairyConcentrateAgent extends BaseInterviewAgent {
-  constructor() {
-    super();
-    this.questions = [
+  getAgentKey(): string {
+    return "DairyConcentrateAgent";
+  }
+
+  getQuestions(context: FarmerContext): InterviewQuestion[] {
+    return [
       {
         id: "dairyConcentrateBrand",
-        type: "select",
-        label: "Which dairy concentrate brand do you use?",
-        options: [
-          { value: "koudijs", label: "Koudijs" },
-          { value: "unga", label: "Unga Farm Care" },
-          { value: "afrimach", label: "Afrimach" },
-          { value: "jubaili", label: "Jubaili" },
-          { value: "farmers_choice", label: "Farmers Choice" },
-          { value: "royal_dutch", label: "Royal Dutch" },
-          { value: "hendrix", label: "Hendrix" },
-          { value: "intraco", label: "Intraco" },
-          { value: "cargill", label: "Cargill" },
-        ],
-        required: true,
+        type: "dropdown",
+        questionKey: "question_dairy_concentrate_brand",
+        options: CONCENTRATE_BRANDS,
+        sectionKey: "section_dairy_feed",
       },
       {
         id: "dairyConcentrateProduct",
-        type: "select",
-        label: "Which specific product?",
-        options: [
-          { value: "16pc", label: "Dairy Concentrate 16%" },
-          { value: "18pc", label: "Dairy Concentrate 18%" },
-          { value: "layer", label: "Dairy Layer/Concentrate" },
-          { value: "dairy_meal", label: "Dairy Meal" },
-        ],
-        required: true,
+        type: "dropdown",
+        questionKey: "question_dairy_concentrate_product",
+        options: CONCENTRATE_PRODUCTS,
+        sectionKey: "section_dairy_feed",
       },
       {
         id: "dairyConcentrateInclusion",
         type: "number",
-        label: "How many kilograms of concentrate per cow per day?",
+        questionKey: "question_dairy_concentrate_inclusion",
         placeholder: "e.g., 3",
-        required: true,
+        step: "any",
+        sectionKey: "section_dairy_feed",
       },
       {
         id: "dairyConcentrateMaizeKg",
         type: "number",
-        label: "How many kilograms of maize do you mix with the concentrate per cow per day?",
+        questionKey: "question_dairy_concentrate_maize_kg",
         placeholder: "e.g., 2",
-        required: false,
+        step: "any",
+        sectionKey: "section_dairy_feed",
       },
       {
         id: "dairyConcentrateSaltKg",
         type: "number",
-        label: "How many kilograms of salt do you add per cow per day?",
+        questionKey: "question_dairy_concentrate_salt_kg",
         placeholder: "e.g., 0.05",
-        required: false,
+        step: "any",
+        sectionKey: "section_dairy_feed",
       },
       {
         id: "dairyConcentrateCalciumSource",
-        type: "select",
-        label: "Which calcium source do you use?",
-        options: [
-          { value: "limestone", label: "Limestone flour" },
-          { value: "dcp", label: "DCP" },
-          { value: "oyster_shell", label: "Oyster shell grit" },
-          { value: "none", label: "None" },
-        ],
-        required: true,
+        type: "dropdown",
+        questionKey: "question_dairy_concentrate_calcium_source",
+        options: CALCIUM_SOURCES,
+        sectionKey: "section_dairy_feed",
       },
       {
         id: "dairyConcentrateCalciumKg",
         type: "number",
-        label: "How many kilograms of calcium source do you add per cow per day?",
+        questionKey: "question_dairy_concentrate_calcium_kg",
         placeholder: "e.g., 0.1",
-        required: false,
+        step: "any",
+        sectionKey: "section_dairy_feed",
       },
     ];
-  }
-
-  async generateRecommendation(): Promise<any> {
-    return {
-      agentType: "DairyConcentrate",
-      collectedData: this.answers,
-      message: "Dairy concentrate details collected.",
-    };
   }
 }

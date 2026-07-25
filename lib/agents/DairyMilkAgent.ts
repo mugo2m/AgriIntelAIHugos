@@ -1,58 +1,54 @@
 // lib/agents/DairyMilkAgent.ts
-import { BaseInterviewAgent, InterviewQuestion } from "./BaseInterviewAgent";
+import { BaseInterviewAgent, InterviewQuestion, FarmerContext } from "./BaseInterviewAgent";
+
+const PARITY_OPTIONS = ["1", "2", "3", "4+"];
 
 export class DairyMilkAgent extends BaseInterviewAgent {
-  constructor() {
-    super();
-    this.questions = [
+  getAgentKey(): string {
+    return "DairyMilkAgent";
+  }
+
+  getQuestions(context: FarmerContext): InterviewQuestion[] {
+    return [
       {
         id: "milkYieldCurrent",
         type: "number",
-        label: "What is the current milk yield per cow per day (litres)?",
+        questionKey: "question_dairy_milk_yield_current",
         placeholder: "e.g., 15",
-        required: true,
+        step: "any",
+        sectionKey: "section_dairy_production",
       },
       {
         id: "milkFatPercent",
         type: "number",
-        label: "What is the milk fat percentage?",
+        questionKey: "question_dairy_milk_fat_percent",
         placeholder: "e.g., 4.0",
-        required: false,
+        step: "any",
+        sectionKey: "section_dairy_production",
       },
       {
         id: "milkProteinPercent",
         type: "number",
-        label: "What is the milk protein percentage?",
+        questionKey: "question_dairy_milk_protein_percent",
         placeholder: "e.g., 3.2",
-        required: false,
+        step: "any",
+        sectionKey: "section_dairy_production",
       },
       {
         id: "daysInMilk",
         type: "number",
-        label: "How many days in milk (DIM)?",
+        questionKey: "question_dairy_days_in_milk",
         placeholder: "e.g., 120",
-        required: true,
+        step: "any",
+        sectionKey: "section_dairy_production",
       },
       {
         id: "parity",
-        type: "select",
-        label: "What is the parity (lactation number) of the cow?",
-        options: [
-          { value: "1", label: "1" },
-          { value: "2", label: "2" },
-          { value: "3", label: "3" },
-          { value: "4+", label: "4+" },
-        ],
-        required: true,
+        type: "dropdown",
+        questionKey: "question_dairy_parity",
+        options: PARITY_OPTIONS,
+        sectionKey: "section_dairy_production",
       },
     ];
-  }
-
-  async generateRecommendation(): Promise<any> {
-    return {
-      agentType: "DairyMilk",
-      collectedData: this.answers,
-      message: "Milk production details collected.",
-    };
   }
 }

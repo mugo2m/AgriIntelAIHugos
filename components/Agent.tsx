@@ -1,6 +1,7 @@
 // components/Agent.tsx – Complete: natural speech + time‑based progressive reveal + Farmers Comments + Paystack Payment (KES forced)
-// + Branching: Soil test vs Extension Officer input (Path B)
+// + Branching: Soil test vs Extension Officer input (Path B) – only for crops
 // + POULTRY SUPPORT: Full rendering for poultry modules (feed, vaccination, financial, housing, biosecurity, breed advice, sourcing)
+// + DAIRY SUPPORT: Full rendering for dairy modules (health, financial, management)
 
 "use client";
 
@@ -189,6 +190,11 @@ const Agent = ({
   const poultryBreed = sessionData?.poultry?.breed || '';
   const poultrySystem = sessionData?.poultry?.system || '';
 
+  // ===== DAIRY DETECTION =====
+  const isDairy = sessionData?.isDairy || sessionData?.species === 'dairy';
+  const dairyBreed = sessionData?.dairy?.breed || '';
+  const dairyCowCategory = sessionData?.dairy?.cowCategory || '';
+
   // ---------- Get the session ID reliably ----------
   const getSessionId = () => {
     return sessionData?.id || interviewId || null;
@@ -218,6 +224,12 @@ const Agent = ({
 
   // ---------- Initialize path based on existing data ----------
   useEffect(() => {
+    // Branching only for crops (not poultry or dairy)
+    if (isPoultry || isDairy) {
+      setPath('recommendations');
+      setSoilTestDone(null);
+      return;
+    }
     if (hasSoilTest) {
       setSoilTestDone(true);
       setPath('soil');
@@ -228,7 +240,7 @@ const Agent = ({
       setPath('branch');
       setSoilTestDone(null);
     }
-  }, [hasSoilTest, sessionData]);
+  }, [hasSoilTest, sessionData, isPoultry, isDairy]);
 
   // ---------- Submit Farmers Comment ----------
   const submitFarmerComment = async () => {
@@ -640,6 +652,8 @@ const Agent = ({
 
     if (isPoultry) {
       introMessage += `For your ${poultryBreed || 'poultry'} flock, I have prepared the following recommendations. `;
+    } else if (isDairy) {
+      introMessage += `For your ${dairyBreed || 'dairy'} herd, I have prepared the following recommendations. `;
     } else if (hasSoilTest && fertilizerPlan?.totalCost) {
       introMessage += safeT('soil_test_recommendations', {
         amount: fertilizerPlan.totalCost.toLocaleString(),
@@ -862,7 +876,7 @@ const Agent = ({
     return safeT('start_voice_session');
   };
 
-  // ========== RENDER RECOMMENDATION TEXT (UPDATED WITH POULTRY MODULES) ==========
+  // ========== RENDER RECOMMENDATION TEXT (UPDATED WITH POULTRY + DAIRY MODULES) ==========
   const renderRecommendationText = (item: StructuredItem, idx: number) => {
     let displayContent = '';
     let moduleType = item.key;
@@ -954,7 +968,27 @@ const Agent = ({
       }
     };
 
+    // ===== DAIRY MODULE RENDERERS =====
+    const getDairyIcon = (key: string): string => {
+      switch (key) {
+        case 'dairy_health_analysis': return '🩺';
+        case 'dairy_financial': return '💰';
+        case 'dairy_management': return '📋';
+        default: return '🐄';
+      }
+    };
+
+    const getDairyBgColor = (key: string): string => {
+      switch (key) {
+        case 'dairy_health_analysis': return 'bg-blue-50 border-blue-300';
+        case 'dairy_financial': return 'bg-amber-50 border-amber-300';
+        case 'dairy_management': return 'bg-green-50 border-green-300';
+        default: return 'bg-sky-50 border-sky-300';
+      }
+    };
+
     const poultryKey = moduleType;
+    const dairyKey = moduleType;
 
     if (poultryKey.startsWith('poultry_') || poultryKey === 'bird_damage') {
       return (
@@ -983,6 +1017,46 @@ const Agent = ({
                       poultryKey === 'poultry_financial' ? 'bg-amber-600' :
                       poultryKey === 'poultry_biosecurity' ? 'bg-red-600' :
                       'bg-purple-600'
+                    }`} style={{ width: `${progressPercent}%` }} />
+                  </div>
+                  <span className="text-sm font-medium text-gray-700">
+                    {Math.round(progressPercent)}%
+                  </span>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // ===== DAIRY MODULE RENDERERS =====
+    if (dairyKey.startsWith('dairy_')) {
+      return (
+        <div
+          key={idx}
+          className={`rounded-xl p-5 transition-all duration-300 border-2 ${getDairyBgColor(dairyKey)} ${
+            isActive ? 'shadow-2xl scale-105' : ''
+          }`}
+        >
+          <div className="flex items-start gap-4">
+            <span className="text-3xl">{getDairyIcon(dairyKey)}</span>
+            <div className="flex-1">
+              <p className="text-xl text-gray-800 leading-relaxed whitespace-pre-wrap">
+                {lines.map((line, i) => (
+                  <span key={i}>
+                    {line}
+                    {i < lines.length - 1 && <br />}
+                  </span>
+                ))}
+              </p>
+              {isActive && displayContent.length > 0 && (
+                <div className="mt-3 flex items-center gap-2">
+                  <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+                    <div className={`h-full transition-all duration-150 ${
+                      dairyKey === 'dairy_financial' ? 'bg-amber-600' :
+                      dairyKey === 'dairy_health_analysis' ? 'bg-blue-600' :
+                      'bg-sky-600'
                     }`} style={{ width: `${progressPercent}%` }} />
                   </div>
                   <span className="text-sm font-medium text-gray-700">
@@ -1035,7 +1109,7 @@ const Agent = ({
 
   // ========== Render branching UI ==========
   const renderBranching = () => {
-    if (path !== 'branch' || isPoultry) return null;
+    if (path !== 'branch' || isPoultry || isDairy) return null;
     return (
       <div className="bg-white rounded-2xl p-6 border-2 border-blue-200 shadow-xl">
         <h3 className="font-bold text-xl mb-4 flex items-center gap-2 text-blue-800">
@@ -1068,7 +1142,7 @@ const Agent = ({
 
   // ========== Render extension input form ==========
   const renderExtensionForm = () => {
-    if (path !== 'extension' || isPoultry) return null;
+    if (path !== 'extension' || isPoultry || isDairy) return null;
     return (
       <div className="bg-white rounded-2xl p-6 border-2 border-yellow-200 shadow-xl">
         <h3 className="font-bold text-xl mb-4 flex items-center gap-2 text-yellow-800">
@@ -1230,12 +1304,16 @@ const Agent = ({
                 {isPoultry && poultryBreed && (
                   <span className="text-orange-600">🐔 {poultryBreed}</span>
                 )}
-                {!isPoultry && sessionData?.crops && (
+                {isDairy && dairyBreed && (
+                  <span className="text-blue-600">🐄 {dairyBreed}</span>
+                )}
+                {!isPoultry && !isDairy && sessionData?.crops && (
                   <span className="text-emerald-600">{sessionData.crops.join(", ")}</span>
                 )}
                 {sessionData?.county && <span className="text-gray-500">• {sessionData.county}</span>}
                 {sessionData?.country && <span className="text-gray-400">• {sessionData.country}</span>}
                 {isPoultry && poultrySystem && <span className="text-gray-500">• {poultrySystem}</span>}
+                {isDairy && dairyCowCategory && <span className="text-gray-500">• {dairyCowCategory}</span>}
                 {hasSoilTest && <span className="text-purple-600">• {safeT('soil_test')}</span>}
                 {soilTestDone === false && <span className="text-yellow-600">• No soil test</span>}
               </div>
@@ -1266,7 +1344,7 @@ const Agent = ({
       {renderExtensionForm()}
 
       <div className="flex flex-row gap-4 justify-center">
-        {sessionData?.grossMarginAnalysis && !isPoultry && (
+        {sessionData?.grossMarginAnalysis && !isPoultry && !isDairy && (
           <Link href={`/financial/${interviewId}`} className="flex-1">
             <button className="w-full px-4 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-xl font-bold hover:from-emerald-700 hover:to-teal-700 flex items-center justify-center gap-2">
               <BarChart3 className="w-5 h-5" />
@@ -1286,7 +1364,9 @@ const Agent = ({
         <div className="bg-white rounded-2xl p-6 border-2 border-purple-200 shadow-xl">
           <h3 className="font-bold text-2xl mb-4 flex items-center gap-2 text-purple-800">
             <Sparkles className="w-6 h-6 text-purple-600" />
-            {isPoultry ? '🐔 Poultry Recommendations' : safeT('personalized_recommendations')}
+            {isPoultry ? '🐔 Poultry Recommendations' :
+             isDairy ? '🐄 Dairy Recommendations' :
+             safeT('personalized_recommendations')}
             {activeStreamingRec !== null && (
               <span className="ml-auto flex items-center gap-2 text-purple-600">
                 <Volume2 className="w-5 h-5 animate-pulse" />
@@ -1299,6 +1379,8 @@ const Agent = ({
               <Rocket className="w-4 h-4" />
               {isPoultry
                 ? '💡 Business Tip: Every shilling invested in quality feed and vaccination returns 3-5 shillings in productivity!'
+                : isDairy
+                ? '💡 Business Tip: Every shilling invested in herd health and quality feed returns 3-5 shillings in milk and productivity!'
                 : safeT('business_tip_short')
               }
             </p>
@@ -1306,7 +1388,7 @@ const Agent = ({
           <div className="space-y-4">
             {structuredList.map((item, idx) => renderRecommendationText(item, idx))}
           </div>
-          {!hasSoilTest && soilTestDone === false && !isPoultry && (
+          {!hasSoilTest && soilTestDone === false && !isPoultry && !isDairy && (
             <div className="mt-4 p-3 bg-yellow-50 rounded-lg border border-yellow-300">
               <p className="text-yellow-800 text-sm flex items-center gap-2">
                 <AlertCircle className="w-4 h-4" />

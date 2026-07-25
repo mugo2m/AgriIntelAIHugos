@@ -1,67 +1,54 @@
 // lib/agents/DairyHousingAgent.ts
-import { BaseInterviewAgent, InterviewQuestion } from "./BaseInterviewAgent";
+import { BaseInterviewAgent, InterviewQuestion, FarmerContext } from "./BaseInterviewAgent";
+
+const HOUSING_TYPES = ["zero_grazing", "free_stall", "tie_stall", "pasture_shelter"];
+const VENTILATION_RATINGS = ["good", "average", "poor"];
+const BEDDING_TYPES = ["straw", "sand", "sawdust", "none"];
 
 export class DairyHousingAgent extends BaseInterviewAgent {
-  constructor() {
-    super();
-    this.questions = [
+  getAgentKey(): string {
+    return "DairyHousingAgent";
+  }
+
+  getQuestions(context: FarmerContext): InterviewQuestion[] {
+    return [
       {
         id: "dairyHousingType",
-        type: "select",
-        label: "What type of housing do you have?",
-        options: [
-          { value: "zero_grazing", label: "Zero‑grazing" },
-          { value: "free_stall", label: "Free‑stall" },
-          { value: "tie_stall", label: "Tie‑stall" },
-          { value: "pasture_shelter", label: "Pasture with shelter" },
-        ],
-        required: true,
+        type: "dropdown",
+        questionKey: "question_dairy_housing_type",
+        options: HOUSING_TYPES,
+        sectionKey: "section_dairy_housing",
       },
       {
         id: "numberOfCowsHoused",
         type: "number",
-        label: "How many cows are housed?",
+        questionKey: "question_dairy_number_of_cows_housed",
         placeholder: "e.g., 10",
-        required: true,
+        step: "any",
+        sectionKey: "section_dairy_housing",
       },
       {
         id: "floorSpacePerCowM2",
         type: "number",
-        label: "What is the floor space per cow in square metres?",
+        questionKey: "question_dairy_floor_space_per_cow_m2",
         placeholder: "e.g., 4",
-        required: false,
+        step: "any",
+        sectionKey: "section_dairy_housing",
       },
       {
         id: "dairyVentilationRating",
-        type: "select",
-        label: "How is the ventilation in your housing?",
-        options: [
-          { value: "good", label: "Good" },
-          { value: "average", label: "Average" },
-          { value: "poor", label: "Poor" },
-        ],
-        required: true,
+        type: "dropdown",
+        questionKey: "question_dairy_ventilation_rating",
+        options: VENTILATION_RATINGS,
+        sectionKey: "section_dairy_housing",
       },
       {
         id: "beddingType",
-        type: "select",
-        label: "What type of bedding do you use?",
-        options: [
-          { value: "straw", label: "Straw" },
-          { value: "sand", label: "Sand" },
-          { value: "sawdust", label: "Sawdust" },
-          { value: "none", label: "None" },
-        ],
-        required: true,
+        type: "dropdown",
+        questionKey: "question_dairy_bedding_type",
+        options: BEDDING_TYPES,
+        sectionKey: "section_dairy_housing",
       },
     ];
-  }
-
-  async generateRecommendation(): Promise<any> {
-    return {
-      agentType: "DairyHousing",
-      collectedData: this.answers,
-      message: "Dairy housing details collected.",
-    };
   }
 }

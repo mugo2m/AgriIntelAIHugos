@@ -1,54 +1,54 @@
 // lib/agents/DairyHealthAgent.ts
-import { BaseInterviewAgent, InterviewQuestion } from "./BaseInterviewAgent";
+import { BaseInterviewAgent, InterviewQuestion, FarmerContext } from "./BaseInterviewAgent";
+
+const DAIRY_SYMPTOMS = [
+  "swollen_udder",
+  "milk_changes",
+  "recumbent",
+  "fever",
+  "coughing",
+  "diarrhoea",
+  "lameness",
+  "bloat",
+  "ketosis",
+  "abortion",
+];
+
+const DAIRY_DURATION = [
+  "less_than_3_days",
+  "3_to_7_days",
+  "more_than_1_week",
+];
 
 export class DairyHealthAgent extends BaseInterviewAgent {
-  constructor() {
-    super();
-    this.questions = [
+  getAgentKey(): string {
+    return "DairyHealthAgent";
+  }
+
+  getQuestions(context: FarmerContext): InterviewQuestion[] {
+    return [
       {
         id: "dairySymptoms",
         type: "multiselect",
-        label: "What health symptoms are you seeing?",
-        options: [
-          { value: "swollen_udder", label: "Swollen, hot udder (mastitis)" },
-          { value: "milk_changes", label: "Milk changes (clots, watery)" },
-          { value: "recumbent", label: "Cow recumbent (down)" },
-          { value: "fever", label: "Fever / depression" },
-          { value: "coughing", label: "Coughing, nasal discharge" },
-          { value: "diarrhoea", label: "Diarrhoea (chronic)" },
-          { value: "lameness", label: "Lameness, swollen feet" },
-          { value: "bloat", label: "Bloat (distended left side)" },
-          { value: "ketosis", label: "Ketosis (fruity breath, weight loss)" },
-          { value: "abortion", label: "Abortion / retained placenta" },
-        ],
-        required: true,
+        questionKey: "question_dairy_symptoms",
+        options: DAIRY_SYMPTOMS,
+        sectionKey: "section_dairy",
       },
       {
         id: "dairyMortalityCount",
         type: "number",
-        label: "How many cows have died in the last month?",
+        questionKey: "question_dairy_mortality_count",
         placeholder: "e.g., 1",
-        required: false,
+        step: "any",
+        sectionKey: "section_dairy",
       },
       {
         id: "dairyHealthDuration",
-        type: "select",
-        label: "How long have these symptoms been present?",
-        options: [
-          { value: "less_than_3_days", label: "Less than 3 days" },
-          { value: "3_to_7_days", label: "3 to 7 days" },
-          { value: "more_than_1_week", label: "More than 1 week" },
-        ],
-        required: true,
+        type: "dropdown",
+        questionKey: "question_dairy_health_duration",
+        options: DAIRY_DURATION,
+        sectionKey: "section_dairy",
       },
     ];
-  }
-
-  async generateRecommendation(): Promise<any> {
-    return {
-      agentType: "DairyHealth",
-      collectedData: this.answers,
-      message: "Dairy health symptoms collected.",
-    };
   }
 }
