@@ -1,4 +1,4 @@
-// lib/recommendationEngine.ts – Part 1 (Final – all fixes applied)
+// lib/recommendationEngine.ts – Part 1 (Final – all fixes applied + POULTRY HOME FEED)
 import { COUNTRY_CURRENCY_MAP } from '@/lib/config/currency';
 import { cropPestDiseaseMap, PestDisease } from '@/lib/data/pestDiseaseMapping';
 import swTranslations from '../public/locales/sw/common.json';
@@ -24,6 +24,9 @@ import { poultryDiseaseMap } from '@/lib/data/poultryDiseaseMap';
 
 // ===== DAIRY UTILITIES =====
 import { dairyPestDiseaseMap, DairyPestDisease } from '@/lib/data/dairyHealthMapping';
+
+// ===== HOME FEED FORMULATION =====
+import { formulateFeed } from '@/lib/HomefeedFormulation';  // <-- ADDED
 
 // ===== HELPERS (unchanged) =====
 const safeT = (translation: any, fallback: string, ...args: any[]): string => {
@@ -386,7 +389,8 @@ type ModuleKey =
   | 'dairy_parasite'
   | 'dairy_business'
   | 'dairy_dos_donts'
-  | 'dairy_reminders';
+  | 'dairy_reminders'
+  | 'poultry_home_feed';  // <-- ADDED
 
 const moduleKeyMap: Record<string, ModuleKey> = {
   'confidence_label': 'confidence',
@@ -430,6 +434,7 @@ const moduleKeyMap: Record<string, ModuleKey> = {
   'dairy_business': 'dairy_business',
   'dairy_dos_donts': 'dairy_dos_donts',
   'dairy_reminders': 'dairy_reminders',
+  'poultry_home_feed': 'poultry_home_feed',  // <-- ADDED
 };
 
 interface RecommendationOutput {
@@ -635,6 +640,58 @@ async function generatePoultryRecommendations(
     }
   }
 
+  // ===== HOME POULTRY FEED FORMULATION =====  // <-- ADDED BLOCK
+  console.log("🐔 Checking poultry_home_feed module, shouldInclude:", shouldInclude('poultry_home_feed'));
+  if (shouldInclude('poultry_home_feed')) {
+    try {
+      // Build the parameters for formulateFeed
+      const available = farmerData.availableIngredients
+        ? (Array.isArray(farmerData.availableIngredients)
+            ? farmerData.availableIngredients
+            : farmerData.availableIngredients.split(','))
+        : [];
+
+      const prices = farmerData.ingredientPrices
+        ? (typeof farmerData.ingredientPrices === 'string'
+            ? JSON.parse(farmerData.ingredientPrices)
+            : farmerData.ingredientPrices)
+        : {};
+
+      const feedResult = formulateFeed({
+        breed: farmerData.poultry_breed || 'local',
+        stage: farmerData.poultryStage || 'grower',
+        quantityKg: parseFloat(farmerData.batchSize) || 100,
+        includeCoccidiostat: farmerData.includeCoccidiostat === 'Yes',
+        availableIngredients: available,
+        country: farmerData.country || 'kenya',
+        ingredientPrices: prices,
+        ageWeeks: farmerData.ageWeeks || undefined,
+      });
+      console.log("📦 Feed formulation result:", feedResult);
+      console.log("📦 Structured list length:", feedResult.structuredList?.length);
+
+      // Push all structured items directly (they already contain key, params)
+      for (const item of feedResult.structuredList) {
+        // Convert numeric costs to formatted currency if needed? Already done inside formulateFeed.
+        structuredList.push(item);
+        // Also add to flat list for backward compatibility
+        if (item.params?.content) {
+          addToList(item.params.content);
+        }
+      }
+
+    } catch (error: any) {
+        console.error("❌ Feed formulation error:", error.message);
+      console.error("❌ Stack:", error.stack);
+      const errorContent = `❌ Failed to formulate feed: ${error.message}`;
+      structuredList.push({
+        key: 'error',
+        params: { content: errorContent }
+      });
+      addToList(errorContent);
+    }
+  }
+
   // 10. Reminder
   if (shouldInclude('reminder')) {
     const content = isSwahili ? "Chunguza udongo wako kila mwaka ili kuweka biashara yako yenye faida." :
@@ -712,7 +769,8 @@ async function generatePoultryRecommendations(
     structuredFinancialAdvice: null,
   };
 }
-
+// ===== END OF PART 1 =====
+// lib/recommendationEngine.ts – Part 2 (Dairy + Crop logic, Main export)
 // ===== ENHANCED DAIRY GENERATOR (FINAL – all fixes applied) =====
 async function generateDairyRecommendations(
   farmerData: any,
@@ -1764,8 +1822,7 @@ async function generateDairyRecommendations(
     structuredFinancialAdvice: null,
   };
 }
-// ===== END OF PART 1 =====
-// lib/recommendationEngine.ts – Part 2 (Main Export + Full Crop Logic)
+// ===== END OF DAIRY GENERATOR =====
 
 // =============================================================
 // MAIN EXPORT – supports crop, poultry, and dairy

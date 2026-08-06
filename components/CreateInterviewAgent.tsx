@@ -1,4 +1,4 @@
-﻿// components/CreateInterviewAgent.tsx – COMPLETE (with ref fix)
+﻿// components/CreateInterviewAgent.tsx – COMPLETE with fix for poultry/dairy business plan context
 "use client";
 
 import { useState, useEffect, useRef, useMemo, useCallback } from "react";
@@ -64,6 +64,59 @@ import { poultryDiseaseMap } from "@/lib/data/poultryDiseaseMap";
 // ===== DAIRY DISEASE MAP (for dropdown) =====
 import { dairyPestDiseaseMap } from "@/lib/data/dairyHealthMapping";
 
+// ===== AGENT REGISTRY (to get questions from agents) =====
+import { getQuestionsForAgents } from "@/lib/agents/agentRegistry";
+
+// ===== FEED FORMULATION BREEDS =====
+const FEED_FORMULATION_BREEDS = ["Local", "Layers", "Sasso", "Kenbrew", "Kroiler", "Broiler", "Sussex"];
+
+// ===== BATCH SIZE OPTIONS (5 to 500 kg) =====
+const batchSizeOptions = Array.from({ length: 100 }, (_, i) => `${(i + 1) * 5} kg`);
+
+// ===== ALL INGREDIENTS FOR FEED FORMULATION =====
+const allIngredients = [
+  // Energy
+  "Broken maize", "Maize bran", "Maize germ", "Sorghum", "Millet", "Cassava",
+  "Wheat bran", "Rice bran",
+  // Protein
+  "Soya bean meal", "Fish meal", "Omena", "Meat and bone meal",
+  "Sunflower cake", "Groundnut cake", "Cottonseed cake",
+  // Minerals & Additives
+  "Lime", "Oyster shell grit", "DCP", "Bone meal",
+  "Premix", "Methionine", "Lysine", "Salt", "Toxin binder"
+];
+
+// ===== POULTRY PRODUCT OPTIONS (translation keys) =====
+const POULTRY_PRODUCT_OPTIONS = [
+  "poultry_product_fresh_eggs",
+  "poultry_product_table_eggs",
+  "poultry_product_day_old_chicks",
+  "poultry_product_growers",
+  "poultry_product_point_of_lay",
+  "poultry_product_spent_hens",
+  "poultry_product_broiler_whole",
+  "poultry_product_broiler_pieces",
+  "poultry_product_manure",
+];
+
+// ===== DAIRY PRODUCT OPTIONS (translation keys) =====
+const DAIRY_PRODUCT_OPTIONS = [
+  "dairy_product_raw_milk",
+  "dairy_product_pasteurised_milk",
+  "dairy_product_yoghurt_plain",
+  "dairy_product_yoghurt_flavoured",
+  "dairy_product_cheese_soft",
+  "dairy_product_cheese_hard",
+  "dairy_product_ghee",
+  "dairy_product_butter",
+  "dairy_product_cream",
+  "dairy_product_fermented_milk",
+  "dairy_product_manure",
+  "dairy_product_calves",
+  "dairy_product_heifers",
+  "dairy_product_culled_cows",
+];
+
 interface CreateInterviewAgentProps {
   userName: string;
   userId?: string;
@@ -99,7 +152,7 @@ const countryCodes = [
   { code: "+44", country: "UK", flag: "🇬🇧" }
 ];
 
-// Crop categories
+// Crop categories (unchanged)
 const cropCategories = {
   grains: ["maize", "beans", "wheat", "sorghum", "millet", "rice", "barley", "finger millet", "oats", "teff", "triticale", "buckwheat", "quinoa", "fonio", "spelt", "kamut", "amaranth grain"],
   pulses: ["soya beans", "cowpeas", "green grams", "bambara nuts", "groundnuts", "pigeonpeas", "chickpea", "lentil", "faba bean", "peanut", "fenugreek", "caraway", "anise", "cumin"],
@@ -434,6 +487,44 @@ const CreateInterviewAgent = ({ userName, userId, profileImage, filter = "comple
   const [dairyFeedCostPerDay, setDairyFeedCostPerDay] = useState<number>(100);
   const [dairyVetCostPerMonth, setDairyVetCostPerMonth] = useState<number>(500);
 
+  // ========== FEED FORMULATION SPECIFIC STATE ==========
+  const [poultryStage, setPoultryStage] = useState<string>("");
+  const [batchSize, setBatchSize] = useState<string>("");
+  const [includeCoccidiostat, setIncludeCoccidiostat] = useState<string>("No");
+  const [availableIngredients, setAvailableIngredients] = useState<string[]>([]);
+  const [ingredientPrices, setIngredientPrices] = useState<Record<string, number>>({});
+  const [ageWeeks, setAgeWeeks] = useState<string>("");
+
+  // ========== BUSINESS PLAN / PRODUCTS TABLE STATE (Crop) ==========
+  const [selectedProducts, setSelectedProducts] = useState<string[]>([]);
+  const [productRows, setProductRows] = useState<{
+    product: string;
+    quantity: string;
+    price: string;
+    cost: string;
+  }[]>([]);
+  const [productsSubmitted, setProductsSubmitted] = useState(false);
+
+  // ========== POULTRY PRODUCTS TABLE STATE ==========
+  const [selectedPoultryProducts, setSelectedPoultryProducts] = useState<string[]>([]);
+  const [poultryProductRows, setPoultryProductRows] = useState<{
+    product: string;
+    quantity: string;
+    price: string;
+    cost: string;
+  }[]>([]);
+  const [poultryProductsSubmitted, setPoultryProductsSubmitted] = useState(false);
+
+  // ========== DAIRY PRODUCTS TABLE STATE ==========
+  const [selectedDairyProducts, setSelectedDairyProducts] = useState<string[]>([]);
+  const [dairyProductRows, setDairyProductRows] = useState<{
+    product: string;
+    quantity: string;
+    price: string;
+    cost: string;
+  }[]>([]);
+  const [dairyProductsSubmitted, setDairyProductsSubmitted] = useState(false);
+
   // ========== AUTO-DETECT FROM FILTER ==========
   useEffect(() => {
     if (filter && filter.startsWith("poultry_")) {
@@ -531,7 +622,7 @@ const CreateInterviewAgent = ({ userName, userId, profileImage, filter = "comple
     symptomsObserved: "",
     mortalityCountDisease: "",
     diseaseDuration: "",
-    // Dairy fields (added for all agents)
+    // Dairy fields
     dairyDiseaseSelect: "",
     dairyDaysSinceCalving: "",
     dairyHeatObserved: "",
@@ -583,6 +674,34 @@ const CreateInterviewAgent = ({ userName, userId, profileImage, filter = "comple
     dairyLastVaccination: "",
     dairyNextVaccinationDue: "",
     dairyReminderTopics: "",
+    // Feed formulation fields
+    poultryStage: "",
+    batchSize: "",
+    includeCoccidiostat: "",
+    availableIngredients: "",
+    ingredientPrices: "",
+    ageWeeks: "",
+    // ===== Business Plan fields =====
+    businessName: "",
+    businessVision: "",
+    businessMission: "",
+    shortTermGoals: "",
+    midTermGoals: "",
+    longTermGoals: "",
+    targetCustomers: "",
+    communicationChannels: "",
+    fallbackPlan: "",
+    competitiveAdvantage: "",
+    paymentModes: "",
+    businessPositions: "",
+    positionHeads: "",
+    products: "",
+    productionInputs: "",
+    // ===== Poultry & Dairy Business Plan extra fields =====
+    poultryProducts: "",
+    dairyProducts: "",
+    poultryProductionInputs: "",
+    dairyProductionInputs: "",
   });
 
   const [plantingNutrients, setPlantingNutrients] = useState({ s: "", ca: "", mg: "", zn: "", b: "", cu: "", mn: "" });
@@ -681,7 +800,7 @@ const CreateInterviewAgent = ({ userName, userId, profileImage, filter = "comple
           }));
         }
 
-        // ===== LOAD DAIRY FIELDS =====
+        // Load dairy fields
         if (profile.dairy) {
           const d = profile.dairy;
           setDairyCowCategory(d.cowCategory || "lactating");
@@ -695,7 +814,6 @@ const CreateInterviewAgent = ({ userName, userId, profileImage, filter = "comple
           setDairyMilkPricePerLitre(d.milkPricePerLitre || 40);
           setDairyFeedCostPerDay(d.feedCostPerDay || 100);
           setDairyVetCostPerMonth(d.vetCostPerMonth || 500);
-          // Load all other dairy fields into farmerDetails
           setFarmerDetails(prev => ({
             ...prev,
             dairyDiseaseSelect: d.diseaseSelect || "",
@@ -789,8 +907,14 @@ const CreateInterviewAgent = ({ userName, userId, profileImage, filter = "comple
           symptomsObserved: details.symptomsObserved || "",
           mortalityCountDisease: details.mortalityCountDisease || "",
           diseaseDuration: details.diseaseDuration || "",
+          // Feed formulation fields
+          stage: details.poultryStage || "",
+          batchSize: details.batchSize || "",
+          includeCoccidiostat: details.includeCoccidiostat || "",
+          availableIngredients: details.availableIngredients ? details.availableIngredients.split(',') : [],
+          ingredientPrices: details.ingredientPrices ? JSON.parse(details.ingredientPrices) : {},
+          ageWeeks: details.ageWeeks || "",
         },
-        // ===== DAIRY ===== (all fields from all agents)
         dairy: {
           cowCategory: dairyCowCategory,
           bodyWeightKg: dairyBodyWeightKg,
@@ -803,7 +927,6 @@ const CreateInterviewAgent = ({ userName, userId, profileImage, filter = "comple
           milkPricePerLitre: dairyMilkPricePerLitre,
           feedCostPerDay: dairyFeedCostPerDay,
           vetCostPerMonth: dairyVetCostPerMonth,
-          // Additional fields from other agents
           daysSinceCalving: details.dairyDaysSinceCalving || "",
           heatObserved: details.dairyHeatObserved || "",
           lastInseminationDate: details.dairyLastInseminationDate || "",
@@ -864,17 +987,7 @@ const CreateInterviewAgent = ({ userName, userId, profileImage, filter = "comple
       console.error("Error saving profile:", error);
       return false;
     }
-  }, [
-    poultryBreed, poultrySystem, poultryFlockSize, poultryAgeWeeks,
-    poultryFarmingGoal, poultryLocationRegion, poultryRainfallPattern,
-    poultryAltitude, poultryFeedType, poultryFeedCostKg,
-    poultryVaccinationDone, poultryMortalityCount, poultryChickCost,
-    poultryEggPrice, poultryMeatPrice, poultryHouseSizeM2,
-    dairyCowCategory, dairyBodyWeightKg, dairyBreed, dairyDiseaseSelect,
-    dairySymptoms, dairyMortalityCount, dairyHealthDuration,
-    dairyMilkYieldPerDay, dairyMilkPricePerLitre, dairyFeedCostPerDay,
-    dairyVetCostPerMonth
-  ]);
+  }, [poultryBreed, poultrySystem, poultryFlockSize, poultryAgeWeeks, poultryFarmingGoal, poultryLocationRegion, poultryRainfallPattern, poultryAltitude, poultryFeedType, poultryFeedCostKg, poultryVaccinationDone, poultryMortalityCount, poultryChickCost, poultryEggPrice, poultryMeatPrice, poultryHouseSizeM2, dairyCowCategory, dairyBodyWeightKg, dairyBreed, dairyDiseaseSelect, dairySymptoms, dairyMortalityCount, dairyHealthDuration, dairyMilkYieldPerDay, dairyMilkPricePerLitre, dairyFeedCostPerDay, dairyVetCostPerMonth]);
 
   useEffect(() => {
     if (user?.uid) loadProfileFromFirestore(user.uid);
@@ -893,6 +1006,17 @@ const CreateInterviewAgent = ({ userName, userId, profileImage, filter = "comple
     GAPInterviewAgent: ["productionChallenges", "marketingChallenges", "climateChallenges", "financialChallenges"],
     PoultrySetupAgent: ["poultry_breed", "poultry_system", "poultry_flock_size", "poultry_age_weeks", "poultry_farming_goal", "poultry_location_region", "poultry_rainfall_pattern", "poultry_altitude", "poultry_feed_type", "poultry_feed_cost_kg", "poultry_vaccination_done", "poultry_mortality_count", "poultry_chick_cost", "poultry_egg_price", "poultry_meat_price", "poultry_house_size_m2"],
     PoultryDiseaseAgent: ["poultry_disease", "symptomsObserved", "mortalityCountDisease", "diseaseDuration"],
+    // ===== NEW: HomePoultryFeedAgent =====
+    HomePoultryFeedAgent: [
+      "country", // Ensures country is asked (already essential)
+      "poultryBreed",
+      "poultryStage",
+      "batchSize",
+      "includeCoccidiostat",
+      "availableIngredients",
+      "ingredientPrices",
+      "ageWeeks",
+    ],
     // DAIRY AGENTS (15 total)
     DairySetupAgent: ["dairyCowCategory", "dairyBodyWeightKg", "dairyBreed", "dairyMilkYieldPerDay", "dairyMilkPricePerLitre", "dairyFeedCostPerDay", "dairyVetCostPerMonth"],
     DairyHealthAgent: ["dairyDiseaseSelect", "dairySymptoms", "dairyMortalityCount", "dairyHealthDuration"],
@@ -909,6 +1033,82 @@ const CreateInterviewAgent = ({ userName, userId, profileImage, filter = "comple
     DairyMilkAgent: ["milkYieldCurrent", "milkFatPercent", "milkProteinPercent", "daysInMilk", "parity"],
     DairyParasiteAgent: ["dairyParasiteSigns"],
     DairyReminderAgent: ["dairyLastDeworming", "dairyLastHoofTrimming", "dairyLastVaccination", "dairyNextVaccinationDue", "dairyReminderTopics"],
+
+    // ========== NEW CROP AGENTS ==========
+    GAPAgent: [],
+    ProfitCalculationAgent: [
+      "actualYieldKg",
+      "pricePerKg",
+      "seedCost",
+      "plantingFertilizerCost",
+      "plantingFertilizerQuantity",
+      "topdressingFertilizerCost",
+      "topdressingFertilizerQuantity",
+      "potassiumFertilizerCost",
+      "potassiumFertilizerQuantity",
+      "recCalciticLime",
+      "calciticLimePricePerBag",
+      "ploughingCost",
+      "plantingLabourCost",
+      "weedingCost",
+      "harvestingCost",
+      "transportCostTotal",
+      "packagingCostTotal",
+      "miscellaneousCostTotal",
+    ],
+    BusinessPlanAgent: [
+      "businessName",
+      "businessVision",
+      "businessMission",
+      "shortTermGoals",
+      "midTermGoals",
+      "longTermGoals",
+      "targetCustomers",
+      "communicationChannels",
+      "fallbackPlan",
+      "competitiveAdvantage",
+      "paymentModes",
+      "businessPositions",
+      "positionHeads",
+      "products",
+      "productionInputs",
+    ],
+
+    // ========== NEW POULTRY & DAIRY BUSINESS PLAN AGENTS ==========
+    PoultryBusinessPlanAgent: [
+      "businessName",
+      "businessVision",
+      "businessMission",
+      "shortTermGoals",
+      "midTermGoals",
+      "longTermGoals",
+      "targetCustomers",
+      "communicationChannels",
+      "fallbackPlan",
+      "competitiveAdvantage",
+      "paymentModes",
+      "businessPositions",
+      "positionHeads",
+      "poultryProducts",
+      "poultryProductionInputs",
+    ],
+    DairyBusinessPlanAgent: [
+      "businessName",
+      "businessVision",
+      "businessMission",
+      "shortTermGoals",
+      "midTermGoals",
+      "longTermGoals",
+      "targetCustomers",
+      "communicationChannels",
+      "fallbackPlan",
+      "competitiveAdvantage",
+      "paymentModes",
+      "businessPositions",
+      "positionHeads",
+      "dairyProducts",
+      "dairyProductionInputs",
+    ],
   };
 
   const getAllowedQuestionIds = useCallback((): string[] => {
@@ -916,12 +1116,39 @@ const CreateInterviewAgent = ({ userName, userId, profileImage, filter = "comple
     const allowed: string[] = [];
     for (const agentName of agents) {
       const ids = agentQuestionMap[agentName] || [];
+      console.log(`🔍 Agent "${agentName}" has ${ids.length} questions:`, ids);
       allowed.push(...ids);
     }
     const essential = ["country", "county", "subCounty", "village", "farmerName"];
     for (const field of essential) { if (!allowed.includes(field)) allowed.push(field); }
+    console.log("✅ Allowed question IDs:", allowed);
     return allowed;
   }, [filter, agents]);
+
+  // ========== Helper to generate crop‑specific product options ==========
+  const getProductOptionsForCrop = (crop: string): string[] => {
+    const cropLower = crop.toLowerCase();
+    const productMap: Record<string, string[]> = {
+      banana: ["Fresh Bananas", "Banana Flour", "Banana Crisps", "Banana Wine", "Dried Bananas"],
+      maize: ["Fresh Maize", "Dry Grain", "Maize Flour", "Maize Bran", "Maize Silage"],
+      tomato: ["Fresh Tomatoes", "Tomato Paste", "Tomato Sauce", "Dried Tomatoes"],
+      coffee: ["Fresh Cherries", "Dry Parchment", "Roasted Beans", "Ground Coffee"],
+      mango: ["Fresh Mangoes", "Dried Mango", "Mango Juice", "Mango Chutney"],
+      avocado: ["Fresh Avocados", "Avocado Oil", "Guacamole"],
+      beans: ["Fresh Beans", "Dry Beans", "Bean Flour"],
+      potato: ["Fresh Potatoes", "Chips", "Potato Flour"],
+      pineapple: ["Fresh Pineapples", "Pineapple Juice", "Dried Pineapple"],
+      onion: ["Fresh Onions", "Dried Onion Flakes"],
+      cabbage: ["Fresh Cabbage", "Coleslaw", "Fermented Cabbage"],
+      watermelon: ["Fresh Watermelon", "Watermelon Juice"],
+      carrot: ["Fresh Carrots", "Carrot Juice", "Grated Carrots"],
+      passion_fruit: ["Fresh Passion Fruit", "Passion Juice", "Concentrate"],
+      macadamia: ["Raw Nuts", "Roasted Nuts", "Macadamia Oil"],
+      cashew: ["Raw Nuts", "Roasted Nuts", "Cashew Butter"],
+    };
+    // Fallback: generic options for any other crop
+    return productMap[cropLower] || [`Fresh ${crop}`, `Processed ${crop}`, `${crop} Flour`];
+  };
 
   // ========== QUESTION DEFINITIONS ==========
   const countryQuestion = [
@@ -957,6 +1184,73 @@ const CreateInterviewAgent = ({ userName, userId, profileImage, filter = "comple
 
   const plantsDamagedQuestion = { id: "plantsDamaged", questionKey: "question_plants_damaged", type: "number", placeholder: "e.g., 50", step: "any", sectionKey: "section_pests" };
   const nutritionBenefitsQuestion = { id: "wantsNutritionBenefits", questionKey: "question_wants_nutrition_benefits", type: "button", options: ["Yes"], sectionKey: "section_nutrition" };
+
+  // ---- Feed formulation questions ----
+  const getFeedFormulationQuestions = () => {
+    const isFeedFormulation = filter === "poultry_feed_formulation" || agents.includes("HomePoultryFeedAgent");
+    if (!isFeedFormulation) return [];
+
+    return [
+      {
+        id: "poultryBreed",
+        questionKey: "question_poultry_breed",
+        type: "dropdown",
+        options: FEED_FORMULATION_BREEDS,
+        sectionKey: "section_poultry",
+      },
+      {
+        id: "poultryStage",
+        questionKey: "question_poultry_stage",
+        type: "dropdown",
+        options: ["Starter", "Grower", "Layer", "Finisher"],
+        sectionKey: "section_poultry",
+      },
+      {
+        id: "batchSize",
+        questionKey: "question_poultry_batch_size",
+        type: "dropdown",
+        options: batchSizeOptions,
+        sectionKey: "section_poultry",
+      },
+      {
+        id: "includeCoccidiostat",
+        questionKey: "question_poultry_coccidiostat",
+        type: "dropdown",
+        options: ["Yes", "No"],
+        sectionKey: "section_poultry",
+        dependsOn: {
+          field: "poultryStage",
+          valueNot: "Layer",
+        },
+      },
+      {
+        id: "availableIngredients",
+        questionKey: "question_poultry_available_ingredients",
+        type: "multiselect",
+        options: allIngredients,
+        sectionKey: "section_poultry",
+      },
+      {
+        id: "ingredientPrices",
+        questionKey: "question_poultry_ingredient_prices",
+        type: "custom",
+        renderCustom: true,
+        sectionKey: "section_poultry",
+        dependsOn: {
+          field: "availableIngredients",
+          valueNot: "",
+        },
+      },
+      {
+        id: "ageWeeks",
+        questionKey: "question_poultry_age_weeks",
+        type: "number",
+        placeholder: "e.g., 6 (leave blank for default)",
+        step: "any",
+        sectionKey: "section_poultry",
+      },
+    ];
+  };
 
   const getCropSpecificQuestions = () => {
     if (!farmerDetails.crops) return [];
@@ -1100,15 +1394,11 @@ const CreateInterviewAgent = ({ userName, userId, profileImage, filter = "comple
     return found ? found.id : "other";
   };
 
+  // ========== UPDATED filterQuestions to handle valueNot for a single field ==========
   const filterQuestions = useCallback((questions: any[]) => {
     return questions.filter(q => {
       if (!q.dependsOn) return true;
-      if (q.dependsOn.field && !q.dependsOn.field2) {
-        const dependsOnField = q.dependsOn.field;
-        const expectedValue = q.dependsOn.value;
-        const actualValue = farmerDetails[dependsOnField as keyof typeof farmerDetails];
-        return actualValue === expectedValue;
-      }
+      // If field2 and valueNot are present, use that condition
       if (q.dependsOn.field2 && q.dependsOn.valueNot) {
         const dependsOnField = q.dependsOn.field;
         const dependsOnField2 = q.dependsOn.field2;
@@ -1118,11 +1408,28 @@ const CreateInterviewAgent = ({ userName, userId, profileImage, filter = "comple
         const actualValue2 = farmerDetails[dependsOnField2 as keyof typeof farmerDetails];
         return actualValue === expectedValue && actualValue2 !== valueNot;
       }
+      if (q.dependsOn.field) {
+        const dependsOnField = q.dependsOn.field;
+        // If value is defined, check equality
+        if (q.dependsOn.value !== undefined) {
+          const expectedValue = q.dependsOn.value;
+          const actualValue = farmerDetails[dependsOnField as keyof typeof farmerDetails];
+          return actualValue === expectedValue;
+        }
+        // If valueNot is defined, check inequality (FIX for ingredientPrices)
+        if (q.dependsOn.valueNot !== undefined) {
+          const notValue = q.dependsOn.valueNot;
+          const actualValue = farmerDetails[dependsOnField as keyof typeof farmerDetails];
+          return actualValue !== notValue;
+        }
+        // If neither, include
+        return true;
+      }
       return true;
     });
   }, [farmerDetails]);
 
-  // ========== GET ALL QUESTIONS (with dairy) ==========
+  // ========== GET ALL QUESTIONS ==========
   const getAllQuestions = useCallback(() => {
     let questions: any[] = [];
     const allowedIds = getAllowedQuestionIds();
@@ -1221,112 +1528,125 @@ const CreateInterviewAgent = ({ userName, userId, profileImage, filter = "comple
 
     // ===== POULTRY PATH =====
     if (selectedSpecies === "poultry") {
-      const poultryFields = [
-        "poultry_breed", "poultry_system", "poultry_flock_size", "poultry_age_weeks",
-        "poultry_farming_goal", "poultry_location_region", "poultry_rainfall_pattern",
-        "poultry_altitude", "poultry_feed_type", "poultry_feed_cost_kg",
-        "poultry_vaccination_done", "poultry_mortality_count", "poultry_chick_cost",
-        "poultry_egg_price", "poultry_meat_price", "poultry_house_size_m2"
-      ];
-      const allBreeds = (() => {
-        const groups = [
-          { breeds: ["KARI Improved Kienyeji", "Kuroiler", "Rainbow Rooster", "Brown Leghorn", "Hy-Line Brown", "Isa Brown", "Lohmann Brown", "Bovans Brown", "Dekalb White", "Babcock White"] },
-          { breeds: ["Cobb 500", "Ross 308", "Arbor Acres", "Hubbard", "Indian River"] },
-          { breeds: ["Sussex", "Kenbrew (Kenbro)", "Sasso", "Kenya Broiler", "KARI Kienyeji"] },
-          { breeds: ["Local Kienyeji", "Local Turkana", "Local Bantam"] },
-          { breeds: ["Broad Breasted White", "Broad Breasted Bronze", "Narragansett", "Royal Palm", "Local Turkey"] },
-          { breeds: ["Khaki Campbell", "Pekin", "Rouen", "Muscovy", "Indian Runner", "Local Duck"] },
-          { breeds: ["African Grey", "Toulouse", "Embden", "Chinese", "Local Goose"] },
-          { breeds: ["Japanese Quail", "Coturnix Quail", "Bobwhite Quail"] },
-          { breeds: ["Other"] }
-        ];
-        return groups.flatMap(g => g.breeds);
-      })();
+      const isFeedFormulation = filter === "poultry_feed_formulation" || agents.includes("HomePoultryFeedAgent");
 
-      const poultryQuestionMap: Record<string, any> = {
-        poultry_breed: { id: "poultry_breed", questionKey: "question_poultry_breed", type: "dropdown", options: allBreeds, sectionKey: "section_poultry" },
-        poultry_system: { id: "poultry_system", questionKey: "question_poultry_system", type: "dropdown", options: ["deep_litter", "battery_cage", "free_range", "pastured"], sectionKey: "section_poultry" },
-        poultry_flock_size: { id: "poultry_flock_size", questionKey: "question_poultry_flock_size", type: "number", placeholder: "e.g., 500", step: "any", sectionKey: "section_poultry" },
-        poultry_age_weeks: { id: "poultry_age_weeks", questionKey: "question_poultry_age_weeks", type: "number", placeholder: "e.g., 6", step: "any", sectionKey: "section_poultry" },
-        poultry_farming_goal: { id: "poultry_farming_goal", questionKey: "question_poultry_farming_goal", type: "dropdown", options: ["Egg production", "Meat production", "Both"], sectionKey: "section_poultry" },
-        poultry_location_region: { id: "poultry_location_region", questionKey: "question_poultry_location_region", type: "dropdown", options: ["Hot", "Cold", "Moderate"], sectionKey: "section_location" },
-        poultry_rainfall_pattern: { id: "poultry_rainfall_pattern", questionKey: "question_poultry_rainfall_pattern", type: "dropdown", options: ["Dry", "Semi-arid", "Wet"], sectionKey: "section_location" },
-        poultry_altitude: { id: "poultry_altitude", questionKey: "question_poultry_altitude", type: "dropdown", options: ["Highland", "Lowland", "Coastal"], sectionKey: "section_location" },
-        poultry_feed_type: { id: "poultry_feed_type", questionKey: "question_poultry_feed_type", type: "dropdown", options: ["Mash", "Pellets", "Crumbles", "Whole grain"], sectionKey: "section_feed" },
-        poultry_feed_cost_kg: { id: "poultry_feed_cost_kg", questionKey: "question_poultry_feed_cost_kg", type: "number", placeholder: "e.g., 65", step: "any", sectionKey: "section_feed" },
-        poultry_vaccination_done: { id: "poultry_vaccination_done", questionKey: "question_poultry_vaccination_done", type: "dropdown", options: ["Yes", "No"], sectionKey: "section_health" },
-        poultry_mortality_count: { id: "poultry_mortality_count", questionKey: "question_poultry_mortality_count", type: "number", placeholder: "e.g., 5", step: "any", sectionKey: "section_health" },
-        poultry_chick_cost: { id: "poultry_chick_cost", questionKey: "question_poultry_chick_cost", type: "number", placeholder: "e.g., 120", step: "any", sectionKey: "section_finance" },
-        poultry_egg_price: { id: "poultry_egg_price", questionKey: "question_poultry_egg_price", type: "number", placeholder: "e.g., 280", step: "any", sectionKey: "section_finance" },
-        poultry_meat_price: { id: "poultry_meat_price", questionKey: "question_poultry_meat_price", type: "number", placeholder: "e.g., 350", step: "any", sectionKey: "section_finance" },
-        poultry_house_size_m2: { id: "poultry_house_size_m2", questionKey: "question_poultry_house_size_m2", type: "number", placeholder: "e.g., 40", step: "any", sectionKey: "section_housing" },
-      };
-
-      for (const field of poultryFields) {
-        if (shouldInclude(field) && poultryQuestionMap[field]) {
-          questions.push(poultryQuestionMap[field]);
+      if (isFeedFormulation) {
+        // Add feed formulation questions
+        const feedQuestions = getFeedFormulationQuestions();
+        for (const q of feedQuestions) {
+          if (shouldInclude(q.id)) {
+            questions.push(q);
+          }
         }
-      }
+      } else {
+        // Original poultry setup questions
+        const poultryFields = [
+          "poultry_breed", "poultry_system", "poultry_flock_size", "poultry_age_weeks",
+          "poultry_farming_goal", "poultry_location_region", "poultry_rainfall_pattern",
+          "poultry_altitude", "poultry_feed_type", "poultry_feed_cost_kg",
+          "poultry_vaccination_done", "poultry_mortality_count", "poultry_chick_cost",
+          "poultry_egg_price", "poultry_meat_price", "poultry_house_size_m2"
+        ];
+        const allBreeds = (() => {
+          const groups = [
+            { breeds: ["KARI Improved Kienyeji", "Kuroiler", "Rainbow Rooster", "Brown Leghorn", "Hy-Line Brown", "Isa Brown", "Lohmann Brown", "Bovans Brown", "Dekalb White", "Babcock White"] },
+            { breeds: ["Cobb 500", "Ross 308", "Arbor Acres", "Hubbard", "Indian River"] },
+            { breeds: ["Sussex", "Kenbrew (Kenbro)", "Sasso", "Kenya Broiler", "KARI Kienyeji"] },
+            { breeds: ["Local Kienyeji", "Local Turkana", "Local Bantam"] },
+            { breeds: ["Broad Breasted White", "Broad Breasted Bronze", "Narragansett", "Royal Palm", "Local Turkey"] },
+            { breeds: ["Khaki Campbell", "Pekin", "Rouen", "Muscovy", "Indian Runner", "Local Duck"] },
+            { breeds: ["African Grey", "Toulouse", "Embden", "Chinese", "Local Goose"] },
+            { breeds: ["Japanese Quail", "Coturnix Quail", "Bobwhite Quail"] },
+            { breeds: ["Other"] }
+          ];
+          return groups.flatMap(g => g.breeds);
+        })();
 
-      // Poultry disease questions
-      const species = farmerDetails.poultry_species || 'chicken';
-      const diseaseNames = (poultryDiseaseMap[species] || poultryDiseaseMap['chicken']).map((d: any) => d.name);
+        const poultryQuestionMap: Record<string, any> = {
+          poultry_breed: { id: "poultry_breed", questionKey: "question_poultry_breed", type: "dropdown", options: allBreeds, sectionKey: "section_poultry" },
+          poultry_system: { id: "poultry_system", questionKey: "question_poultry_system", type: "dropdown", options: ["deep_litter", "battery_cage", "free_range", "pastured"], sectionKey: "section_poultry" },
+          poultry_flock_size: { id: "poultry_flock_size", questionKey: "question_poultry_flock_size", type: "number", placeholder: "e.g., 500", step: "any", sectionKey: "section_poultry" },
+          poultry_age_weeks: { id: "poultry_age_weeks", questionKey: "question_poultry_age_weeks", type: "number", placeholder: "e.g., 6", step: "any", sectionKey: "section_poultry" },
+          poultry_farming_goal: { id: "poultry_farming_goal", questionKey: "question_poultry_farming_goal", type: "dropdown", options: ["Egg production", "Meat production", "Both"], sectionKey: "section_poultry" },
+          poultry_location_region: { id: "poultry_location_region", questionKey: "question_poultry_location_region", type: "dropdown", options: ["Hot", "Cold", "Moderate"], sectionKey: "section_location" },
+          poultry_rainfall_pattern: { id: "poultry_rainfall_pattern", questionKey: "question_poultry_rainfall_pattern", type: "dropdown", options: ["Dry", "Semi-arid", "Wet"], sectionKey: "section_location" },
+          poultry_altitude: { id: "poultry_altitude", questionKey: "question_poultry_altitude", type: "dropdown", options: ["Highland", "Lowland", "Coastal"], sectionKey: "section_location" },
+          poultry_feed_type: { id: "poultry_feed_type", questionKey: "question_poultry_feed_type", type: "dropdown", options: ["Mash", "Pellets", "Crumbles", "Whole grain"], sectionKey: "section_feed" },
+          poultry_feed_cost_kg: { id: "poultry_feed_cost_kg", questionKey: "question_poultry_feed_cost_kg", type: "number", placeholder: "e.g., 65", step: "any", sectionKey: "section_feed" },
+          poultry_vaccination_done: { id: "poultry_vaccination_done", questionKey: "question_poultry_vaccination_done", type: "dropdown", options: ["Yes", "No"], sectionKey: "section_health" },
+          poultry_mortality_count: { id: "poultry_mortality_count", questionKey: "question_poultry_mortality_count", type: "number", placeholder: "e.g., 5", step: "any", sectionKey: "section_health" },
+          poultry_chick_cost: { id: "poultry_chick_cost", questionKey: "question_poultry_chick_cost", type: "number", placeholder: "e.g., 120", step: "any", sectionKey: "section_finance" },
+          poultry_egg_price: { id: "poultry_egg_price", questionKey: "question_poultry_egg_price", type: "number", placeholder: "e.g., 280", step: "any", sectionKey: "section_finance" },
+          poultry_meat_price: { id: "poultry_meat_price", questionKey: "question_poultry_meat_price", type: "number", placeholder: "e.g., 350", step: "any", sectionKey: "section_finance" },
+          poultry_house_size_m2: { id: "poultry_house_size_m2", questionKey: "question_poultry_house_size_m2", type: "number", placeholder: "e.g., 40", step: "any", sectionKey: "section_housing" },
+        };
 
-      if (shouldInclude("poultry_disease")) {
-        questions.push({
-          id: "poultry_disease",
-          questionKey: "question_poultry_disease_select",
-          type: "dropdown",
-          options: diseaseNames,
-          sectionKey: "section_poultry"
-        });
-      }
+        for (const field of poultryFields) {
+          if (shouldInclude(field) && poultryQuestionMap[field]) {
+            questions.push(poultryQuestionMap[field]);
+          }
+        }
 
-      if (shouldInclude("symptomsObserved")) {
-        questions.push({
-          id: "symptomsObserved",
-          questionKey: "question_poultry_disease_symptoms",
-          type: "multiselect",
-          options: [
-            "poultry_symptom_respiratory",
-            "poultry_symptom_green_diarrhoea",
-            "poultry_symptom_white_diarrhoea",
-            "poultry_symptom_chocolate_diarrhoea",
-            "poultry_symptom_paralysis",
-            "poultry_symptom_scabs",
-            "poultry_symptom_lameness",
-            "poultry_symptom_sudden_death",
-            "poultry_symptom_swollen_face",
-            "poultry_symptom_egg_drop",
-            "poultry_symptom_tremors",
-            "poultry_symptom_depression",
-          ],
-          sectionKey: "section_poultry"
-        });
-      }
+        // Poultry disease questions
+        const species = farmerDetails.poultry_species || 'chicken';
+        const diseaseNames = (poultryDiseaseMap[species] || poultryDiseaseMap['chicken']).map((d: any) => d.name);
 
-      if (shouldInclude("mortalityCountDisease")) {
-        questions.push({
-          id: "mortalityCountDisease",
-          questionKey: "question_poultry_mortality_count_disease",
-          type: "number",
-          placeholder: "e.g., 5",
-          sectionKey: "section_poultry"
-        });
-      }
+        if (shouldInclude("poultry_disease")) {
+          questions.push({
+            id: "poultry_disease",
+            questionKey: "question_poultry_disease_select",
+            type: "dropdown",
+            options: diseaseNames,
+            sectionKey: "section_poultry"
+          });
+        }
 
-      if (shouldInclude("diseaseDuration")) {
-        questions.push({
-          id: "diseaseDuration",
-          questionKey: "question_poultry_disease_duration",
-          type: "dropdown",
-          options: [
-            "poultry_duration_less_than_3_days",
-            "poultry_duration_3_to_7_days",
-            "poultry_duration_more_than_1_week",
-          ],
-          sectionKey: "section_poultry"
-        });
+        if (shouldInclude("symptomsObserved")) {
+          questions.push({
+            id: "symptomsObserved",
+            questionKey: "question_poultry_disease_symptoms",
+            type: "multiselect",
+            options: [
+              "poultry_symptom_respiratory",
+              "poultry_symptom_green_diarrhoea",
+              "poultry_symptom_white_diarrhoea",
+              "poultry_symptom_chocolate_diarrhoea",
+              "poultry_symptom_paralysis",
+              "poultry_symptom_scabs",
+              "poultry_symptom_lameness",
+              "poultry_symptom_sudden_death",
+              "poultry_symptom_swollen_face",
+              "poultry_symptom_egg_drop",
+              "poultry_symptom_tremors",
+              "poultry_symptom_depression",
+            ],
+            sectionKey: "section_poultry"
+          });
+        }
+
+        if (shouldInclude("mortalityCountDisease")) {
+          questions.push({
+            id: "mortalityCountDisease",
+            questionKey: "question_poultry_mortality_count_disease",
+            type: "number",
+            placeholder: "e.g., 5",
+            sectionKey: "section_poultry"
+          });
+        }
+
+        if (shouldInclude("diseaseDuration")) {
+          questions.push({
+            id: "diseaseDuration",
+            questionKey: "question_poultry_disease_duration",
+            type: "dropdown",
+            options: [
+              "poultry_duration_less_than_3_days",
+              "poultry_duration_3_to_7_days",
+              "poultry_duration_more_than_1_week",
+            ],
+            sectionKey: "section_poultry"
+          });
+        }
       }
 
       // Include personal location if not already included
@@ -1553,12 +1873,39 @@ const CreateInterviewAgent = ({ userName, userId, profileImage, filter = "comple
       if (shouldInclude("county")) questions.push(personalLocationQuestions[1]);
     }
 
-    return questions;
-  }, [farmerDetails, getAllowedQuestionIds, selectedSpecies]);
+    // ============================================================
+    // ADD QUESTIONS FROM AGENTS (Business Plan, etc.)
+    // ============================================================
+    // Build context for agent questions – FIX: include species and flags
+    const context: FarmerContext = {
+      crops: farmerDetails.crops ? [farmerDetails.crops] : [],
+      country: farmerDetails.country,
+      county: farmerDetails.county,
+      species: selectedSpecies,
+      isDairy: selectedSpecies === "dairy",
+      isPoultry: selectedSpecies === "poultry",
+    };
 
-  // ============================================================
-  // CONTINUED – PART 2
-  // ============================================================
+    // Use the agent registry to get questions from all agents
+    // We pass the current agents list and the context.
+    const agentQuestions = getQuestionsForAgents(agents, context);
+
+    // Deduplicate by id (keep first occurrence – hardcoded questions take precedence)
+    const seen = new Set<string>();
+    for (const q of questions) {
+      seen.add(q.id);
+    }
+    for (const q of agentQuestions) {
+      if (!seen.has(q.id)) {
+        questions.push(q);
+        seen.add(q.id);
+      }
+    }
+
+    console.log("📋 Total questions generated:", questions.length);
+    console.log("📋 First few questions:", questions.slice(0, 3));
+    return questions;
+  }, [farmerDetails, getAllowedQuestionIds, selectedSpecies, filter, agents, safeT]);
 
   const allQuestions = useMemo(() => getAllQuestions(), [getAllQuestions]);
   const visibleQuestions = useMemo(() => filterQuestions(allQuestions), [allQuestions, filterQuestions]);
@@ -1573,6 +1920,7 @@ const CreateInterviewAgent = ({ userName, userId, profileImage, filter = "comple
   const lastDairyParasiteSignsRef = useRef("");
   const lastDairyDeficiencySymptomsRef = useRef("");
   const lastDairyBusinessInterestRef = useRef("");
+
   // ========== SPEECH RECOGNITION ==========
   useEffect(() => {
     let isMounted = true;
@@ -1852,6 +2200,12 @@ const CreateInterviewAgent = ({ userName, userId, profileImage, filter = "comple
     else if (fieldId === "poultry_breed") acknowledgment = safeT('ack_poultry_breed', { answer: spokenAnswer });
     else if (fieldId === "poultry_flock_size") acknowledgment = safeT('ack_poultry_flock_size', { answer: spokenAnswer });
     else if (fieldId === "poultry_chick_cost") acknowledgment = safeT('ack_poultry_chick_cost', { answer: spokenAnswer });
+    // Feed formulation acknowledgments
+    else if (fieldId === "poultryStage") acknowledgment = safeT('ack_poultry_stage', { answer: spokenAnswer });
+    else if (fieldId === "batchSize") acknowledgment = safeT('ack_batch_size', { answer: spokenAnswer });
+    else if (fieldId === "includeCoccidiostat") acknowledgment = safeT('ack_include_coccidiostat', { answer: spokenAnswer });
+    else if (fieldId === "availableIngredients") acknowledgment = safeT('ack_available_ingredients', { answer: spokenAnswer });
+    else if (fieldId === "ageWeeks") acknowledgment = safeT('ack_age_weeks', { answer: spokenAnswer });
     else acknowledgment = safeT('ack_generic', { answer: spokenAnswer });
 
     await voiceAssistantRef.current?.speak(acknowledgment);
@@ -1869,82 +2223,186 @@ const CreateInterviewAgent = ({ userName, userId, profileImage, filter = "comple
     toast.success(safeT('nutrients_recorded'));
   };
 
-const processAnswer = async (answer: string) => {
-  if (currentStep !== "configuring") return;
-  const currentConfig = visibleQuestions[configStep];
-  console.log('🔍 processAnswer called for:', currentConfig.id, 'answer:', answer);
-  let cleanAnswer = answer;
-  let finalValue = cleanAnswer;
+  const processAnswer = async (answer: string) => {
+    if (currentStep !== "configuring") return;
+    const currentConfig = visibleQuestions[configStep];
+    console.log('🔍 processAnswer called for:', currentConfig.id, 'answer:', answer);
+    let cleanAnswer = answer;
+    let finalValue = cleanAnswer;
 
-  // ===== CAPTURE DAIRY MODULE ANSWERS IN REFS =====
-  if (currentConfig.id === "dairyManagementFocus") {
-    lastDairyManagementFocusRef.current = finalValue;
-    console.log('📌 Stored dairyManagementFocus in ref:', lastDairyManagementFocusRef.current);
-  }
-  if (currentConfig.id === "dairyParasiteSigns") {
-    lastDairyParasiteSignsRef.current = finalValue;
-    console.log('📌 Stored dairyParasiteSigns in ref:', lastDairyParasiteSignsRef.current);
-  }
-  if (currentConfig.id === "dairyDeficiencySymptoms") {
-    lastDairyDeficiencySymptomsRef.current = finalValue;
-    console.log('📌 Stored dairyDeficiencySymptoms in ref:', lastDairyDeficiencySymptomsRef.current);
-  }
-  if (currentConfig.id === "dairyBusinessInterest") {
-    lastDairyBusinessInterestRef.current = finalValue;
-    console.log('📌 Stored dairyBusinessInterest in ref:', lastDairyBusinessInterestRef.current);
-  }
-
-  if (currentConfig.id === "plantingFertilizerNutrients") {
-    handleNutrientSubmit("plantingFertilizerNutrients", plantingNutrients);
-    if (configStep < visibleQuestions.length - 1) { setConfigStep(prev => prev + 1); setTimeout(() => askQuestion(configStep + 1), 2500); }
-    return;
-  }
-  if (currentConfig.id === "topdressingFertilizerNutrients") {
-    handleNutrientSubmit("topdressingFertilizerNutrients", topdressingNutrients);
-    if (configStep < visibleQuestions.length - 1) { setConfigStep(prev => prev + 1); setTimeout(() => askQuestion(configStep + 1), 2500); }
-    return;
-  }
-  if (currentConfig.id === "potassiumFertilizerNutrients") {
-    handleNutrientSubmit("potassiumFertilizerNutrients", potassiumNutrients);
-    if (configStep < visibleQuestions.length - 1) { setConfigStep(prev => prev + 1); setTimeout(() => askQuestion(configStep + 1), 2500); }
-    return;
-  }
-  if (currentConfig.id === "wantsNutritionBenefits") {
-    finalValue = "Yes";
-    setFarmerDetails(prev => ({ ...prev, wantsNutritionBenefits: finalValue }));
-    setLastSubmittedAnswer("Yes");
-    await speakAcknowledgment("Yes", currentConfig.id);
-    setUserTranscript("");
-    if (configStep < visibleQuestions.length - 1) { setConfigStep(prev => prev + 1); setTimeout(() => askQuestion(configStep + 1), 2500); }
-    return;
-  }
-
-  // Validation
-  if (currentConfig.id === "actualYieldKg") {
-    const yieldKg = parseFloat(cleanAnswer);
-    if (!isNaN(yieldKg) && yieldKg < 100 && yieldKg > 0) {
-      const bagsEquivalent = Math.round(yieldKg / 90);
-      const convertedKg = bagsEquivalent * 90;
-      toast.warning(safeT('yield_seems_low_warning'), { description: safeT('yield_seems_low_detail', { yield: yieldKg, bags: bagsEquivalent, converted: convertedKg }), duration: 10000, action: { label: safeT('use_converted'), onClick: () => { setUserTranscript(convertedKg.toString()); } } });
-      const confirmed = window.confirm(safeT('yield_seems_low_confirm', { yield: yieldKg, bags: bagsEquivalent, converted: convertedKg }));
-      if (!confirmed) return;
+    // ===== CAPTURE DAIRY MODULE ANSWERS IN REFS =====
+    if (currentConfig.id === "dairyManagementFocus") {
+      lastDairyManagementFocusRef.current = finalValue;
+      console.log('📌 Stored dairyManagementFocus in ref:', lastDairyManagementFocusRef.current);
     }
-  }
+    if (currentConfig.id === "dairyParasiteSigns") {
+      lastDairyParasiteSignsRef.current = finalValue;
+      console.log('📌 Stored dairyParasiteSigns in ref:', lastDairyParasiteSignsRef.current);
+    }
+    if (currentConfig.id === "dairyDeficiencySymptoms") {
+      lastDairyDeficiencySymptomsRef.current = finalValue;
+      console.log('📌 Stored dairyDeficiencySymptoms in ref:', lastDairyDeficiencySymptomsRef.current);
+    }
+    if (currentConfig.id === "dairyBusinessInterest") {
+      lastDairyBusinessInterestRef.current = finalValue;
+      console.log('📌 Stored dairyBusinessInterest in ref:', lastDairyBusinessInterestRef.current);
+    }
 
-  // Set farmer details
-  setFarmerDetails(prev => ({ ...prev, [currentConfig.id]: finalValue }));
-  setLastSubmittedAnswer(cleanAnswer);
-  await speakAcknowledgment(cleanAnswer, currentConfig.id);
-  setUserTranscript("");
+    // ===== NUTRIENT SUBMITS =====
+    if (currentConfig.id === "plantingFertilizerNutrients") {
+      handleNutrientSubmit("plantingFertilizerNutrients", plantingNutrients);
+      if (configStep < visibleQuestions.length - 1) { setConfigStep(prev => prev + 1); setTimeout(() => askQuestion(configStep + 1), 2500); }
+      return;
+    }
+    if (currentConfig.id === "topdressingFertilizerNutrients") {
+      handleNutrientSubmit("topdressingFertilizerNutrients", topdressingNutrients);
+      if (configStep < visibleQuestions.length - 1) { setConfigStep(prev => prev + 1); setTimeout(() => askQuestion(configStep + 1), 2500); }
+      return;
+    }
+    if (currentConfig.id === "potassiumFertilizerNutrients") {
+      handleNutrientSubmit("potassiumFertilizerNutrients", potassiumNutrients);
+      if (configStep < visibleQuestions.length - 1) { setConfigStep(prev => prev + 1); setTimeout(() => askQuestion(configStep + 1), 2500); }
+      return;
+    }
 
-  if (configStep < visibleQuestions.length - 1) {
-    setConfigStep(prev => prev + 1);
-    setTimeout(() => askQuestion(configStep + 1), 2500);
-  } else {
-    setCurrentStep("generating");
-    generateSession();
-  }
-};
+    // ===== WANTS NUTRITION BENEFITS =====
+    if (currentConfig.id === "wantsNutritionBenefits") {
+      finalValue = "Yes";
+      setFarmerDetails(prev => ({ ...prev, wantsNutritionBenefits: finalValue }));
+      setLastSubmittedAnswer("Yes");
+      await speakAcknowledgment("Yes", currentConfig.id);
+      setUserTranscript("");
+      if (configStep < visibleQuestions.length - 1) { setConfigStep(prev => prev + 1); setTimeout(() => askQuestion(configStep + 1), 2500); }
+      return;
+    }
+
+    // ===== YIELD VALIDATION =====
+    if (currentConfig.id === "actualYieldKg") {
+      const yieldKg = parseFloat(cleanAnswer);
+      if (!isNaN(yieldKg) && yieldKg < 100 && yieldKg > 0) {
+        const bagsEquivalent = Math.round(yieldKg / 90);
+        const convertedKg = bagsEquivalent * 90;
+        toast.warning(safeT('yield_seems_low_warning'), { description: safeT('yield_seems_low_detail', { yield: yieldKg, bags: bagsEquivalent, converted: convertedKg }), duration: 10000, action: { label: safeT('use_converted'), onClick: () => { setUserTranscript(convertedKg.toString()); } } });
+        const confirmed = window.confirm(safeT('yield_seems_low_confirm', { yield: yieldKg, bags: bagsEquivalent, converted: convertedKg }));
+        if (!confirmed) return;
+      }
+    }
+
+    // ===== AVAILABLE INGREDIENTS =====
+    if (currentConfig.id === "availableIngredients") {
+      const ingredientsArray = cleanAnswer.split(',').map(s => s.trim()).filter(Boolean);
+      setAvailableIngredients(ingredientsArray);
+      setFarmerDetails(prev => ({ ...prev, availableIngredients: cleanAnswer }));
+      setLastSubmittedAnswer(cleanAnswer);
+      await speakAcknowledgment(cleanAnswer, currentConfig.id);
+      setUserTranscript("");
+      if (configStep < visibleQuestions.length - 1) {
+        setConfigStep(prev => prev + 1);
+        setTimeout(() => askQuestion(configStep + 1), 2500);
+      } else {
+        setCurrentStep("generating");
+        generateSession();
+      }
+      return;
+    }
+
+    // ===== PRODUCTS TABLES =====
+    if (currentConfig.id === "products") {
+      setFarmerDetails(prev => ({ ...prev, products: finalValue }));
+      setLastSubmittedAnswer(cleanAnswer);
+      await speakAcknowledgment(cleanAnswer, currentConfig.id);
+      setUserTranscript("");
+      if (configStep < visibleQuestions.length - 1) {
+        setConfigStep(prev => prev + 1);
+        setTimeout(() => askQuestion(configStep + 1), 2500);
+      } else {
+        setCurrentStep("generating");
+        generateSession();
+      }
+      return;
+    }
+
+    if (currentConfig.id === "poultryProducts") {
+      setFarmerDetails(prev => ({ ...prev, poultryProducts: finalValue }));
+      setLastSubmittedAnswer(cleanAnswer);
+      await speakAcknowledgment(cleanAnswer, currentConfig.id);
+      setUserTranscript("");
+      if (configStep < visibleQuestions.length - 1) {
+        setConfigStep(prev => prev + 1);
+        setTimeout(() => askQuestion(configStep + 1), 2500);
+      } else {
+        setCurrentStep("generating");
+        generateSession();
+      }
+      return;
+    }
+
+    if (currentConfig.id === "dairyProducts") {
+      setFarmerDetails(prev => ({ ...prev, dairyProducts: finalValue }));
+      setLastSubmittedAnswer(cleanAnswer);
+      await speakAcknowledgment(cleanAnswer, currentConfig.id);
+      setUserTranscript("");
+      if (configStep < visibleQuestions.length - 1) {
+        setConfigStep(prev => prev + 1);
+        setTimeout(() => askQuestion(configStep + 1), 2500);
+      } else {
+        setCurrentStep("generating");
+        generateSession();
+      }
+      return;
+    }
+
+    // ============================================================
+    // ===== BUSINESS PLAN FIELDS (including poultry/dairy inputs) =====
+    // ============================================================
+    const businessPlanFields = [
+      "businessName",
+      "businessVision",
+      "businessMission",
+      "shortTermGoals",
+      "midTermGoals",
+      "longTermGoals",
+      "targetCustomers",
+      "communicationChannels",
+      "fallbackPlan",
+      "competitiveAdvantage",
+      "paymentModes",
+      "businessPositions",
+      "positionHeads",
+      "productionInputs",
+      "poultryProductionInputs",
+      "dairyProductionInputs",
+    ];
+
+    if (businessPlanFields.includes(currentConfig.id)) {
+      setFarmerDetails(prev => ({ ...prev, [currentConfig.id]: finalValue }));
+      setLastSubmittedAnswer(cleanAnswer);
+      await speakAcknowledgment(cleanAnswer, currentConfig.id);
+      setUserTranscript("");
+      if (configStep < visibleQuestions.length - 1) {
+        setConfigStep(prev => prev + 1);
+        setTimeout(() => askQuestion(configStep + 1), 2500);
+      } else {
+        setCurrentStep("generating");
+        generateSession();
+      }
+      return;
+    }
+
+    // ===== DEFAULT: Set farmer details for other fields =====
+    setFarmerDetails(prev => ({ ...prev, [currentConfig.id]: finalValue }));
+    setLastSubmittedAnswer(cleanAnswer);
+    await speakAcknowledgment(cleanAnswer, currentConfig.id);
+    setUserTranscript("");
+
+    if (configStep < visibleQuestions.length - 1) {
+      setConfigStep(prev => prev + 1);
+      setTimeout(() => askQuestion(configStep + 1), 2500);
+    } else {
+      setCurrentStep("generating");
+      generateSession();
+    }
+  };
 
   const safeStartListening = () => {
     if (isSpeaking || isStreaming) { console.log("AI is speaking, waiting to listen..."); return; }
@@ -2004,28 +2462,23 @@ const processAnswer = async (answer: string) => {
     let currentUserId = userId || localStorage.getItem('userId') || `user-${Date.now()}`;
     localStorage.setItem('userId', currentUserId);
 
-    // Ensure county fallback
     if (!farmerDetails.county) farmerDetails.county = farmerDetails.country || "Unknown";
     if (!farmerDetails.subCounty) farmerDetails.subCounty = "Unknown";
     if (!farmerDetails.village) farmerDetails.village = "Unknown";
 
-    // Save poultry and dairy data BEFORE generating session
     if (user?.uid) await saveProfileToFirestore(user.uid, farmerDetails);
 
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 120000);
 
-    // ===== PAYLOAD – always use ref for dairyManagementFocus =====
     const payload = {
       ...farmerDetails,
-      // Override dairyManagementFocus with the ref value if present
       dairyManagementFocus: lastDairyManagementFocusRef.current || farmerDetails.dairyManagementFocus || "",
       userid: currentUserId,
       modules: modules,
       species: selectedSpecies,
       isPoultry: selectedSpecies === "poultry",
       isDairy: selectedSpecies === "dairy",
-      // Poultry fields
       poultry_breed: poultryBreed,
       poultry_system: poultrySystem,
       poultry_flock_size: poultryFlockSize,
@@ -2046,99 +2499,83 @@ const processAnswer = async (answer: string) => {
       symptomsObserved: farmerDetails.symptomsObserved || "",
       mortalityCountDisease: farmerDetails.mortalityCountDisease || "",
       diseaseDuration: farmerDetails.diseaseDuration || "",
-      // DAIRY fields (all 15 agents)
-dairyCowCategory,
-dairyBodyWeightKg,
-dairyBreed,
-dairyDiseaseSelect,
-dairySymptoms: dairySymptoms.join(','),
-dairyMortalityCount,
-dairyHealthDuration,
-dairyMilkYieldPerDay,
-dairyMilkPricePerLitre,
-dairyFeedCostPerDay,
-dairyVetCostPerMonth,
-
-// DairyBreedingAgent
-dairyDaysSinceCalving: farmerDetails.dairyDaysSinceCalving || "",
-dairyHeatObserved: farmerDetails.dairyHeatObserved || "",
-dairyLastInseminationDate: farmerDetails.dairyLastInseminationDate || "",
-dairyBreedingMethod: farmerDetails.dairyBreedingMethod || "",
-dairyReproductiveProblems: farmerDetails.dairyReproductiveProblems || "",
-
-// DairyBusinessAgent – override with ref
-dairyBusinessInterest: lastDairyBusinessInterestRef.current || farmerDetails.dairyBusinessInterest || "",
-
-// DairyCalfAgent
-calfAgeWeeks: farmerDetails.calfAgeWeeks || "",
-calfFeedingMethod: farmerDetails.calfFeedingMethod || "",
-calfMilkLitresPerDay: farmerDetails.calfMilkLitresPerDay || "",
-calfReceivedColostrum: farmerDetails.calfReceivedColostrum || "",
-calfHousingType: farmerDetails.calfHousingType || "",
-calfHealthIssues: farmerDetails.calfHealthIssues || "",
-
-// DairyConcentrateAgent
-dairyConcentrateBrand: farmerDetails.dairyConcentrateBrand || "",
-dairyConcentrateProduct: farmerDetails.dairyConcentrateProduct || "",
-dairyConcentrateInclusion: farmerDetails.dairyConcentrateInclusion || "",
-dairyConcentrateMaizeKg: farmerDetails.dairyConcentrateMaizeKg || "",
-dairyConcentrateSaltKg: farmerDetails.dairyConcentrateSaltKg || "",
-dairyConcentrateCalciumSource: farmerDetails.dairyConcentrateCalciumSource || "",
-dairyConcentrateCalciumKg: farmerDetails.dairyConcentrateCalciumKg || "",
-
-// DairyDeficiencyAgent – override with ref
-dairyDeficiencySymptoms: lastDairyDeficiencySymptomsRef.current || farmerDetails.dairyDeficiencySymptoms || "",
-
-// DairyDosDontsAgent – override with ref
-dairyManagementFocus: lastDairyManagementFocusRef.current || farmerDetails.dairyManagementFocus || "",
-
-// DairyFeedAgent
-dairyAvailableForages: farmerDetails.dairyAvailableForages || "",
-dairyAvailableGrains: farmerDetails.dairyAvailableGrains || "",
-dairyAvailableProtein: farmerDetails.dairyAvailableProtein || "",
-dairyAvailableMinerals: farmerDetails.dairyAvailableMinerals || "",
-dairyQuantityToMix: farmerDetails.dairyQuantityToMix || "",
-
-// DairyFeedPerDayAgent
-dairyForageType: farmerDetails.dairyForageType || "",
-dairyForageKgPerDay: farmerDetails.dairyForageKgPerDay || "",
-dairyConcentrateType: farmerDetails.dairyConcentrateType || "",
-dairyConcentrateKgPerDay: farmerDetails.dairyConcentrateKgPerDay || "",
-dairyMilkYield: farmerDetails.dairyMilkYield || "",
-
-// DairyFinancialAgent (some already covered, adding extras)
-dairyMilkPrice: farmerDetails.dairyMilkPrice || "",
-dairyVetCostMonth: farmerDetails.dairyVetCostMonth || "",
-dairyOtherCosts: farmerDetails.dairyOtherCosts || "",
-
-// DairyHousingAgent
-dairyHousingType: farmerDetails.dairyHousingType || "",
-numberOfCowsHoused: farmerDetails.numberOfCowsHoused || "",
-floorSpacePerCowM2: farmerDetails.floorSpacePerCowM2 || "",
-dairyVentilationRating: farmerDetails.dairyVentilationRating || "",
-beddingType: farmerDetails.beddingType || "",
-
-// DairyMilkAgent
-milkYieldCurrent: farmerDetails.milkYieldCurrent || "",
-milkFatPercent: farmerDetails.milkFatPercent || "",
-milkProteinPercent: farmerDetails.milkProteinPercent || "",
-daysInMilk: farmerDetails.daysInMilk || "",
-parity: farmerDetails.parity || "",
-
-// DairyParasiteAgent – override with ref
-dairyParasiteSigns: lastDairyParasiteSignsRef.current || farmerDetails.dairyParasiteSigns || "",
-
-// DairyReminderAgent
-dairyLastDeworming: farmerDetails.dairyLastDeworming || "",
-dairyLastHoofTrimming: farmerDetails.dairyLastHoofTrimming || "",
-dairyLastVaccination: farmerDetails.dairyLastVaccination || "",
-dairyNextVaccinationDue: farmerDetails.dairyNextVaccinationDue || "",
-dairyReminderTopics: farmerDetails.dairyReminderTopics || "",
+      // Feed formulation fields – OVERRIDE WITH THE ARRAY
+      poultryStage: farmerDetails.poultryStage || "",
+      batchSize: farmerDetails.batchSize || "",
+      includeCoccidiostat: farmerDetails.includeCoccidiostat || "",
+      availableIngredients: availableIngredients, // the array state
+      ingredientPrices: JSON.stringify(ingredientPrices), // the object state
+      ageWeeks: farmerDetails.ageWeeks || "",
+      // DAIRY fields
+      dairyCowCategory,
+      dairyBodyWeightKg,
+      dairyBreed,
+      dairyDiseaseSelect,
+      dairySymptoms: dairySymptoms.join(','),
+      dairyMortalityCount,
+      dairyHealthDuration,
+      dairyMilkYieldPerDay,
+      dairyMilkPricePerLitre,
+      dairyFeedCostPerDay,
+      dairyVetCostPerMonth,
+      dairyDaysSinceCalving: farmerDetails.dairyDaysSinceCalving || "",
+      dairyHeatObserved: farmerDetails.dairyHeatObserved || "",
+      dairyLastInseminationDate: farmerDetails.dairyLastInseminationDate || "",
+      dairyBreedingMethod: farmerDetails.dairyBreedingMethod || "",
+      dairyReproductiveProblems: farmerDetails.dairyReproductiveProblems || "",
+      dairyBusinessInterest: lastDairyBusinessInterestRef.current || farmerDetails.dairyBusinessInterest || "",
+      calfAgeWeeks: farmerDetails.calfAgeWeeks || "",
+      calfFeedingMethod: farmerDetails.calfFeedingMethod || "",
+      calfMilkLitresPerDay: farmerDetails.calfMilkLitresPerDay || "",
+      calfReceivedColostrum: farmerDetails.calfReceivedColostrum || "",
+      calfHousingType: farmerDetails.calfHousingType || "",
+      calfHealthIssues: farmerDetails.calfHealthIssues || "",
+      dairyConcentrateBrand: farmerDetails.dairyConcentrateBrand || "",
+      dairyConcentrateProduct: farmerDetails.dairyConcentrateProduct || "",
+      dairyConcentrateInclusion: farmerDetails.dairyConcentrateInclusion || "",
+      dairyConcentrateMaizeKg: farmerDetails.dairyConcentrateMaizeKg || "",
+      dairyConcentrateSaltKg: farmerDetails.dairyConcentrateSaltKg || "",
+      dairyConcentrateCalciumSource: farmerDetails.dairyConcentrateCalciumSource || "",
+      dairyConcentrateCalciumKg: farmerDetails.dairyConcentrateCalciumKg || "",
+      dairyDeficiencySymptoms: lastDairyDeficiencySymptomsRef.current || farmerDetails.dairyDeficiencySymptoms || "",
+      dairyManagementFocus: lastDairyManagementFocusRef.current || farmerDetails.dairyManagementFocus || "",
+      dairyAvailableForages: farmerDetails.dairyAvailableForages || "",
+      dairyAvailableGrains: farmerDetails.dairyAvailableGrains || "",
+      dairyAvailableProtein: farmerDetails.dairyAvailableProtein || "",
+      dairyAvailableMinerals: farmerDetails.dairyAvailableMinerals || "",
+      dairyQuantityToMix: farmerDetails.dairyQuantityToMix || "",
+      dairyForageType: farmerDetails.dairyForageType || "",
+      dairyForageKgPerDay: farmerDetails.dairyForageKgPerDay || "",
+      dairyConcentrateType: farmerDetails.dairyConcentrateType || "",
+      dairyConcentrateKgPerDay: farmerDetails.dairyConcentrateKgPerDay || "",
+      dairyMilkYield: farmerDetails.dairyMilkYield || "",
+      dairyMilkPrice: farmerDetails.dairyMilkPrice || "",
+      dairyVetCostMonth: farmerDetails.dairyVetCostMonth || "",
+      dairyOtherCosts: farmerDetails.dairyOtherCosts || "",
+      dairyHousingType: farmerDetails.dairyHousingType || "",
+      numberOfCowsHoused: farmerDetails.numberOfCowsHoused || "",
+      floorSpacePerCowM2: farmerDetails.floorSpacePerCowM2 || "",
+      dairyVentilationRating: farmerDetails.dairyVentilationRating || "",
+      beddingType: farmerDetails.beddingType || "",
+      milkYieldCurrent: farmerDetails.milkYieldCurrent || "",
+      milkFatPercent: farmerDetails.milkFatPercent || "",
+      milkProteinPercent: farmerDetails.milkProteinPercent || "",
+      daysInMilk: farmerDetails.daysInMilk || "",
+      parity: farmerDetails.parity || "",
+      dairyParasiteSigns: lastDairyParasiteSignsRef.current || farmerDetails.dairyParasiteSigns || "",
+      dairyLastDeworming: farmerDetails.dairyLastDeworming || "",
+      dairyLastHoofTrimming: farmerDetails.dairyLastHoofTrimming || "",
+      dairyLastVaccination: farmerDetails.dairyLastVaccination || "",
+      dairyNextVaccinationDue: farmerDetails.dairyNextVaccinationDue || "",
+      dairyReminderTopics: farmerDetails.dairyReminderTopics || "",
     };
     console.log('📦 API Payload:', JSON.stringify(payload, null, 2));
+    console.log("🔍 PAYLOAD CHECK:");
 
-
-
+    console.log("availableIngredients:", payload.availableIngredients);
+    console.log("ingredientPrices:", payload.ingredientPrices);
+    console.log("📦 Raw state before payload:", { availableIngredients, ingredientPrices });
+    alert(`Sending: ${availableIngredients.length} ingredients, prices: ${JSON.stringify(ingredientPrices)}`);
     try {
       const response = await fetch("/api/vapi/generate", {
         method: "POST",
@@ -2211,13 +2648,435 @@ dairyReminderTopics: farmerDetails.dairyReminderTopics || "",
     );
   }, [plantingNutrients, topdressingNutrients, potassiumNutrients, configStep, visibleQuestions.length, safeT, handleNutrientSubmit]);
 
+  // ===== RENDER INGREDIENT PRICES =====
+  const renderIngredientPrices = useCallback(() => {
+    const selectedIngredients = availableIngredients;
+    if (selectedIngredients.length === 0) return null;
+
+    const symbol = getDisplaySymbol();
+    const handlePriceChange = (ingredient: string, value: string) => {
+      const num = parseFloat(value);
+      if (!isNaN(num) && num >= 0) {
+        setIngredientPrices(prev => ({ ...prev, [ingredient]: num }));
+      } else {
+        setIngredientPrices(prev => {
+          const newPrices = { ...prev };
+          delete newPrices[ingredient];
+          return newPrices;
+        });
+      }
+    };
+
+    return (
+      <div className="space-y-4 p-4 bg-blue-50 rounded-xl border border-blue-200">
+        <p className="font-medium text-blue-900">
+          Enter the price per kg for each ingredient you selected. Use numbers only.
+        </p>
+        <p className="text-sm text-blue-700">
+          Currency is set to {symbol} (based on your country: {farmerDetails.country || 'Kenya'})
+        </p>
+        <div className="space-y-2">
+          {selectedIngredients.map((ing) => (
+            <div key={ing} className="flex items-center gap-2">
+              <span className="w-40 text-sm font-medium text-gray-800">{ing}</span>
+              <input
+                type="number"
+                step="any"
+                placeholder="Price per kg"
+                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-800 bg-white placeholder-gray-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                value={ingredientPrices[ing] ?? ''}
+                onChange={(e) => handlePriceChange(ing, e.target.value)}
+              />
+              <span className="text-sm font-medium text-gray-600">{symbol} / kg</span>
+            </div>
+          ))}
+        </div>
+        <button
+          onClick={() => {
+            console.log("🟢 Submitting ingredientPrices object:", ingredientPrices);
+            const pricesString = JSON.stringify(ingredientPrices);
+            setFarmerDetails(prev => ({ ...prev, ingredientPrices: pricesString }));
+            if (configStep < visibleQuestions.length - 1) {
+              setConfigStep(prev => prev + 1);
+              setTimeout(() => askQuestion(configStep + 1), 1500);
+            }
+          }}
+          className="mt-4 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium"
+        >
+          Submit all prices
+        </button>
+        <p className="text-xs text-gray-500">Leave blank to use default market prices.</p>
+      </div>
+    );
+  }, [availableIngredients, ingredientPrices, configStep, visibleQuestions.length, getDisplaySymbol]);
+
+  // ========== Custom renderer for Crop Products Table (Q14) ==========
+  const renderProductsTable = () => {
+    const crop = farmerDetails.crops || "";
+    const productOptions = getProductOptionsForCrop(crop);
+
+    const handleProductSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+      const selected = Array.from(e.target.selectedOptions, (opt) => opt.value);
+      setSelectedProducts(selected);
+      setProductRows(
+        selected.map((product) => ({
+          product,
+          quantity: "",
+          price: "",
+          cost: "",
+        }))
+      );
+    };
+
+    const handleRowChange = (index: number, field: "quantity" | "price" | "cost", value: string) => {
+      const updated = [...productRows];
+      updated[index][field] = value;
+      setProductRows(updated);
+    };
+
+    const handleSubmitProducts = () => {
+      const allFilled = productRows.every(
+        (row) => row.quantity.trim() && row.price.trim() && row.cost.trim()
+      );
+      if (!allFilled) {
+        toast.error("Please fill in quantity, price, and cost for all products.");
+        return;
+      }
+      const formatted = productRows
+        .map((row) => `${row.product}: ${row.quantity}kg @ ${row.price}/kg, cost ${row.cost}/kg`)
+        .join("; ");
+      setProductsSubmitted(true);
+      processAnswer(formatted);
+    };
+
+    return (
+      <div className="space-y-4 p-4 bg-purple-50 rounded-xl border-2 border-purple-300">
+        <p className="font-medium text-purple-900">{safeT("question_products")}</p>
+        <select
+          multiple
+          value={selectedProducts}
+          onChange={handleProductSelect}
+          className="w-full p-3 border-2 rounded-xl text-purple-900 bg-white"
+        >
+          {productOptions.map((opt) => (
+            <option key={opt} value={opt}>
+              {opt}
+            </option>
+          ))}
+        </select>
+        <p className="text-sm text-gray-500">Hold Ctrl (or Cmd) to select multiple products</p>
+
+        {productRows.length > 0 && (
+          <div className="overflow-x-auto">
+            <table className="w-full border-collapse bg-white rounded-xl">
+              <thead>
+                <tr className="bg-purple-200">
+                  <th className="p-2 text-left text-purple-900">Product</th>
+                  <th className="p-2 text-left text-purple-900">Qty (kg)</th>
+                  <th className="p-2 text-left text-purple-900">Price/kg</th>
+                  <th className="p-2 text-left text-purple-900">Cost/kg</th>
+                </tr>
+              </thead>
+              <tbody>
+                {productRows.map((row, idx) => (
+                  <tr key={idx} className="border-t">
+                    <td className="p-2 font-medium text-purple-900">{row.product}</td>
+                    <td className="p-2">
+                      <input
+                        type="number"
+                        step="any"
+                        value={row.quantity}
+                        onChange={(e) => handleRowChange(idx, "quantity", e.target.value)}
+                        placeholder="e.g., 15000"
+                        className="w-full p-2 border rounded-lg text-purple-900"
+                      />
+                    </td>
+                    <td className="p-2">
+                      <input
+                        type="number"
+                        step="any"
+                        value={row.price}
+                        onChange={(e) => handleRowChange(idx, "price", e.target.value)}
+                        placeholder="e.g., 40"
+                        className="w-full p-2 border rounded-lg text-purple-900"
+                      />
+                    </td>
+                    <td className="p-2">
+                      <input
+                        type="number"
+                        step="any"
+                        value={row.cost}
+                        onChange={(e) => handleRowChange(idx, "cost", e.target.value)}
+                        placeholder="e.g., 25"
+                        className="w-full p-2 border rounded-lg text-purple-900"
+                      />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <button
+              onClick={handleSubmitProducts}
+              disabled={productsSubmitted}
+              className="mt-4 px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:opacity-50"
+            >
+              {productsSubmitted ? "✓ Products Submitted" : "Submit Products"}
+            </button>
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  // ========== Custom renderer for Poultry Products Table ==========
+  const renderPoultryProductsTable = () => {
+    const handleProductSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+      const selected = Array.from(e.target.selectedOptions, (opt) => opt.value);
+      setSelectedPoultryProducts(selected);
+      setPoultryProductRows(
+        selected.map((product) => ({
+          product,
+          quantity: "",
+          price: "",
+          cost: "",
+        }))
+      );
+    };
+
+    const handleRowChange = (index: number, field: "quantity" | "price" | "cost", value: string) => {
+      const updated = [...poultryProductRows];
+      updated[index][field] = value;
+      setPoultryProductRows(updated);
+    };
+
+    const handleSubmitPoultryProducts = () => {
+      const allFilled = poultryProductRows.every(
+        (row) => row.quantity.trim() && row.price.trim() && row.cost.trim()
+      );
+      if (!allFilled) {
+        toast.error("Please fill in quantity, price, and cost for all poultry products.");
+        return;
+      }
+      const formatted = poultryProductRows
+        .map((row) => `${row.product}: ${row.quantity} units @ ${row.price}/unit, cost ${row.cost}/unit`)
+        .join("; ");
+      setPoultryProductsSubmitted(true);
+      processAnswer(formatted);
+    };
+
+    return (
+      <div className="space-y-4 p-4 bg-orange-50 rounded-xl border-2 border-orange-300">
+        <p className="font-medium text-orange-900">{safeT("question_poultry_products")}</p>
+        <select
+          multiple
+          value={selectedPoultryProducts}
+          onChange={handleProductSelect}
+          className="w-full p-3 border-2 rounded-xl text-orange-900 bg-white"
+        >
+          {POULTRY_PRODUCT_OPTIONS.map((opt) => (
+            <option key={opt} value={opt}>
+              {safeT(opt)}
+            </option>
+          ))}
+        </select>
+        <p className="text-sm text-gray-500">Hold Ctrl (or Cmd) to select multiple products</p>
+
+        {poultryProductRows.length > 0 && (
+          <div className="overflow-x-auto">
+            <table className="w-full border-collapse bg-white rounded-xl">
+              <thead>
+                <tr className="bg-orange-200">
+                  <th className="p-2 text-left text-orange-900">{safeT("poultry_product_name")}</th>
+                  <th className="p-2 text-left text-orange-900">{safeT("poultry_product_quantity")}</th>
+                  <th className="p-2 text-left text-orange-900">{safeT("poultry_product_price")}</th>
+                  <th className="p-2 text-left text-orange-900">{safeT("poultry_product_cost")}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {poultryProductRows.map((row, idx) => (
+                  <tr key={idx} className="border-t">
+                    <td className="p-2 font-medium text-orange-900">{safeT(row.product)}</td>
+                    <td className="p-2">
+                      <input
+                        type="number"
+                        step="any"
+                        value={row.quantity}
+                        onChange={(e) => handleRowChange(idx, "quantity", e.target.value)}
+                        placeholder="e.g., 1000"
+                        className="w-full p-2 border rounded-lg text-orange-900"
+                      />
+                    </td>
+                    <td className="p-2">
+                      <input
+                        type="number"
+                        step="any"
+                        value={row.price}
+                        onChange={(e) => handleRowChange(idx, "price", e.target.value)}
+                        placeholder="e.g., 280"
+                        className="w-full p-2 border rounded-lg text-orange-900"
+                      />
+                    </td>
+                    <td className="p-2">
+                      <input
+                        type="number"
+                        step="any"
+                        value={row.cost}
+                        onChange={(e) => handleRowChange(idx, "cost", e.target.value)}
+                        placeholder="e.g., 200"
+                        className="w-full p-2 border rounded-lg text-orange-900"
+                      />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <button
+              onClick={handleSubmitPoultryProducts}
+              disabled={poultryProductsSubmitted}
+              className="mt-4 px-6 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 disabled:opacity-50"
+            >
+              {poultryProductsSubmitted ? "✓ Products Submitted" : "Submit Products"}
+            </button>
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  // ========== Custom renderer for Dairy Products Table ==========
+  const renderDairyProductsTable = () => {
+    const handleProductSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+      const selected = Array.from(e.target.selectedOptions, (opt) => opt.value);
+      setSelectedDairyProducts(selected);
+      setDairyProductRows(
+        selected.map((product) => ({
+          product,
+          quantity: "",
+          price: "",
+          cost: "",
+        }))
+      );
+    };
+
+    const handleRowChange = (index: number, field: "quantity" | "price" | "cost", value: string) => {
+      const updated = [...dairyProductRows];
+      updated[index][field] = value;
+      setDairyProductRows(updated);
+    };
+
+    const handleSubmitDairyProducts = () => {
+      const allFilled = dairyProductRows.every(
+        (row) => row.quantity.trim() && row.price.trim() && row.cost.trim()
+      );
+      if (!allFilled) {
+        toast.error("Please fill in quantity, price, and cost for all dairy products.");
+        return;
+      }
+      const formatted = dairyProductRows
+        .map((row) => `${row.product}: ${row.quantity} units @ ${row.price}/unit, cost ${row.cost}/unit`)
+        .join("; ");
+      setDairyProductsSubmitted(true);
+      processAnswer(formatted);
+    };
+
+    return (
+      <div className="space-y-4 p-4 bg-blue-50 rounded-xl border-2 border-blue-300">
+        <p className="font-medium text-blue-900">{safeT("question_dairy_products")}</p>
+        <select
+          multiple
+          value={selectedDairyProducts}
+          onChange={handleProductSelect}
+          className="w-full p-3 border-2 rounded-xl text-blue-900 bg-white"
+        >
+          {DAIRY_PRODUCT_OPTIONS.map((opt) => (
+            <option key={opt} value={opt}>
+              {safeT(opt)}
+            </option>
+          ))}
+        </select>
+        <p className="text-sm text-gray-500">Hold Ctrl (or Cmd) to select multiple products</p>
+
+        {dairyProductRows.length > 0 && (
+          <div className="overflow-x-auto">
+            <table className="w-full border-collapse bg-white rounded-xl">
+              <thead>
+                <tr className="bg-blue-200">
+                  <th className="p-2 text-left text-blue-900">{safeT("dairy_product_name")}</th>
+                  <th className="p-2 text-left text-blue-900">{safeT("dairy_product_quantity")}</th>
+                  <th className="p-2 text-left text-blue-900">{safeT("dairy_product_price")}</th>
+                  <th className="p-2 text-left text-blue-900">{safeT("dairy_product_cost")}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {dairyProductRows.map((row, idx) => (
+                  <tr key={idx} className="border-t">
+                    <td className="p-2 font-medium text-blue-900">{safeT(row.product)}</td>
+                    <td className="p-2">
+                      <input
+                        type="number"
+                        step="any"
+                        value={row.quantity}
+                        onChange={(e) => handleRowChange(idx, "quantity", e.target.value)}
+                        placeholder="e.g., 5000"
+                        className="w-full p-2 border rounded-lg text-blue-900"
+                      />
+                    </td>
+                    <td className="p-2">
+                      <input
+                        type="number"
+                        step="any"
+                        value={row.price}
+                        onChange={(e) => handleRowChange(idx, "price", e.target.value)}
+                        placeholder="e.g., 40"
+                        className="w-full p-2 border rounded-lg text-blue-900"
+                      />
+                    </td>
+                    <td className="p-2">
+                      <input
+                        type="number"
+                        step="any"
+                        value={row.cost}
+                        onChange={(e) => handleRowChange(idx, "cost", e.target.value)}
+                        placeholder="e.g., 25"
+                        className="w-full p-2 border rounded-lg text-blue-900"
+                      />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <button
+              onClick={handleSubmitDairyProducts}
+              disabled={dairyProductsSubmitted}
+              className="mt-4 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
+            >
+              {dairyProductsSubmitted ? "✓ Products Submitted" : "Submit Products"}
+            </button>
+          </div>
+        )}
+      </div>
+    );
+  };
+
   const renderInput = useCallback(() => {
     const q = visibleQuestions[configStep];
     if (!q) return null;
 
+    // ===== Custom render for products tables =====
+    if (q.id === "products") {
+      return renderProductsTable();
+    }
+    if (q.id === "poultryProducts") {
+      return renderPoultryProductsTable();
+    }
+    if (q.id === "dairyProducts") {
+      return renderDairyProductsTable();
+    }
+
     if (q.id === "plantingFertilizerNutrients") return renderNutrientSelector("planting", plantingNutrients, setPlantingNutrients);
     if (q.id === "topdressingFertilizerNutrients") return renderNutrientSelector("topdressing", topdressingNutrients, setTopdressingNutrients);
     if (q.id === "potassiumFertilizerNutrients") return renderNutrientSelector("potassium", potassiumNutrients, setPotassiumNutrients);
+    if (q.id === "ingredientPrices") return renderIngredientPrices();
 
     if (q.type === "button" && q.id === "wantsNutritionBenefits") {
       return (
@@ -2257,7 +3116,7 @@ dairyReminderTopics: farmerDetails.dairyReminderTopics || "",
           {q.options?.map((opt: string, index: number) => (
             <label key={`${opt}-${index}`} className="flex items-center gap-2 p-2 hover:bg-blue-50 rounded-lg">
               <input type="checkbox" value={opt} checked={userTranscript.includes(opt)} onChange={(e) => { const values = userTranscript ? userTranscript.split(',') : []; e.target.checked ? values.push(opt) : values.splice(values.indexOf(opt), 1); setUserTranscript(values.join(',')); }} className="w-4 h-4 accent-blue-600" />
-              <span className="text-blue-900">{opt}</span>
+              <span className="text-blue-900">{safeT(opt)}</span>
             </label>
           ))}
         </div>
@@ -2267,7 +3126,7 @@ dairyReminderTopics: farmerDetails.dairyReminderTopics || "",
     const displaySymbol = getDisplaySymbol();
     if (displaySymbol !== 'Ksh') defaultValue = defaultValue.replace(/Ksh/g, displaySymbol);
     return <input type={q.type || "text"} value={defaultValue} onChange={(e) => setUserTranscript(e.target.value)} placeholder={q.placeholder || safeT('type_answer')} step={q.step || "any"} className="w-full px-4 py-3 border-2 rounded-xl text-blue-900 font-medium focus:border-blue-600 placeholder-gray-400" />;
-  }, [configStep, visibleQuestions, userTranscript, plantingNutrients, topdressingNutrients, potassiumNutrients, renderNutrientSelector, safeT, setPlantingNutrients, setTopdressingNutrients, setPotassiumNutrients, processAnswer]);
+  }, [configStep, visibleQuestions, userTranscript, plantingNutrients, topdressingNutrients, potassiumNutrients, renderNutrientSelector, renderIngredientPrices, safeT, setPlantingNutrients, setTopdressingNutrients, setPotassiumNutrients, processAnswer, renderProductsTable, renderPoultryProductsTable, renderDairyProductsTable]);
 
   // ========== RENDER ==========
   return (

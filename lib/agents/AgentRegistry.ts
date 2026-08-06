@@ -1,11 +1,11 @@
 // lib/agents/agentRegistry.ts
 import { BaseInterviewAgent, InterviewQuestion, FarmerContext } from "./BaseInterviewAgent";
 import EnterpriseSetupAgent from "./EnterpriseSetupAgent";
-import DiseaseInterviewAgent from "./DiseaseInterviewAgent";
+import { DiseaseInterviewAgent } from "./DiseaseInterviewAgent";      // <-- FIXED: named import
 
 // Poultry agents
 import PoultrySetupAgent from "./PoultrySetupAgent";
-import PoultryDiseaseAgent from "./PoultryDiseaseAgent";
+import { PoultryDiseaseAgent } from "./PoultryDiseaseAgent";          // <-- FIXED: named import
 
 // Dairy agents (core)
 import { DairySetupAgent } from "./DairySetupAgent";
@@ -25,6 +25,15 @@ import { DairyHousingAgent } from "./DairyHousingAgent";
 import { DairyMilkAgent } from "./DairyMilkAgent";
 import { DairyParasiteAgent } from "./DairyParasiteAgent";
 import { DairyReminderAgent } from "./DairyReminderAgent";
+
+// NEW: Crop agents (GAP, Profit, Business Plan)
+import { GAPAgent } from "./GAPAgent";
+import { ProfitCalculationAgent } from "./ProfitCalculationAgent";
+import { BusinessPlanAgent } from "./BusinessPlanAgent";
+
+// NEW: Poultry and Dairy Business Plan agents
+import { PoultryBusinessPlanAgent } from "./PoultryBusinessPlanAgent";
+import { DairyBusinessPlanAgent } from "./DairyBusinessPlanAgent";
 
 // Map agent names to instances
 const agentMap: Record<string, BaseInterviewAgent> = {
@@ -52,6 +61,15 @@ const agentMap: Record<string, BaseInterviewAgent> = {
   DairyMilkAgent: new DairyMilkAgent(),
   DairyParasiteAgent: new DairyParasiteAgent(),
   DairyReminderAgent: new DairyReminderAgent(),
+
+  // NEW: Crop recommendation agents
+  GAPAgent: new GAPAgent(),
+  ProfitCalculationAgent: new ProfitCalculationAgent(),
+  BusinessPlanAgent: new BusinessPlanAgent(),
+
+  // NEW: Poultry and Dairy Business Plan agents
+  PoultryBusinessPlanAgent: new PoultryBusinessPlanAgent(),
+  DairyBusinessPlanAgent: new DairyBusinessPlanAgent(),
 };
 
 /**

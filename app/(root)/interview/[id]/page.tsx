@@ -1,4 +1,4 @@
-// app/(root)/interview/[id]/page.tsx – UPDATED with poultry + dairy header
+// app/(root)/interview/[id]/page.tsx – Original (without extra structuredList logs)
 import Image from "next/image";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";

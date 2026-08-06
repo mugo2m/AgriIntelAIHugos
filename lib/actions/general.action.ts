@@ -1,4 +1,4 @@
-﻿// lib/actions/general.action.ts
+﻿// lib/actions/general.action.ts – ORIGINAL (before structuredList fix)
 // VERSION: 3.2 – Full dairy agent data in session summaries
 "use server";
 
@@ -88,20 +88,16 @@ function formatCurrencyForSpeech(amount: number, country: string = 'kenya'): str
 // ========== CROP DEFAULTS FOR ALL 219 CROPS ==========
 // Default yields (kg per acre) – same as in recommendationEngine.ts
 const defaultYields: Record<string, number> = {
-  // Cereals & grains
   maize: 2000, rice: 3000, wheat: 2000, barley: 2000, sorghum: 1500, millet: 1200,
   "finger millet": 1200, teff: 1000, triticale: 2000, oats: 1500, buckwheat: 1000,
   quinoa: 1200, fonio: 800, spelt: 1500, kamut: 1500, "amaranth grain": 800,
-  // Pulses & legumes
   beans: 1200, cowpeas: 800, "green grams": 800, groundnuts: 1000, "soya beans": 1000,
   pigeonpeas: 1000, bambaranuts: 800, chickpea: 800, lentil: 800, "faba bean": 1000,
   peanut: 1000, alfalfa: 8000, lucerne: 8000, clover: 5000, "white clover": 5000,
   vetch: 2000, mucuna: 2000, desmodium: 5000, dolichos: 2000, canavalia: 2000,
   "sunn hemp": 2000, "crotalaria paulina": 2000,
-  // Root & tuber crops
   cassava: 8000, "sweet potatoes": 7000, "irish potatoes": 10000, yams: 12000, taro: 10000,
   ginger: 8000, turmeric: 6000, horseradish: 5000, parsnip: 8000, turnip: 8000, rutabaga: 8000,
-  // Vegetables
   tomatoes: 15000, onions: 8000, carrots: 10000, cabbages: 12000, kales: 8000,
   capsicums: 8000, chillies: 6000, brinjals: 10000, "french beans": 5000, "garden peas": 4000,
   spinach: 8000, okra: 7000, lettuce: 8000, broccoli: 6000, cauliflower: 6000,
@@ -111,7 +107,6 @@ const defaultYields: Record<string, number> = {
   amaranth: 4000, arugula: 5000, asparagus: 3000, artichoke: 5000, rhubarb: 8000,
   wasabi: 5000, "bok choy": 8000, "collard greens": 8000, "mustard greens": 6000,
   "swiss chard": 8000, radicchio: 6000, escarole: 6000, frisee: 6000, "turnip greens": 6000,
-  // Fruits
   bananas: 6000, mangoes: 8000, avocados: 2000, oranges: 10000, pineapples: 20000,
   watermelons: 15000, pawpaws: 10000, "passion fruit": 8000, grapefruit: 10000, lemons: 10000,
   limes: 8000, guava: 8000, jackfruit: 5000, breadfruit: 5000, pomegranate: 6000,
@@ -119,11 +114,9 @@ const defaultYields: Record<string, number> = {
   "date palm": 5000, mulberry: 4000, lychee: 5000, persimmon: 6000, gooseberry: 4000,
   currant: 3000, elderberry: 3000, rambutan: 5000, durian: 8000, mangosteen: 4000,
   longan: 5000, marula: 4000,
-  // Cash crops
   coffee: 2000, tea: 2500, cocoa: 800, cotton: 2000, sunflower: 1500, simsim: 500,
   sugarcane: 40000, tobacco: 2000, sisal: 5000, pyrethrum: 1000, "oil palm": 8000,
   rubber: 500,
-  // Herbs & spices
   vanilla: 1000, "black pepper": 2000, cardamom: 1000, cinnamon: 2000, cloves: 1000,
   coriander: 1000, basil: 2000, mint: 2000, rosemary: 2000, thyme: 2000, oregano: 2000,
   sage: 2000, dill: 1000, fennel: 2000, lavender: 1000, chamomile: 1000, echinacea: 1000,
@@ -131,32 +124,26 @@ const defaultYields: Record<string, number> = {
   fenugreek: 800, cumin: 500, caraway: 500, anise: 500, lovage: 2000, marjoram: 2000,
   tarragon: 2000, sorrel: 2000, chervil: 2000, savory: 2000, calendula: 1000, nasturtium: 2000,
   borage: 2000, "st. john's wort": 1000, valerian: 1000,
-  // Forage grasses
   brachiaria: 10000, "buffel grass": 6000, "guinea grass": 8000, "italian ryegrass": 8000,
   "napier grass": 20000, "napier hybrid": 25000, "orchard grass": 8000, "rhodes grass": 8000,
   "timothy grass": 8000, "forage sorghum": 15000, leucaena: 8000, calliandra: 8000,
   sesbania: 8000, cenchrus: 6000,
-  // Other
   bamboo: 5000, "aloe vera": 10000, "oyster nut": 2000, watercress: 5000, ramie: 3000,
   flax: 1000, hemp: 2000, jute: 2000, kenaf: 2000, "slender leaf": 4000
 };
 
 // Default prices (per kg) – same as in recommendationEngine.ts
 const defaultPrices: Record<string, number> = {
-  // Cereals & grains
   maize: 40, rice: 60, wheat: 45, barley: 40, sorghum: 45, millet: 50,
   "finger millet": 50, teff: 60, triticale: 45, oats: 35, buckwheat: 50,
   quinoa: 80, fonio: 60, spelt: 55, kamut: 60, "amaranth grain": 50,
-  // Pulses & legumes
   beans: 80, cowpeas: 70, "green grams": 70, groundnuts: 120, "soya beans": 60,
   pigeonpeas: 70, bambaranuts: 80, chickpea: 80, lentil: 70, "faba bean": 60,
   peanut: 120, alfalfa: 10, lucerne: 10, clover: 10, "white clover": 10,
   vetch: 30, mucuna: 30, desmodium: 30, dolichos: 40, canavalia: 30,
   "sunn hemp": 30, "crotalaria paulina": 30,
-  // Root & tuber crops
   cassava: 20, "sweet potatoes": 25, "irish potatoes": 30, yams: 50, taro: 40,
   ginger: 80, turmeric: 100, horseradish: 40, parsnip: 30, turnip: 25, rutabaga: 25,
-  // Vegetables
   tomatoes: 40, onions: 50, carrots: 40, cabbages: 25, kales: 20,
   capsicums: 50, chillies: 80, brinjals: 40, "french beans": 60, "garden peas": 50,
   spinach: 25, okra: 35, lettuce: 30, broccoli: 50, cauliflower: 40,
@@ -166,7 +153,6 @@ const defaultPrices: Record<string, number> = {
   amaranth: 20, arugula: 30, asparagus: 100, artichoke: 80, rhubarb: 50,
   wasabi: 200, "bok choy": 30, "collard greens": 20, "mustard greens": 20,
   "swiss chard": 25, radicchio: 40, escarole: 30, frisee: 30, "turnip greens": 20,
-  // Fruits
   bananas: 30, mangoes: 50, avocados: 40, oranges: 40, pineapples: 40,
   watermelons: 30, pawpaws: 30, "passion fruit": 50, grapefruit: 30, lemons: 30,
   limes: 30, guava: 30, jackfruit: 40, breadfruit: 30, pomegranate: 50,
@@ -174,11 +160,9 @@ const defaultPrices: Record<string, number> = {
   "date palm": 80, mulberry: 40, lychee: 80, persimmon: 60, gooseberry: 40,
   currant: 50, elderberry: 40, rambutan: 80, durian: 100, mangosteen: 120,
   longan: 70, marula: 50,
-  // Cash crops
   coffee: 300, tea: 200, cocoa: 300, cotton: 100, sunflower: 60, simsim: 80,
   sugarcane: 5, tobacco: 200, sisal: 10, pyrethrum: 200, "oil palm": 300,
   rubber: 100,
-  // Herbs & spices
   vanilla: 500, "black pepper": 300, cardamom: 200, cinnamon: 200, cloves: 300,
   coriander: 50, basil: 50, mint: 40, rosemary: 60, thyme: 60, oregano: 50,
   sage: 50, dill: 40, fennel: 50, lavender: 100, chamomile: 100, echinacea: 80,
@@ -186,17 +170,14 @@ const defaultPrices: Record<string, number> = {
   fenugreek: 50, cumin: 80, caraway: 60, anise: 70, lovage: 40, marjoram: 50,
   tarragon: 60, sorrel: 30, chervil: 40, savory: 50, calendula: 40, nasturtium: 30,
   borage: 30, "st. john's wort": 40, valerian: 50,
-  // Forage grasses
   brachiaria: 8, "buffel grass": 8, "guinea grass": 8, "italian ryegrass": 8,
   "napier grass": 5, "napier hybrid": 6, "orchard grass": 8, "rhodes grass": 8,
   "timothy grass": 8, "forage sorghum": 6, leucaena: 8, calliandra: 8,
   sesbania: 8, cenchrus: 8,
-  // Other
   bamboo: 50, "aloe vera": 10, "oyster nut": 100, watercress: 30, ramie: 20,
   flax: 40, hemp: 50, jute: 30, kenaf: 30, "slender leaf": 20
 };
 
-// Helper to get crop category for cost estimation
 function getCropCategoryForCosts(crop: string): string {
   const c = crop.toLowerCase();
   const cereals = ["maize", "wheat", "barley", "rice", "sorghum", "millet", "finger millet", "oats", "teff", "triticale", "buckwheat", "quinoa", "fonio", "spelt", "kamut", "amaranth grain"];
@@ -217,14 +198,10 @@ function getCropCategoryForCosts(crop: string): string {
   return "other";
 }
 
-// Estimate costs based on crop category and input level
 function estimateCosts(category: string, level: 'low' | 'medium' | 'high'): { seedCost: number; fertilizerCost: number; labourCost: number; transportCost: number; bagCost: number } {
   const multipliers = { low: 0.5, medium: 1, high: 1.5 };
   const factor = multipliers[level];
-
-  // Base costs for medium input (per acre)
   let baseSeed = 2000, baseFertilizer = 8000, baseLabour = 15000, baseTransport = 2000, baseBagCost = 1000;
-
   switch (category) {
     case 'cereal':
       baseSeed = 2500; baseFertilizer = 10000; baseLabour = 18000; baseTransport = 2500; baseBagCost = 1500;
@@ -250,7 +227,6 @@ function estimateCosts(category: string, level: 'low' | 'medium' | 'high'): { se
     default:
       baseSeed = 2000; baseFertilizer = 8000; baseLabour = 15000; baseTransport = 2000; baseBagCost = 1000;
   }
-
   return {
     seedCost: Math.round(baseSeed * factor),
     fertilizerCost: Math.round(baseFertilizer * factor),
@@ -260,57 +236,28 @@ function estimateCosts(category: string, level: 'low' | 'medium' | 'high'): { se
   };
 }
 
-// 🌾 Calculate gross margin based on crop defaults (supports all 219 crops)
 function calculateGrossMargin(session: any) {
-  if (!session || session.isPoultry || session.isDairy) return null; // Only for crops
-
+  if (!session || session.isPoultry || session.isDairy) return null;
   const crop = session.crops?.[0] || 'maize';
   const lowerCrop = crop.toLowerCase();
   const country = session.country || 'kenya';
-
-  // Get default yield and price for this crop
   const yieldKg = defaultYields[lowerCrop] || 2000;
   const pricePerKg = defaultPrices[lowerCrop] || 40;
-
   const category = getCropCategoryForCosts(lowerCrop);
-  const pricePerBag = pricePerKg * 90; // 90kg bag assumed
-
+  const pricePerBag = pricePerKg * 90;
   const levels: ('low' | 'medium' | 'high')[] = ['low', 'medium', 'high'];
   const result: any = {};
-
   for (const level of levels) {
     const costs = estimateCosts(category, level);
     const bags = Math.round(yieldKg / 90);
     const grossOutput = bags * pricePerBag;
     const totalCost = costs.seedCost + costs.fertilizerCost + costs.labourCost + costs.transportCost + costs.bagCost;
     const grossMargin = grossOutput - totalCost;
-
-    result[level] = {
-      bags,
-      pricePerBag,
-      grossOutput,
-      seedCost: costs.seedCost,
-      fertilizerCost: costs.fertilizerCost,
-      labourCost: costs.labourCost,
-      transportCost: costs.transportCost,
-      bagCost: costs.bagCost,
-      totalCost,
-      grossMargin,
-      costPerBag: Math.round(totalCost / bags)
-    };
+    result[level] = { bags, pricePerBag, grossOutput, seedCost: costs.seedCost, fertilizerCost: costs.fertilizerCost, labourCost: costs.labourCost, transportCost: costs.transportCost, bagCost: costs.bagCost, totalCost, grossMargin, costPerBag: Math.round(totalCost / bags) };
   }
-
-  return {
-    crop,
-    low: result.low,
-    medium: result.medium,
-    high: result.high,
-    farmerLevel: session.managementLevel || "Medium input",
-    recommendation: getFinancialRecommendation(session.managementLevel, result.low, result.medium, result.high, country)
-  };
+  return { crop, low: result.low, medium: result.medium, high: result.high, farmerLevel: session.managementLevel || "Medium input", recommendation: getFinancialRecommendation(session.managementLevel, result.low, result.medium, result.high, country) };
 }
 
-// 🌾 Generate financial recommendation (currency aware)
 function getFinancialRecommendation(level: string, low: any, medium: any, high: any, country: string = 'kenya'): string {
   if (level?.toLowerCase().includes('low')) {
     return `Based on your low-input farming, you're currently earning ${formatCurrencyForCountry(low.grossMargin, country)} per hectare. By adopting medium-input practices, you could increase your profit to ${formatCurrencyForCountry(medium.grossMargin, country)}. Remember: Every ${COUNTRY_CURRENCY_MAP[country]?.symbol || 'Ksh'} 1 invested returns ${COUNTRY_CURRENCY_MAP[country]?.symbol || 'Ksh'} 3-5 profit!`;
@@ -466,7 +413,6 @@ FARMER DETAILS (Poultry):
 - Mortality count: ${session.poultry?.mortalityCount || 0}
 `;
         } else if (isDairy) {
-          // Build dairy details from all available agent data
           const dairy = session.dairy || {};
           const details: string[] = [];
           for (const [key, value] of Object.entries(dairy)) {
@@ -582,7 +528,6 @@ Return as JSON:
         fallbackNextSteps = "Continue asking about specific poultry health, nutrition, and management issues.";
       } else if (isDairy) {
         const dairy = session.dairy || {};
-        // Build a concise summary from available data
         const breed = dairy.breed ? `(${dairy.breed})` : '';
         const category = dairy.cowCategory ? ` - ${dairy.cowCategory}` : '';
         const disease = dairy.diseaseSelect ? ` for ${dairy.diseaseSelect}` : '';
@@ -645,7 +590,7 @@ Return as JSON:
   }
 }
 
-// 🌾 UPDATED: Get farmer session by ID with language support
+// 🌾 ORIGINAL getFarmerSessionById (without explicit structuredList handling)
 export async function getFarmerSessionById(id: string, language: string = 'en'): Promise<any> {
   if (!id || typeof id !== 'string' || id.trim() === '') {
     console.error("Invalid session ID provided:", id);

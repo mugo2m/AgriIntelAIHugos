@@ -1,4 +1,4 @@
-// app/(root)/recommendation/page.tsx – COMPLETE (crop + poultry + all dairy agents)
+// app/(root)/recommendation/page.tsx – COMPLETE (crop + poultry + dairy + new feed formulation + new crop agents + poultry/dairy business plans)
 "use client";
 
 import { useState } from "react";
@@ -23,7 +23,7 @@ interface RecommendationOption {
 
 const OPTIONS: RecommendationOption[] = [
   // ============================================================
-  // CROP OPTIONS (unchanged – all original)
+  // CROP OPTIONS
   // ============================================================
   {
     id: "fertilizer",
@@ -115,19 +115,58 @@ const OPTIONS: RecommendationOption[] = [
     color: "from-rose-500 to-pink-600",
     category: "crops"
   },
+
+  // ===== NEW CROP AGENTS (Added Today) =====
+  {
+    id: "crop_profit",
+    label: "Crop Profit Calculation",
+    emoji: "📊",
+    description: "Calculate revenue, costs, gross margin, and ROI for your crop enterprise",
+    agents: ["EnterpriseSetupAgent", "ProfitCalculationAgent"],
+    modules: ["profit"],
+    color: "from-emerald-500 to-green-600",
+    category: "crops"
+  },
+  {
+    id: "crop_gap",
+    label: "Good Agricultural Practices (GAP)",
+    emoji: "🌿",
+    description: "Get crop‑specific best practices for planting, weeding, harvesting, and safety",
+    agents: ["EnterpriseSetupAgent", "GAPAgent"],
+    modules: ["gap"],
+    color: "from-teal-500 to-cyan-600",
+    category: "crops"
+  },
+  {
+    id: "crop_business",
+    label: "Crop Business Plan Generator",
+    emoji: "📋",
+    description: "Create a full business plan with vision, mission, goals, marketing, team, products, and production inputs",
+    agents: ["EnterpriseSetupAgent", "BusinessPlanAgent"],
+    modules: ["business"],
+    color: "from-violet-500 to-purple-600",
+    category: "crops"
+  },
+
+  // ---- UPDATED: Complete Farm Health Check now includes all crop agents and modules ----
   {
     id: "complete",
     label: "Complete Farm Health Check",
     emoji: "📋",
     description: "All recommendations in one comprehensive report",
-    agents: [],
-    modules: ["complete"],
+    agents: [
+      "EnterpriseSetupAgent",
+      "GAPAgent",
+      "ProfitCalculationAgent",
+      "BusinessPlanAgent"
+    ],
+    modules: ["gap", "profit", "business", "complete"],
     color: "from-emerald-600 to-teal-700",
     category: "crops"
   },
 
   // ============================================================
-  // POULTRY OPTIONS (unchanged – all original)
+  // POULTRY OPTIONS (existing + new feed formulation + poultry business plan)
   // ============================================================
   {
     id: "poultry_disease",
@@ -219,9 +258,31 @@ const OPTIONS: RecommendationOption[] = [
     color: "from-teal-500 to-cyan-600",
     category: "poultry"
   },
+  // ---- NEW OPTION ----
+  {
+    id: "poultry_feed_formulation",
+    label: "Home Poultry Feed Formulation",
+    emoji: "⚖️",
+    description: "Formulate a balanced feed using your local ingredients with automatic substitution and cost optimization",
+    agents: ["HomePoultryFeedAgent"],
+    modules: ["poultry_home_feed"],
+    color: "from-green-500 to-teal-600",
+    category: "poultry"
+  },
+  // ---- ADDED: Poultry Business Plan Generator ----
+  {
+    id: "poultry_business",
+    label: "Poultry Business Plan Generator",
+    emoji: "📋",
+    description: "Create a full business plan with vision, mission, goals, marketing, team, products, and production inputs for your poultry enterprise",
+    agents: ["PoultrySetupAgent", "PoultryBusinessPlanAgent"],
+    modules: ["business"],
+    color: "from-amber-500 to-orange-600",
+    category: "poultry"
+  },
 
   // ============================================================
-  // DAIRY OPTIONS – all 15 agents now available
+  // DAIRY OPTIONS (all 15 agents + dairy business plan)
   // ============================================================
   {
     id: "dairy_health",
@@ -279,7 +340,7 @@ const OPTIONS: RecommendationOption[] = [
     emoji: "🍽️",
     description: "Plan daily forage and concentrate amounts based on milk yield",
     agents: ["DairySetupAgent", "DairyFeedPerDayAgent"],
-    modules: ["confidence", "dairy_feed", "reminder"], // Uses the same module key; engine will detect which data is present
+    modules: ["confidence", "dairy_feed", "reminder"],
     color: "from-teal-500 to-cyan-600",
     category: "dairy"
   },
@@ -373,6 +434,17 @@ const OPTIONS: RecommendationOption[] = [
     color: "from-indigo-600 to-blue-700",
     category: "dairy"
   },
+  // ---- ADDED: Dairy Business Plan Generator ----
+  {
+    id: "dairy_business_plan",
+    label: "Dairy Business Plan Generator",
+    emoji: "📋",
+    description: "Create a full business plan with vision, mission, goals, marketing, team, products, and production inputs for your dairy enterprise",
+    agents: ["DairySetupAgent", "DairyBusinessPlanAgent"],
+    modules: ["business"],
+    color: "from-blue-500 to-cyan-600",
+    category: "dairy"
+  },
 ];
 
 export default function RecommendationPage() {
@@ -416,7 +488,6 @@ export default function RecommendationPage() {
     <div className="flex flex-col gap-6 p-4 max-w-4xl mx-auto">
       {!isOnline && <OfflineBanner />}
 
-      {/* Header */}
       <div className="flex items-center gap-4">
         <Link href="/" className="p-2 bg-gray-100 rounded-xl hover:bg-gray-200 transition">
           <ArrowLeft className="w-5 h-5" />
@@ -432,7 +503,6 @@ export default function RecommendationPage() {
         </div>
       </div>
 
-      {/* Category Filter */}
       <div className="flex gap-2 bg-gray-100 p-1 rounded-xl self-start flex-wrap">
         <button
           onClick={() => setActiveCategory("all")}
@@ -468,7 +538,6 @@ export default function RecommendationPage() {
         </button>
       </div>
 
-      {/* Options Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {filteredOptions.map((option) => (
           <button

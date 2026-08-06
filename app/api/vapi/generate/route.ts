@@ -1,4 +1,4 @@
-// app/api/vapi/generate/route.ts – COMPLETE (crops + poultry + dairy with all fields)
+// app/api/vapi/generate/route.ts – v9.1 (Poultry & Dairy Business Plan Support)
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/firebase/admin";
 import { soilTestInterpreter } from "@/lib/soilTestInterpreter";
@@ -7,8 +7,11 @@ import { generateRecommendations } from "@/lib/recommendationEngine";
 import { getSpacingOptions } from "@/lib/data/spacing";
 import { getPlantingAdvice, getPlantingAdviceText } from "@/lib/data/plantingDates";
 import { COUNTRY_CURRENCY_MAP } from "@/lib/config/currency";
+import { calculateAndFormatProfit } from "@/lib/utils/profitCalculation";
+import { calculateAndFormatPoultryProfit } from "@/lib/utils/poultryProfitCalculation";
+import { calculateAndFormatDairyProfit } from "@/lib/utils/dairyProfitCalculation";
 
-console.log("Farmer Session Generation Route Loaded - v8.2 (All Dairy Fields Fixed)");
+console.log("Farmer Session Generation Route Loaded - v9.1 (Poultry & Dairy Business Plan)");
 
 const withTimeout = <T>(promise: Promise<T>, ms: number, errorMessage: string = "Operation timed out"): Promise<T> => {
   let timeoutId: NodeJS.Timeout;
@@ -426,7 +429,7 @@ function addLineBreaksForVoice(recommendations: any): any {
 // =============================================================
 export async function POST(request: NextRequest) {
   try {
-    console.log("🚀🚀🚀 USING V8.2 ROUTE (All Dairy Fields Fixed) 🚀🚀🚀");
+    console.log("🚀🚀🚀 USING V9.1 ROUTE (Poultry & Dairy Business Plan) 🚀🚀🚀");
     const body = await request.json();
     const cookieLanguage = request.cookies.get('preferred-language')?.value;
     const bodyLanguage = body.language;
@@ -487,12 +490,20 @@ export async function POST(request: NextRequest) {
       poultry_mortality_count_disease,
       poultry_disease_duration,
 
-      // ===== DAIRY FIELDS (ALL AGENTS) =====
+      // ===== FEED FORMULATION FIELDS =====
+      availableIngredients,
+      ingredientPrices,
+      poultryStage,
+      batchSize,
+      includeCoccidiostat,
+      ageWeeks,
+
+      // ===== DAIRY FIELDS =====
       isDairy,
       dairyCowCategory,
       dairyBodyWeightKg,
       dairyBreed,
-      dairyDiseaseSelect,               // <-- ADDED (disease dropdown)
+      dairyDiseaseSelect,
       dairySymptoms,
       dairyMortalityCount,
       dairyHealthDuration,
@@ -500,22 +511,18 @@ export async function POST(request: NextRequest) {
       dairyMilkPricePerLitre,
       dairyFeedCostPerDay,
       dairyVetCostPerMonth,
-      // DairyBreedingAgent
-      dairyDaysSinceCalving,            // <-- ADDED
-      dairyHeatObserved,                // <-- ADDED
-      dairyLastInseminationDate,        // <-- ADDED
-      dairyBreedingMethod,              // <-- ADDED
-      dairyReproductiveProblems,        // <-- ADDED
-      // DairyBusinessAgent
-      dairyBusinessInterest,            // <-- ADDED
-      // DairyCalfAgent
+      dairyDaysSinceCalving,
+      dairyHeatObserved,
+      dairyLastInseminationDate,
+      dairyBreedingMethod,
+      dairyReproductiveProblems,
+      dairyBusinessInterest,
       calfAgeWeeks,
       calfFeedingMethod,
       calfMilkLitresPerDay,
       calfReceivedColostrum,
       calfHousingType,
       calfHealthIssues,
-      // DairyConcentrateAgent
       dairyConcentrateBrand,
       dairyConcentrateProduct,
       dairyConcentrateInclusion,
@@ -523,47 +530,69 @@ export async function POST(request: NextRequest) {
       dairyConcentrateSaltKg,
       dairyConcentrateCalciumSource,
       dairyConcentrateCalciumKg,
-      // DairyDeficiencyAgent
-      dairyDeficiencySymptoms,          // <-- ADDED
-      // DairyDosDontsAgent
-      dairyManagementFocus,             // <-- ADDED
-      // DairyFeedAgent
+      dairyDeficiencySymptoms,
+      dairyManagementFocus,
       dairyAvailableForages,
       dairyAvailableGrains,
       dairyAvailableProtein,
       dairyAvailableMinerals,
       dairyQuantityToMix,
-      // DairyFeedPerDayAgent
       dairyForageType,
       dairyForageKgPerDay,
       dairyConcentrateType,
       dairyConcentrateKgPerDay,
       dairyMilkYield,
-      // DairyFinancialAgent (some overlap with setup, but we capture all)
       dairyMilkPrice,
       dairyVetCostMonth,
       dairyOtherCosts,
-      // DairyHousingAgent
       dairyHousingType,
       numberOfCowsHoused,
       floorSpacePerCowM2,
       dairyVentilationRating,
       beddingType,
-      // DairyMilkAgent
       milkYieldCurrent,
       milkFatPercent,
       milkProteinPercent,
       daysInMilk,
       parity,
-      // DairyParasiteAgent
-      dairyParasiteSigns,               // <-- ADDED
-      // DairyReminderAgent
+      dairyParasiteSigns,
       dairyLastDeworming,
       dairyLastHoofTrimming,
       dairyLastVaccination,
       dairyNextVaccinationDue,
       dairyReminderTopics,
+
+      // ===== BUSINESS PLAN FIELDS (shared) =====
+      businessName,
+      businessVision,
+      businessMission,
+      shortTermGoals,
+      midTermGoals,
+      longTermGoals,
+      targetCustomers,
+      communicationChannels,
+      fallbackPlan,
+      competitiveAdvantage,
+      paymentModes,
+      businessPositions,
+      positionHeads,
+      products,
+      productionInputs,
+
+      // ===== POULTRY & DAIRY BUSINESS PLAN SPECIFIC FIELDS =====
+      poultryProducts,
+      poultryProductionInputs,
+      dairyProducts,
+      dairyProductionInputs,
     } = body;
+
+    // Log received data
+    console.log("🧾 [BACKEND] Received availableIngredients:", availableIngredients);
+    console.log("🧾 [BACKEND] Received ingredientPrices:", ingredientPrices);
+    console.log("🧾 [BACKEND] Received poultryStage:", poultryStage);
+    console.log("🧾 [BACKEND] Received batchSize:", batchSize);
+    console.log("🧾 [BACKEND] Received includeCoccidiostat:", includeCoccidiostat);
+    console.log("🧾 [BACKEND] Received ageWeeks:", ageWeeks);
 
     // Basic validation (userid is always required)
     if (!userid) {
@@ -579,7 +608,6 @@ export async function POST(request: NextRequest) {
     if (isDairy) {
       console.log(`🐄 Generating dairy recommendations for breed: ${dairyBreed}, category: ${dairyCowCategory}`);
 
-      // Build farmerData for the recommendation engine (include all fields)
       const farmerData = {
         farmerName: farmerName || 'Farmer',
         country: country || 'kenya',
@@ -664,7 +692,6 @@ export async function POST(request: NextRequest) {
         dairyReminderTopics: dairyReminderTopics || '',
       };
 
-      // Call the recommendation engine
       let recommendationsOutput = await withTimeout(
         generateRecommendations({
           hasSoilTest: false,
@@ -681,10 +708,91 @@ export async function POST(request: NextRequest) {
         "Recommendation generation timed out after 600 seconds"
       );
 
-      // Post-process: add line breaks for voice
       recommendationsOutput = addLineBreaksForVoice(recommendationsOutput);
 
-      // Save session
+      // ===== DAIRY BUSINESS PLAN MODULE =====
+      if (recommendationsOutput) {
+        if (!recommendationsOutput.structuredList) {
+          recommendationsOutput.structuredList = [];
+        }
+
+        // ---- Dairy Business Plan ----
+        // FIX: Removed `&& dairyBreed` – always include if module is present
+        if (modules && modules.includes("business")) {
+          const breedDisplay = dairyBreed || "Dairy";
+          const dairyBusinessContent = `
+📋 **Business Plan – Dairy Enterprise (${breedDisplay})**
+
+**1. Business Identity**
+- **Name:** ${businessName || "Not provided"}
+- **Vision:** ${businessVision || "Not provided"}
+- **Mission:** ${businessMission || "Not provided"}
+
+**2. Goals**
+- **Short‑term (3–6 mo):** ${shortTermGoals || "Not provided"}
+- **Mid‑term (1 yr):** ${midTermGoals || "Not provided"}
+- **Long‑term (3–6 yr):** ${longTermGoals || "Not provided"}
+
+**3. Marketing**
+- **Target customers:** ${targetCustomers || "Not provided"}
+- **Communication channels:** ${communicationChannels || "Not provided"}
+- **Fallback plan:** ${fallbackPlan || "Not provided"}
+
+**4. Competitive Edge**
+- **Advantage:** ${competitiveAdvantage || "Not provided"}
+- **Payment modes:** ${paymentModes || "Not provided"}
+
+**5. Team**
+- **Positions:** ${businessPositions || "Not provided"}
+- **Heads:** ${positionHeads || "Not provided"}
+
+**6. Products**
+${dairyProducts || "Not provided"}
+
+**7. Production Inputs**
+${dairyProductionInputs || "Not provided"}
+          `.trim();
+
+          recommendationsOutput.structuredList.push({
+            key: "business_plan_grouped",
+            params: { content: dairyBusinessContent },
+          });
+        }
+
+        // ---- Dairy Profit Calculation ----
+        if (modules && modules.includes("profit")) {
+          const dairyProfitInputs = {
+            country: country || 'kenya',
+            enterpriseName: dairyBreed || 'Dairy',
+            milkYieldPerCowPerDay: parseFloat(dairyMilkYieldPerDay) || 0,
+            numberOfLactatingCows: parseInt(dairyCowCategory === 'lactating' ? '1' : '0') || 1,
+            milkPricePerLitre: parseFloat(dairyMilkPricePerLitre) || 0,
+            feedCostPerCowPerDay: parseFloat(dairyFeedCostPerDay) || 0,
+            concentrateCostPerCowPerDay: parseFloat(dairyConcentrateInclusion) || 0,
+            forageCostPerCowPerDay: 0,
+            vetCostPerMonth: parseFloat(dairyVetCostPerMonth) || 0,
+            medicineCostPerMonth: 0,
+            labourCostPerMonth: parseFloat(dairyOtherCosts) || 0,
+            utilitiesCostPerMonth: 0,
+            transportCostPerMonth: 0,
+            aiCostPerMonth: 0,
+            miscellaneousCostPerMonth: parseFloat(dairyOtherCosts) || 0,
+            otherProductsRevenue: 0,
+          };
+
+          try {
+            const profitResult = calculateAndFormatDairyProfit(dairyProfitInputs);
+            recommendationsOutput.structuredList.push({
+              key: "profit_analysis_grouped",
+              params: { content: profitResult.summaryText },
+            });
+            recommendationsOutput.profitAnalysis = profitResult;
+          } catch (err) {
+            console.error("Dairy profit calculation error:", err);
+          }
+        }
+      }
+
       const sessionRef = db.collection("farmer_sessions").doc();
       const sessionId = sessionRef.id;
 
@@ -713,7 +821,6 @@ export async function POST(request: NextRequest) {
           milkPricePerLitre: parseFloat(dairyMilkPricePerLitre) || 40,
           feedCostPerDay: parseFloat(dairyFeedCostPerDay) || 100,
           vetCostPerMonth: parseFloat(dairyVetCostPerMonth) || 500,
-          // Additional fields
           daysSinceCalving: dairyDaysSinceCalving || '',
           heatObserved: dairyHeatObserved || '',
           lastInseminationDate: dairyLastInseminationDate || '',
@@ -771,8 +878,8 @@ export async function POST(request: NextRequest) {
         structuredFinancialAdvice: recommendationsOutput.structuredFinancialAdvice || null,
         metadata: {
           createdAt: new Date().toISOString(),
-          source: "dairy-v8.2-all-fields",
-          version: "8.2"
+          source: "dairy-v9.1",
+          version: "9.1"
         }
       };
 
@@ -791,12 +898,11 @@ export async function POST(request: NextRequest) {
     }
 
     // ============================================================
-    // POULTRY PATH
+    // POULTRY PATH (including feed formulation)
     // ============================================================
     if (isPoultry) {
       console.log(`🐔 Generating poultry recommendations for breed: ${poultry_breed}, system: ${poultry_system}, flock: ${poultry_flock_size}`);
 
-      // Build farmerData for the recommendation engine
       const farmerData = {
         farmerName: farmerName || 'Farmer',
         country: country || 'kenya',
@@ -804,7 +910,6 @@ export async function POST(request: NextRequest) {
         currencySymbol: currencyConfig.symbol,
         currencyName: currencyConfig.name,
         county: county || '',
-        // Poultry fields
         poultry_breed: poultry_breed || 'Sussex',
         poultry_system: poultry_system || 'deep_litter',
         poultry_flock_size: parseInt(poultry_flock_size) || 100,
@@ -821,14 +926,18 @@ export async function POST(request: NextRequest) {
         poultry_egg_price: parseFloat(poultry_egg_price) || 280,
         poultry_meat_price: parseFloat(poultry_meat_price) || 350,
         poultry_house_size_m2: parseFloat(poultry_house_size_m2) || 40,
-        // Disease fields
         poultry_disease: poultry_disease || '',
         poultry_disease_symptoms: poultry_disease_symptoms || '',
         poultry_mortality_count_disease: parseInt(poultry_mortality_count_disease) || 0,
         poultry_disease_duration: poultry_disease_duration || '',
+        availableIngredients: availableIngredients || [],
+        ingredientPrices: ingredientPrices || "{}",
+        poultryStage: poultryStage || '',
+        batchSize: batchSize || '',
+        includeCoccidiostat: includeCoccidiostat || 'No',
+        ageWeeks: ageWeeks || '',
       };
 
-      // Call the recommendation engine
       let recommendationsOutput = await withTimeout(
         generateRecommendations({
           hasSoilTest: false,
@@ -845,10 +954,94 @@ export async function POST(request: NextRequest) {
         "Recommendation generation timed out after 600 seconds"
       );
 
-      // Post-process: add line breaks for voice
       recommendationsOutput = addLineBreaksForVoice(recommendationsOutput);
 
-      // Save session
+      // ===== POULTRY BUSINESS PLAN MODULE =====
+      if (recommendationsOutput) {
+        if (!recommendationsOutput.structuredList) {
+          recommendationsOutput.structuredList = [];
+        }
+
+        // ---- Poultry Business Plan ----
+        // FIX: Removed `&& poultry_breed` – always include if module is present
+        if (modules && modules.includes("business")) {
+          const breedDisplay = poultry_breed || "Poultry";
+          const poultryBusinessContent = `
+📋 **Business Plan – Poultry Enterprise (${breedDisplay})**
+
+**1. Business Identity**
+- **Name:** ${businessName || "Not provided"}
+- **Vision:** ${businessVision || "Not provided"}
+- **Mission:** ${businessMission || "Not provided"}
+
+**2. Goals**
+- **Short‑term (3–6 mo):** ${shortTermGoals || "Not provided"}
+- **Mid‑term (1 yr):** ${midTermGoals || "Not provided"}
+- **Long‑term (3–6 yr):** ${longTermGoals || "Not provided"}
+
+**3. Marketing**
+- **Target customers:** ${targetCustomers || "Not provided"}
+- **Communication channels:** ${communicationChannels || "Not provided"}
+- **Fallback plan:** ${fallbackPlan || "Not provided"}
+
+**4. Competitive Edge**
+- **Advantage:** ${competitiveAdvantage || "Not provided"}
+- **Payment modes:** ${paymentModes || "Not provided"}
+
+**5. Team**
+- **Positions:** ${businessPositions || "Not provided"}
+- **Heads:** ${positionHeads || "Not provided"}
+
+**6. Products**
+${poultryProducts || "Not provided"}
+
+**7. Production Inputs**
+${poultryProductionInputs || "Not provided"}
+          `.trim();
+
+          recommendationsOutput.structuredList.push({
+            key: "business_plan_grouped",
+            params: { content: poultryBusinessContent },
+          });
+        }
+
+        // ---- Poultry Profit Calculation ----
+        if (modules && modules.includes("profit")) {
+          const poultryProfitInputs = {
+            country: country || 'kenya',
+            enterpriseName: poultry_breed || 'Poultry',
+            eggProductionPerDay: 0,
+            eggPricePerTray: parseFloat(poultry_egg_price) || 0,
+            birdsSold: parseInt(poultry_flock_size) || 0,
+            meatWeightKg: 2.0,
+            meatPricePerKg: parseFloat(poultry_meat_price) || 0,
+            dayOldChicksCost: parseFloat(poultry_chick_cost) || 0,
+            birdPurchaseCount: parseInt(poultry_flock_size) || 0,
+            feedCostPerKg: parseFloat(poultry_feed_cost_kg) || 0,
+            feedKgPerBird: poultry_age_weeks ? poultry_age_weeks * 0.1 : 0,
+            vaccinationCostPerBird: 10,
+            medicationCostPerBird: 5,
+            labourCostTotal: 0,
+            utilitiesCostTotal: 0,
+            transportCostTotal: 0,
+            miscellaneousCostTotal: 0,
+            numberOfBirds: parseInt(poultry_flock_size) || 0,
+            cycleDurationDays: 42,
+          };
+
+          try {
+            const profitResult = calculateAndFormatPoultryProfit(poultryProfitInputs);
+            recommendationsOutput.structuredList.push({
+              key: "profit_analysis_grouped",
+              params: { content: profitResult.summaryText },
+            });
+            recommendationsOutput.profitAnalysis = profitResult;
+          } catch (err) {
+            console.error("Poultry profit calculation error:", err);
+          }
+        }
+      }
+
       const sessionRef = db.collection("farmer_sessions").doc();
       const sessionId = sessionRef.id;
 
@@ -886,6 +1079,14 @@ export async function POST(request: NextRequest) {
           diseaseSymptoms: poultry_disease_symptoms || '',
           mortalityCountDisease: parseInt(poultry_mortality_count_disease) || 0,
           diseaseDuration: poultry_disease_duration || '',
+          feedFormulation: {
+            availableIngredients: availableIngredients || [],
+            ingredientPrices: ingredientPrices || "{}",
+            poultryStage: poultryStage || '',
+            batchSize: batchSize || '',
+            includeCoccidiostat: includeCoccidiostat || 'No',
+            ageWeeks: ageWeeks || '',
+          }
         },
         recommendations: recommendationsOutput.list || [],
         financialAdvice: recommendationsOutput.financialAdvice || null,
@@ -893,8 +1094,8 @@ export async function POST(request: NextRequest) {
         structuredFinancialAdvice: recommendationsOutput.structuredFinancialAdvice || null,
         metadata: {
           createdAt: new Date().toISOString(),
-          source: "poultry-v8.2-all-fields",
-          version: "8.2"
+          source: "poultry-v9.1",
+          version: "9.1"
         }
       };
 
@@ -913,7 +1114,7 @@ export async function POST(request: NextRequest) {
     }
 
     // ============================================================
-    // CROP PATH – existing logic (unchanged)
+    // CROP PATH
     // ============================================================
     if (!crops || !county) {
       console.error("Missing required fields for crops:", { crops, county });
@@ -1205,6 +1406,108 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    // ============================================================
+    // CROP MODULE-SPECIFIC STRUCTURED ITEMS (GAP, Profit, Business Plan)
+    // ============================================================
+    if (recommendationsOutput) {
+      if (!recommendationsOutput.structuredList) {
+        recommendationsOutput.structuredList = [];
+      }
+
+      // ---- 1. GAP Module ----
+      if (modules && modules.includes("gap") && primaryCrop) {
+        const gapKey = `gap_${primaryCrop.toLowerCase().replace(/ /g, '_')}`;
+        recommendationsOutput.structuredList.push({
+          key: "gap_grouped",
+          params: {
+            title: `🌱 Good Agricultural Practices for ${primaryCrop}`,
+            gapKey: gapKey,
+            remember: "REMEMBER: Every practice you do well puts more money in your pocket",
+          },
+        });
+      }
+
+      // ---- 2. Profit Calculation Module ----
+      if (modules && modules.includes("profit") && primaryCrop) {
+        const profitInputs = {
+          cropName: primaryCrop,
+          country: country || 'kenya',
+          actualYieldKg: validatedYieldKg,
+          pricePerKg: validatedPricePerKg,
+          plantingMaterialCost: parseFloat(body.plantingMaterialCost) || parseFloat(body.seedCost) || 0,
+          plantingFertilizerCost: parseFloat(body.plantingFertilizerCost) || parseFloat(body.plantingFertilizerCostFromSoil) || 0,
+          plantingFertilizerQuantity: parseFloat(body.plantingFertilizerQuantityKg) || parseFloat(body.plantingFertilizerQuantity) || 0,
+          topdressingFertilizerCost: parseFloat(body.topdressingFertilizerCost) || 0,
+          topdressingFertilizerQuantity: parseFloat(body.topdressingFertilizerQuantityKg) || parseFloat(body.topdressingFertilizerQuantity) || 0,
+          potassiumFertilizerCost: parseFloat(body.potassiumFertilizerCost) || 0,
+          potassiumFertilizerQuantity: parseFloat(body.potassiumFertilizerQuantityKg) || parseFloat(body.potassiumFertilizerQuantity) || 0,
+          calciticLimePricePerBag: parseFloat(body.calciticLimePricePerBag) || 0,
+          recCalciticLime: parseFloat(body.recCalciticLime) || 0,
+          dolomiticLimePricePerBag: parseFloat(body.dolomiticLimePricePerBag) || 0,
+          recDolomiticLime: parseFloat(body.recDolomiticLime) || 0,
+          ploughingCost: parseFloat(body.ploughingCost) || 0,
+          plantingLabourCost: parseFloat(body.plantingLabourCost) || 0,
+          weedingCost: parseFloat(body.weedingCost) || 0,
+          harvestingCost: parseFloat(body.harvestingCost) || 0,
+          transportCostTotal: parseFloat(body.transportCostTotal) || 0,
+          packagingCostTotal: parseFloat(body.packagingCostTotal) || 0,
+          miscellaneousCostTotal: parseFloat(body.miscellaneousCostTotal) || 0,
+        };
+
+        try {
+          const profitResult = calculateAndFormatProfit(profitInputs);
+          recommendationsOutput.structuredList.push({
+            key: "profit_analysis_grouped",
+            params: { content: profitResult.summaryText },
+          });
+          recommendationsOutput.profitAnalysis = profitResult;
+        } catch (err) {
+          console.error("Crop profit calculation error:", err);
+        }
+      }
+
+      // ---- 3. Business Plan Module ----
+      if (modules && modules.includes("business") && primaryCrop) {
+        const businessContent = `
+📋 **Business Plan – ${primaryCrop} Enterprise**
+
+**1. Business Identity**
+- **Name:** ${businessName || "Not provided"}
+- **Vision:** ${businessVision || "Not provided"}
+- **Mission:** ${businessMission || "Not provided"}
+
+**2. Goals**
+- **Short‑term (3–6 mo):** ${shortTermGoals || "Not provided"}
+- **Mid‑term (1 yr):** ${midTermGoals || "Not provided"}
+- **Long‑term (3–6 yr):** ${longTermGoals || "Not provided"}
+
+**3. Marketing**
+- **Target customers:** ${targetCustomers || "Not provided"}
+- **Communication channels:** ${communicationChannels || "Not provided"}
+- **Fallback plan:** ${fallbackPlan || "Not provided"}
+
+**4. Competitive Edge**
+- **Advantage:** ${competitiveAdvantage || "Not provided"}
+- **Payment modes:** ${paymentModes || "Not provided"}
+
+**5. Team**
+- **Positions:** ${businessPositions || "Not provided"}
+- **Heads:** ${positionHeads || "Not provided"}
+
+**6. Products**
+${products || "Not provided"}
+
+**7. Production Inputs**
+${productionInputs || "Not provided"}
+        `.trim();
+
+        recommendationsOutput.structuredList.push({
+          key: "business_plan_grouped",
+          params: { content: businessContent },
+        });
+      }
+    }
+
     // ===== POST-PROCESS: INSERT LIME AFTER FERTILIZER PLAN =====
     if (recommendationsOutput && modules && modules.includes("fertilizer_plan")) {
       const showLime = (hasCalcitic || hasDolomitic) || (calciticKg > 0 || dolomiticKg > 0);
@@ -1324,7 +1627,7 @@ export async function POST(request: NextRequest) {
         warnings: { yield: yieldWarnings, price: priceWarnings, spacing: spacingWarning ? [spacingWarning] : [] },
         createdAt: new Date().toISOString(),
         source: "logic-based",
-        version: "8.2"
+        version: "9.1"
       }
     };
 
@@ -1353,7 +1656,7 @@ export async function POST(request: NextRequest) {
 export async function GET() {
   return NextResponse.json({
     status: "operational",
-    message: "Farmer Session Generation API - v8.2: All Dairy Fields Fixed",
-    version: "8.2"
+    message: "Farmer Session Generation API - v9.1: Poultry & Dairy Business Plan Support",
+    version: "9.1"
   });
 }

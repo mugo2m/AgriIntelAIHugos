@@ -24,9 +24,25 @@ async function GenerateContent({ searchParams }: { searchParams: Promise<{ filte
     );
   }
 
-  const filter = params.filter || "complete";
-  const agentNames = params.agents ? params.agents.split(",").filter(Boolean) : [];
-  const modules = params.modules ? params.modules.split(",").filter(Boolean) : [];
+  let filter = params.filter || "complete";
+  let agentNames = params.agents ? params.agents.split(",").filter(Boolean) : [];
+  let modules = params.modules ? params.modules.split(",").filter(Boolean) : [];
+
+  // ── AUTO‑INCLUDE BUSINESS PLAN AND GAP/PROFIT when filter is "complete" ──
+  if (filter === "complete" && agentNames.length === 0) {
+    // Include enterprise setup + all new crop modules
+    agentNames = [
+      "EnterpriseSetupAgent",
+      "GAPAgent",
+      "ProfitCalculationAgent",
+      "BusinessPlanAgent",
+    ];
+  }
+
+  if (filter === "complete" && modules.length === 0) {
+    // Enable all crop modules
+    modules = ["gap", "profit", "business"];
+  }
 
   return (
     <CreateInterviewAgent

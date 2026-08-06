@@ -1,7 +1,9 @@
-// components/Agent.tsx – Complete: natural speech + time‑based progressive reveal + Farmers Comments + Paystack Payment (KES forced)
+// components/Agent.tsx – Complete: natural speech + time‑based progressive reveal + Farmers Comments
 // + Branching: Soil test vs Extension Officer input (Path B) – only for crops
-// + POULTRY SUPPORT: Full rendering for poultry modules (feed, vaccination, financial, housing, biosecurity, breed advice, sourcing)
-// + DAIRY SUPPORT: Full rendering for dairy modules (health, financial, management)
+// + POULTRY SUPPORT: Full rendering for poultry modules
+// + DAIRY SUPPORT: Full rendering for dairy modules
+// + FEED FORMULATION SUPPORT: Full rendering for home poultry feed formulation
+// + NEW: Profit Analysis and Business Plan modules (FREE – no payment required)
 
 "use client";
 
@@ -136,8 +138,6 @@ const Agent = ({
 
   const [voiceEnabled, setVoiceEnabled] = useState(false);
   const [voiceInitializing, setVoiceInitializing] = useState(false);
-  const [hasPaid, setHasPaid] = useState(false);
-  const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [welcomeSpoken, setWelcomeSpoken] = useState(false);
@@ -195,32 +195,13 @@ const Agent = ({
   const dairyBreed = sessionData?.dairy?.breed || '';
   const dairyCowCategory = sessionData?.dairy?.cowCategory || '';
 
+  // ===== FEED FORMULATION DETECTION =====
+  const isFeedFormulation = structuredList.some(item => item.key === 'feed_summary');
+
   // ---------- Get the session ID reliably ----------
   const getSessionId = () => {
     return sessionData?.id || interviewId || null;
   };
-
-  // ---------- Load payment status from localStorage ----------
-  useEffect(() => {
-    const id = getSessionId();
-    if (id) {
-      const paid = localStorage.getItem(`paid_${id}`);
-      if (paid === 'true') {
-        setHasPaid(true);
-      }
-    }
-  }, [sessionData, interviewId]);
-
-  // ---------- If session already has recommendations, mark as paid ----------
-  useEffect(() => {
-    if (sessionData && (sessionData.structuredList?.length > 0 || sessionData.recommendations?.length > 0)) {
-      setHasPaid(true);
-      const id = getSessionId();
-      if (id) {
-        localStorage.setItem(`paid_${id}`, 'true');
-      }
-    }
-  }, [sessionData, interviewId]);
 
   // ---------- Initialize path based on existing data ----------
   useEffect(() => {
@@ -650,7 +631,9 @@ const Agent = ({
 
     let introMessage = safeT('prepared_recommendations', 'I\'ve prepared personalized recommendations for your farm enterprise. ');
 
-    if (isPoultry) {
+    if (isFeedFormulation) {
+      introMessage += `I have formulated a balanced feed for your ${poultryBreed || 'poultry'} flock. `;
+    } else if (isPoultry) {
       introMessage += `For your ${poultryBreed || 'poultry'} flock, I have prepared the following recommendations. `;
     } else if (isDairy) {
       introMessage += `For your ${dairyBreed || 'dairy'} herd, I have prepared the following recommendations. `;
@@ -798,13 +781,6 @@ const Agent = ({
         generateExtensionRecommendations();
       }
 
-      if (!hasPaid) {
-        toast.info(safeT('payment_required_to_start'));
-        setShowPaymentModal(true);
-        setIsProcessing(false);
-        return;
-      }
-
       if (!voiceEnabled) {
         toast.error("Please turn voice ON first by clicking the 'Voice ON' button");
         setIsProcessing(false);
@@ -858,25 +834,14 @@ const Agent = ({
 
   const isStartButtonDisabled = isLoading || voiceInitializing || isProcessing;
 
-  const getDisplayCurrency = () => {
-    return getDisplayCurrencyFromSession(sessionData?.country);
-  };
-
   const getStartButtonText = () => {
     if (isLoading) return safeT('starting');
     if (voiceInitializing) return safeT('initializing');
-    if (!hasPaid) {
-      const displayCurrency = getDisplayCurrency();
-      const localAmount = getLocalAmount(10, displayCurrency.code);
-      const symbol = displayCurrency.symbol;
-      const payText = safeT('pay') || 'Pay';
-      return `${payText} ${symbol} ${localAmount}`;
-    }
     if (!voiceEnabled) return "Turn Voice ON First";
     return safeT('start_voice_session');
   };
 
-  // ========== RENDER RECOMMENDATION TEXT (UPDATED WITH POULTRY + DAIRY MODULES) ==========
+  // ========== RENDER RECOMMENDATION TEXT (UPDATED WITH PROFIT AND BUSINESS PLAN) ==========
   const renderRecommendationText = (item: StructuredItem, idx: number) => {
     let displayContent = '';
     let moduleType = item.key;
@@ -917,12 +882,13 @@ const Agent = ({
 
     if (!displayContent || displayContent.trim() === '') return null;
 
+    // Get the displayed text (either streamed or full)
     const displayedText = recommendationStreams[idx] || '';
     const isActive = activeStreamingRec === idx;
     const isRead = readRecommendations.has(idx);
-    if (!isActive && !isRead) return null;
 
-    const finalText = isActive ? displayedText : displayContent;
+    // Use streamed text if active, else use full content
+    const finalText = isActive && displayedText ? displayedText : displayContent;
     if (!finalText) return null;
 
     const displaySymbol = getDisplaySymbol();
@@ -939,7 +905,34 @@ const Agent = ({
     const lines = processedText.split(/\n/);
     const progressPercent = (displayedText.length / displayContent.length) * 100;
 
-    // ===== POULTRY MODULE RENDERERS =====
+    // ----- ICON AND COLOR HELPERS -----
+    const getFeedIcon = (key: string): string => {
+      switch (key) {
+        case 'feed_summary': return '📋';
+        case 'ingredient_list': return '🌾';
+        case 'missing_ingredients': return '🛒';
+        case 'nutritional_info': return '🔬';
+        case 'total_cost': return '💰';
+        case 'savings_estimate': return '💸';
+        case 'efficiency_note': return '✅';
+        case 'business_warning': return '⚠️';
+        case 'closing_message': return '💡';
+        case 'designer_credit': return '👨‍🌾';
+        case 'other_modules': return '📚';
+        case 'upcoming_species': return '🐖';
+        case 'submit_comments': return '💬';
+        default: return '⚖️';
+      }
+    };
+
+    const getFeedBgColor = (key: string): string => {
+      if (key === 'business_warning' || key === 'missing_ingredients') return 'bg-red-50 border-red-300';
+      if (key === 'efficiency_note' || key === 'savings_estimate') return 'bg-green-50 border-green-300';
+      if (key === 'nutritional_info') return 'bg-blue-50 border-blue-300';
+      if (key === 'total_cost') return 'bg-amber-50 border-amber-300';
+      return 'bg-cyan-50 border-cyan-300';
+    };
+
     const getPoultryIcon = (key: string): string => {
       switch (key) {
         case 'poultry_feed': return '🍽️';
@@ -968,7 +961,6 @@ const Agent = ({
       }
     };
 
-    // ===== DAIRY MODULE RENDERERS =====
     const getDairyIcon = (key: string): string => {
       switch (key) {
         case 'dairy_health_analysis': return '🩺';
@@ -987,9 +979,121 @@ const Agent = ({
       }
     };
 
-    const poultryKey = moduleType;
-    const dairyKey = moduleType;
+    // ----- NEW: Profit Analysis -----
+    if (item.key === 'profit_analysis_grouped') {
+      return (
+        <div
+          key={idx}
+          className={`rounded-xl p-5 transition-all duration-300 border-2 ${
+            isActive ? 'bg-emerald-100 border-emerald-500 shadow-2xl scale-105' : 'bg-emerald-50 border-emerald-300'
+          }`}
+        >
+          <div className="flex items-start gap-4">
+            <span className="text-3xl">📊</span>
+            <div className="flex-1">
+              <p className="text-xl text-gray-800 leading-relaxed whitespace-pre-wrap">
+                {lines.map((line, i) => (
+                  <span key={i}>
+                    {line}
+                    {i < lines.length - 1 && <br />}
+                  </span>
+                ))}
+              </p>
+              {isActive && displayContent.length > 0 && (
+                <div className="mt-3 flex items-center gap-2">
+                  <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+                    <div className="h-full bg-emerald-600 transition-all duration-150" style={{ width: `${progressPercent}%` }} />
+                  </div>
+                  <span className="text-sm text-emerald-700 font-medium">
+                    {Math.round(progressPercent)}%
+                  </span>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      );
+    }
 
+    // ----- NEW: Business Plan -----
+    if (item.key === 'business_plan_grouped') {
+      return (
+        <div
+          key={idx}
+          className={`rounded-xl p-5 transition-all duration-300 border-2 ${
+            isActive ? 'bg-indigo-100 border-indigo-500 shadow-2xl scale-105' : 'bg-indigo-50 border-indigo-300'
+          }`}
+        >
+          <div className="flex items-start gap-4">
+            <span className="text-3xl">📋</span>
+            <div className="flex-1">
+              <p className="text-xl text-gray-800 leading-relaxed whitespace-pre-wrap">
+                {lines.map((line, i) => (
+                  <span key={i}>
+                    {line}
+                    {i < lines.length - 1 && <br />}
+                  </span>
+                ))}
+              </p>
+              {isActive && displayContent.length > 0 && (
+                <div className="mt-3 flex items-center gap-2">
+                  <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+                    <div className="h-full bg-indigo-600 transition-all duration-150" style={{ width: `${progressPercent}%` }} />
+                  </div>
+                  <span className="text-sm text-indigo-700 font-medium">
+                    {Math.round(progressPercent)}%
+                  </span>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // ---- FEED FORMULATION ----
+    const isFeedKey = item.key.startsWith('feed_') ||
+      ['missing_ingredients', 'nutritional_info', 'total_cost', 'savings_estimate',
+       'efficiency_note', 'business_warning', 'closing_message', 'designer_credit',
+       'other_modules', 'upcoming_species', 'submit_comments'].includes(item.key);
+
+    if (isFeedKey) {
+      return (
+        <div
+          key={idx}
+          className={`rounded-xl p-5 transition-all duration-300 border-2 ${getFeedBgColor(item.key)} ${
+            isActive ? 'shadow-2xl scale-105' : ''
+          }`}
+        >
+          <div className="flex items-start gap-4">
+            <span className="text-3xl">{getFeedIcon(item.key)}</span>
+            <div className="flex-1">
+              <p className="text-xl text-gray-800 leading-relaxed whitespace-pre-wrap">
+                {lines.map((line, i) => (
+                  <span key={i}>
+                    {line}
+                    {i < lines.length - 1 && <br />}
+                  </span>
+                ))}
+              </p>
+              {isActive && displayContent.length > 0 && (
+                <div className="mt-3 flex items-center gap-2">
+                  <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+                    <div className="h-full bg-cyan-600 transition-all duration-150" style={{ width: `${progressPercent}%` }} />
+                  </div>
+                  <span className="text-sm font-medium text-gray-700">
+                    {Math.round(progressPercent)}%
+                  </span>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // ---- POULTRY ----
+    const poultryKey = moduleType;
     if (poultryKey.startsWith('poultry_') || poultryKey === 'bird_damage') {
       return (
         <div
@@ -1030,7 +1134,8 @@ const Agent = ({
       );
     }
 
-    // ===== DAIRY MODULE RENDERERS =====
+    // ---- DAIRY ----
+    const dairyKey = moduleType;
     if (dairyKey.startsWith('dairy_')) {
       return (
         <div
@@ -1070,7 +1175,7 @@ const Agent = ({
       );
     }
 
-    // ===== CROP MODULE RENDERERS (existing) =====
+    // ---- CROP MODULES (including gap_grouped, damage_report_grouped, crop_benefits_grouped, and default) ----
     return (
       <div
         key={idx}
@@ -1301,13 +1406,16 @@ const Agent = ({
             <div>
               <h4 className="font-bold text-lg text-gray-800">{userName}</h4>
               <div className="flex flex-wrap gap-1 text-xs">
-                {isPoultry && poultryBreed && (
+                {isFeedFormulation && (
+                  <span className="text-cyan-600">⚖️ Feed Formulation</span>
+                )}
+                {isPoultry && poultryBreed && !isFeedFormulation && (
                   <span className="text-orange-600">🐔 {poultryBreed}</span>
                 )}
                 {isDairy && dairyBreed && (
                   <span className="text-blue-600">🐄 {dairyBreed}</span>
                 )}
-                {!isPoultry && !isDairy && sessionData?.crops && (
+                {!isPoultry && !isDairy && !isFeedFormulation && sessionData?.crops && (
                   <span className="text-emerald-600">{sessionData.crops.join(", ")}</span>
                 )}
                 {sessionData?.county && <span className="text-gray-500">• {sessionData.county}</span>}
@@ -1364,7 +1472,8 @@ const Agent = ({
         <div className="bg-white rounded-2xl p-6 border-2 border-purple-200 shadow-xl">
           <h3 className="font-bold text-2xl mb-4 flex items-center gap-2 text-purple-800">
             <Sparkles className="w-6 h-6 text-purple-600" />
-            {isPoultry ? '🐔 Poultry Recommendations' :
+            {isFeedFormulation ? '⚖️ Home Poultry Feed Formulation' :
+             isPoultry ? '🐔 Poultry Recommendations' :
              isDairy ? '🐄 Dairy Recommendations' :
              safeT('personalized_recommendations')}
             {activeStreamingRec !== null && (
@@ -1377,7 +1486,9 @@ const Agent = ({
           <div className="mb-6 p-3 bg-gradient-to-r from-amber-400 to-yellow-500 rounded-xl text-white">
             <p className="text-sm flex items-center gap-2">
               <Rocket className="w-4 h-4" />
-              {isPoultry
+              {isFeedFormulation
+                ? '💡 Business Tip: Home-mixing feed can save you up to 30% compared to commercial feed while maintaining quality. Use local ingredients to cut costs and boost profits!'
+                : isPoultry
                 ? '💡 Business Tip: Every shilling invested in quality feed and vaccination returns 3-5 shillings in productivity!'
                 : isDairy
                 ? '💡 Business Tip: Every shilling invested in herd health and quality feed returns 3-5 shillings in milk and productivity!'
@@ -1388,7 +1499,7 @@ const Agent = ({
           <div className="space-y-4">
             {structuredList.map((item, idx) => renderRecommendationText(item, idx))}
           </div>
-          {!hasSoilTest && soilTestDone === false && !isPoultry && !isDairy && (
+          {!hasSoilTest && soilTestDone === false && !isPoultry && !isDairy && !isFeedFormulation && (
             <div className="mt-4 p-3 bg-yellow-50 rounded-lg border border-yellow-300">
               <p className="text-yellow-800 text-sm flex items-center gap-2">
                 <AlertCircle className="w-4 h-4" />
