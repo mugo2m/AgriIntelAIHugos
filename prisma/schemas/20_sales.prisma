@@ -363,11 +363,13 @@ businessPartners BusinessPartner[]
 }
 
 model CommoditySale {
-
   id Int @id @default(autoincrement())
 
   transactionId Int @unique
   transaction CommodityTransaction @relation(fields: [transactionId], references: [id])
+
+  salesChannelId Int?
+  salesChannel SalesChannel? @relation(fields: [salesChannelId], references: [id])
 
   invoiceNumber String?
 
@@ -407,4 +409,3 @@ model CommoditySale {
 
   updatedAt DateTime @updatedAt
 }
-

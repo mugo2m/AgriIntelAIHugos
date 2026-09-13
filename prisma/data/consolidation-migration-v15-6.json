@@ -1,0 +1,181 @@
+{
+  "audit": "Controlled SubCounty Consolidation Migration",
+  "version": "V15.6",
+  "mode": "TRANSACTIONAL_WRITE",
+  "generatedAt": "2026-09-11T09:51:03.810Z",
+  "safetyBasis": {
+    "sourceAudit": "final-database-integrity-audit-v15-5.json",
+    "sourceStatus": "PASS",
+    "safePairs": 3
+  },
+  "pairs": [
+    {
+      "countyName": "Nyeri",
+      "identityName": "Mukurwe-ini",
+      "oldSubCountyId": 376,
+      "oldSubCountyName": "Mukurweini Sub County",
+      "targetSubCountyId": 1382,
+      "targetSubCountyName": "Mukurwe-ini",
+      "expectedWardCount": 4,
+      "expectedWardGids": [
+        487,
+        488,
+        489,
+        490
+      ]
+    },
+    {
+      "countyName": "Narok",
+      "identityName": "Trans Mara West",
+      "oldSubCountyId": 411,
+      "oldSubCountyName": "Transmara West Sub County",
+      "targetSubCountyId": 1475,
+      "targetSubCountyName": "Trans Mara West",
+      "expectedWardCount": 6,
+      "expectedWardGids": [
+        2158,
+        2159,
+        2160,
+        2161,
+        2162,
+        2163
+      ]
+    },
+    {
+      "countyName": "Narok",
+      "identityName": "Trans Mara East",
+      "oldSubCountyId": 515,
+      "oldSubCountyName": "Transmara East Sub County",
+      "targetSubCountyId": 1474,
+      "targetSubCountyName": "Trans Mara East",
+      "expectedWardCount": 4,
+      "expectedWardGids": [
+        2164,
+        2165,
+        2166,
+        2167
+      ]
+    }
+  ],
+  "results": [
+    {
+      "countyName": "Nyeri",
+      "identityName": "Mukurwe-ini",
+      "oldSubCountyId": 376,
+      "oldSubCountyName": "Mukurweini Sub County",
+      "targetSubCountyId": 1382,
+      "targetSubCountyName": "Mukurwe-ini",
+      "expectedWardCount": 4,
+      "updatedWardCount": 4,
+      "deletedSubCountyCount": 1,
+      "expectedWardGids": [
+        487,
+        488,
+        489,
+        490
+      ],
+      "verifiedWardGids": [
+        487,
+        488,
+        489,
+        490
+      ],
+      "farmersBefore": 0,
+      "farmsBefore": 0,
+      "businessPartnersBefore": 0,
+      "commoditySourceBefore": 0,
+      "commodityDestinationBefore": 0,
+      "oldWardCountBefore": 4,
+      "targetWardCountBefore": 0,
+      "oldWardCountAfter": 0,
+      "targetWardCountAfter": 4,
+      "oldSubCountyExistsAfter": false,
+      "targetSubCountyExistsAfter": true,
+      "status": "PASS"
+    },
+    {
+      "countyName": "Narok",
+      "identityName": "Trans Mara West",
+      "oldSubCountyId": 411,
+      "oldSubCountyName": "Transmara West Sub County",
+      "targetSubCountyId": 1475,
+      "targetSubCountyName": "Trans Mara West",
+      "expectedWardCount": 6,
+      "updatedWardCount": 6,
+      "deletedSubCountyCount": 1,
+      "expectedWardGids": [
+        2158,
+        2159,
+        2160,
+        2161,
+        2162,
+        2163
+      ],
+      "verifiedWardGids": [
+        2158,
+        2159,
+        2160,
+        2161,
+        2162,
+        2163
+      ],
+      "farmersBefore": 0,
+      "farmsBefore": 0,
+      "businessPartnersBefore": 0,
+      "commoditySourceBefore": 0,
+      "commodityDestinationBefore": 0,
+      "oldWardCountBefore": 6,
+      "targetWardCountBefore": 0,
+      "oldWardCountAfter": 0,
+      "targetWardCountAfter": 6,
+      "oldSubCountyExistsAfter": false,
+      "targetSubCountyExistsAfter": true,
+      "status": "PASS"
+    },
+    {
+      "countyName": "Narok",
+      "identityName": "Trans Mara East",
+      "oldSubCountyId": 515,
+      "oldSubCountyName": "Transmara East Sub County",
+      "targetSubCountyId": 1474,
+      "targetSubCountyName": "Trans Mara East",
+      "expectedWardCount": 4,
+      "updatedWardCount": 4,
+      "deletedSubCountyCount": 1,
+      "expectedWardGids": [
+        2164,
+        2165,
+        2166,
+        2167
+      ],
+      "verifiedWardGids": [
+        2164,
+        2165,
+        2166,
+        2167
+      ],
+      "farmersBefore": 0,
+      "farmsBefore": 0,
+      "businessPartnersBefore": 0,
+      "commoditySourceBefore": 0,
+      "commodityDestinationBefore": 0,
+      "oldWardCountBefore": 4,
+      "targetWardCountBefore": 0,
+      "oldWardCountAfter": 0,
+      "targetWardCountAfter": 4,
+      "oldSubCountyExistsAfter": false,
+      "targetSubCountyExistsAfter": true,
+      "status": "PASS"
+    }
+  ],
+  "totals": {
+    "pairsProcessed": 3,
+    "wardsMoved": 14,
+    "subCountiesDeleted": 3,
+    "farmersChanged": 0,
+    "farmsChanged": 0,
+    "businessPartnersChanged": 0,
+    "commodityTransactionsChanged": 0
+  },
+  "finalStatus": "PASS"
+}

@@ -1,0 +1,595 @@
+{
+  "audit": "Final Database Integrity Audit V15.5 - Duplicate SubCounty Identity Audit",
+  "version": "V15.5",
+  "mode": "READ_ONLY",
+  "generatedAt": "2026-09-11T09:46:47.958Z",
+  "authoritativeSource": {
+    "file": "C:\\Users\\USER\\AgriIntelAIHugos\\prisma\\data\\kenya-wards-1450.geojson",
+    "featureCount": 1450,
+    "numericGidCount": 1450,
+    "uniqueGidCount": 1450
+  },
+  "databaseCounts": {
+    "counties": 47,
+    "subCounties": 417,
+    "wards": 1450,
+    "farmers": 1,
+    "farms": 1,
+    "businessPartners": 0,
+    "commodityTransactions": 0
+  },
+  "duplicateTargets": [
+    {
+      "countyName": "Nyeri",
+      "countyId": 69,
+      "identityName": "Mukurwe-ini",
+      "normalizedIdentity": "mukurweini",
+      "ids": [
+        376,
+        1382
+      ]
+    },
+    {
+      "countyName": "Narok",
+      "countyId": 80,
+      "identityName": "Trans Mara West",
+      "normalizedIdentity": "transmarawest",
+      "ids": [
+        411,
+        1475
+      ]
+    },
+    {
+      "countyName": "Narok",
+      "countyId": 80,
+      "identityName": "Trans Mara East",
+      "normalizedIdentity": "transmaraeast",
+      "ids": [
+        515,
+        1474
+      ]
+    }
+  ],
+  "pairResults": [
+    {
+      "countyId": 69,
+      "countyName": "Nyeri",
+      "identityName": "Mukurwe-ini",
+      "normalizedIdentity": "mukurweini",
+      "ids": [
+        376,
+        1382
+      ],
+      "records": [
+        {
+          "id": 376,
+          "countyId": 69,
+          "countyName": "Nyeri",
+          "name": "Mukurweini Sub County",
+          "normalizedIdentity": "mukurweini",
+          "wardCount": 4,
+          "wardIds": [
+            1494,
+            1495,
+            1496,
+            1497
+          ],
+          "wardGids": [
+            487,
+            488,
+            489,
+            490
+          ],
+          "farmersCount": 0,
+          "farmsCount": 0,
+          "businessPartnersCount": 0,
+          "commoditySourceCount": 0,
+          "commodityDestinationCount": 0,
+          "totalApplicationDependencies": 0,
+          "wardEvidence": [
+            {
+              "id": 1494,
+              "name": "Gikondi Ward",
+              "sourceGid": 487,
+              "countyId": 69,
+              "subCountyId": 376,
+              "authoritative": {
+                "gid": 487,
+                "county": "NYERI",
+                "subcounty": "Mukurweini Sub County",
+                "ward": "Gikondi Ward",
+                "uid": "ohWtG7fskG2",
+                "scuid": "zT8Zj5vNYCy",
+                "cuid": "ptWVfaCIdVx"
+              },
+              "countyMatchesAuthoritative": true,
+              "subCountyMatchesAuthoritative": true
+            },
+            {
+              "id": 1495,
+              "name": "Rugi Ward",
+              "sourceGid": 488,
+              "countyId": 69,
+              "subCountyId": 376,
+              "authoritative": {
+                "gid": 488,
+                "county": "NYERI",
+                "subcounty": "Mukurweini Sub County",
+                "ward": "Rugi Ward",
+                "uid": "EitnMJgAT0z",
+                "scuid": "zT8Zj5vNYCy",
+                "cuid": "ptWVfaCIdVx"
+              },
+              "countyMatchesAuthoritative": true,
+              "subCountyMatchesAuthoritative": true
+            },
+            {
+              "id": 1496,
+              "name": "Mukurwe-ini west Ward",
+              "sourceGid": 489,
+              "countyId": 69,
+              "subCountyId": 376,
+              "authoritative": {
+                "gid": 489,
+                "county": "NYERI",
+                "subcounty": "Mukurweini Sub County",
+                "ward": "Mukurwe-ini west Ward",
+                "uid": "WQtfFgLYHGe",
+                "scuid": "zT8Zj5vNYCy",
+                "cuid": "ptWVfaCIdVx"
+              },
+              "countyMatchesAuthoritative": true,
+              "subCountyMatchesAuthoritative": true
+            },
+            {
+              "id": 1497,
+              "name": "Mukurwe-ini central Ward",
+              "sourceGid": 490,
+              "countyId": 69,
+              "subCountyId": 376,
+              "authoritative": {
+                "gid": 490,
+                "county": "NYERI",
+                "subcounty": "Mukurweini Sub County",
+                "ward": "Mukurwe-ini central Ward",
+                "uid": "GAsUkSqRL2f",
+                "scuid": "zT8Zj5vNYCy",
+                "cuid": "ptWVfaCIdVx"
+              },
+              "countyMatchesAuthoritative": true,
+              "subCountyMatchesAuthoritative": true
+            }
+          ],
+          "hasAnyDependencies": false,
+          "hasWards": true
+        },
+        {
+          "id": 1382,
+          "countyId": 69,
+          "countyName": "Nyeri",
+          "name": "Mukurwe-ini",
+          "normalizedIdentity": "mukurweini",
+          "wardCount": 0,
+          "wardIds": [],
+          "wardGids": [],
+          "farmersCount": 0,
+          "farmsCount": 0,
+          "businessPartnersCount": 0,
+          "commoditySourceCount": 0,
+          "commodityDestinationCount": 0,
+          "totalApplicationDependencies": 0,
+          "wardEvidence": [],
+          "hasAnyDependencies": false,
+          "hasWards": false
+        }
+      ],
+      "sameCounty": true,
+      "sameNormalizedIdentity": true,
+      "totalWardCount": 4,
+      "totalDependencyCount": 0,
+      "duplicateType": "EXACT_DUPLICATE_EMPTY_AND_POPULATED",
+      "recommendation": "SAFE_TO_CONSOLIDATE",
+      "confidence": "HIGH",
+      "evidence": [
+        "Both records belong to the same county.",
+        "Both records have the same normalized SubCounty identity.",
+        "Ward sourceGIDs are unique across the duplicate pair.",
+        "Every audited Ward sourceGID resolves to an authoritative GeoJSON feature.",
+        "All audited wards have the same county as their SubCounty.",
+        "All audited wards point to their expected SubCounty ID.",
+        "Exactly one duplicate record is empty and the other contains the active data.",
+        "One record is empty and one record contains the active data.",
+        "No application dependency conflict exists."
+      ],
+      "safetyChecks": {
+        "idsExist": true,
+        "sameCounty": true,
+        "sameNormalizedIdentity": true,
+        "noApplicationDependencyConflict": true,
+        "authoritativeGidsUnique": true,
+        "authoritativeGidsMatchDatabase": true,
+        "wardCountyIntegrity": true,
+        "wardSubCountyIntegrity": true
+      }
+    },
+    {
+      "countyId": 80,
+      "countyName": "Narok",
+      "identityName": "Trans Mara West",
+      "normalizedIdentity": "transmarawest",
+      "ids": [
+        411,
+        1475
+      ],
+      "records": [
+        {
+          "id": 411,
+          "countyId": 80,
+          "countyName": "Narok",
+          "name": "Transmara West Sub County",
+          "normalizedIdentity": "transmarawest",
+          "wardCount": 6,
+          "wardIds": [
+            1641,
+            2071,
+            2072,
+            2073,
+            2074,
+            2075
+          ],
+          "wardGids": [
+            2158,
+            2159,
+            2160,
+            2161,
+            2162,
+            2163
+          ],
+          "farmersCount": 0,
+          "farmsCount": 0,
+          "businessPartnersCount": 0,
+          "commoditySourceCount": 0,
+          "commodityDestinationCount": 0,
+          "totalApplicationDependencies": 0,
+          "wardEvidence": [
+            {
+              "id": 1641,
+              "name": "Kilgoris Central  Ward",
+              "sourceGid": 2158,
+              "countyId": 80,
+              "subCountyId": 411,
+              "authoritative": {
+                "gid": 2158,
+                "county": "Narok",
+                "subcounty": "Transmara West Sub County",
+                "ward": "Kilgoris Central  Ward",
+                "uid": "bFIJdjEp5Kl",
+                "scuid": "Nb6e34jNGAq",
+                "cuid": "kqJ83J2D72s"
+              },
+              "countyMatchesAuthoritative": true,
+              "subCountyMatchesAuthoritative": true
+            },
+            {
+              "id": 2071,
+              "name": "Keyian Ward",
+              "sourceGid": 2159,
+              "countyId": 80,
+              "subCountyId": 411,
+              "authoritative": {
+                "gid": 2159,
+                "county": "Narok",
+                "subcounty": "Transmara West Sub County",
+                "ward": "Keyian Ward",
+                "uid": "mq1FEx5vQZ4",
+                "scuid": "Nb6e34jNGAq",
+                "cuid": "kqJ83J2D72s"
+              },
+              "countyMatchesAuthoritative": true,
+              "subCountyMatchesAuthoritative": true
+            },
+            {
+              "id": 2072,
+              "name": "Angata Barikoi Ward",
+              "sourceGid": 2160,
+              "countyId": 80,
+              "subCountyId": 411,
+              "authoritative": {
+                "gid": 2160,
+                "county": "Narok",
+                "subcounty": "Transmara West Sub County",
+                "ward": "Angata Barikoi Ward",
+                "uid": "QYQsVGsbKWg",
+                "scuid": "Nb6e34jNGAq",
+                "cuid": "kqJ83J2D72s"
+              },
+              "countyMatchesAuthoritative": true,
+              "subCountyMatchesAuthoritative": true
+            },
+            {
+              "id": 2073,
+              "name": "Shankoe Ward",
+              "sourceGid": 2161,
+              "countyId": 80,
+              "subCountyId": 411,
+              "authoritative": {
+                "gid": 2161,
+                "county": "Narok",
+                "subcounty": "Transmara West Sub County",
+                "ward": "Shankoe Ward",
+                "uid": "L1Lr24F5gyc",
+                "scuid": "Nb6e34jNGAq",
+                "cuid": "kqJ83J2D72s"
+              },
+              "countyMatchesAuthoritative": true,
+              "subCountyMatchesAuthoritative": true
+            },
+            {
+              "id": 2074,
+              "name": "Kimintet Ward",
+              "sourceGid": 2162,
+              "countyId": 80,
+              "subCountyId": 411,
+              "authoritative": {
+                "gid": 2162,
+                "county": "Narok",
+                "subcounty": "Transmara West Sub County",
+                "ward": "Kimintet Ward",
+                "uid": "BCIB2lbwUN4",
+                "scuid": "Nb6e34jNGAq",
+                "cuid": "kqJ83J2D72s"
+              },
+              "countyMatchesAuthoritative": true,
+              "subCountyMatchesAuthoritative": true
+            },
+            {
+              "id": 2075,
+              "name": "Lolgorian Ward",
+              "sourceGid": 2163,
+              "countyId": 80,
+              "subCountyId": 411,
+              "authoritative": {
+                "gid": 2163,
+                "county": "Narok",
+                "subcounty": "Transmara West Sub County",
+                "ward": "Lolgorian Ward",
+                "uid": "jhNc8UIGW4Y",
+                "scuid": "Nb6e34jNGAq",
+                "cuid": "kqJ83J2D72s"
+              },
+              "countyMatchesAuthoritative": true,
+              "subCountyMatchesAuthoritative": true
+            }
+          ],
+          "hasAnyDependencies": false,
+          "hasWards": true
+        },
+        {
+          "id": 1475,
+          "countyId": 80,
+          "countyName": "Narok",
+          "name": "Trans Mara West",
+          "normalizedIdentity": "transmarawest",
+          "wardCount": 0,
+          "wardIds": [],
+          "wardGids": [],
+          "farmersCount": 0,
+          "farmsCount": 0,
+          "businessPartnersCount": 0,
+          "commoditySourceCount": 0,
+          "commodityDestinationCount": 0,
+          "totalApplicationDependencies": 0,
+          "wardEvidence": [],
+          "hasAnyDependencies": false,
+          "hasWards": false
+        }
+      ],
+      "sameCounty": true,
+      "sameNormalizedIdentity": true,
+      "totalWardCount": 6,
+      "totalDependencyCount": 0,
+      "duplicateType": "EXACT_DUPLICATE_EMPTY_AND_POPULATED",
+      "recommendation": "SAFE_TO_CONSOLIDATE",
+      "confidence": "HIGH",
+      "evidence": [
+        "Both records belong to the same county.",
+        "Both records have the same normalized SubCounty identity.",
+        "Ward sourceGIDs are unique across the duplicate pair.",
+        "Every audited Ward sourceGID resolves to an authoritative GeoJSON feature.",
+        "All audited wards have the same county as their SubCounty.",
+        "All audited wards point to their expected SubCounty ID.",
+        "Exactly one duplicate record is empty and the other contains the active data.",
+        "One record is empty and one record contains the active data.",
+        "No application dependency conflict exists."
+      ],
+      "safetyChecks": {
+        "idsExist": true,
+        "sameCounty": true,
+        "sameNormalizedIdentity": true,
+        "noApplicationDependencyConflict": true,
+        "authoritativeGidsUnique": true,
+        "authoritativeGidsMatchDatabase": true,
+        "wardCountyIntegrity": true,
+        "wardSubCountyIntegrity": true
+      }
+    },
+    {
+      "countyId": 80,
+      "countyName": "Narok",
+      "identityName": "Trans Mara East",
+      "normalizedIdentity": "transmaraeast",
+      "ids": [
+        515,
+        1474
+      ],
+      "records": [
+        {
+          "id": 515,
+          "countyId": 80,
+          "countyName": "Narok",
+          "name": "Transmara East Sub County",
+          "normalizedIdentity": "transmaraeast",
+          "wardCount": 4,
+          "wardIds": [
+            2076,
+            2077,
+            2078,
+            2283
+          ],
+          "wardGids": [
+            2164,
+            2165,
+            2166,
+            2167
+          ],
+          "farmersCount": 0,
+          "farmsCount": 0,
+          "businessPartnersCount": 0,
+          "commoditySourceCount": 0,
+          "commodityDestinationCount": 0,
+          "totalApplicationDependencies": 0,
+          "wardEvidence": [
+            {
+              "id": 2076,
+              "name": "Iikerin Ward",
+              "sourceGid": 2164,
+              "countyId": 80,
+              "subCountyId": 515,
+              "authoritative": {
+                "gid": 2164,
+                "county": "Narok",
+                "subcounty": "Transmara East Sub County",
+                "ward": "Iikerin Ward",
+                "uid": "lQwlJ2oi5zA",
+                "scuid": "PGTkGnIAZuy",
+                "cuid": "kqJ83J2D72s"
+              },
+              "countyMatchesAuthoritative": true,
+              "subCountyMatchesAuthoritative": true
+            },
+            {
+              "id": 2077,
+              "name": "Ololmasani Ward",
+              "sourceGid": 2165,
+              "countyId": 80,
+              "subCountyId": 515,
+              "authoritative": {
+                "gid": 2165,
+                "county": "Narok",
+                "subcounty": "Transmara East Sub County",
+                "ward": "Ololmasani Ward",
+                "uid": "tVa5R01HhNz",
+                "scuid": "PGTkGnIAZuy",
+                "cuid": "kqJ83J2D72s"
+              },
+              "countyMatchesAuthoritative": true,
+              "subCountyMatchesAuthoritative": true
+            },
+            {
+              "id": 2078,
+              "name": "Mogondo Ward",
+              "sourceGid": 2166,
+              "countyId": 80,
+              "subCountyId": 515,
+              "authoritative": {
+                "gid": 2166,
+                "county": "Narok",
+                "subcounty": "Transmara East Sub County",
+                "ward": "Mogondo Ward",
+                "uid": "VcvJbIcShgA",
+                "scuid": "PGTkGnIAZuy",
+                "cuid": "kqJ83J2D72s"
+              },
+              "countyMatchesAuthoritative": true,
+              "subCountyMatchesAuthoritative": true
+            },
+            {
+              "id": 2283,
+              "name": "Kapsasian Ward",
+              "sourceGid": 2167,
+              "countyId": 80,
+              "subCountyId": 515,
+              "authoritative": {
+                "gid": 2167,
+                "county": "Narok",
+                "subcounty": "Transmara East Sub County",
+                "ward": "Kapsasian Ward",
+                "uid": "D9H082cdWsj",
+                "scuid": "PGTkGnIAZuy",
+                "cuid": "kqJ83J2D72s"
+              },
+              "countyMatchesAuthoritative": true,
+              "subCountyMatchesAuthoritative": true
+            }
+          ],
+          "hasAnyDependencies": false,
+          "hasWards": true
+        },
+        {
+          "id": 1474,
+          "countyId": 80,
+          "countyName": "Narok",
+          "name": "Trans Mara East",
+          "normalizedIdentity": "transmaraeast",
+          "wardCount": 0,
+          "wardIds": [],
+          "wardGids": [],
+          "farmersCount": 0,
+          "farmsCount": 0,
+          "businessPartnersCount": 0,
+          "commoditySourceCount": 0,
+          "commodityDestinationCount": 0,
+          "totalApplicationDependencies": 0,
+          "wardEvidence": [],
+          "hasAnyDependencies": false,
+          "hasWards": false
+        }
+      ],
+      "sameCounty": true,
+      "sameNormalizedIdentity": true,
+      "totalWardCount": 4,
+      "totalDependencyCount": 0,
+      "duplicateType": "EXACT_DUPLICATE_EMPTY_AND_POPULATED",
+      "recommendation": "SAFE_TO_CONSOLIDATE",
+      "confidence": "HIGH",
+      "evidence": [
+        "Both records belong to the same county.",
+        "Both records have the same normalized SubCounty identity.",
+        "Ward sourceGIDs are unique across the duplicate pair.",
+        "Every audited Ward sourceGID resolves to an authoritative GeoJSON feature.",
+        "All audited wards have the same county as their SubCounty.",
+        "All audited wards point to their expected SubCounty ID.",
+        "Exactly one duplicate record is empty and the other contains the active data.",
+        "One record is empty and one record contains the active data.",
+        "No application dependency conflict exists."
+      ],
+      "safetyChecks": {
+        "idsExist": true,
+        "sameCounty": true,
+        "sameNormalizedIdentity": true,
+        "noApplicationDependencyConflict": true,
+        "authoritativeGidsUnique": true,
+        "authoritativeGidsMatchDatabase": true,
+        "wardCountyIntegrity": true,
+        "wardSubCountyIntegrity": true
+      }
+    }
+  ],
+  "totals": {
+    "duplicatePairs": 3,
+    "safeToConsolidate": 3,
+    "review": 0,
+    "doNotTouch": 0,
+    "highConfidence": 3,
+    "mediumConfidence": 0,
+    "lowConfidence": 0
+  },
+  "globalSafety": {
+    "noWritesPerformed": true,
+    "duplicatePairsAudited": 3,
+    "recordsAudited": 6,
+    "wardsAudited": 14,
+    "applicationDependenciesAudited": 0
+  },
+  "finalStatus": "PASS"
+}

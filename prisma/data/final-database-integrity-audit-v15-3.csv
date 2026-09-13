@@ -1,0 +1,1451 @@
+gid,authoritativeCounty,authoritativeSubCounty,authoritativeWard,expectedCountyId,expectedSubCountyId,actualWardId,actualCountyId,actualSubCountyId,actualSubCountyName,status
+241,ISIOLO,Isiolo Sub County,WABERA,48,1310,1024,48,1310,Isiolo,CORRECT
+1455,Migori,Rongo Sub County,North Kamagambo Ward,49,1552,1025,49,1552,Rongo,CORRECT
+1456,Migori,Rongo Sub County,Central Kamagambo Ward,49,1552,1026,49,1552,Rongo,CORRECT
+1457,Migori,Rongo Sub County,South Kamagambo Ward,49,1552,1027,49,1552,Rongo,CORRECT
+1458,Migori,Awendo Sub County,North Sakwa Ward,49,1548,1028,49,1548,Awendo,CORRECT
+1459,Migori,Awendo Sub County,South Sakwa Ward,49,1548,1029,49,1548,Awendo,CORRECT
+1460,Migori,Awendo Sub County,West Sakwa Ward,49,1548,1030,49,1548,Awendo,CORRECT
+1461,Migori,Awendo Sub County,Central Sakwa Ward,49,1548,1031,49,1548,Awendo,CORRECT
+1462,Migori,Suna East Sub County,God Jope  Ward,49,1553,1032,49,1553,Suna East,CORRECT
+1463,Migori,Suna East Sub County,Suna Central Ward,49,1553,1033,49,1553,Suna East,CORRECT
+1464,Migori,Suna East Sub County,Kakrao Ward,49,1553,1034,49,1553,Suna East,CORRECT
+1465,Migori,Suna East Sub County,Kwa Ward,49,1553,1035,49,1553,Suna East,CORRECT
+1466,Migori,Suna West Sub County,Wiga Ward,49,1554,1036,49,1554,Suna West,CORRECT
+1467,Migori,Suna West Sub County,Waseweta Ii Ward,49,1554,1037,49,1554,Suna West,CORRECT
+1468,Migori,Suna West Sub County,Ragana-oruba Ward,49,1554,1038,49,1554,Suna West,CORRECT
+1469,Migori,Suna West Sub County,Wasimbete Ward,49,1554,1039,49,1554,Suna West,CORRECT
+1470,Migori,Uriri Sub County,West Kanyamkago Ward,49,1555,1040,49,1555,Uriri,CORRECT
+1471,Migori,Uriri Sub County,North  Kanyamkago Ward,49,1555,1041,49,1555,Uriri,CORRECT
+1472,Migori,Uriri Sub County,Central Kanyamkago Ward,49,1555,1042,49,1555,Uriri,CORRECT
+1473,Migori,Uriri Sub County,South Kanyamkago Ward,49,1555,1043,49,1555,Uriri,CORRECT
+1474,Migori,Uriri Sub County,East Kanyamkago Ward,49,1555,1044,49,1555,Uriri,CORRECT
+1475,Migori,Nyatike Sub County,Kachieng' Ward,49,1551,1045,49,1551,Nyatike,CORRECT
+1486,Migori,Kuria West Sub County,Masaba Ward,49,1550,1046,49,1550,Kuria West,CORRECT
+1490,Migori,Kuria East Sub County,Ntimaru West Ward,49,1549,1047,49,1549,Kuria East,CORRECT
+1520,Machakos,Athi River Sub County,Mathatani Ward,50,1351,1048,50,1351,Athi River,CORRECT
+1521,Machakos,Athi River Sub County,Syokimau-mulolongo Ward,50,1351,1049,50,1351,Athi River,CORRECT
+1522,Machakos,Machakos Sub County,Kalama Ward,50,1355,1050,50,1355,Machakos,CORRECT
+1523,Machakos,Machakos Sub County,Mua Ward,50,1355,1051,50,1355,Machakos,CORRECT
+1524,Machakos,Machakos Sub County,Mutituni Ward,50,1355,1052,50,1355,Machakos,CORRECT
+1525,Machakos,Machakos Sub County,Township Ward,50,1355,1053,50,1355,Machakos,CORRECT
+1526,Machakos,Machakos Sub County,Mumbuni North Ward,50,1355,1054,50,1355,Machakos,CORRECT
+1527,Machakos,Machakos Sub County,Muvuti-kiima-kimwe Ward,50,1355,1055,50,1355,Machakos,CORRECT
+1528,Machakos,Machakos Sub County,Kola Ward,50,1355,1056,50,1355,Machakos,CORRECT
+1529,Machakos,Mwala Sub County,Mbiuni Ward,50,1358,1057,50,1358,Mwala,CORRECT
+1530,Machakos,Mwala Sub County,Makutano-mwala Ward,50,1358,1058,50,1358,Mwala,CORRECT
+1531,Machakos,Mwala Sub County,Masii Ward,50,1358,1059,50,1358,Mwala,CORRECT
+1532,Machakos,Mwala Sub County,Muthetheni Ward,50,1358,1060,50,1358,Mwala,CORRECT
+1533,Machakos,Mwala Sub County,Wamunyu Ward,50,1358,1061,50,1358,Mwala,CORRECT
+1534,Machakos,Mwala Sub County,Kibauni Ward,50,1358,1062,50,1358,Mwala,CORRECT
+1535,Homa Bay,Kasipul Sub County,West Kasipul Ward,51,267,1063,51,267,Kasipul Sub County,CORRECT
+1536,Homa Bay,Kasipul Sub County,South Kasipul Ward,51,267,1064,51,267,Kasipul Sub County,CORRECT
+1537,Homa Bay,Kasipul Sub County,Central Kasipul Ward,51,267,1065,51,267,Kasipul Sub County,CORRECT
+1538,Homa Bay,Kasipul Sub County,East Kamagak Ward,51,267,1066,51,267,Kasipul Sub County,CORRECT
+1539,Homa Bay,Kasipul Sub County,West Kamagak Ward,51,267,1067,51,267,Kasipul Sub County,CORRECT
+1540,Homa Bay,Kabondo Kasipul Sub County,Kabondo East Ward,51,268,1068,51,268,Kabondo Kasipul Sub County,CORRECT
+1541,Homa Bay,Kabondo Kasipul Sub County,Kabondo West Ward,51,268,1069,51,268,Kabondo Kasipul Sub County,CORRECT
+1542,Homa Bay,Kabondo Kasipul Sub County,Kokwanyo/kakelo Ward,51,268,1070,51,268,Kabondo Kasipul Sub County,CORRECT
+1543,Homa Bay,Kabondo Kasipul Sub County,Kojwach Ward,51,268,1071,51,268,Kabondo Kasipul Sub County,CORRECT
+1544,Homa Bay,Karachuonyo Sub County,West Karachuonyo Ward,51,269,1072,51,269,Karachuonyo Sub County,CORRECT
+1545,Homa Bay,Karachuonyo Sub County,North Karachuonyo Ward,51,269,1073,51,269,Karachuonyo Sub County,CORRECT
+1546,Homa Bay,Karachuonyo Sub County,Central Ward,51,269,1074,51,269,Karachuonyo Sub County,CORRECT
+1547,Homa Bay,Karachuonyo Sub County,Kanyaluo Ward,51,269,1075,51,269,Karachuonyo Sub County,CORRECT
+1553,Homa Bay,Rangwe Sub County,Kagan Ward,51,1545,1076,51,1545,Rangwe,CORRECT
+1554,Homa Bay,Rangwe Sub County,Kochia Ward,51,1545,1077,51,1545,Rangwe,CORRECT
+1555,Homa Bay,Homa Bay Town Sub County,Homa Bay Central Ward,51,271,1078,51,271,Homa Bay Town Sub County,CORRECT
+1556,Homa Bay,Homa Bay Town Sub County,Homa Bay Arujo Ward,51,271,1079,51,271,Homa Bay Town Sub County,CORRECT
+1558,Homa Bay,Homa Bay Town Sub County,Homa Bay East Ward,51,271,1080,51,271,Homa Bay Town Sub County,CORRECT
+1559,Homa Bay,Ndhiwa Sub County,Kwabwai Ward,51,1541,1081,51,1541,Ndhiwa,CORRECT
+1560,Homa Bay,Ndhiwa Sub County,Kanyadoto Ward,51,1541,1082,51,1541,Ndhiwa,CORRECT
+1561,Homa Bay,Ndhiwa Sub County,Kanyikela Ward,51,1541,1083,51,1541,Ndhiwa,CORRECT
+1562,Homa Bay,Ndhiwa Sub County,Kabouch North Ward,51,1541,1084,51,1541,Ndhiwa,CORRECT
+1563,Homa Bay,Ndhiwa Sub County,Kabuoch South/pala Ward,51,1541,1085,51,1541,Ndhiwa,CORRECT
+1565,Homa Bay,Ndhiwa Sub County,Kanyamwa Kosewe Ward,51,1541,1086,51,1541,Ndhiwa,CORRECT
+1566,Homa Bay,Mbita Sub County,Mfangano Island Ward,51,273,1087,51,273,Mbita Sub County,CORRECT
+1567,Homa Bay,Mbita Sub County,Rusinga Island Ward,51,273,1088,51,273,Mbita Sub County,CORRECT
+1568,Homa Bay,Mbita Sub County,Kasgunga Ward,51,273,1089,51,273,Mbita Sub County,CORRECT
+1579,Vihiga,Sabatia Sub County,Chavakali Ward,52,1508,1090,52,1508,Sabatia,CORRECT
+1582,Vihiga,Sabatia Sub County,Busali Ward,52,1508,1091,52,1508,Sabatia,CORRECT
+1583,Vihiga,Hamisi Sub County,Shiru Ward,52,1510,1092,52,1510,Hamisi,CORRECT
+1584,Vihiga,Hamisi Sub County,Gisambai Ward,52,1510,1093,52,1510,Hamisi,CORRECT
+1585,Vihiga,Hamisi Sub County,Muhudu Ward,52,1510,1094,52,1510,Hamisi,CORRECT
+1586,Vihiga,Hamisi Sub County,Tambua Ward,52,1510,1095,52,1510,Hamisi,CORRECT
+1587,Vihiga,Hamisi Sub County,Jepkoyai Ward,52,1510,1096,52,1510,Hamisi,CORRECT
+1591,Vihiga,Luanda Sub County,Luanda South Ward,52,1509,1097,52,1509,Luanda,CORRECT
+1593,Vihiga,Emuhaya Sub County,North East Bunyore Ward,52,1506,1098,52,1506,Emuhaya,CORRECT
+1596,Vihiga,Hamisi Sub County,Banja Ward,52,1510,1099,52,1510,Hamisi,CORRECT
+1597,Vihiga,Vihiga Sub County,South Maragoli Ward,52,1507,1100,52,1507,Vihiga,CORRECT
+1598,Vihiga,Hamisi Sub County,Shamakhokho Ward,52,1510,1101,52,1510,Hamisi,CORRECT
+1600,Bungoma,Cheptais Sub County,Cheptais Ward,53,1516,1102,53,1516,Cheptais,CORRECT
+1603,Bungoma,Cheptais Sub County,Kakateny Ward,53,1516,1103,53,1516,Cheptais,CORRECT
+1604,Bungoma,Mt Elgon Sub County,Kaptama Ward,53,280,1104,53,280,Mt Elgon Sub County,CORRECT
+1607,Bungoma,Sirisia Sub County,Malakisi/south Kulisiru Ward,53,281,1105,53,281,Sirisia Sub County,CORRECT
+1608,Bungoma,Sirisia Sub County,Lwandanyi Ward,53,281,1106,53,281,Sirisia Sub County,CORRECT
+1610,Bungoma,Kabuchai Sub County,West Nalondo Ward,53,282,1107,53,282,Kabuchai Sub County,CORRECT
+1612,Bungoma,Kabuchai Sub County,Mukuyuni Ward,53,282,1108,53,282,Kabuchai Sub County,CORRECT
+1616,Bungoma,Bumula Sub County,Kabula  Ward,53,1511,1109,53,1511,Bumula,CORRECT
+1617,Bungoma,Bumula Sub County,Kimaeti Ward,53,1511,1110,53,1511,Bumula,CORRECT
+1619,Bungoma,Bumula Sub County,Siboti Ward,53,1511,1111,53,1511,Bumula,CORRECT
+1620,Bungoma,Kanduyi Sub County,Bukembe West Ward,53,284,1112,53,284,Kanduyi Sub County,CORRECT
+1621,Bungoma,Kanduyi Sub County,Bukembe East Ward,53,284,1113,53,284,Kanduyi Sub County,CORRECT
+1634,Bungoma,Webuye West Sub County,Bokoli Ward,53,1520,1114,53,1520,Webuye West,CORRECT
+1635,Bungoma,Kimilili Sub County,Kibingei Ward,53,1517,1115,53,1517,Kimilili,CORRECT
+1636,Bungoma,Kimilili Sub County,Kimilili Ward,53,1517,1116,53,1517,Kimilili,CORRECT
+1637,Bungoma,Kimilili Sub County,Maeni Ward,53,1517,1117,53,1517,Kimilili,CORRECT
+1638,Bungoma,Kimilili Sub County,Kamukuywa Ward,53,1517,1118,53,1517,Kimilili,CORRECT
+1639,Bungoma,Tongaren Sub County,Mbakalo Ward,53,1519,1119,53,1519,Tongaren,CORRECT
+1640,Bungoma,Tongaren Sub County,Naitiri/kabuyefwe Ward,53,1519,1120,53,1519,Tongaren,CORRECT
+1641,Bungoma,Tongaren Sub County,Milima Ward,53,1519,1121,53,1519,Tongaren,CORRECT
+1642,Bungoma,Tongaren Sub County,Ndalu/ Tabani Ward,53,1519,1122,53,1519,Tongaren,CORRECT
+1643,Bungoma,Tongaren Sub County,Tongaren Ward,53,1519,1123,53,1519,Tongaren,CORRECT
+1644,Bungoma,Tongaren Sub County,Soysambu/ Mitua Ward,53,1519,1124,53,1519,Tongaren,CORRECT
+1645,Kakamega,Lugari Sub County,Mautuma Ward,54,1500,1125,54,1500,Lugari,CORRECT
+1646,Kakamega,Lugari Sub County,Lugari Ward,54,1500,1126,54,1500,Lugari,CORRECT
+1647,Kakamega,Lugari Sub County,Lumakanda Ward,54,1500,1127,54,1500,Lugari,CORRECT
+1648,Kakamega,Lugari Sub County,Chekalini Ward,54,1500,1128,54,1500,Lugari,CORRECT
+1649,Kakamega,Lugari Sub County,Chevaywa Ward,54,1500,1129,54,1500,Lugari,CORRECT
+1650,Kakamega,Lugari Sub County,Lwandeti Ward,54,1500,1130,54,1500,Lugari,CORRECT
+1651,Kakamega,Likuyani Sub County,Likuyani Ward,54,1499,1131,54,1499,Likuyani,CORRECT
+1652,Kakamega,Likuyani Sub County,Sango Ward,54,1499,1132,54,1499,Likuyani,CORRECT
+1653,Kakamega,Likuyani Sub County,Kongoni Ward,54,1499,1133,54,1499,Likuyani,CORRECT
+1654,Kakamega,Likuyani Sub County,Nzoia Ward,54,1499,1134,54,1499,Likuyani,CORRECT
+1655,Kakamega,Likuyani Sub County,Sinoko Ward,54,1499,1135,54,1499,Likuyani,CORRECT
+1656,Kakamega,Malava Sub County,West Kabras Ward,54,290,1136,54,290,Malava Sub County,CORRECT
+1657,Kakamega,Malava Sub County,Chemuche Ward,54,290,1137,54,290,Malava Sub County,CORRECT
+1658,Kakamega,Malava Sub County,East Kabras Ward,54,290,1138,54,290,Malava Sub County,CORRECT
+1659,Kakamega,Malava Sub County,Butali Chegulo Ward,54,290,1139,54,290,Malava Sub County,CORRECT
+1660,Kakamega,Malava Sub County,Manda-shivanga Ward,54,290,1140,54,290,Malava Sub County,CORRECT
+1661,Kakamega,Malava Sub County,Shirungu-mugai Ward,54,290,1141,54,290,Malava Sub County,CORRECT
+1662,Kakamega,Malava Sub County,South Kabras Ward,54,290,1142,54,290,Malava Sub County,CORRECT
+1663,Kakamega,Lurambi Sub County,Butsotso East Ward,54,291,1143,54,291,Lurambi Sub County,CORRECT
+1664,Kakamega,Lurambi Sub County,Butsotso South  Ward,54,291,1144,54,291,Lurambi Sub County,CORRECT
+1665,Kakamega,Lurambi Sub County,Butsotso Central Ward,54,291,1145,54,291,Lurambi Sub County,CORRECT
+1666,Kakamega,Lurambi Sub County,Sheywe Ward,54,291,1146,54,291,Lurambi Sub County,CORRECT
+1667,Kakamega,Lurambi Sub County,Mahiakalo Ward,54,291,1147,54,291,Lurambi Sub County,CORRECT
+1668,Kakamega,Lurambi Sub County,Shirere Ward,54,291,1148,54,291,Lurambi Sub County,CORRECT
+1669,Kakamega,Navakholo Sub County,Ingoste-matiha Ward,54,1505,1149,54,1505,Navakholo,CORRECT
+1670,Kakamega,Navakholo Sub County,Shinoyi-shikomari-esumeiya Ward,54,1505,1150,54,1505,Navakholo,CORRECT
+1671,Kakamega,Navakholo Sub County,Bunyala West Ward,54,1505,1151,54,1505,Navakholo,CORRECT
+1672,Kakamega,Navakholo Sub County,Bunyala East Ward,54,1505,1152,54,1505,Navakholo,CORRECT
+1673,Kakamega,Navakholo Sub County,Bunyala Central Ward,54,1505,1153,54,1505,Navakholo,CORRECT
+1674,Kakamega,Mumias West  Sub County,Mumias Central Ward,54,1504,1154,54,1504,Mumias West,CORRECT
+1796,Mombasa,Changamwe Sub County,Kipevu Ward,55,1251,1155,55,1251,Changamwe,CORRECT
+961,KERICHO,AINAMOI,BELGUT,56,295,1156,56,295,AINAMOI,CORRECT
+94,TANA RIVER,Galole Sub County,Chewani Ward,57,296,1157,57,296,Galole Sub County,CORRECT
+92,TANA RIVER,Galole Sub County,Kinakomba Ward,57,296,1158,57,296,Galole Sub County,CORRECT
+1476,Migori,Nyatike Sub County,Kanyasa Ward,49,1551,1159,49,1551,Nyatike,CORRECT
+1477,Migori,Nyatike Sub County,North Kadem Ward,49,1551,1160,49,1551,Nyatike,CORRECT
+1478,Migori,Nyatike Sub County,Macalder/kanyarwanda Ward,49,1551,1161,49,1551,Nyatike,CORRECT
+1479,Migori,Nyatike Sub County,Kaler Ward,49,1551,1162,49,1551,Nyatike,CORRECT
+1480,Migori,Nyatike Sub County,Got Kachola Ward,49,1551,1163,49,1551,Nyatike,CORRECT
+1481,Migori,Nyatike Sub County,Muhuru Ward,49,1551,1164,49,1551,Nyatike,CORRECT
+1482,Migori,Kuria West Sub County,Bukira East Ward,49,1550,1165,49,1550,Kuria West,CORRECT
+1483,Migori,Kuria West Sub County,Bukira Central/ikerege Ward,49,1550,1166,49,1550,Kuria West,CORRECT
+1484,Migori,Kuria West Sub County,Isibania Ward,49,1550,1167,49,1550,Kuria West,CORRECT
+1797,Mombasa,Changamwe Sub County,Airport Ward,55,1251,1168,55,1251,Changamwe,CORRECT
+101,LAMU,LAMU EAST,FAZA,58,1274,1169,58,1274,Lamu East,CORRECT
+102,LAMU,LAMU EAST,KIUNGA,58,1274,1170,58,1274,Lamu East,CORRECT
+103,LAMU,LAMU EAST,BASUBA,58,1274,1171,58,1274,Lamu East,CORRECT
+104,LAMU,LAMU WEST,SHELLA,58,1275,1172,58,1275,Lamu West,CORRECT
+105,LAMU,LAMU WEST,MKOMAMI,58,1275,1173,58,1275,Lamu West,CORRECT
+106,LAMU,LAMU WEST,HINDI,58,1275,1174,58,1275,Lamu West,CORRECT
+98,TANA RIVER,Bura Sub County,Bangale Ward,57,299,1175,57,299,Bura Sub County,CORRECT
+99,TANA RIVER,Bura Sub County,Sala Ward,57,299,1176,57,299,Bura Sub County,CORRECT
+108,LAMU,LAMU WEST,HONGWE,58,1275,1177,58,1275,Lamu West,CORRECT
+1678,Kakamega,Mumias East Sub County,Lusheya Lubinu Ward,54,1503,1178,54,1503,Mumias East,CORRECT
+1679,Kakamega,Mumias East Sub County,Malaha Isongo Makunga Ward,54,1503,1179,54,1503,Mumias East,CORRECT
+1680,Kakamega,Mumias East Sub County,East Wanga Ward,54,1503,1180,54,1503,Mumias East,CORRECT
+1681,Kakamega,Matungu Sub County,Koyonzo Ward,54,1502,1181,54,1502,Matungu,CORRECT
+1682,Kakamega,Matungu Sub County,Kholera Ward,54,1502,1182,54,1502,Matungu,CORRECT
+1683,Kakamega,Matungu Sub County,Khalaba Ward,54,1502,1183,54,1502,Matungu,CORRECT
+111,TAITA TAVETA,Taveta Sub County,Chala Ward,59,1278,1184,59,1278,Taveta,CORRECT
+1485,Migori,Kuria West Sub County,Mokerero Ward,49,1550,1185,49,1550,Kuria West,CORRECT
+115,TAITA TAVETA,Taveta Sub County,Mata Ward,59,1278,1186,59,1278,Taveta,CORRECT
+1487,Migori,Kuria West Sub County,Tagare Ward,49,1550,1187,49,1550,Kuria West,CORRECT
+116,TAITA TAVETA,Wundanyi Sub County,Wundanyi/mbale Ward,59,303,1188,59,303,Wundanyi Sub County,CORRECT
+118,TAITA TAVETA,Wundanyi Sub County,Wumingu/kishushe Ward,59,303,1189,59,303,Wundanyi Sub County,CORRECT
+1488,Migori,Kuria West Sub County,Nyamosense/komosoko Ward,49,1550,1190,49,1550,Kuria West,CORRECT
+1489,Migori,Kuria East Sub County,Gokeharaka/getambwega Ward,49,1549,1191,49,1549,Kuria East,CORRECT
+1491,Migori,Kuria East Sub County,Ntimaru East Ward,49,1549,1192,49,1549,Kuria East,CORRECT
+1492,Migori,Kuria East Sub County,Nyabasi East Ward,49,1549,1193,49,1549,Kuria East,CORRECT
+1493,Migori,Kuria East Sub County,Nyabasi West Ward,49,1549,1194,49,1549,Kuria East,CORRECT
+1494,Migori,Rongo Sub County,East Kamagambo Ward,49,1552,1195,49,1552,Rongo,CORRECT
+1495,Machakos,Masinga Sub County,Kivaa Ward,50,1356,1196,50,1356,Masinga,CORRECT
+1496,Machakos,Masinga Sub County,Masinga Central Ward,50,1356,1197,50,1356,Masinga,CORRECT
+1497,Machakos,Masinga Sub County,Ekalakala Ward,50,1356,1198,50,1356,Masinga,CORRECT
+1498,Machakos,Masinga Sub County,Muthesya Ward,50,1356,1199,50,1356,Masinga,CORRECT
+1499,Machakos,Masinga Sub County,Mananja Ward,50,1356,1200,50,1356,Masinga,CORRECT
+1500,Machakos,Yatta Sub County,Ndalani Ward,50,1359,1201,50,1359,Yatta,CORRECT
+1501,Machakos,Yatta Sub County,Matuu Ward,50,1359,1202,50,1359,Yatta,CORRECT
+1502,Machakos,Yatta Sub County,Kithimani Ward,50,1359,1203,50,1359,Yatta,CORRECT
+1503,Machakos,Yatta Sub County,Ikombe Ward,50,1359,1204,50,1359,Yatta,CORRECT
+1504,Machakos,Yatta Sub County,Katangi Ward,50,1359,1205,50,1359,Yatta,CORRECT
+1505,Machakos,Kangundo Sub County,Kangundo North Ward,50,1353,1206,50,1353,Kangundo,CORRECT
+1506,Machakos,Kangundo Sub County,Kangundo Central Ward,50,1353,1207,50,1353,Kangundo,CORRECT
+1507,Machakos,Kangundo Sub County,Kangundo East Ward,50,1353,1208,50,1353,Kangundo,CORRECT
+1508,Machakos,Kangundo Sub County,Kangundo West Ward,50,1353,1209,50,1353,Kangundo,CORRECT
+1509,Machakos,Matungulu Sub County,Tala Ward,50,1357,1210,50,1357,Matungulu,CORRECT
+1510,Machakos,Matungulu Sub County,Matungulu North Ward,50,1357,1211,50,1357,Matungulu,CORRECT
+1511,Machakos,Matungulu Sub County,Matungulu East Ward,50,1357,1212,50,1357,Matungulu,CORRECT
+1512,Machakos,Matungulu Sub County,Matungulu West Ward,50,1357,1213,50,1357,Matungulu,CORRECT
+1513,Machakos,Matungulu Sub County,Kyeleni Ward,50,1357,1214,50,1357,Matungulu,CORRECT
+1514,Machakos,Kathiani Sub County,Mitamboni Ward,50,1354,1215,50,1354,Kathiani,CORRECT
+1515,Machakos,Kathiani Sub County,Kathiani Central Ward,50,1354,1216,50,1354,Kathiani,CORRECT
+1516,Machakos,Kathiani Sub County,Upper Kaewa-iveti Ward,50,1354,1217,50,1354,Kathiani,CORRECT
+1517,Machakos,Kathiani Sub County,Lower Kaewa-kaani Ward,50,1354,1218,50,1354,Kathiani,CORRECT
+1518,Machakos,Athi River Sub County,Athi River Ward,50,1351,1219,50,1351,Athi River,CORRECT
+1519,Machakos,Athi River Sub County,Kinanie Ward,50,1351,1220,50,1351,Athi River,CORRECT
+1548,Homa Bay,Karachuonyo Sub County,Kibiri Ward,51,269,1221,51,269,Karachuonyo Sub County,CORRECT
+1549,Homa Bay,Karachuonyo Sub County,Wang'chieng Ward,51,269,1222,51,269,Karachuonyo Sub County,CORRECT
+1550,Homa Bay,Karachuonyo Sub County,Kendu Bay Town Ward,51,269,1223,51,269,Karachuonyo Sub County,CORRECT
+1551,Homa Bay,Rangwe Sub County,West Gem Ward,51,1545,1224,51,1545,Rangwe,CORRECT
+1552,Homa Bay,Rangwe Sub County,East Gem Ward,51,1545,1225,51,1545,Rangwe,CORRECT
+1557,Homa Bay,Homa Bay Town Sub County,Homa Bay West Ward,51,271,1226,51,271,Homa Bay Town Sub County,CORRECT
+131,GARISSA,Garissa Sub County,Township Ward,60,1283,1227,60,1283,Garissa,CORRECT
+1564,Homa Bay,Ndhiwa Sub County,Kanyamwa Kologi Ward,51,1541,1228,51,1541,Ndhiwa,CORRECT
+1569,Homa Bay,Mbita Sub County,Gembe Ward,51,273,1229,51,273,Mbita Sub County,CORRECT
+1570,Homa Bay,Mbita Sub County,Lambwe Ward,51,273,1230,51,273,Mbita Sub County,CORRECT
+1571,Homa Bay,Suba Sub County,Gwassi South Ward,51,310,1231,51,310,Suba Sub County,CORRECT
+1572,Homa Bay,Suba Sub County,Gwassi North Ward,51,310,1232,51,310,Suba Sub County,CORRECT
+1573,Homa Bay,Suba Sub County,Kaksingiri West Ward,51,310,1233,51,310,Suba Sub County,CORRECT
+134,GARISSA,Garissa Sub County,Waberi Ward,60,1283,1234,60,1283,Garissa,CORRECT
+135,GARISSA,Balambala Sub County,Balambala Ward,60,1280,1235,60,1280,Balambala,CORRECT
+136,GARISSA,Balambala Sub County,Danyere Ward,60,1280,1236,60,1280,Balambala,CORRECT
+137,GARISSA,Balambala Sub County,Jarajara Ward,60,1280,1237,60,1280,Balambala,CORRECT
+138,GARISSA,Balambala Sub County,Saka Ward,60,1280,1238,60,1280,Balambala,CORRECT
+139,GARISSA,Garissa Sub County,Sankuri Ward,60,1283,1239,60,1283,Garissa,CORRECT
+140,GARISSA,Lagdera Sub County,Modogashe Ward,60,1286,1240,60,1286,Lagdera,CORRECT
+141,GARISSA,Lagdera Sub County,Benane Ward,60,1286,1241,60,1286,Lagdera,CORRECT
+142,GARISSA,Lagdera Sub County,Goreale Ward,60,1286,1242,60,1286,Lagdera,CORRECT
+1798,Mombasa,Changamwe Sub County,Changamwe Ward,55,1251,1243,55,1251,Changamwe,CORRECT
+1574,Homa Bay,Suba Sub County,Ruma-kaksingiri East Ward,51,310,1244,51,310,Suba Sub County,CORRECT
+1575,Vihiga,Vihiga Sub County,Lugaga-wamuluma Ward,52,1507,1245,52,1507,Vihiga,CORRECT
+1576,Vihiga,Vihiga Sub County,Central Maragoli Ward,52,1507,1246,52,1507,Vihiga,CORRECT
+1577,Vihiga,Sabatia Sub County,Lyaduywa/izava Ward,52,1508,1247,52,1508,Sabatia,CORRECT
+1578,Vihiga,Sabatia Sub County,West Sabatia Ward,52,1508,1248,52,1508,Sabatia,CORRECT
+156,GARISSA,Fafi Sub County,Nanighi Ward,60,1282,1249,60,1282,Fafi,CORRECT
+157,GARISSA,Hulugho Sub County,Hulugho Ward,60,1284,1250,60,1284,Hulugho,CORRECT
+158,GARISSA,Hulugho Sub County,Sangailu Ward,60,1284,1251,60,1284,Hulugho,CORRECT
+1580,Vihiga,Sabatia Sub County,North Maragoli Ward,52,1508,1252,52,1508,Sabatia,CORRECT
+1581,Vihiga,Sabatia Sub County,Wodanga Ward,52,1508,1253,52,1508,Sabatia,CORRECT
+1588,Vihiga,Luanda Sub County,Luanda Township Ward,52,1509,1254,52,1509,Luanda,CORRECT
+1589,Vihiga,Luanda Sub County,Wemilabi Ward,52,1509,1255,52,1509,Luanda,CORRECT
+1590,Vihiga,Luanda Sub County,Mwibona Ward,52,1509,1256,52,1509,Luanda,CORRECT
+164,WAJIR,Wajir North Sub County,Malkagufu Ward,61,1292,1257,61,1292,Wajir North,CORRECT
+165,WAJIR,Wajir North Sub County,Batalu Ward,61,1292,1258,61,1292,Wajir North,CORRECT
+1592,Vihiga,Luanda Sub County,Emabungo Ward,52,1509,1259,52,1509,Luanda,CORRECT
+167,WAJIR,Wajir North Sub County,Godoma Ward,61,1292,1260,61,1292,Wajir North,CORRECT
+1594,Vihiga,Emuhaya Sub County,Central Bunyore Ward,52,1506,1261,52,1506,Emuhaya,CORRECT
+1595,Vihiga,Emuhaya Sub County,West Bunyore Ward,52,1506,1262,52,1506,Emuhaya,CORRECT
+93,TANA RIVER,Galole Sub County,Mikinduni Ward,57,296,1263,57,296,Galole Sub County,CORRECT
+171,WAJIR,Wajir East Sub County,Khorof/Harar Ward,61,1291,1264,61,1291,Wajir East,CORRECT
+172,WAJIR,Tarbaj Sub County,Elben Ward,61,1290,1265,61,1290,Tarbaj,CORRECT
+173,WAJIR,Tarbaj Sub County,Sarman Ward,61,1290,1266,61,1290,Tarbaj,CORRECT
+174,WAJIR,Tarbaj Sub County,Tarbaj Ward,61,1290,1267,61,1290,Tarbaj,CORRECT
+175,WAJIR,Tarbaj Sub County,Wargadud Ward,61,1290,1268,61,1290,Tarbaj,CORRECT
+122,TAITA TAVETA,Mwatate Sub County,Bura Ward,59,1276,1269,59,1276,Mwatate,CORRECT
+177,WAJIR,Wajir West Sub County,Hadado Athibohol Ward,61,1294,1270,61,1294,Wajir West,CORRECT
+1800,Mombasa,Jomvu  Sub County,Jomvu Kuu Ward,55,1252,1271,55,1252,Jomvu,CORRECT
+1599,Vihiga,Vihiga Sub County,Mungoma Ward,52,1507,1272,52,1507,Vihiga,CORRECT
+1601,Bungoma,Cheptais Sub County,Chesikaki Ward,53,1516,1273,53,1516,Cheptais,CORRECT
+1602,Bungoma,Cheptais Sub County,Chepyuk Ward,53,1516,1274,53,1516,Cheptais,CORRECT
+1605,Bungoma,Mt Elgon Sub County,Elgon Ward,53,280,1275,53,280,Mt Elgon Sub County,CORRECT
+1691,Kakamega,Khwisero Sub County,Kisa North Ward,54,1498,1276,54,1498,Khwisero,CORRECT
+1717,Busia,Nambale Sub County,Nambale Township Ward,62,1525,1277,62,1525,Nambale,CORRECT
+1718,Busia,Nambale Sub County,Bukhayo North Walatsi Ward,62,1525,1278,62,1525,Nambale,CORRECT
+1719,Busia,Nambale Sub County,Bukhayo East Ward,62,1525,1279,62,1525,Nambale,CORRECT
+1720,Busia,Nambale Sub County,Bukhayo Central Ward,62,1525,1280,62,1525,Nambale,CORRECT
+1721,Busia,Matayos Sub County,Bukhayo West Ward,62,323,1281,62,323,Matayos Sub County,CORRECT
+203,MANDERA,MANDERA NORTH,MAROTHILE,63,1301,2472,63,1301,Mandera North,CORRECT
+204,MANDERA,MANDERA NORTH,RHAMU,63,1301,1282,63,1301,Mandera North,CORRECT
+205,MANDERA,MANDERA NORTH,RHAMU DIMTU,63,1301,1283,63,1301,Mandera North,CORRECT
+207,MANDERA,MANDERA SOUTH,KOTULO,63,325,1284,63,325,MANDERA SOUTH,CORRECT
+208,MANDERA,MANDERA SOUTH,ELWAK SOUTH,63,325,1285,63,325,MANDERA SOUTH,CORRECT
+210,MANDERA,MANDERA SOUTH,SHAMBIR FATUMA,63,325,1286,63,325,MANDERA SOUTH,CORRECT
+211,MANDERA,MANDERA EAST,ARABIA,63,1300,1287,63,1300,Mandera East,CORRECT
+221,MARSABIT,MOYALE,BUTIYE,64,1306,1288,64,1306,Moyale,CORRECT
+222,MARSABIT,MOYALE,SOLOLO,64,1306,1289,64,1306,Moyale,CORRECT
+223,MARSABIT,MOYALE,HEILLU/MANYATTA,64,1306,1290,64,1306,Moyale,CORRECT
+224,MARSABIT,MOYALE,GOLBO,64,1306,1291,64,1306,Moyale,CORRECT
+231,MARSABIT,NORTH HORR,NORTH HORR,64,1307,1292,64,1307,North Horr,CORRECT
+232,MARSABIT,NORTH HORR,ILLERET,64,1307,1293,64,1307,North Horr,CORRECT
+233,MARSABIT,SAKU,SAGANTE/JALDESA,64,329,1294,64,329,SAKU,CORRECT
+1723,Busia,Matayos Sub County,Matayos South Ward,62,323,1295,62,323,Matayos Sub County,CORRECT
+1724,Busia,Matayos Sub County,Busibwabo Ward,62,323,1296,62,323,Matayos Sub County,CORRECT
+1725,Busia,Matayos Sub County,Burumba Ward,62,323,1297,62,323,Matayos Sub County,CORRECT
+240,MARSABIT,LAISAMIS,LAISAMIS,64,330,1298,64,330,LAISAMIS,CORRECT
+251,MERU,Igembe South Sub County,Maua Ward,65,1316,1299,65,1316,Igembe South,CORRECT
+252,MERU,Igembe South Sub County,Kiegoi/antubochiu Ward,65,1316,1300,65,1316,Igembe South,CORRECT
+253,MERU,Igembe South Sub County,Athiru gaiti Ward,65,1316,1301,65,1316,Igembe South,CORRECT
+254,MERU,Igembe South Sub County,Akachiu Ward,65,1316,1302,65,1316,Igembe South,CORRECT
+255,MERU,Igembe South Sub County,Kanuni Ward,65,1316,1303,65,1316,Igembe South,CORRECT
+256,MERU,Igembe Central Sub County,Akirang'ondu Ward,65,1314,1304,65,1314,Igembe Central,CORRECT
+257,MERU,Igembe Central Sub County,Athiru ruujine Ward,65,1314,1305,65,1314,Igembe Central,CORRECT
+258,MERU,Igembe Central Sub County,Kiengu/Igembe East ward,65,1314,1306,65,1314,Igembe Central,CORRECT
+259,MERU,Igembe Central Sub County,Njia Ward,65,1314,1307,65,1314,Igembe Central,CORRECT
+260,MERU,Igembe Central Sub County,Kangeta Ward,65,1314,1308,65,1314,Igembe Central,CORRECT
+261,MERU,Igembe North Sub County,Antuambui Ward,65,1315,1309,65,1315,Igembe North,CORRECT
+262,MERU,Igembe North Sub County,Ntunene Ward,65,1315,1310,65,1315,Igembe North,CORRECT
+263,MERU,Igembe North Sub County,Antubetwe kiongo Ward,65,1315,1311,65,1315,Igembe North,CORRECT
+264,MERU,Igembe North Sub County,Naathu Ward,65,1315,1312,65,1315,Igembe North,CORRECT
+265,MERU,Igembe North Sub County,Amwathi Ward,65,1315,1313,65,1315,Igembe North,CORRECT
+266,MERU,Tigania West Sub County,Athwana Ward,65,1322,1314,65,1322,Tigania West,CORRECT
+267,MERU,Tigania West Sub County,Akithii Ward,65,1322,1315,65,1322,Tigania West,CORRECT
+268,MERU,Tigania West Sub County,Kianjai Ward,65,1322,1316,65,1322,Tigania West,CORRECT
+269,MERU,Tigania West Sub County,Nkomo Ward,65,1322,1317,65,1322,Tigania West,CORRECT
+270,MERU,Tigania West Sub County,Mbeu Ward,65,1322,1318,65,1322,Tigania West,CORRECT
+271,MERU,Tigania East Sub County,Thangatha Ward,65,1321,1319,65,1321,Tigania East,CORRECT
+272,MERU,Tigania East Sub County,Mikinduri Ward,65,1321,1320,65,1321,Tigania East,CORRECT
+273,MERU,Tigania East Sub County,Kiguchwa Ward,65,1321,1321,65,1321,Tigania East,CORRECT
+274,MERU,Tigania East Sub County,Muthara Ward,65,1321,1322,65,1321,Tigania East,CORRECT
+275,MERU,Tigania East Sub County,Karama Ward,65,1321,1323,65,1321,Tigania East,CORRECT
+276,MERU,Imenti North Sub County,Municipality Ward,65,1317,1324,65,1317,Imenti North,CORRECT
+277,MERU,Imenti North Sub County,Ntima east Ward,65,1317,1325,65,1317,Imenti North,CORRECT
+278,MERU,Imenti North Sub County,Ntima west Ward,65,1317,1326,65,1317,Imenti North,CORRECT
+279,MERU,Imenti North Sub County,Nyaki west Ward,65,1317,1327,65,1317,Imenti North,CORRECT
+280,MERU,Imenti North Sub County,Nyaki east Ward,65,1317,1328,65,1317,Imenti North,CORRECT
+281,MERU,Buuri Sub County,Timau Ward,65,337,1329,65,337,Buuri Sub County,CORRECT
+282,MERU,Buuri Sub County,Kisima Ward,65,337,1330,65,337,Buuri Sub County,CORRECT
+283,MERU,Buuri Sub County,Kiirua Naari Ward,65,337,1331,65,337,Buuri Sub County,CORRECT
+284,MERU,Buuri Sub County,Ruiru Rwawera Ward,65,337,1332,65,337,Buuri Sub County,CORRECT
+285,MERU,Imenti Central Sub County,Mwangathia Ward,65,338,1333,65,338,Imenti Central Sub County,CORRECT
+286,MERU,Imenti Central Sub County,Abothuguchi central Ward,65,338,1334,65,338,Imenti Central Sub County,CORRECT
+287,MERU,Imenti Central Sub County,Abothuguchi west Ward,65,338,1335,65,338,Imenti Central Sub County,CORRECT
+288,MERU,Imenti Central Sub County,Kiagu Ward,65,338,1336,65,338,Imenti Central Sub County,CORRECT
+289,MERU,Buuri Sub County,Kibirichia Ward,65,337,1337,65,337,Buuri Sub County,CORRECT
+290,MERU,Imenti South Sub County,Mitunguu Ward,65,1318,1338,65,1318,Imenti South,CORRECT
+291,MERU,Imenti South Sub County,Igoji east Ward,65,1318,1339,65,1318,Imenti South,CORRECT
+292,MERU,Imenti South Sub County,Igoji west Ward,65,1318,1340,65,1318,Imenti South,CORRECT
+293,MERU,Imenti South Sub County,Abogeta east Ward,65,1318,1341,65,1318,Imenti South,CORRECT
+294,MERU,Imenti South Sub County,Abogeta west Ward,65,1318,1342,65,1318,Imenti South,CORRECT
+295,MERU,Imenti South Sub County,Nkuene Ward,65,1318,1343,65,1318,Imenti South,CORRECT
+296,THARAKA-NITHI,Muthambi Sub County,Mitheru Ward,66,340,1344,66,340,Muthambi Sub County,CORRECT
+297,THARAKA-NITHI,Muthambi Sub County,Muthambi Ward,66,340,1345,66,340,Muthambi Sub County,CORRECT
+298,THARAKA-NITHI,Mwimbi Sub County,Mwimbi Ward,66,341,1346,66,341,Mwimbi Sub County,CORRECT
+1606,Bungoma,Sirisia Sub County,Namwela Ward,53,281,1347,53,281,Sirisia Sub County,CORRECT
+461,NYANDARUA,Oljoroorok Sub County,Charagita Ward,67,342,1348,67,342,Oljoroorok Sub County,CORRECT
+1609,Bungoma,Kabuchai Sub County,Kabuchai/chwele Ward,53,282,1349,53,282,Kabuchai Sub County,CORRECT
+1611,Bungoma,Kabuchai Sub County,Bwake/luuya Ward,53,282,1350,53,282,Kabuchai Sub County,CORRECT
+333,KITUI,Mwingi North Sub County,Mumoni Ward,68,343,1351,68,343,Mwingi North Sub County,CORRECT
+334,KITUI,Mwingi North Sub County,Tseikuru Ward,68,343,1352,68,343,Mwingi North Sub County,CORRECT
+335,KITUI,Mwingi North Sub County,Tharaka Ward,68,343,1353,68,343,Mwingi North Sub County,CORRECT
+336,KITUI,Mwingi West Sub County,Kyome/thaana Ward,68,344,1354,68,344,Mwingi West Sub County,CORRECT
+337,KITUI,Mwingi West Sub County,Nguutani Ward,68,344,1355,68,344,Mwingi West Sub County,CORRECT
+338,KITUI,Mwingi West Sub County,Migwani Ward,68,344,1356,68,344,Mwingi West Sub County,CORRECT
+339,KITUI,Mwingi West Sub County,Kiomo/kyethani Ward,68,344,1357,68,344,Mwingi West Sub County,CORRECT
+340,KITUI,Mwingi Central Sub- County,Central Ward,68,1346,1358,68,1346,Mwingi Central,CORRECT
+341,KITUI,Mwingi Central Sub- County,Kivou Ward,68,1346,1359,68,1346,Mwingi Central,CORRECT
+342,KITUI,Mwingi Central Sub- County,Nguni Ward,68,1346,1360,68,1346,Mwingi Central,CORRECT
+343,KITUI,Mwingi Central Sub- County,Nuu Ward,68,1346,1361,68,1346,Mwingi Central,CORRECT
+344,KITUI,Mwingi Central Sub- County,Mui Ward,68,1346,1362,68,1346,Mwingi Central,CORRECT
+1613,Bungoma,Bumula Sub County,South Bukusu Ward,53,1511,1363,53,1511,Bumula,CORRECT
+484,NYERI,Nyeri South Sub County,Iria-ini Ward,69,1381,1364,69,1381,Nyeri South,CORRECT
+485,NYERI,Nyeri South Sub County,Chinga Ward,69,1381,1365,69,1381,Nyeri South,CORRECT
+616,TURKANA,Turkana West Sub County,Nakalale Ward,70,1416,1366,70,1416,Turkana West,CORRECT
+352,KITUI,Kitui Rural Sub County,Kwavonza/yatta Ward,68,348,1367,68,348,Kitui Rural Sub County,CORRECT
+353,KITUI,Kitui Rural Sub County,Kanyangi Ward,68,348,1368,68,348,Kitui Rural Sub County,CORRECT
+354,KITUI,Kitui Central  Sub County,Miambani Ward,68,1336,1369,68,1336,Kitui Central,CORRECT
+355,KITUI,Kitui Central  Sub County,Township Ward,68,1336,1370,68,1336,Kitui Central,CORRECT
+356,KITUI,Kitui Central  Sub County,Kyangwithya west Ward,68,1336,1371,68,1336,Kitui Central,CORRECT
+641,WEST POKOT,West Pokot Sub County,Riwo Ward,71,1421,1372,71,1421,West Pokot,CORRECT
+651,WEST POKOT,Pokot North Sub County,Suam Ward,71,1419,1373,71,1419,Pokot North,CORRECT
+652,WEST POKOT,Pokot North Sub County,Kodich Ward,71,1419,1374,71,1419,Pokot North,CORRECT
+653,WEST POKOT,Pokot North Sub County,Kasei Ward,71,1419,1375,71,1419,Pokot North,CORRECT
+654,WEST POKOT,Pokot North Sub County,Kapchok Ward,71,1419,1376,71,1419,Pokot North,CORRECT
+655,WEST POKOT,Pokot North Sub County,Kiwawa Ward,71,1419,1377,71,1419,Pokot North,CORRECT
+1801,Mombasa,Jomvu  Sub County,Miritini Ward,55,1252,1378,55,1252,Jomvu,CORRECT
+960,KERICHO,Belgut Sub County,Chaik Ward,56,1482,1379,56,1482,Belgut,CORRECT
+1614,Bungoma,Bumula Sub County,Bumula Ward,53,1511,1380,53,1511,Bumula,CORRECT
+1615,Bungoma,Bumula Sub County,Khasoko Ward,53,1511,1381,53,1511,Bumula,CORRECT
+663,SAMBURU,Samburu Central Sub County,Maralal Ward,72,1422,1382,72,1422,Samburu Central,CORRECT
+162,WAJIR,Wajir North Sub County,Bute Ward,61,1292,1383,61,1292,Wajir North,CORRECT
+360,KITUI,Kitui East Sub County,Nzambani Ward,68,354,1384,68,354,Kitui East Sub County,CORRECT
+1618,Bungoma,Bumula Sub County,West Bukusu Ward,53,1511,1385,53,1511,Bumula,CORRECT
+1622,Bungoma,Kanduyi Sub County,Township Ward,53,284,1386,53,284,Kanduyi Sub County,CORRECT
+1623,Bungoma,Kanduyi Sub County,Khalaba Ward,53,284,1387,53,284,Kanduyi Sub County,CORRECT
+1624,Bungoma,Kanduyi Sub County,Musikoma Ward,53,284,1388,53,284,Kanduyi Sub County,CORRECT
+1625,Bungoma,Kanduyi Sub County,East Sang'alo Ward,53,284,1389,53,284,Kanduyi Sub County,CORRECT
+1626,Bungoma,Kanduyi Sub County,Marakaru/tuuti Ward,53,284,1390,53,284,Kanduyi Sub County,CORRECT
+1627,Bungoma,Kanduyi Sub County,West Sang'alo Ward,53,284,1391,53,284,Kanduyi Sub County,CORRECT
+1628,Bungoma,Webuye  East Sub County,Mihuu Ward,53,355,1392,53,355,Webuye  East Sub County,CORRECT
+1629,Bungoma,Webuye  East Sub County,Ndivisi Ward,53,355,1393,53,355,Webuye  East Sub County,CORRECT
+1630,Bungoma,Webuye  East Sub County,Maraka Ward,53,355,1394,53,355,Webuye  East Sub County,CORRECT
+1631,Bungoma,Webuye West Sub County,Misikhu Ward,53,1520,1395,53,1520,Webuye West,CORRECT
+1632,Bungoma,Webuye West Sub County,Sitikho Ward,53,1520,1396,53,1520,Webuye West,CORRECT
+1633,Bungoma,Webuye West Sub County,Matulo Ward,53,1520,1397,53,1520,Webuye West,CORRECT
+97,TANA RIVER,Bura Sub County,Hirimani Ward,57,299,1398,57,299,Bura Sub County,CORRECT
+1831,Kilifi,Kilifi North Sub County,Mnarani Ward,73,1266,1399,73,1266,Kilifi North,CORRECT
+1675,Kakamega,Mumias West  Sub County,Mumias North Ward,54,1504,1400,54,1504,Mumias West,CORRECT
+95,TANA RIVER,Galole Sub County,Wayu Ward,57,296,1401,57,296,Galole Sub County,CORRECT
+368,KITUI,Kitui South Sub County,Ikutha Ward,68,357,1402,68,357,Kitui South Sub County,CORRECT
+370,KITUI,Kitui South Sub County,Athi Ward,68,357,1403,68,357,Kitui South Sub County,CORRECT
+411,MAKUENI,Mbooni  Sub County,Tulimani Ward,74,358,1404,74,358,Mbooni  Sub County,CORRECT
+412,MAKUENI,Mbooni  Sub County,Mbooni Ward,74,358,1405,74,358,Mbooni  Sub County,CORRECT
+413,MAKUENI,Mbooni  Sub County,Kithungo/Kitundu Ward,74,358,1406,74,358,Mbooni  Sub County,CORRECT
+414,MAKUENI,Mbooni  Sub County,Kiteta-Kisau Ward,74,358,1407,74,358,Mbooni  Sub County,CORRECT
+415,MAKUENI,Mbooni  Sub County,Waia/Kako Ward,74,358,1408,74,358,Mbooni  Sub County,CORRECT
+416,MAKUENI,Mbooni  Sub County,Kalawa/ Kathulumbi Ward,74,358,1409,74,358,Mbooni  Sub County,CORRECT
+417,MAKUENI,Kilome Sub County,Kasikeu Ward,74,359,1410,74,359,Kilome Sub County,CORRECT
+418,MAKUENI,Kilome Sub County,Mukaa Ward,74,359,1411,74,359,Kilome Sub County,CORRECT
+419,MAKUENI,Kilome Sub County,Kiima Kiu/Kalanzoni Ward,74,359,1412,74,359,Kilome Sub County,CORRECT
+420,MAKUENI,Kaiti  Sub County,Ukia ward,74,360,1413,74,360,Kaiti  Sub County,CORRECT
+421,MAKUENI,Kaiti  Sub County,Kee ward,74,360,1414,74,360,Kaiti  Sub County,CORRECT
+422,MAKUENI,Kaiti  Sub County,Kilungu ward,74,360,1415,74,360,Kaiti  Sub County,CORRECT
+423,MAKUENI,Kaiti  Sub County,Ilima ward,74,360,1416,74,360,Kaiti  Sub County,CORRECT
+424,MAKUENI,Makueni  Sub County,Wote Ward,74,1364,1417,74,1364,Makueni,CORRECT
+425,MAKUENI,Makueni  Sub County,Muvau/Kikumini Ward,74,1364,1418,74,1364,Makueni,CORRECT
+426,MAKUENI,Makueni  Sub County,Mavindini Ward,74,1364,1419,74,1364,Makueni,CORRECT
+427,MAKUENI,Makueni  Sub County,Kitise/Kithuki Ward,74,1364,1420,74,1364,Makueni,CORRECT
+428,MAKUENI,Makueni  Sub County,Kathonzweni Ward,74,1364,1421,74,1364,Makueni,CORRECT
+429,MAKUENI,Makueni  Sub County,Nzaui/Kilili/Kalamba Ward,74,1364,1422,74,1364,Makueni,CORRECT
+430,MAKUENI,Makueni  Sub County,Mbitini Ward,74,1364,1423,74,1364,Makueni,CORRECT
+431,MAKUENI,Kibwezi West  Sub County,Makindu Ward,74,362,1424,74,362,Kibwezi West  Sub County,CORRECT
+432,MAKUENI,Kibwezi West  Sub County,Nguumo Ward,74,362,1425,74,362,Kibwezi West  Sub County,CORRECT
+433,MAKUENI,Kibwezi West  Sub County,Kikumbulyu North Ward,74,362,1426,74,362,Kibwezi West  Sub County,CORRECT
+434,MAKUENI,Kibwezi West  Sub County,Kikumbulyu South Ward,74,362,1427,74,362,Kibwezi West  Sub County,CORRECT
+435,MAKUENI,Kibwezi West  Sub County,Nguu/Masumba Ward,74,362,1428,74,362,Kibwezi West  Sub County,CORRECT
+1676,Kakamega,Mumias West  Sub County,Etenje Ward,54,1504,1429,54,1504,Mumias West,CORRECT
+1677,Kakamega,Mumias West  Sub County,Musanda Ward,54,1504,1430,54,1504,Mumias West,CORRECT
+113,TAITA TAVETA,Taveta Sub County,Bomani Ward,59,1278,1431,59,1278,Taveta,CORRECT
+114,TAITA TAVETA,Taveta Sub County,Mboghoni Ward,59,1278,1432,59,1278,Taveta,CORRECT
+129,TAITA TAVETA,Voi Sub County,Kasigau Ward,59,1279,1433,59,1279,Voi,CORRECT
+154,GARISSA,Fafi Sub County,Jarajila Ward,60,1282,1434,60,1282,Fafi,CORRECT
+155,GARISSA,Fafi Sub County,Fafi Ward,60,1282,1435,60,1282,Fafi,CORRECT
+163,WAJIR,Wajir North Sub County,Korondile Ward,61,1292,1436,61,1292,Wajir North,CORRECT
+183,WAJIR,Eldas Sub County,Elnur/tula tula Ward,61,1288,1437,61,1288,Eldas,CORRECT
+191,MANDERA,MANDERA WEST,TAKABA SOUTH,63,1295,1438,63,1295,Mandera West,CORRECT
+192,MANDERA,MANDERA WEST,TAKABA,63,1295,1439,63,1295,Mandera West,CORRECT
+184,WAJIR,Wajir South Sub County,Benane Ward,61,1293,1440,61,1293,Wajir South,CORRECT
+185,WAJIR,Wajir South Sub County,Burder Ward,61,1293,1441,61,1293,Wajir South,CORRECT
+1832,Kilifi,Kilifi South Sub County,Junju Ward,73,1267,1442,73,1267,Kilifi South,CORRECT
+1684,Kakamega,Matungu Sub County,Mayoni Ward,54,1502,1443,54,1502,Matungu,CORRECT
+1685,Kakamega,Matungu Sub County,Namamali Ward,54,1502,1444,54,1502,Matungu,CORRECT
+1686,Kakamega,Butere Sub County,Marama West Ward,54,1493,1445,54,1493,Butere,CORRECT
+1687,Kakamega,Butere Sub County,Marama Central Ward,54,1493,1446,54,1493,Butere,CORRECT
+1688,Kakamega,Butere Sub County,Marenyo-shianda Ward,54,1493,1447,54,1493,Butere,CORRECT
+1689,Kakamega,Butere Sub County,Marama North Ward,54,1493,1448,54,1493,Butere,CORRECT
+1690,Kakamega,Butere Sub County,Marama South Ward,54,1493,1449,54,1493,Butere,CORRECT
+1692,Kakamega,Khwisero Sub County,Kisa East Ward,54,1498,1450,54,1498,Khwisero,CORRECT
+1693,Kakamega,Khwisero Sub County,Kisa West Ward,54,1498,1451,54,1498,Khwisero,CORRECT
+1694,Kakamega,Khwisero Sub County,Kisa Central Ward,54,1498,1452,54,1498,Khwisero,CORRECT
+1695,Kakamega,Shinyalu Sub County,Isukha North Ward,54,369,1453,54,369,Shinyalu Sub County,CORRECT
+1696,Kakamega,Shinyalu Sub County,Murhanda Ward,54,369,1454,54,369,Shinyalu Sub County,CORRECT
+1697,Kakamega,Shinyalu Sub County,Isukha Central Ward,54,369,1455,54,369,Shinyalu Sub County,CORRECT
+1698,Kakamega,Shinyalu Sub County,Isukha South Ward,54,369,1456,54,369,Shinyalu Sub County,CORRECT
+1699,Kakamega,Shinyalu Sub County,Isukha East Ward,54,369,1457,54,369,Shinyalu Sub County,CORRECT
+1700,Kakamega,Shinyalu Sub County,Isukha West Ward,54,369,1458,54,369,Shinyalu Sub County,CORRECT
+1701,Kakamega,Ikolomani Sub County,Idakho South Ward,54,370,1459,54,370,Ikolomani Sub County,CORRECT
+1702,Kakamega,Ikolomani Sub County,Idakho East Ward,54,370,1460,54,370,Ikolomani Sub County,CORRECT
+1703,Kakamega,Ikolomani Sub County,Idakho North Ward,54,370,1461,54,370,Ikolomani Sub County,CORRECT
+1704,Kakamega,Ikolomani Sub County,Idakho Central Ward,54,370,1462,54,370,Ikolomani Sub County,CORRECT
+1705,Busia,Teso North Sub County,Malaba Central Ward,62,1527,1463,62,1527,Teso North,CORRECT
+1706,Busia,Teso North Sub County,Malaba North Ward,62,1527,1464,62,1527,Teso North,CORRECT
+1707,Busia,Teso North Sub County,Ang'urai South Ward,62,1527,1465,62,1527,Teso North,CORRECT
+1708,Busia,Teso North Sub County,Ang'urai North Ward,62,1527,1466,62,1527,Teso North,CORRECT
+1709,Busia,Teso North Sub County,Ang'urai East Ward,62,1527,1467,62,1527,Teso North,CORRECT
+1710,Busia,Teso North Sub County,Malaba South Ward,62,1527,1468,62,1527,Teso North,CORRECT
+1711,Busia,Teso South Sub County,Ang'orom Ward,62,1528,1469,62,1528,Teso South,CORRECT
+1712,Busia,Teso South Sub County,Chakol South Ward,62,1528,1470,62,1528,Teso South,CORRECT
+1713,Busia,Teso South Sub County,Chakol North Ward,62,1528,1471,62,1528,Teso South,CORRECT
+1714,Busia,Teso South Sub County,Amukura West Ward,62,1528,1472,62,1528,Teso South,CORRECT
+1715,Busia,Teso South Sub County,Amukura East Ward,62,1528,1473,62,1528,Teso South,CORRECT
+452,NYANDARUA,Kipipiri Sub County,Githioro Ward,67,1372,1474,67,1372,Kipipiri,CORRECT
+351,KITUI,Kitui Rural Sub County,Mbitini Ward,68,348,1475,68,348,Kitui Rural Sub County,CORRECT
+454,NYANDARUA,Olkalou Sub County,Kanjuiri range Ward,67,374,1476,67,374,Olkalou Sub County,CORRECT
+1716,Busia,Teso South Sub County,Amukura Central Ward,62,1528,1477,62,1528,Teso South,CORRECT
+359,KITUI,Kitui East Sub County,Zombe/mwitika Ward,68,354,1478,68,354,Kitui East Sub County,CORRECT
+225,MARSABIT,MOYALE,MOYALE TOWNSHIP,64,1306,1479,64,1306,Moyale,CORRECT
+226,MARSABIT,MOYALE,URAN,64,1306,1480,64,1306,Moyale,CORRECT
+227,MARSABIT,MOYALE,OBBU,64,1306,1481,64,1306,Moyale,CORRECT
+228,MARSABIT,NORTH HORR,DUKANA,64,1307,1482,64,1307,North Horr,CORRECT
+229,MARSABIT,NORTH HORR,MAIKONA,64,1307,1483,64,1307,North Horr,CORRECT
+206,MANDERA,MANDERA SOUTH,WARGADUD,63,325,1484,63,325,MANDERA SOUTH,CORRECT
+457,NYANDARUA,Olkalou Sub County,Rurii Ward,67,374,1485,67,374,Olkalou Sub County,CORRECT
+96,TANA RIVER,Bura Sub County,Chewele Ward,57,299,1486,57,299,Bura Sub County,CORRECT
+234,MARSABIT,SAKU,KARARE,64,329,1487,64,329,SAKU,CORRECT
+235,MARSABIT,SAKU,MARSABIT CENTRAL,64,329,1488,64,329,SAKU,CORRECT
+236,MARSABIT,LAISAMIS,LOIYANGALANI,64,330,1489,64,330,LAISAMIS,CORRECT
+100,TANA RIVER,Bura Sub County,Madogo Ward,57,299,1490,57,299,Bura Sub County,CORRECT
+1722,Busia,Matayos Sub County,Mayenje Ward,62,323,1491,62,323,Matayos Sub County,CORRECT
+1726,Busia,Butula Sub County,Marachi West Ward,62,1524,1492,62,1524,Butula,CORRECT
+486,NYERI,Nyeri South Sub County,Karima Ward,69,1381,1493,69,1381,Nyeri South,CORRECT
+487,NYERI,Mukurweini Sub County,Gikondi Ward,69,376,1494,69,376,Mukurweini Sub County,CORRECT
+488,NYERI,Mukurweini Sub County,Rugi Ward,69,376,1495,69,376,Mukurweini Sub County,CORRECT
+489,NYERI,Mukurweini Sub County,Mukurwe-ini west Ward,69,376,1496,69,376,Mukurweini Sub County,CORRECT
+490,NYERI,Mukurweini Sub County,Mukurwe-ini central Ward,69,376,1497,69,376,Mukurweini Sub County,CORRECT
+491,NYERI,Nyeri Central Sub County,Kiganjo/mathari Ward,69,1383,1498,69,1383,Nyeri Central,CORRECT
+492,NYERI,Nyeri Central Sub County,Rware Ward,69,1383,1499,69,1383,Nyeri Central,CORRECT
+493,NYERI,Nyeri Central Sub County,Gatitu/muruguru Ward,69,1383,1500,69,1383,Nyeri Central,CORRECT
+494,NYERI,Nyeri Central Sub County,RURING'U / Karia Ward,69,1383,1501,69,1383,Nyeri Central,CORRECT
+495,NYERI,Nyeri Central Sub County,Kamakwa/mukaro Ward,69,1383,1502,69,1383,Nyeri Central,CORRECT
+496,KIRINYAGA,Kirinyaga North/Mwea West Sub County,Mutithi Ward,75,378,1503,75,378,Kirinyaga North/Mwea West Sub County,CORRECT
+497,KIRINYAGA,Kirinyaga North/Mwea West Sub County,Kangai Ward,75,378,1504,75,378,Kirinyaga North/Mwea West Sub County,CORRECT
+498,KIRINYAGA,Kirinyaga North/Mwea West Sub County,Thiba Ward,75,378,1505,75,378,Kirinyaga North/Mwea West Sub County,CORRECT
+499,KIRINYAGA,Kirinyaga North/Mwea West Sub County,Wamumu Ward,75,378,1506,75,378,Kirinyaga North/Mwea West Sub County,CORRECT
+500,KIRINYAGA,Kirinyaga South Sub County,Nyangati Ward,75,379,1507,75,379,Kirinyaga South Sub County,CORRECT
+501,KIRINYAGA,Kirinyaga South Sub County,Murinduko Ward,75,379,1508,75,379,Kirinyaga South Sub County,CORRECT
+502,KIRINYAGA,Kirinyaga South Sub County,Gathigiriri Ward,75,379,1509,75,379,Kirinyaga South Sub County,CORRECT
+503,KIRINYAGA,Kirinyaga South Sub County,Tebere Ward,75,379,1510,75,379,Kirinyaga South Sub County,CORRECT
+504,KIRINYAGA,Kirinyaga East Sub County,Kabare Ward,75,1385,1511,75,1385,Kirinyaga East,CORRECT
+505,KIRINYAGA,Kirinyaga East Sub County,Baragwi Ward,75,1385,1512,75,1385,Kirinyaga East,CORRECT
+506,KIRINYAGA,Kirinyaga East Sub County,Njukiine Ward,75,1385,1513,75,1385,Kirinyaga East,CORRECT
+507,KIRINYAGA,Kirinyaga East Sub County,Ngariama Ward,75,1385,1514,75,1385,Kirinyaga East,CORRECT
+508,KIRINYAGA,Kirinyaga East Sub County,Karumandi Ward,75,1385,1515,75,1385,Kirinyaga East,CORRECT
+509,KIRINYAGA,Kirinyaga West Sub County,Mukure Ward,75,1386,1516,75,1386,Kirinyaga West,CORRECT
+510,KIRINYAGA,Kirinyaga West Sub County,Kiine Ward,75,1386,1517,75,1386,Kirinyaga West,CORRECT
+511,KIRINYAGA,Kirinyaga West Sub County,Kariti Ward,75,1386,1518,75,1386,Kirinyaga West,CORRECT
+1729,Busia,Butula Sub County,Marachi East Ward,62,1524,1519,62,1524,Butula,CORRECT
+1730,Busia,Butula Sub County,Marachi North Ward,62,1524,1520,62,1524,Butula,CORRECT
+1731,Busia,Butula Sub County,Elugulu Ward,62,1524,1521,62,1524,Butula,CORRECT
+1732,Busia,Samia Sub County,Namboboto Nambuku Ward,62,1526,1522,62,1526,Samia,CORRECT
+1733,Busia,Samia Sub County,Nangina Ward,62,1526,1523,62,1526,Samia,CORRECT
+1734,Busia,Samia Sub County,Ageng'a Nanguba Ward,62,1526,1524,62,1526,Samia,CORRECT
+1735,Busia,Samia Sub County,Bwiri Ward,62,1526,1525,62,1526,Samia,CORRECT
+2097,Muranga,Mathioya Sub County,Kiru Ward,76,1391,1526,76,1391,Mathioya,CORRECT
+2098,Muranga,Mathioya Sub County,Kamacharia Ward,76,1391,1527,76,1391,Mathioya,CORRECT
+2099,Muranga,Kiharu Sub County,Wangu Ward,76,384,1528,76,384,Kiharu Sub County,CORRECT
+2100,Muranga,Kiharu Sub County,Mugoiri Ward,76,384,1529,76,384,Kiharu Sub County,CORRECT
+2101,Muranga,Kiharu Sub County,Mbiri Ward,76,384,1530,76,384,Kiharu Sub County,CORRECT
+2102,Muranga,Kiharu Sub County,Township Ward,76,384,1531,76,384,Kiharu Sub County,CORRECT
+2103,Muranga,Kiharu Sub County,Murarandia Ward,76,384,1532,76,384,Kiharu Sub County,CORRECT
+1741,Nakuru,Molo  Sub County,Elburgon Ward,77,1462,1533,77,1462,Molo,CORRECT
+1749,Nakuru,Njoro  Sub County,Njoro Ward,77,1467,1534,77,1467,Njoro,CORRECT
+1750,Nakuru,Naivasha  Sub County,Biashara Ward,77,1463,1535,77,1463,Naivasha,CORRECT
+1751,Nakuru,Naivasha  Sub County,Hells Gate Ward,77,1463,1536,77,1463,Naivasha,CORRECT
+2104,Muranga,Kiharu Sub County,Gaturi Ward,76,384,1537,76,384,Kiharu Sub County,CORRECT
+2105,Muranga,Kigumo Sub County,Kahumbu Ward,76,1395,1538,76,1395,Kigumo,CORRECT
+1763,Nakuru,Kuresoi South  Sub County,Amalo Ward,77,1461,1539,77,1461,Kuresoi South,CORRECT
+1764,Nakuru,Kuresoi South  Sub County,Keringet Ward,77,1461,1540,77,1461,Kuresoi South,CORRECT
+1765,Nakuru,Kuresoi South  Sub County,Kiptagich Ward,77,1461,1541,77,1461,Kuresoi South,CORRECT
+1766,Nakuru,Kuresoi South  Sub County,Tinet Ward,77,1461,1542,77,1461,Kuresoi South,CORRECT
+611,TURKANA,Turkana North Sub County,Kaeris Ward,70,1414,1543,70,1414,Turkana North,CORRECT
+612,TURKANA,Turkana North Sub County,Lakezone Ward,70,1414,1544,70,1414,Turkana North,CORRECT
+613,TURKANA,Turkana North Sub County,Lapur Ward,70,1414,1545,70,1414,Turkana North,CORRECT
+614,TURKANA,Kibish Sub County,Kaaleng/kaikor Ward,70,1410,1546,70,1410,Kibish,CORRECT
+2106,Muranga,Kigumo Sub County,Muthithi Ward,76,1395,1547,76,1395,Kigumo,CORRECT
+2107,Muranga,Kigumo Sub County,Kigumo Ward,76,1395,1548,76,1395,Kigumo,CORRECT
+2108,Muranga,Kigumo Sub County,Kangari Ward,76,1395,1549,76,1395,Kigumo,CORRECT
+2109,Muranga,Kigumo Sub County,Kinyona Ward,76,1395,1550,76,1395,Kigumo,CORRECT
+2110,Muranga,Muranga South Sub County,Kimorori/wempa Ward,76,1393,1551,76,1393,Murang'a South,CORRECT
+2111,Muranga,Muranga South Sub County,Makuyu Ward,76,1393,1552,76,1393,Murang'a South,CORRECT
+2112,Muranga,Muranga South Sub County,Kambiti Ward,76,1393,1553,76,1393,Murang'a South,CORRECT
+2113,Muranga,Muranga South Sub County,Kamahuhu Ward,76,1393,1554,76,1393,Murang'a South,CORRECT
+2114,Muranga,Muranga South Sub County,Ichagaki Ward,76,1393,1555,76,1393,Murang'a South,CORRECT
+2115,Muranga,Muranga South Sub County,Nginda Ward,76,1393,1556,76,1393,Murang'a South,CORRECT
+2116,Muranga,Kandara Sub County,Ng'araria Ward,76,1396,1557,76,1396,Kandara,CORRECT
+2117,Muranga,Kandara Sub County,Muruka Ward,76,1396,1558,76,1396,Kandara,CORRECT
+2118,Muranga,Kandara Sub County,Kagundu-ini Ward,76,1396,1559,76,1396,Kandara,CORRECT
+2119,Muranga,Kandara Sub County,Gaichanjiru Ward,76,1396,1560,76,1396,Kandara,CORRECT
+2120,Muranga,Kandara Sub County,Ithiru Ward,76,1396,1561,76,1396,Kandara,CORRECT
+2121,Muranga,Kandara Sub County,Ruchu Ward,76,1396,1562,76,1396,Kandara,CORRECT
+2122,Muranga,Gatanga Sub County,Ithanga Ward,76,1394,1563,76,1394,Gatanga,CORRECT
+2123,Muranga,Gatanga Sub County,Kakuzi/mitubiri Ward,76,1394,1564,76,1394,Gatanga,CORRECT
+1727,Busia,Butula Sub County,Kingandole Ward,62,1524,1565,62,1524,Butula,CORRECT
+462,NYANDARUA,Ndaragwa Sub County,Leshau/pondo Ward,67,395,1566,67,395,Ndaragwa Sub County,CORRECT
+618,TURKANA,Turkana West Sub County,Lopur Ward,70,1416,1567,70,1416,Turkana West,CORRECT
+619,TURKANA,Turkana West Sub County,Letea Ward,70,1416,1568,70,1416,Turkana West,CORRECT
+620,TURKANA,Turkana West Sub County,Songot Ward,70,1416,1569,70,1416,Turkana West,CORRECT
+2124,Muranga,Gatanga Sub County,Mugumo-ini Ward,76,1394,1570,76,1394,Gatanga,CORRECT
+2125,Muranga,Gatanga Sub County,Kihumbu-ini Ward,76,1394,1571,76,1394,Gatanga,CORRECT
+2126,Muranga,Gatanga Sub County,Gatanga Ward,76,1394,1572,76,1394,Gatanga,CORRECT
+2127,Muranga,Gatanga Sub County,Kariara Ward,76,1394,1573,76,1394,Gatanga,CORRECT
+2128,Uasin Gishu,Soy Sub County,Moi's Bridge Ward,78,1434,1574,78,1434,Soy,CORRECT
+160,GARISSA,Ijara Sub County,Masalani Ward,60,1285,1575,60,1285,Ijara,CORRECT
+2129,Uasin Gishu,Soy Sub County,Kapkures Ward,78,1434,1576,78,1434,Soy,CORRECT
+2130,Uasin Gishu,Soy Sub County,Ziwa Ward,78,1434,1577,78,1434,Soy,CORRECT
+2133,Uasin Gishu,Soy Sub County,Soy Ward,78,1434,1578,78,1434,Soy,CORRECT
+2134,Uasin Gishu,Soy Sub County,Kuinet/kapsuswa Ward,78,1434,1579,78,1434,Soy,CORRECT
+2135,Uasin Gishu,Turbo Sub County,Ngenyilel Ward,78,1435,1580,78,1435,Turbo,CORRECT
+2136,Uasin Gishu,Turbo Sub County,Tapsagoi Ward,78,1435,1581,78,1435,Turbo,CORRECT
+2137,Uasin Gishu,Turbo Sub County,Kamagut Ward,78,1435,1582,78,1435,Turbo,CORRECT
+2138,Uasin Gishu,Turbo Sub County,Kiplombe Ward,78,1435,1583,78,1435,Turbo,CORRECT
+2139,Uasin Gishu,Turbo Sub County,Kapsaos Ward,78,1435,1584,78,1435,Turbo,CORRECT
+2140,Uasin Gishu,Turbo Sub County,Huruma Ward,78,1435,1585,78,1435,Turbo,CORRECT
+161,WAJIR,Wajir North Sub County,Gurar Ward,61,1292,1586,61,1292,Wajir North,CORRECT
+345,KITUI,Mwingi Central Sub- County,Waita Ward,68,1346,1587,68,1346,Mwingi Central,CORRECT
+346,KITUI,Kitui West  Sub County,Mutongoni Ward,68,1337,1588,68,1337,Kitui West,CORRECT
+347,KITUI,Kitui West  Sub County,Kauwi Ward,68,1337,1589,68,1337,Kitui West,CORRECT
+348,KITUI,Kitui West  Sub County,Matinyani Ward,68,1337,1590,68,1337,Kitui West,CORRECT
+349,KITUI,Kitui West  Sub County,Kwamutonga/kithumula Ward,68,1337,1591,68,1337,Kitui West,CORRECT
+482,NYERI,Mathira East Sub County,Karatina town Ward,69,1379,1592,69,1379,Mathira East,CORRECT
+483,NYERI,Nyeri South Sub County,Mahiga Ward,69,1381,1593,69,1381,Nyeri South,CORRECT
+362,KITUI,Kitui East Sub County,Voo/kyamatu Ward,68,354,1594,68,354,Kitui East Sub County,CORRECT
+363,KITUI,Kitui East Sub County,Endau/malalani Ward,68,354,1595,68,354,Kitui East Sub County,CORRECT
+364,KITUI,Kitui East Sub County,Mutitu/kaliku Ward,68,354,1596,68,354,Kitui East Sub County,CORRECT
+365,KITUI,Kitui South Sub County,Ikanga/kyatune Ward,68,357,1597,68,357,Kitui South Sub County,CORRECT
+436,MAKUENI,Kibwezi West  Sub County,Emali/Mulala Ward,74,362,1598,74,362,Kibwezi West  Sub County,CORRECT
+437,MAKUENI,Kibwezi East  Sub County,Masongaleni Ward,74,401,1599,74,401,Kibwezi East  Sub County,CORRECT
+438,MAKUENI,Kibwezi East  Sub County,Mtito Andei Ward,74,401,1600,74,401,Kibwezi East  Sub County,CORRECT
+439,MAKUENI,Kibwezi East  Sub County,Thange Ward,74,401,1601,74,401,Kibwezi East  Sub County,CORRECT
+440,MAKUENI,Kibwezi East  Sub County,Ivingoni/Nzambani Ward,74,401,1602,74,401,Kibwezi East  Sub County,CORRECT
+441,NYANDARUA,Kinangop Sub County,Engineer Ward,67,1369,1603,67,1369,Kinangop,CORRECT
+442,NYANDARUA,Kinangop Sub County,Gathara Ward,67,1369,1604,67,1369,Kinangop,CORRECT
+443,NYANDARUA,Kinangop Sub County,North kinangop Ward,67,1369,1605,67,1369,Kinangop,CORRECT
+444,NYANDARUA,Kinangop Sub County,Murungaru Ward,67,1369,1606,67,1369,Kinangop,CORRECT
+449,NYANDARUA,Kipipiri Sub County,Wanjohi Ward,67,1372,1607,67,1372,Kipipiri,CORRECT
+450,NYANDARUA,Kipipiri Sub County,Kipipiri Ward,67,1372,1608,67,1372,Kipipiri,CORRECT
+512,KIRINYAGA,Kirinyaga Central Sub County,Mutira Ward,75,1384,1609,75,1384,Kirinyaga Central,CORRECT
+513,KIRINYAGA,Kirinyaga Central Sub County,Kanyekini Ward,75,1384,1610,75,1384,Kirinyaga Central,CORRECT
+514,KIRINYAGA,Kirinyaga Central Sub County,Kerugoya Ward,75,1384,1611,75,1384,Kirinyaga Central,CORRECT
+515,KIRINYAGA,Kirinyaga Central Sub County,Inoi Ward,75,1384,1612,75,1384,Kirinyaga Central,CORRECT
+624,TURKANA,Turkana Central Sub County,Kerio Delta Ward,70,1412,1613,70,1412,Turkana Central,CORRECT
+625,TURKANA,Turkana Central Sub County,KANG'ATOTHA Ward,70,1412,1614,70,1412,Turkana Central,CORRECT
+626,TURKANA,Turkana Central Sub County,Kalokol Ward,70,1412,1615,70,1412,Turkana Central,CORRECT
+2044,Nairobi,Ruaraka  Sub County,Mathare North Ward,,,1616,79,405,Ruaraka  Sub County,TARGET_UNRESOLVED
+1728,Busia,Butula Sub County,Marachi Central Ward,62,1524,1617,62,1524,Butula,CORRECT
+1736,Busia,Bunyala Sub County,Bunyala Central Ward,62,1522,1618,62,1522,Bunyala,CORRECT
+2047,Nairobi,Embakasi South Sub County,Imara Daima Ward,,,1619,79,407,Embakasi South Sub County,TARGET_UNRESOLVED
+2141,Uasin Gishu,Moiben Sub County,Tembelio Ward,78,1433,1620,78,1433,Moiben,CORRECT
+2142,Uasin Gishu,Moiben Sub County,Sergoit Ward,78,1433,1621,78,1433,Moiben,CORRECT
+2143,Uasin Gishu,Moiben Sub County,Karuna/meibeki Ward,78,1433,1622,78,1433,Moiben,CORRECT
+2144,Uasin Gishu,Moiben Sub County,Moiben Ward,78,1433,1623,78,1433,Moiben,CORRECT
+2145,Uasin Gishu,Moiben Sub County,Kimumu Ward,78,1433,1624,78,1433,Moiben,CORRECT
+2146,Uasin Gishu,Ainabkoi Sub County,Kapsoya Ward,78,1430,1625,78,1430,Ainabkoi,CORRECT
+2147,Uasin Gishu,Ainabkoi Sub County,Kaptagat Ward,78,1430,1626,78,1430,Ainabkoi,CORRECT
+2148,Uasin Gishu,Ainabkoi Sub County,Ainabkoi/olare Ward,78,1430,1627,78,1430,Ainabkoi,CORRECT
+2149,Uasin Gishu,Kapseret Sub County,Simat/ Kapseret Ward,78,1431,1628,78,1431,Kapseret,CORRECT
+2150,Uasin Gishu,Kapseret Sub County,Kipkenyo Ward,78,1431,1629,78,1431,Kapseret,CORRECT
+1737,Busia,Bunyala Sub County,Bunyala North Ward,62,1522,1630,62,1522,Bunyala,CORRECT
+1738,Busia,Bunyala Sub County,Bunyala West Ward,62,1522,1631,62,1522,Bunyala,CORRECT
+1739,Busia,Bunyala Sub County,Bunyala South Ward,62,1522,1632,62,1522,Bunyala,CORRECT
+1740,Nakuru,Molo  Sub County,Mariashoni Ward,77,1462,1633,77,1462,Molo,CORRECT
+1742,Nakuru,Molo  Sub County,Turi Ward,77,1462,1634,77,1462,Molo,CORRECT
+1743,Nakuru,Molo  Sub County,Molo Ward,77,1462,1635,77,1462,Molo,CORRECT
+1744,Nakuru,Njoro  Sub County,Mau Narok Ward,77,1467,1636,77,1467,Njoro,CORRECT
+1745,Nakuru,Njoro  Sub County,Mauche Ward,77,1467,1637,77,1467,Njoro,CORRECT
+1746,Nakuru,Njoro  Sub County,Kihingo Ward,77,1467,1638,77,1467,Njoro,CORRECT
+1747,Nakuru,Njoro  Sub County,Nessuit Ward,77,1467,1639,77,1467,Njoro,CORRECT
+1748,Nakuru,Njoro  Sub County,Lare Ward,77,1467,1640,77,1467,Njoro,CORRECT
+2158,Narok,Transmara West Sub County,Kilgoris Central  Ward,80,411,1641,80,411,Transmara West Sub County,CORRECT
+1752,Nakuru,Naivasha  Sub County,Lake View Ward,77,1463,1642,77,1463,Naivasha,CORRECT
+1753,Nakuru,Naivasha  Sub County,Mai Mahiu Ward,77,1463,1643,77,1463,Naivasha,CORRECT
+1754,Nakuru,Naivasha  Sub County,Maeilla Ward,77,1463,1644,77,1463,Naivasha,CORRECT
+1755,Nakuru,Naivasha  Sub County,Olkaria Ward,77,1463,1645,77,1463,Naivasha,CORRECT
+1756,Nakuru,Naivasha  Sub County,Naivasha East Ward,77,1463,1646,77,1463,Naivasha,CORRECT
+1757,Nakuru,Naivasha  Sub County,Viwandani Ward,77,1463,1647,77,1463,Naivasha,CORRECT
+1758,Nakuru,Gilgil Sub County,Gilgil Ward,77,1459,1648,77,1459,Gilgil,CORRECT
+1759,Nakuru,Gilgil Sub County,Elementaita Ward,77,1459,1649,77,1459,Gilgil,CORRECT
+1760,Nakuru,Gilgil Sub County,Mbaruk/eburu Ward,77,1459,1650,77,1459,Gilgil,CORRECT
+1761,Nakuru,Gilgil Sub County,Malewa West Ward,77,1459,1651,77,1459,Gilgil,CORRECT
+1762,Nakuru,Gilgil Sub County,Murindat Ward,77,1459,1652,77,1459,Gilgil,CORRECT
+615,TURKANA,Kibish Sub County,Kibish Ward,70,1410,1653,70,1410,Kibish,CORRECT
+622,TURKANA,Turkana West Sub County,Lokichoggio Ward,70,1416,1654,70,1416,Turkana West,CORRECT
+630,TURKANA,Loima Sub County,Turkwel Ward,70,1411,1655,70,1411,Loima,CORRECT
+632,TURKANA,Loima Sub County,Lokiriama/Lorengippi Ward,70,1411,1656,70,1411,Loima,CORRECT
+633,TURKANA,Turkana South Sub County,Kaputir Ward,70,1415,1657,70,1415,Turkana South,CORRECT
+635,TURKANA,Turkana South Sub County,Lobokat Ward,70,1415,1658,70,1415,Turkana South,CORRECT
+636,TURKANA,Turkana South Sub County,Kalapata Ward,70,1415,1659,70,1415,Turkana South,CORRECT
+642,WEST POKOT,West Pokot Sub County,Kapenguria Ward,71,1421,1660,71,1421,West Pokot,CORRECT
+643,WEST POKOT,West Pokot Sub County,Mnagei Ward,71,1421,1661,71,1421,West Pokot,CORRECT
+644,WEST POKOT,West Pokot Sub County,Siyoi Ward,71,1421,1662,71,1421,West Pokot,CORRECT
+645,WEST POKOT,West Pokot Sub County,Endugh Ward,71,1421,1663,71,1421,West Pokot,CORRECT
+646,WEST POKOT,West Pokot Sub County,Sook Ward,71,1421,1664,71,1421,West Pokot,CORRECT
+647,WEST POKOT,Pokot Central Sub County,Sekerr Ward,71,1418,1665,71,1418,Pokot Central,CORRECT
+648,WEST POKOT,Pokot Central Sub County,Masool Ward,71,1418,1666,71,1418,Pokot Central,CORRECT
+166,WAJIR,Wajir North Sub County,Danaba Ward,61,1292,1667,61,1292,Wajir North,CORRECT
+649,WEST POKOT,Pokot Central Sub County,Lomut Ward,71,1418,1668,71,1418,Pokot Central,CORRECT
+650,WEST POKOT,Pokot Central Sub County,Wei wei Ward,71,1418,1669,71,1418,Pokot Central,CORRECT
+2172,Narok,Narok North Sub County,Olorropil Ward,80,1471,1670,80,1471,Narok North,CORRECT
+2173,Narok,Narok North Sub County,Melili Ward,80,1471,1671,80,1471,Narok North,CORRECT
+2174,Narok,Narok East Sub County,Mosiro Ward,80,1470,1672,80,1470,Narok East,CORRECT
+2175,Narok,Narok East Sub County,Ildamat Ward,80,1470,1673,80,1470,Narok East,CORRECT
+2176,Narok,Narok East Sub County,Keekonyokie Ward,80,1470,1674,80,1470,Narok East,CORRECT
+2177,Narok,Narok East Sub County,Suswa Ward,80,1470,1675,80,1470,Narok East,CORRECT
+2178,Narok,Narok South Sub County,Maji Moto/naroosura Ward,80,1472,1676,80,1472,Narok South,CORRECT
+2179,Narok,Narok South Sub County,Ololulung'a Ward,80,1472,1677,80,1472,Narok South,CORRECT
+2180,Narok,Narok South Sub County,Melelo Ward,80,1472,1678,80,1472,Narok South,CORRECT
+2181,Narok,Narok South Sub County,Loita Ward,80,1472,1679,80,1472,Narok South,CORRECT
+2182,Narok,Narok South Sub County,Sogoo Ward,80,1472,1680,80,1472,Narok South,CORRECT
+2183,Narok,Narok South Sub County,Sagamian Ward,80,1472,1681,80,1472,Narok South,CORRECT
+2184,Narok,Narok West Sub County,Ilmotiook Ward,80,1473,1682,80,1473,Narok West,CORRECT
+2185,Narok,Narok West Sub County,Mara Ward,80,1473,1683,80,1473,Narok West,CORRECT
+2186,Narok,Narok West Sub County,Siana Ward,80,1473,1684,80,1473,Narok West,CORRECT
+664,SAMBURU,Samburu Central Sub County,Loosuk Ward,72,1422,1685,72,1422,Samburu Central,CORRECT
+665,SAMBURU,Samburu Central Sub County,Porro Ward,72,1422,1686,72,1422,Samburu Central,CORRECT
+666,SAMBURU,Samburu North Sub County,El-barta Ward,72,1424,1687,72,1424,Samburu North,CORRECT
+667,SAMBURU,Samburu North Sub County,Nachola Ward,72,1424,1688,72,1424,Samburu North,CORRECT
+668,SAMBURU,Samburu North Sub County,Ndoto Ward,72,1424,1689,72,1424,Samburu North,CORRECT
+669,SAMBURU,Samburu North Sub County,Nyiro Ward,72,1424,1690,72,1424,Samburu North,CORRECT
+670,SAMBURU,Samburu Central Sub County,Angata nayokie Ward,72,1422,1691,72,1422,Samburu Central,CORRECT
+671,SAMBURU,Samburu Central Sub County,Baawa Ward,72,1422,1692,72,1422,Samburu Central,CORRECT
+672,SAMBURU,Samburu East Sub County,Waso Ward,72,421,1693,72,421,Samburu East Sub County,CORRECT
+673,SAMBURU,Samburu East Sub County,Wamba west Ward,72,421,1694,72,421,Samburu East Sub County,CORRECT
+674,SAMBURU,Samburu East Sub County,Wamba east Ward,72,421,1695,72,421,Samburu East Sub County,CORRECT
+675,SAMBURU,Samburu East Sub County,Wamba north Ward,72,421,1696,72,421,Samburu East Sub County,CORRECT
+676,TRANS NZOIA,Kwanza  Sub County,Kapomboi Ward,81,1427,1697,81,1427,Kwanza,CORRECT
+677,TRANS NZOIA,Kwanza  Sub County,Kwanza Ward,81,1427,1698,81,1427,Kwanza,CORRECT
+1841,Kilifi,Rabai Sub County,Mwawesa Ward,73,1270,1699,73,1270,Rabai,CORRECT
+680,TRANS NZOIA,Endebess Sub County,Chepchoina Ward,81,1428,1700,81,1428,Endebess,CORRECT
+681,TRANS NZOIA,Endebess Sub County,Endebess Ward,81,1428,1701,81,1428,Endebess,CORRECT
+682,TRANS NZOIA,Endebess Sub County,Matumbei Ward,81,1428,1702,81,1428,Endebess,CORRECT
+683,TRANS NZOIA,Saboti  Sub County,Kinyoro Ward,81,425,1703,81,425,Saboti  Sub County,CORRECT
+684,TRANS NZOIA,Saboti  Sub County,Matisi Ward,81,425,1704,81,425,Saboti  Sub County,CORRECT
+1803,Mombasa,Kisauni  Sub County,Mjambere Ward,55,1253,1705,55,1253,Kisauni,CORRECT
+2187,Narok,Narok West Sub County,Naikarra Ward,80,1473,1706,80,1473,Narok West,CORRECT
+2188,Kiambu,Githunguri Sub County,Githiga Ward,82,1399,1707,82,1399,Githunguri,CORRECT
+2189,Kiambu,Githunguri Sub County,Ikinu Ward,82,1399,1708,82,1399,Githunguri,CORRECT
+2190,Kiambu,Githunguri Sub County,Ngewa Ward,82,1399,1709,82,1399,Githunguri,CORRECT
+2191,Kiambu,Githunguri Sub County,Komothai Ward,82,1399,1710,82,1399,Githunguri,CORRECT
+2192,Kiambu,Kiambu Town Sub County,Ting'ang'a Ward,82,428,1711,82,428,Kiambu Town Sub County,CORRECT
+2193,Kiambu,Kiambu Town Sub County,Ndumberi Ward,82,428,1712,82,428,Kiambu Town Sub County,CORRECT
+2194,Kiambu,Kiambu Town Sub County,Riabai Ward,82,428,1713,82,428,Kiambu Town Sub County,CORRECT
+2195,Kiambu,Kiambu Town Sub County,Kiambu Township Ward,82,428,1714,82,428,Kiambu Town Sub County,CORRECT
+2196,Kiambu,Kiambaa Sub County,Cianda Ward,82,1402,1715,82,1402,Kiambaa,CORRECT
+2197,Kiambu,Kiambaa Sub County,Karuri Ward,82,1402,1716,82,1402,Kiambaa,CORRECT
+2198,Kiambu,Kiambaa Sub County,Ndenderu Ward,82,1402,1717,82,1402,Kiambaa,CORRECT
+2199,Kiambu,Kiambaa Sub County,Muchatha Ward,82,1402,1718,82,1402,Kiambaa,CORRECT
+2200,Kiambu,Kiambaa Sub County,Kihara Ward,82,1402,1719,82,1402,Kiambaa,CORRECT
+1767,Nakuru,Kuresoi North  Sub County,Kiptororo Ward,77,1460,1720,77,1460,Kuresoi North,CORRECT
+1768,Nakuru,Kuresoi North  Sub County,Nyota Ward,77,1460,1721,77,1460,Kuresoi North,CORRECT
+1769,Nakuru,Kuresoi North  Sub County,Sirikwa Ward,77,1460,1722,77,1460,Kuresoi North,CORRECT
+2201,Kiambu,Kabete Sub County,Gitaru,82,1401,1723,82,1401,Kabete,CORRECT
+2202,Kiambu,Kabete Sub County,Muguga,82,1401,1724,82,1401,Kabete,CORRECT
+2203,Kiambu,Kabete Sub County,Nyadhuna Ward,82,1401,1725,82,1401,Kabete,CORRECT
+2204,Kiambu,Kabete Sub County,Kabete Ward,82,1401,1726,82,1401,Kabete,CORRECT
+688,TRANS NZOIA,Kiminini  Sub County,Kiminini Ward,81,1429,1727,81,1429,Kiminini,CORRECT
+689,TRANS NZOIA,Kiminini  Sub County,Waitaluk Ward,81,1429,1728,81,1429,Kiminini,CORRECT
+690,TRANS NZOIA,Kiminini  Sub County,Sirende Ward,81,1429,1729,81,1429,Kiminini,CORRECT
+1771,Nakuru,Subukia  Sub County,Subukia Ward,77,1469,1730,77,1469,Subukia,CORRECT
+189,WAJIR,Wajir South Sub County,Ibrahim ure Ward,61,1293,1731,61,1293,Wajir South,CORRECT
+1774,Nakuru,Rongai  Sub County,Menengai West Ward,77,1468,1732,77,1468,Rongai,CORRECT
+2216,Kiambu,Lari Sub County,Kinale Ward,82,1405,1733,82,1405,Lari,CORRECT
+2218,Kiambu,Lari Sub County,Nyanduma Ward,82,1405,1734,82,1405,Lari,CORRECT
+2219,Kiambu,Lari Sub County,Kamburu Ward,82,1405,1735,82,1405,Lari,CORRECT
+2220,Kiambu,Lari Sub County,Lari/kirenga Ward,82,1405,1736,82,1405,Lari,CORRECT
+2221,Kiambu,Gatundu South Sub County,Kiamwangi Ward,82,1398,1737,82,1398,Gatundu South,CORRECT
+2222,Kiambu,Gatundu South Sub County,Kiganjo Ward,82,1398,1738,82,1398,Gatundu South,CORRECT
+2223,Kiambu,Gatundu South Sub County,Ndarugu Ward,82,1398,1739,82,1398,Gatundu South,CORRECT
+2224,Kiambu,Gatundu South Sub County,Ngenda Ward,82,1398,1740,82,1398,Gatundu South,CORRECT
+2225,Kiambu,Gatundu North Sub County,Gituamba Ward,82,1397,1741,82,1397,Gatundu North,CORRECT
+2226,Kiambu,Gatundu North Sub County,Githobokoni Ward,82,1397,1742,82,1397,Gatundu North,CORRECT
+2227,Kiambu,Gatundu North Sub County,Chania Ward,82,1397,1743,82,1397,Gatundu North,CORRECT
+2228,Kiambu,Gatundu North Sub County,Mang'u Ward,82,1397,1744,82,1397,Gatundu North,CORRECT
+2229,Kiambu,Juja Sub County,Murera Ward,82,1400,1745,82,1400,Juja,CORRECT
+2230,Kiambu,Juja Sub County,Theta Ward,82,1400,1746,82,1400,Juja,CORRECT
+1776,Nakuru,Rongai  Sub County,Visoi Ward,77,1468,1747,77,1468,Rongai,CORRECT
+2231,Kiambu,Juja Sub County,Juja Ward,82,1400,1748,82,1400,Juja,CORRECT
+2232,Kiambu,Juja Sub County,Witeithie Ward,82,1400,1749,82,1400,Juja,CORRECT
+2233,Kiambu,Juja Sub County,Kalimoni Ward,82,1400,1750,82,1400,Juja,CORRECT
+2234,Kiambu,Thika Town Sub County,Thika Township Ward,82,439,1751,82,439,Thika Town Sub County,CORRECT
+2235,Kiambu,Thika Town Sub County,Kamenu Ward,82,439,1752,82,439,Thika Town Sub County,CORRECT
+2236,Kiambu,Thika Town Sub County,Hospital Ward,82,439,1753,82,439,Thika Town Sub County,CORRECT
+1779,Nakuru,Nakuru North  Sub County,Dundori Ward,77,1465,1754,77,1465,Nakuru North,CORRECT
+1842,Kilifi,Rabai Sub County,Rurumaward,73,1270,1755,73,1270,Rabai,CORRECT
+695,TRANS NZOIA,Cherangany Sub County,Makutano Ward,81,441,1756,81,441,Cherangany Sub County,CORRECT
+696,TRANS NZOIA,Cherangany Sub County,Kaplamai Ward,81,441,1757,81,441,Cherangany Sub County,CORRECT
+697,TRANS NZOIA,Cherangany Sub County,Motosiet Ward,81,441,1758,81,441,Cherangany Sub County,CORRECT
+698,TRANS NZOIA,Cherangany Sub County,Cherangany/suwerwa Ward,81,441,1759,81,441,Cherangany Sub County,CORRECT
+699,TRANS NZOIA,Cherangany Sub County,Chepsiro/kiptoror Ward,81,441,1760,81,441,Cherangany Sub County,CORRECT
+1808,Mombasa,Kisauni  Sub County,Magogoni Ward,55,1253,1761,55,1253,Kisauni,CORRECT
+1876,Siaya,Rarieda Sub County,North Uyoma Ward,83,1534,1762,83,1534,Rarieda,CORRECT
+1877,Siaya,Rarieda Sub County,South Uyoma Ward,83,1534,1763,83,1534,Rarieda,CORRECT
+1878,Siaya,Rarieda Sub County,West Uyoma Ward,83,1534,1764,83,1534,Rarieda,CORRECT
+1891,Kwale,Msambweni Sub County,Ukunda Ward,84,1260,1765,84,1260,Msambweni,CORRECT
+1892,Kwale,Msambweni Sub County,Kinondo Ward,84,1260,1766,84,1260,Msambweni,CORRECT
+1893,Kwale,Msambweni Sub County,Ramisi Ward,84,1260,1767,84,1260,Msambweni,CORRECT
+1894,Kwale,Lunga Lunga Sub County,Pongwe Kikoneni Ward,84,1258,1768,84,1258,Lunga Lunga,CORRECT
+1895,Kwale,Lunga Lunga Sub County,Dzombo Ward,84,1258,1769,84,1258,Lunga Lunga,CORRECT
+1896,Kwale,Lunga Lunga Sub County,Mwereni Ward,84,1258,1770,84,1258,Lunga Lunga,CORRECT
+1897,Kwale,Lunga Lunga Sub County,Vanga Ward,84,1258,1771,84,1258,Lunga Lunga,CORRECT
+1780,Nakuru,Nakuru North  Sub County,Kabatini Ward,77,1465,1772,77,1465,Nakuru North,CORRECT
+1898,Kwale,Matuga Sub County,Tsimba Golini Ward,84,1259,1773,84,1259,Matuga,CORRECT
+1899,Kwale,Matuga Sub County,Waa Ngombeni Ward,84,1259,1774,84,1259,Matuga,CORRECT
+1770,Nakuru,Kuresoi North  Sub County,Kamara Ward,77,1460,1775,77,1460,Kuresoi North,CORRECT
+1900,Kwale,Matuga Sub County,Tiwi Ward,84,1259,1776,84,1259,Matuga,CORRECT
+1901,Kwale,Matuga Sub County,Kubo South Ward,84,1259,1777,84,1259,Matuga,CORRECT
+1772,Nakuru,Subukia  Sub County,Waseges Ward,77,1469,1778,77,1469,Subukia,CORRECT
+1773,Nakuru,Subukia  Sub County,Kabazi Ward,77,1469,1779,77,1469,Subukia,CORRECT
+731,ELGEYO-MARAKWET,Marakwet East sub-county,Kapyego Ward,85,1438,1780,85,1438,Marakwet East,CORRECT
+732,ELGEYO-MARAKWET,Marakwet East sub-county,Sambirir Ward,85,1438,1781,85,1438,Marakwet East,CORRECT
+1902,Kwale,Matuga Sub County,Mkongani Ward,84,1259,1782,84,1259,Matuga,CORRECT
+1903,Kwale,Kinango Sub County,Ndavaya Ward,84,1257,1783,84,1257,Kinango,CORRECT
+1904,Kwale,Kinango Sub County,Puma Ward,84,1257,1784,84,1257,Kinango,CORRECT
+1905,Kwale,Kinango Sub County,Kinango Ward,84,1257,1785,84,1257,Kinango,CORRECT
+1906,Kwale,Kinango Sub County,Mackinon Road Ward,84,1257,1786,84,1257,Kinango,CORRECT
+1907,Kwale,Kinango Sub County,Chengoni/samburu Ward,84,1257,1787,84,1257,Kinango,CORRECT
+1908,Kwale,Kinango Sub County,Mwavumbo Ward,84,1257,1788,84,1257,Kinango,CORRECT
+1781,Nakuru,Nakuru North  Sub County,Kiamaina Ward,77,1465,1789,77,1465,Nakuru North,CORRECT
+1909,Kwale,Kinango Sub County,Kasemeni Ward,84,1257,1790,84,1257,Kinango,CORRECT
+2237,Kiambu,Thika Town Sub County,Gatuanyaga Ward,82,439,1791,82,439,Thika Town Sub County,CORRECT
+2238,Kiambu,Thika Town Sub County,Ngoliba Ward,82,439,1792,82,439,Thika Town Sub County,CORRECT
+2239,Kiambu,Ruiru Sub County,Gitothua,82,1407,1793,82,1407,Ruiru,CORRECT
+112,TAITA TAVETA,Taveta Sub County,Mahoo Ward,59,1278,1794,59,1278,Taveta,CORRECT
+2269,Bomet,Konoin Sub County,Kimulot Ward,86,1490,1795,86,1490,Konoin,CORRECT
+2270,Bomet,Konoin Sub County,Mogogosiek Ward,86,1490,1796,86,1490,Konoin,CORRECT
+2271,Bomet,Konoin Sub County,Boito Ward,86,1490,1797,86,1490,Konoin,CORRECT
+2272,Bomet,Konoin Sub County,Embomos Ward,86,1490,1798,86,1490,Konoin,CORRECT
+2273,Kisii,Bomachoge Borabu Sub County,BOMBABA BORABU,87,450,1799,87,450,Bomachoge Borabu Sub County,CORRECT
+1775,Nakuru,Rongai  Sub County,Soin Ward,77,1468,1800,77,1468,Rongai,CORRECT
+757,NANDI,Aldai Sub County,Kemeloi-maraba Ward,88,451,1801,88,451,Aldai Sub County,CORRECT
+758,NANDI,Aldai Sub County,Kobujoi Ward,88,451,1802,88,451,Aldai Sub County,CORRECT
+759,NANDI,Aldai Sub County,Kaptumo/kaboi Ward,88,451,1803,88,451,Aldai Sub County,CORRECT
+760,NANDI,Aldai Sub County,Koyo/ndurio Ward,88,451,1804,88,451,Aldai Sub County,CORRECT
+761,NANDI,Nandi East Sub County,Nandi hills Ward,88,1442,1805,88,1442,Nandi East,CORRECT
+762,NANDI,Nandi East Sub County,Chepkunyuk Ward,88,1442,1806,88,1442,Nandi East,CORRECT
+119,TAITA TAVETA,Wundanyi Sub County,Mwanda/mgange Ward,59,303,1807,59,303,Wundanyi Sub County,CORRECT
+120,TAITA TAVETA,Mwatate Sub County,Ronge Ward,59,1276,1808,59,1276,Mwatate,CORRECT
+305,THARAKA-NITHI,Igambang'ombe Sub County,Igambang`ombe Ward,66,1323,1809,66,1323,Igambang'ombe,CORRECT
+767,NANDI,Chesumei Sub County,Lelmoko/ngechek Ward,88,1440,1810,88,1440,Chesumei,CORRECT
+121,TAITA TAVETA,Mwatate Sub County,Mwatate Ward,59,1276,1811,59,1276,Mwatate,CORRECT
+124,TAITA TAVETA,Mwatate Sub County,Wusi/kishamba Ward,59,1276,1812,59,1276,Mwatate,CORRECT
+329,EMBU,Mbeere North  Sub County,Muminji Ward,89,1332,1813,89,1332,Mbeere North,CORRECT
+330,EMBU,Mbeere North  Sub County,Evurore Ward,89,1332,1814,89,1332,Mbeere North,CORRECT
+1782,Nakuru,Nakuru North  Sub County,Lanet/umoja Ward,77,1465,1815,77,1465,Nakuru North,CORRECT
+770,NANDI,Emgwen Sub County,Chepkumia Ward,88,456,1816,88,456,Emgwen Sub County,CORRECT
+1783,Nakuru,Nakuru North  Sub County,Bahati Ward,77,1465,1817,77,1465,Nakuru North,CORRECT
+1786,Nakuru,Nakuru West  Sub County,Kaptembwo Ward,77,1466,1818,77,1466,Nakuru West,CORRECT
+479,NYERI,Mathira East Sub County,Iriaini Ward,69,1379,1819,69,1379,Mathira East,CORRECT
+480,NYERI,Mathira East Sub County,Konyu Ward,69,1379,1820,69,1379,Mathira East,CORRECT
+772,NANDI,Emgwen Sub County,Kapsabet Ward,88,456,1821,88,456,Emgwen Sub County,CORRECT
+773,NANDI,Emgwen Sub County,Kilibwoni Ward,88,456,1822,88,456,Emgwen Sub County,CORRECT
+1810,Mombasa,Nyali  Sub County,Frere Town Ward,55,1256,1823,55,1256,Nyali,CORRECT
+481,NYERI,Mathira West Sub County,Kirimukuyu Ward,69,1380,1824,69,1380,Mathira West,CORRECT
+1787,Nakuru,Nakuru West  Sub County,Kapkures Ward,77,1466,1825,77,1466,Nakuru West,CORRECT
+662,SAMBURU,Samburu Central Sub County,Suguta Marmar Ward,72,1422,1826,72,1422,Samburu Central,CORRECT
+1788,Nakuru,Nakuru West  Sub County,Rhoda Ward,77,1466,1827,77,1466,Nakuru West,CORRECT
+1789,Nakuru,Nakuru West  Sub County,Shaabab Ward,77,1466,1828,77,1466,Nakuru West,CORRECT
+747,ELGEYO-MARAKWET,Keiyo South Sub County,Soy North Ward,85,1437,1829,85,1437,Keiyo South,CORRECT
+748,ELGEYO-MARAKWET,Keiyo South Sub County,Soy South Ward,85,1437,1830,85,1437,Keiyo South,CORRECT
+1790,Nakuru,Nakuru East  Sub County,Biashara Ward,77,1464,1831,77,1464,Nakuru East,CORRECT
+755,NANDI,Aldai Sub County,Kabwareng Ward,88,451,1832,88,451,Aldai Sub County,CORRECT
+778,NANDI,Mosop Sub County,Ndalat Ward,88,462,1833,88,462,Mosop Sub County,CORRECT
+1791,Nakuru,Nakuru East  Sub County,Kivumbini Ward,77,1464,1834,77,1464,Nakuru East,CORRECT
+1792,Nakuru,Nakuru East  Sub County,Flamingo Ward,77,1464,1835,77,1464,Nakuru East,CORRECT
+1793,Nakuru,Nakuru East  Sub County,Menengai Ward,77,1464,1836,77,1464,Nakuru East,CORRECT
+781,BARINGO,Tiaty Sub County,Tirioko Ward,90,,1837,90,757,Tiaty East,TARGET_UNRESOLVED
+782,BARINGO,Tiaty Sub County,Kolowa Ward,90,,1838,90,757,Tiaty East,TARGET_UNRESOLVED
+783,BARINGO,Tiaty Sub County,Ribkwo Ward,90,,1839,90,757,Tiaty East,TARGET_UNRESOLVED
+784,BARINGO,Tiaty Sub County,Silale Ward,90,,1840,90,757,Tiaty East,TARGET_UNRESOLVED
+785,BARINGO,Tiaty Sub County,Loiyamorok Ward,90,,1841,90,757,Tiaty East,TARGET_UNRESOLVED
+1813,Mombasa,Nyali  Sub County,Kongowea Ward,55,1256,1842,55,1256,Nyali,CORRECT
+814,LAIKIPIA,Laikipia West Sub County,Marmanet Ward,91,1457,1843,91,1457,Laikipia West,CORRECT
+815,LAIKIPIA,Laikipia West Sub County,Igwamiti Ward,91,1457,1844,91,1457,Laikipia West,CORRECT
+816,LAIKIPIA,Laikipia West Sub County,Salama Ward,91,1457,1845,91,1457,Laikipia West,CORRECT
+817,LAIKIPIA,Laikipia East Sub County,Ngobit Ward,91,1455,1846,91,1455,Laikipia East,CORRECT
+818,LAIKIPIA,Laikipia East Sub County,Tigithi Ward,91,1455,1847,91,1455,Laikipia East,CORRECT
+819,LAIKIPIA,Laikipia East Sub County,Thingithu Ward,91,1455,1848,91,1455,Laikipia East,CORRECT
+820,LAIKIPIA,Laikipia East Sub County,Nanyuki Ward,91,1455,1849,91,1455,Laikipia East,CORRECT
+1821,Mombasa,Mvita  Sub County,Tudor Ward,55,1255,1850,55,1255,Mvita,CORRECT
+1777,Nakuru,Rongai  Sub County,Mosop Ward,77,1468,1851,77,1468,Rongai,CORRECT
+1778,Nakuru,Rongai  Sub County,Solai Ward,77,1468,1852,77,1468,Rongai,CORRECT
+117,TAITA TAVETA,Wundanyi Sub County,Werugha Ward,59,303,1853,59,303,Wundanyi Sub County,CORRECT
+1784,Nakuru,Nakuru West  Sub County,Barut Ward,77,1466,1854,77,1466,Nakuru West,CORRECT
+1785,Nakuru,Nakuru West  Sub County,London Ward,77,1466,1855,77,1466,Nakuru West,CORRECT
+1799,Mombasa,Changamwe Sub County,Chaani Ward,55,1251,1856,55,1251,Changamwe,CORRECT
+911,KAJIADO,Kajiado North Sub County,Olkeri Ward,92,1478,1857,92,1478,Kajiado North,CORRECT
+912,KAJIADO,Kajiado North Sub County,Ongata rongai Ward,92,1478,1858,92,1478,Kajiado North,CORRECT
+913,KAJIADO,Kajiado North Sub County,Nkaimurunya Ward,92,1478,1859,92,1478,Kajiado North,CORRECT
+914,KAJIADO,Kajiado North Sub County,Oloolua Ward,92,1478,1860,92,1478,Kajiado North,CORRECT
+915,KAJIADO,Kajiado North Sub County,Ngong Ward,92,1478,1861,92,1478,Kajiado North,CORRECT
+916,KAJIADO,Kajiado Central Sub County,Purko Ward,92,1477,1862,92,1477,Kajiado Central,CORRECT
+917,KAJIADO,Kajiado Central Sub County,Ildamat Ward,92,1477,1863,92,1477,Kajiado Central,CORRECT
+918,KAJIADO,Kajiado Central Sub County,Dalalekutuk Ward,92,1477,1864,92,1477,Kajiado Central,CORRECT
+919,KAJIADO,Kajiado Central Sub County,Matapato north Ward,92,1477,1865,92,1477,Kajiado Central,CORRECT
+920,KAJIADO,Kajiado Central Sub County,Matapato south Ward,92,1477,1866,92,1477,Kajiado Central,CORRECT
+921,KAJIADO,Kajiado East Sub County,Kaputiei north Ward,92,469,1867,92,469,Kajiado East Sub County,CORRECT
+922,KAJIADO,Kajiado East Sub County,Kitengela Ward,92,469,1868,92,469,Kajiado East Sub County,CORRECT
+923,KAJIADO,Kajiado East Sub County,Oloosirkon/sholinke Ward,92,469,1869,92,469,Kajiado East Sub County,CORRECT
+924,KAJIADO,Kajiado East Sub County,Kenyawa-poka Ward,92,469,1870,92,469,Kajiado East Sub County,CORRECT
+925,KAJIADO,Kajiado East Sub County,Imaroro Ward,92,469,1871,92,469,Kajiado East Sub County,CORRECT
+926,KAJIADO,Kajiado West Sub County,Keekonyokie Ward,92,1479,1872,92,1479,Kajiado West,CORRECT
+1912,Kisumu,Kisumu East Sub County,Manyatta B Ward,93,1535,1873,93,1535,Kisumu East,CORRECT
+943,KERICHO,Kipkelion West Sub County,Chilchila Ward,56,472,1874,56,472,Kipkelion West Sub County,CORRECT
+944,KERICHO,Ainamoi Sub County,Kapsoit Ward,56,295,1875,56,295,AINAMOI,CORRECT
+945,KERICHO,Ainamoi Sub County,Ainamoi Ward,56,295,1876,56,295,AINAMOI,CORRECT
+946,KERICHO,Ainamoi Sub County,Kapkugerwet Ward,56,295,1877,56,295,AINAMOI,CORRECT
+947,KERICHO,Ainamoi Sub County,Kipchebor Ward,56,295,1878,56,295,AINAMOI,CORRECT
+948,KERICHO,Ainamoi Sub County,Kipchimchim Ward,56,295,1879,56,295,AINAMOI,CORRECT
+949,KERICHO,Ainamoi Sub County,Kapsaos Ward,56,295,1880,56,295,AINAMOI,CORRECT
+950,KERICHO,Bureti Sub County,Kisiara Ward,56,1483,1881,56,1483,Bureti,CORRECT
+951,KERICHO,Bureti Sub County,Tebesonik Ward,56,1483,1882,56,1483,Bureti,CORRECT
+952,KERICHO,Bureti Sub County,Cheboin Ward,56,1483,1883,56,1483,Bureti,CORRECT
+953,KERICHO,Bureti Sub County,Chemosot Ward,56,1483,1884,56,1483,Bureti,CORRECT
+954,KERICHO,Bureti Sub County,Litein Ward,56,1483,1885,56,1483,Bureti,CORRECT
+955,KERICHO,Bureti Sub County,Cheplanget Ward,56,1483,1886,56,1483,Bureti,CORRECT
+957,KERICHO,Belgut Sub County,Waldai Ward,56,1482,1887,56,1482,Belgut,CORRECT
+958,KERICHO,Belgut Sub County,Kabianga Ward,56,1482,1888,56,1482,Belgut,CORRECT
+1814,Mombasa,Nyali  Sub County,Kadzandani Ward,55,1256,1889,55,1256,Nyali,CORRECT
+1794,Nakuru,Nakuru East  Sub County,Nakuru East Ward,77,1464,1890,77,1464,Nakuru East,CORRECT
+1795,Mombasa,Changamwe Sub County,Port Reitz Ward,55,1251,1891,55,1251,Changamwe,CORRECT
+962,KERICHO,Sigowet/Soin Sub County,Sigowet Ward,56,474,1892,56,474,Sigowet/Soin Sub County,CORRECT
+963,KERICHO,Sigowet/Soin Sub County,Kaplelartet Ward,56,474,1893,56,474,Sigowet/Soin Sub County,CORRECT
+964,KERICHO,Sigowet/Soin Sub County,Soliat Ward,56,474,1894,56,474,Sigowet/Soin Sub County,CORRECT
+965,KERICHO,Sigowet/Soin Sub County,Soin Ward,56,474,1895,56,474,Sigowet/Soin Sub County,CORRECT
+1816,Mombasa,Likoni  Sub County,Shika Adabu Ward,55,1254,1896,55,1254,Likoni,CORRECT
+1804,Mombasa,Kisauni  Sub County,Junda Ward,55,1253,1897,55,1253,Kisauni,CORRECT
+1805,Mombasa,Kisauni  Sub County,Bamburi Ward,55,1253,1898,55,1253,Kisauni,CORRECT
+1806,Mombasa,Kisauni  Sub County,Mwakirunge Ward,55,1253,1899,55,1253,Kisauni,CORRECT
+1807,Mombasa,Kisauni  Sub County,Mtopanga Ward,55,1253,1900,55,1253,Kisauni,CORRECT
+1913,Kisumu,Kisumu East Sub County,Nyalenda A Ward,93,1535,1901,93,1535,Kisumu East,CORRECT
+1809,Mombasa,Kisauni  Sub County,Shanzu Ward,55,1253,1902,55,1253,Kisauni,CORRECT
+1811,Mombasa,Nyali  Sub County,Ziwa La Ng'ombe Ward,55,1256,1903,55,1256,Nyali,CORRECT
+1812,Mombasa,Nyali  Sub County,Mkomani Ward,55,1256,1904,55,1256,Nyali,CORRECT
+1815,Mombasa,Likoni  Sub County,Mtongwe Ward,55,1254,1905,55,1254,Likoni,CORRECT
+125,TAITA TAVETA,Voi Sub County,Mbololo Ward,59,1279,1906,59,1279,Voi,CORRECT
+1817,Mombasa,Likoni  Sub County,Bofu Ward,55,1254,1907,55,1254,Likoni,CORRECT
+1826,Kilifi,Kilifi North Sub County,Sokoni Ward,73,1266,1908,73,1266,Kilifi North,CORRECT
+1828,Kilifi,Kilifi North Sub County,Dabaso Ward,73,1266,1909,73,1266,Kilifi North,CORRECT
+1830,Kilifi,Kilifi North Sub County,Watamu Ward,73,1266,1910,73,1266,Kilifi North,CORRECT
+1833,Kilifi,Kilifi South Sub County,Mwarakaya Ward,73,1267,1911,73,1267,Kilifi South,CORRECT
+1835,Kilifi,Kilifi South Sub County,Chasimba Ward,73,1267,1912,73,1267,Kilifi South,CORRECT
+1836,Kilifi,Kilifi South Sub County,Mtepeni Ward,73,1267,1913,73,1267,Kilifi South,CORRECT
+1837,Kilifi,Kaloleni Sub County,Mariakani Ward,73,1264,1914,73,1264,Kaloleni,CORRECT
+1838,Kilifi,Kaloleni Sub County,Kayafungo Ward,73,1264,1915,73,1264,Kaloleni,CORRECT
+1839,Kilifi,Kaloleni Sub County,Kaloleni Ward,73,1264,1916,73,1264,Kaloleni,CORRECT
+1840,Kilifi,Kaloleni Sub County,Mwanamwinga Ward,73,1264,1917,73,1264,Kaloleni,CORRECT
+1843,Kilifi,Rabai Sub County,Kambe/ribe Ward,73,1270,1918,73,1270,Rabai,CORRECT
+1922,Kisumu,Kisumu Central Sub County,Shauri Moyo Kaloleni Ward,93,1536,1919,93,1536,Kisumu Central,CORRECT
+1846,Kilifi,Ganze Sub County,Bamba Ward,73,1263,1920,73,1263,Ganze,CORRECT
+1847,Kilifi,Ganze Sub County,Jaribuni Ward,73,1263,1921,73,1263,Ganze,CORRECT
+1849,Kilifi,Malindi Sub County,Jilore Ward,73,1269,1922,73,1269,Malindi,CORRECT
+1850,Kilifi,Malindi Sub County,Kakuyuni Ward,73,1269,1923,73,1269,Malindi,CORRECT
+1853,Kilifi,Malindi Sub County,Shella Ward,73,1269,1924,73,1269,Malindi,CORRECT
+1854,Kilifi,Magarini Sub County,Marafa Ward,73,1268,1925,73,1268,Magarini,CORRECT
+1855,Kilifi,Magarini Sub County,Magarini Ward,73,1268,1926,73,1268,Magarini,CORRECT
+1879,Siaya,Ugenya Sub County,West Ugenya Ward,83,1531,1927,83,1531,Ugenya,CORRECT
+1880,Siaya,Ugenya Sub County,Ukwala Ward,83,1531,1928,83,1531,Ugenya,CORRECT
+1881,Siaya,Ugenya Sub County,North Ugenya Ward,83,1531,1929,83,1531,Ugenya,CORRECT
+1882,Siaya,Ugenya Sub County,East Ugenya Ward,83,1531,1930,83,1531,Ugenya,CORRECT
+1883,Siaya,Ugunja Sub County,Sidindi Ward,83,1532,1931,83,1532,Ugunja,CORRECT
+1884,Siaya,Ugunja Sub County,Sigomere Ward,83,1532,1932,83,1532,Ugunja,CORRECT
+1885,Siaya,Ugunja Sub County,Ugunja Ward,83,1532,1933,83,1532,Ugunja,CORRECT
+1886,Siaya,Alego Usonga Sub County,Usonga Ward,83,483,1934,83,483,Alego Usonga Sub County,CORRECT
+1887,Siaya,Alego Usonga Sub County,West Alego Ward,83,483,1935,83,483,Alego Usonga Sub County,CORRECT
+1888,Siaya,Alego Usonga Sub County,Central Alego Ward,83,483,1936,83,483,Alego Usonga Sub County,CORRECT
+1889,Siaya,Alego Usonga Sub County,Siaya Township Ward,83,483,1937,83,483,Alego Usonga Sub County,CORRECT
+1890,Kwale,Msambweni Sub County,Gombato Bongwe Ward,84,1260,1938,84,1260,Msambweni,CORRECT
+126,TAITA TAVETA,Voi Sub County,Sagala Ward,59,1279,1939,59,1279,Voi,CORRECT
+1915,Kisumu,Kisumu West Sub County,South West Kisumu Ward,93,1537,1940,93,1537,Kisumu West,CORRECT
+2005,Kisii,Kitutu Chache South Sub County,Nyakoe Ward,87,485,1941,87,485,Kitutu Chache South Sub County,CORRECT
+2006,Kisii,Kitutu Chache South Sub County,Kisii Central Ward,87,485,1942,87,485,Kitutu Chache South Sub County,CORRECT
+2008,Nairobi,Westlands  Sub County,Parklands/highridge Ward,,,1943,79,486,Westlands  Sub County,TARGET_UNRESOLVED
+2012,Nairobi,Dagoretti North Sub County,Kilimani Ward,,,1944,79,487,Dagoretti North Sub County,TARGET_UNRESOLVED
+2015,Nairobi,Dagoretti North Sub County,Kileleshwa Ward,,,1945,79,487,Dagoretti North Sub County,TARGET_UNRESOLVED
+802,BARINGO,Mogotio Sub County,Mogotio Ward,90,1451,1946,90,1451,Mogotio,CORRECT
+803,BARINGO,Mogotio Sub County,Emining Ward,90,1451,1947,90,1451,Mogotio,CORRECT
+804,BARINGO,Mogotio Sub County,Kisanana Ward,90,1451,1948,90,1451,Mogotio,CORRECT
+805,BARINGO,Koibatek Sub County,Lembus Ward,90,1449,1949,90,1449,Koibatek,CORRECT
+806,BARINGO,Koibatek Sub County,Lembus kwen Ward,90,1449,1950,90,1449,Koibatek,CORRECT
+807,BARINGO,Koibatek Sub County,Ravine Ward,90,1449,1951,90,1449,Koibatek,CORRECT
+808,BARINGO,Koibatek Sub County,Mumberes/Maji Mazuri Ward,90,1449,1952,90,1449,Koibatek,CORRECT
+809,BARINGO,Koibatek Sub County,Lembus/Perkerra Ward,90,1449,1953,90,1449,Koibatek,CORRECT
+810,BARINGO,Koibatek Sub County,Koibatek Ward,90,1449,1954,90,1449,Koibatek,CORRECT
+811,LAIKIPIA,Laikipia West Sub County,Ol-Moran Ward,91,1457,1955,91,1457,Laikipia West,CORRECT
+812,LAIKIPIA,Laikipia West Sub County,Rumuruti Township Ward,91,1457,1956,91,1457,Laikipia West,CORRECT
+2030,Nairobi,Kibra  Sub County,Woodley/kenyatta Golf Course Ward,,,1957,79,1576,Kibra,TARGET_UNRESOLVED
+937,KERICHO,Kipkelion East Sub County,Kedowa/kimugul Ward,56,491,1958,56,491,Kipkelion East Sub County,CORRECT
+938,KERICHO,Kipkelion East Sub County,Chepseon Ward,56,491,1959,56,491,Kipkelion East Sub County,CORRECT
+939,KERICHO,Kipkelion East Sub County,Tendeno/sorget Ward,56,491,1960,56,491,Kipkelion East Sub County,CORRECT
+940,KERICHO,Kipkelion West Sub County,Kunyak Ward,56,472,1961,56,472,Kipkelion West Sub County,CORRECT
+941,KERICHO,Kipkelion West Sub County,Kamasian Ward,56,472,1962,56,472,Kipkelion West Sub County,CORRECT
+942,KERICHO,Kipkelion West Sub County,Kipkelion Ward,56,472,1963,56,472,Kipkelion West Sub County,CORRECT
+1818,Mombasa,Likoni  Sub County,Likoni Ward,55,1254,1964,55,1254,Likoni,CORRECT
+2034,Nairobi,Roysambu  Sub County,Zimmerman Ward,,,1965,79,492,Roysambu  Sub County,TARGET_UNRESOLVED
+2035,Nairobi,Roysambu  Sub County,Roysambu Ward,,,1966,79,492,Roysambu  Sub County,TARGET_UNRESOLVED
+2038,Nairobi,Kasarani  Sub County,Mwiki Ward,,,1967,79,1575,Kasarani,TARGET_UNRESOLVED
+2039,Nairobi,Kasarani  Sub County,Kasarani Ward,,,1968,79,1575,Kasarani,TARGET_UNRESOLVED
+1923,Kisumu,Kisumu Central Sub County,Market Milimani Ward,93,1536,1969,93,1536,Kisumu Central,CORRECT
+2045,Nairobi,Ruaraka  Sub County,Lucky Summer Ward,,,1970,79,405,Ruaraka  Sub County,TARGET_UNRESOLVED
+2046,Nairobi,Ruaraka  Sub County,Korogocho Ward,,,1971,79,405,Ruaraka  Sub County,TARGET_UNRESOLVED
+1827,Kilifi,Kilifi North Sub County,Kibarani Ward,73,1266,1972,73,1266,Kilifi North,CORRECT
+1829,Kilifi,Kilifi North Sub County,Matsangoni Ward,73,1266,1973,73,1266,Kilifi North,CORRECT
+2050,Nairobi,Embakasi South Sub County,Pipeline Ward,,,1974,79,407,Embakasi South Sub County,TARGET_UNRESOLVED
+1924,Kisumu,Kisumu Central Sub County,Kondele Ward,93,1536,1975,93,1536,Kisumu Central,CORRECT
+1819,Mombasa,Likoni  Sub County,Timbwani Ward,55,1254,1976,55,1254,Likoni,CORRECT
+1925,Kisumu,Kisumu Central Sub County,Nyalenda B Ward,93,1536,1977,93,1536,Kisumu Central,CORRECT
+1926,Kisumu,Seme Sub County,West Seme Ward,93,1538,1978,93,1538,Seme,CORRECT
+1927,Kisumu,Seme Sub County,Central Seme Ward,93,1538,1979,93,1538,Seme,CORRECT
+1928,Kisumu,Seme Sub County,East Seme Ward,93,1538,1980,93,1538,Seme,CORRECT
+1929,Kisumu,Seme Sub County,North Seme Ward,93,1538,1981,93,1538,Seme,CORRECT
+1930,Kisumu,Nyando Sub County,East Kano/wawidhi Ward,93,495,1982,93,495,Nyando Sub County,CORRECT
+1931,Kisumu,Nyando Sub County,Kabonyo Kanyagwal,93,495,1983,93,495,Nyando Sub County,CORRECT
+1932,Kisumu,Nyando Sub County,Kobura Ward,93,495,1984,93,495,Nyando Sub County,CORRECT
+1933,Kisumu,Muhoroni Sub County,Miwani Ward,93,1539,1985,93,1539,Muhoroni,CORRECT
+1934,Kisumu,Muhoroni Sub County,Ombeyi Ward,93,1539,1986,93,1539,Muhoroni,CORRECT
+1935,Kisumu,Muhoroni Sub County,Masogo/nyang'oma Ward,93,1539,1987,93,1539,Muhoroni,CORRECT
+1936,Kisumu,Muhoroni Sub County,Chemelil Ward,93,1539,1988,93,1539,Muhoroni,CORRECT
+1937,Kisumu,Muhoroni Sub County,Muhoroni Koru Ward,93,1539,1989,93,1539,Muhoroni,CORRECT
+1938,Kisumu,Nyakach Sub County,South West Nyakach Ward,93,497,1990,93,497,Nyakach Sub County,CORRECT
+1939,Kisumu,Nyakach Sub County,North Nyakach Ward,93,497,1991,93,497,Nyakach Sub County,CORRECT
+1940,Kisumu,Nyakach Sub County,Central Nyakach Ward,93,497,1992,93,497,Nyakach Sub County,CORRECT
+1941,Kisumu,Nyakach Sub County,West Nyakach Ward,93,497,1993,93,497,Nyakach Sub County,CORRECT
+1942,Kisumu,Nyakach Sub County,South East Nyakach Ward,93,497,1994,93,497,Nyakach Sub County,CORRECT
+1943,Kisumu,Nyando Sub County,Awasi/onjiko Ward,93,495,1995,93,495,Nyando Sub County,CORRECT
+1944,Kisumu,Nyando Sub County,Ahero Ward,93,495,1996,93,495,Nyando Sub County,CORRECT
+1945,Nyamira,Masaba North Sub County,Rigoma Ward,94,1569,1997,94,1569,Masaba North,CORRECT
+1946,Nyamira,Masaba North Sub County,Gachuba Ward,94,1569,1998,94,1569,Masaba North,CORRECT
+1947,Nyamira,Manga Sub County,Kamera Ward,94,1568,1999,94,1568,Manga,CORRECT
+1948,Nyamira,Manga Sub County,Magombo Ward,94,1568,2000,94,1568,Manga,CORRECT
+1949,Nyamira,Manga Sub County,Manga Ward,94,1568,2001,94,1568,Manga,CORRECT
+1950,Nyamira,Masaba North Sub County,Gesima Ward,94,1569,2002,94,1569,Masaba North,CORRECT
+1951,Nyamira,Nyamira Sub County,Nyamaiya Ward,94,500,2003,94,500,Nyamira Sub County,CORRECT
+1952,Nyamira,Nyamira Sub County,Bogichora Ward,94,500,2004,94,500,Nyamira Sub County,CORRECT
+1953,Nyamira,Nyamira Sub County,Bosamaro Ward,94,500,2005,94,500,Nyamira Sub County,CORRECT
+1954,Nyamira,Nyamira Sub County,Bonyamatuta Ward,94,500,2006,94,500,Nyamira Sub County,CORRECT
+1955,Nyamira,Nyamira Sub County,Township Ward,94,500,2007,94,500,Nyamira Sub County,CORRECT
+1956,Nyamira,Nyamira North Sub County,Itibo Ward,94,1570,2008,94,1570,Nyamira North,CORRECT
+1957,Nyamira,Nyamira North Sub County,Bomwagamo Ward,94,1570,2009,94,1570,Nyamira North,CORRECT
+1958,Nyamira,Nyamira North Sub County,Bokeira Ward,94,1570,2010,94,1570,Nyamira North,CORRECT
+1959,Nyamira,Nyamira North Sub County,Magwagwa Ward,94,1570,2011,94,1570,Nyamira North,CORRECT
+1960,Nyamira,Nyamira North Sub County,Ekerenyo Ward,94,1570,2012,94,1570,Nyamira North,CORRECT
+1961,Nyamira,Borabu Sub County,Mekenene Ward,94,1567,2013,94,1567,Borabu,CORRECT
+1962,Nyamira,Borabu Sub County,Kiabonyoru Ward,94,1567,2014,94,1567,Borabu,CORRECT
+1963,Nyamira,Borabu Sub County,Nyansiongo Ward,94,1567,2015,94,1567,Borabu,CORRECT
+1964,Nyamira,Borabu Sub County,Esise Ward,94,1567,2016,94,1567,Borabu,CORRECT
+1965,Kisii,Bonchari  Sub County,Bomariba Ward,87,503,2017,87,503,Bonchari  Sub County,CORRECT
+1966,Kisii,Bonchari  Sub County,Bogiakumu Ward,87,503,2018,87,503,Bonchari  Sub County,CORRECT
+1967,Kisii,Bonchari  Sub County,Bomorenda Ward,87,503,2019,87,503,Bonchari  Sub County,CORRECT
+1968,Kisii,Bonchari  Sub County,Riana Ward,87,503,2020,87,503,Bonchari  Sub County,CORRECT
+1969,Kisii,South Mugirango Sub County,Tabaka Ward,87,504,2021,87,504,South Mugirango Sub County,CORRECT
+1970,Kisii,South Mugirango Sub County,Boikanga Ward,87,504,2022,87,504,South Mugirango Sub County,CORRECT
+1971,Kisii,South Mugirango Sub County,Bogetenga Ward,87,504,2023,87,504,South Mugirango Sub County,CORRECT
+1972,Kisii,South Mugirango Sub County,Borabu Chitago Ward,87,504,2024,87,504,South Mugirango Sub County,CORRECT
+1973,Kisii,South Mugirango Sub County,Moticho Ward,87,504,2025,87,504,South Mugirango Sub County,CORRECT
+1974,Kisii,South Mugirango Sub County,Getenga Ward,87,504,2026,87,504,South Mugirango Sub County,CORRECT
+1975,Kisii,Bomachoge Borabu Sub County,Bokimonge Ward,87,450,2027,87,450,Bomachoge Borabu Sub County,CORRECT
+1976,Kisii,Bomachoge Borabu Sub County,Magenche Ward,87,450,2028,87,450,Bomachoge Borabu Sub County,CORRECT
+1977,Kisii,Bobasi Sub County,Masige West Ward,87,505,2029,87,505,Bobasi Sub County,CORRECT
+1978,Kisii,Bobasi Sub County,Masige East Ward,87,505,2030,87,505,Bobasi Sub County,CORRECT
+1979,Kisii,Bobasi Sub County,Basi Central Ward,87,505,2031,87,505,Bobasi Sub County,CORRECT
+1980,Kisii,Bobasi Sub County,Nyacheki Ward,87,505,2032,87,505,Bobasi Sub County,CORRECT
+1981,Kisii,Bobasi Sub County,Bassi Bogetaorio Ward,87,505,2033,87,505,Bobasi Sub County,CORRECT
+1982,Kisii,Bobasi Sub County,Bobasi Chache Ward,87,505,2034,87,505,Bobasi Sub County,CORRECT
+1983,Kisii,Bobasi Sub County,Sameta Mokwerero Ward,87,505,2035,87,505,Bobasi Sub County,CORRECT
+1984,Kisii,Bobasi Sub County,Bobasi Boitangare Ward,87,505,2036,87,505,Bobasi Sub County,CORRECT
+1985,Kisii,Bomachoge Chache Sub County,Majoge Basi Ward,87,506,2037,87,506,Bomachoge Chache Sub County,CORRECT
+1986,Kisii,Bomachoge Chache Sub County,Boochi Tendere Ward,87,506,2038,87,506,Bomachoge Chache Sub County,CORRECT
+1987,Kisii,Bomachoge Chache Sub County,Bosoti Sengera Ward,87,506,2039,87,506,Bomachoge Chache Sub County,CORRECT
+1988,Kisii,Nyaribari Masaba Sub County,Ichuni Ward,87,507,2040,87,507,Nyaribari Masaba Sub County,CORRECT
+1989,Kisii,Nyaribari Masaba Sub County,Nyamasibi Ward,87,507,2041,87,507,Nyaribari Masaba Sub County,CORRECT
+1990,Kisii,Nyaribari Masaba Sub County,Masimba Ward,87,507,2042,87,507,Nyaribari Masaba Sub County,CORRECT
+1991,Kisii,Nyaribari Masaba Sub County,Gesusu Ward,87,507,2043,87,507,Nyaribari Masaba Sub County,CORRECT
+1992,Kisii,Nyaribari Masaba Sub County,Kiamokama Ward,87,507,2044,87,507,Nyaribari Masaba Sub County,CORRECT
+1993,Kisii,Nyaribari Chache  Sub County,Bobaracho Ward,87,508,2045,87,508,Nyaribari Chache  Sub County,CORRECT
+1994,Kisii,Nyaribari Chache  Sub County,Kisii Central Ward,87,508,2628,87,508,Nyaribari Chache  Sub County,CORRECT
+1995,Kisii,Nyaribari Chache  Sub County,Keumbu Ward,87,508,2046,87,508,Nyaribari Chache  Sub County,CORRECT
+1996,Kisii,Nyaribari Chache  Sub County,Kiogoro Ward,87,508,2047,87,508,Nyaribari Chache  Sub County,CORRECT
+1997,Kisii,Nyaribari Chache  Sub County,Birongo Ward,87,508,2048,87,508,Nyaribari Chache  Sub County,CORRECT
+128,TAITA TAVETA,Voi Sub County,Marungu Ward,59,1279,2049,59,1279,Voi,CORRECT
+2063,Nairobi,Embakasi East Sub County,Lower Savanna Ward,,,2050,79,509,Embakasi East Sub County,TARGET_UNRESOLVED
+2064,Nairobi,Embakasi East Sub County,Embakasi Ward,,,2051,79,509,Embakasi East Sub County,TARGET_UNRESOLVED
+2065,Nairobi,Embakasi East Sub County,Utawala Ward,,,2052,79,509,Embakasi East Sub County,TARGET_UNRESOLVED
+2066,Nairobi,Embakasi East Sub County,Mihango Ward,,,2053,79,509,Embakasi East Sub County,TARGET_UNRESOLVED
+130,TAITA TAVETA,Voi Sub County,Ngolia Ward,59,1279,2054,59,1279,Voi,CORRECT
+2000,Kisii,Kitutu Chache North Sub County,Sensi Ward,87,510,2055,87,510,Kitutu Chache North Sub County,CORRECT
+2072,Nairobi,Makadara  Sub County,Viwandani Ward,,,2056,79,1578,Makadara,TARGET_UNRESOLVED
+2073,Nairobi,Makadara  Sub County,Harambee Ward,,,2057,79,1578,Makadara,TARGET_UNRESOLVED
+2077,Nairobi,Kamukunji  Sub County,Eastleigh South Ward,,,2058,79,1574,Kamukunji,TARGET_UNRESOLVED
+749,ELGEYO-MARAKWET,Keiyo South Sub County,Kabiemit Ward,85,1437,2059,85,1437,Keiyo South,CORRECT
+143,GARISSA,Lagdera Sub County,Maalimin Ward,60,1286,2060,60,1286,Lagdera,CORRECT
+144,GARISSA,Lagdera Sub County,Sabena Ward,60,1286,2061,60,1286,Lagdera,CORRECT
+145,GARISSA,Lagdera Sub County,Baraki Ward,60,1286,2062,60,1286,Lagdera,CORRECT
+765,NANDI,Chesumei Sub County,Chemundu/kapng'etunyi Ward,88,1440,2063,88,1440,Chesumei,CORRECT
+2013,Nairobi,Dagoretti North Sub County,Kawangware Ward,,,2064,79,487,Dagoretti North Sub County,TARGET_UNRESOLVED
+2084,Nairobi,Starehe  Sub County,Landimawe Ward,,,2065,79,513,Starehe  Sub County,TARGET_UNRESOLVED
+2085,Nairobi,Starehe  Sub County,Nairobi South Ward,,,2066,79,513,Starehe  Sub County,TARGET_UNRESOLVED
+2088,Nairobi,Mathare  Sub County,Huruma Ward,,,2067,79,1579,Mathare,TARGET_UNRESOLVED
+2131,Uasin Gishu,Soy Sub County,Segeroi/barsombe Ward,78,1434,2068,78,1434,Soy,CORRECT
+2132,Uasin Gishu,Soy Sub County,Kipsomba Ward,78,1434,2069,78,1434,Soy,CORRECT
+2152,Uasin Gishu,Kapseret Sub County,Megun Ward,78,1431,2070,78,1431,Kapseret,CORRECT
+2159,Narok,Transmara West Sub County,Keyian Ward,80,411,2071,80,411,Transmara West Sub County,CORRECT
+2160,Narok,Transmara West Sub County,Angata Barikoi Ward,80,411,2072,80,411,Transmara West Sub County,CORRECT
+2161,Narok,Transmara West Sub County,Shankoe Ward,80,411,2073,80,411,Transmara West Sub County,CORRECT
+2162,Narok,Transmara West Sub County,Kimintet Ward,80,411,2074,80,411,Transmara West Sub County,CORRECT
+2163,Narok,Transmara West Sub County,Lolgorian Ward,80,411,2075,80,411,Transmara West Sub County,CORRECT
+2164,Narok,Transmara East Sub County,Iikerin Ward,80,515,2076,80,515,Transmara East Sub County,CORRECT
+2165,Narok,Transmara East Sub County,Ololmasani Ward,80,515,2077,80,515,Transmara East Sub County,CORRECT
+2166,Narok,Transmara East Sub County,Mogondo Ward,80,515,2078,80,515,Transmara East Sub County,CORRECT
+2217,Kiambu,Lari Sub County,Kijabe Ward,82,1405,2079,82,1405,Lari,CORRECT
+2241,Kiambu,Ruiru Sub County,Gatongora Ward,82,1407,2080,82,1407,Ruiru,CORRECT
+306,THARAKA-NITHI,Tharaka North Sub County,Gatunga Ward,66,1326,2081,66,1326,Tharaka North,CORRECT
+307,THARAKA-NITHI,Tharaka North Sub County,Mukothima Ward,66,1326,2082,66,1326,Tharaka North,CORRECT
+2243,Kiambu,Ruiru Sub County,Kahawa Wendani Ward,82,1407,2083,82,1407,Ruiru,CORRECT
+2274,Kisii,Bomachoge Borabu Sub County,BOOCHI BORABU,87,450,2084,87,450,Bomachoge Borabu Sub County,CORRECT
+86,TANA RIVER,Garsen Sub County,Kipini east Ward,57,517,2085,57,517,Garsen Sub County,CORRECT
+87,TANA RIVER,Garsen Sub County,Garsen south Ward,57,517,2086,57,517,Garsen Sub County,CORRECT
+196,MANDERA,BANISSA,BANISSA,63,518,2087,63,518,BANISSA,CORRECT
+197,MANDERA,BANISSA,DERKHALE,63,518,2088,63,518,BANISSA,CORRECT
+242,ISIOLO,Isiolo Sub County,BULA PESA,48,1310,2089,48,1310,Isiolo,CORRECT
+243,ISIOLO,Merti Sub County,CHARI,48,1311,2090,48,1311,Merti,CORRECT
+244,ISIOLO,Merti Sub County,CHERAB,48,1311,2091,48,1311,Merti,CORRECT
+245,ISIOLO,Isiolo Sub County,NGARE MARA,48,1310,2092,48,1310,Isiolo,CORRECT
+246,ISIOLO,Isiolo Sub County,BURAT,48,1310,2093,48,1310,Isiolo,CORRECT
+247,ISIOLO,Isiolo Sub County,OLDONYIRO,48,1310,2094,48,1310,Isiolo,CORRECT
+248,ISIOLO,Garbatulla Sub County,GARBATULLA,48,1309,2095,48,1309,Garbatulla,CORRECT
+249,ISIOLO,Garbatulla Sub County,KINNA,48,1309,2096,48,1309,Garbatulla,CORRECT
+250,ISIOLO,Garbatulla Sub County,SERICHO,48,1309,2097,48,1309,Garbatulla,CORRECT
+193,MANDERA,MANDERA WEST,LAGHSURE,63,1295,2098,63,1295,Mandera West,CORRECT
+201,MANDERA,MANDERA NORTH,ASHABITO,63,1301,2099,63,1301,Mandera North,CORRECT
+202,MANDERA,MANDERA NORTH,GUTICHA,63,1301,2100,63,1301,Mandera North,CORRECT
+212,MANDERA,MANDERA EAST,BULLA MPYA,63,1300,2101,63,1300,Mandera East,CORRECT
+213,MANDERA,MANDERA EAST,KHALALIO,63,1300,2102,63,1300,Mandera East,CORRECT
+214,MANDERA,MANDERA EAST,NEBOI,63,1300,2103,63,1300,Mandera East,CORRECT
+215,MANDERA,MANDERA EAST,TOWNSHIP,63,1300,2104,63,1300,Mandera East,CORRECT
+216,MANDERA,LAFEY,LIBEHIA,63,1298,2105,63,1298,Lafey,CORRECT
+217,MANDERA,LAFEY,FINO,63,1298,2106,63,1298,Lafey,CORRECT
+218,MANDERA,LAFEY,LAFEY,63,1298,2107,63,1298,Lafey,CORRECT
+219,MANDERA,LAFEY,WARANKARA,63,1298,2108,63,1298,Lafey,CORRECT
+220,MANDERA,LAFEY,ALANGO GOF,63,1298,2109,63,1298,Lafey,CORRECT
+445,NYANDARUA,Kinangop Sub County,Njabani/kiburu Ward,67,1369,2110,67,1369,Kinangop,CORRECT
+637,TURKANA,Turkana South Sub County,Lokichar Ward,70,1415,2111,70,1415,Turkana South,CORRECT
+638,TURKANA,Turkana East Sub County,Kapedo/napeitom Ward,70,1413,2112,70,1413,Turkana East,CORRECT
+733,ELGEYO-MARAKWET,Marakwet East sub-county,Endo Ward,85,1438,2113,85,1438,Marakwet East,CORRECT
+734,ELGEYO-MARAKWET,Marakwet East sub-county,Embobut/Embulot Ward,85,1438,2114,85,1438,Marakwet East,CORRECT
+735,ELGEYO-MARAKWET,Marakwet West Sub County,Lelan Ward,85,1439,2115,85,1439,Marakwet West,CORRECT
+2016,Nairobi,Dagoretti North Sub County,Kabiro Ward,,,2116,79,487,Dagoretti North Sub County,TARGET_UNRESOLVED
+2017,Nairobi,Dagoretti South Sub County,Mutu-ini Ward,,,2117,79,524,Dagoretti South Sub County,TARGET_UNRESOLVED
+2018,Nairobi,Dagoretti South Sub County,Ngando Ward,,,2118,79,524,Dagoretti South Sub County,TARGET_UNRESOLVED
+2019,Nairobi,Dagoretti South Sub County,Riruta Ward,,,2119,79,524,Dagoretti South Sub County,TARGET_UNRESOLVED
+2020,Nairobi,Dagoretti South Sub County,Uthiru/ruthimitu Ward,,,2120,79,524,Dagoretti South Sub County,TARGET_UNRESOLVED
+2021,Nairobi,Dagoretti South Sub County,Waithaka Ward,,,2121,79,524,Dagoretti South Sub County,TARGET_UNRESOLVED
+2022,Nairobi,Langata  Sub County,Karen Ward,,,2122,79,1577,Lang'ata,TARGET_UNRESOLVED
+794,BARINGO,Baringo Central Sub County,Sacho Ward,90,1446,2123,90,1446,Baringo Central,CORRECT
+801,BARINGO,Marigat Sub County,Mukutani Ward,90,1450,2124,90,1450,Marigat,CORRECT
+935,KAJIADO,Loitokitok Sub County,Kimana Ward,92,1480,2125,92,1480,Loitokitok,CORRECT
+821,LAIKIPIA,Laikipia East Sub County,Umande Ward,91,1455,2126,91,1455,Laikipia East,CORRECT
+822,LAIKIPIA,Laikipia North Sub County,Sosian Ward,91,1456,2127,91,1456,Laikipia North,CORRECT
+823,LAIKIPIA,Laikipia North Sub County,Segera Ward,91,1456,2128,91,1456,Laikipia North,CORRECT
+824,LAIKIPIA,Laikipia North Sub County,Mugogodo West Ward,91,1456,2129,91,1456,Laikipia North,CORRECT
+825,LAIKIPIA,Laikipia North Sub County,Mugogodo East Ward,91,1456,2130,91,1456,Laikipia North,CORRECT
+927,KAJIADO,Kajiado West Sub County,Iloodokilani Ward,92,1479,2131,92,1479,Kajiado West,CORRECT
+928,KAJIADO,Kajiado West Sub County,Magadi Ward,92,1479,2132,92,1479,Kajiado West,CORRECT
+929,KAJIADO,Kajiado West Sub County,Ewuaso oonkidong'i Ward,92,1479,2133,92,1479,Kajiado West,CORRECT
+1802,Mombasa,Jomvu  Sub County,Mikindani Ward,55,1252,2134,55,1252,Jomvu,CORRECT
+1820,Mombasa,Mvita  Sub County,Makadara Ward-mji Wa Kale Ward,55,1255,2135,55,1255,Mvita,CORRECT
+1822,Mombasa,Mvita  Sub County,Tononoka Ward,55,1255,2136,55,1255,Mvita,CORRECT
+1823,Mombasa,Mvita  Sub County,Ganjoni Ward-shimanzi Ward,55,1255,2137,55,1255,Mvita,CORRECT
+1824,Mombasa,Mvita  Sub County,Majengo Ward,55,1255,2138,55,1255,Mvita,CORRECT
+1825,Kilifi,Kilifi North Sub County,Tezo Ward,73,1266,2139,73,1266,Kilifi North,CORRECT
+123,TAITA TAVETA,Mwatate Sub County,Chawia Ward,59,1276,2140,59,1276,Mwatate,CORRECT
+1834,Kilifi,Kilifi South Sub County,Shimo La Tewa Ward,73,1267,2141,73,1267,Kilifi South,CORRECT
+1844,Kilifi,Rabai Sub County,Rabai/kisurutini Ward,73,1270,2142,73,1270,Rabai,CORRECT
+1845,Kilifi,Ganze Sub County,Ganze Ward,73,1263,2143,73,1263,Ganze,CORRECT
+1848,Kilifi,Ganze Sub County,Sokoke Ward,73,1263,2144,73,1263,Ganze,CORRECT
+1851,Kilifi,Malindi Sub County,Ganda Ward,73,1269,2145,73,1269,Malindi,CORRECT
+1852,Kilifi,Malindi Sub County,Malindi Town Ward,73,1269,2146,73,1269,Malindi,CORRECT
+1856,Kilifi,Magarini Sub County,Gongoni Ward,73,1268,2147,73,1268,Magarini,CORRECT
+1857,Kilifi,Magarini Sub County,Adu Ward,73,1268,2148,73,1268,Magarini,CORRECT
+1858,Kilifi,Magarini Sub County,Garashi Ward,73,1268,2149,73,1268,Magarini,CORRECT
+1859,Kilifi,Magarini Sub County,Sabaki Ward,73,1268,2150,73,1268,Magarini,CORRECT
+1860,Siaya,Alego Usonga Sub County,North Alego Ward,83,483,2151,83,483,Alego Usonga Sub County,CORRECT
+1861,Siaya,Alego Usonga Sub County,South East Alego Ward,83,483,2152,83,483,Alego Usonga Sub County,CORRECT
+1862,Siaya,Gem Sub County,North Gem Ward,83,1530,2153,83,1530,Gem,CORRECT
+1863,Siaya,Gem Sub County,West Gem Ward,83,1530,2154,83,1530,Gem,CORRECT
+1864,Siaya,Gem Sub County,Central Gem Ward,83,1530,2155,83,1530,Gem,CORRECT
+1865,Siaya,Gem Sub County,Yala Township Ward,83,1530,2156,83,1530,Gem,CORRECT
+1866,Siaya,Gem Sub County,East Gem Ward,83,1530,2157,83,1530,Gem,CORRECT
+1867,Siaya,Gem Sub County,South Gem Ward,83,1530,2158,83,1530,Gem,CORRECT
+1868,Siaya,Bondo Sub County,West Yimbo Ward,83,1533,2159,83,1533,Bondo,CORRECT
+1869,Siaya,Bondo Sub County,Central Sakwa Ward,83,1533,2160,83,1533,Bondo,CORRECT
+1870,Siaya,Bondo Sub County,South Sakwa Ward,83,1533,2161,83,1533,Bondo,CORRECT
+1871,Siaya,Bondo Sub County,Yimbo East Ward,83,1533,2162,83,1533,Bondo,CORRECT
+1872,Siaya,Bondo Sub County,West Sakwa Ward,83,1533,2163,83,1533,Bondo,CORRECT
+1873,Siaya,Bondo Sub County,North Sakwa Ward,83,1533,2164,83,1533,Bondo,CORRECT
+1874,Siaya,Rarieda Sub County,East Asembo Ward,83,1534,2165,83,1534,Rarieda,CORRECT
+1875,Siaya,Rarieda Sub County,West Asembo Ward,83,1534,2166,83,1534,Rarieda,CORRECT
+1910,Kisumu,Kisumu East Sub County,Kajulu Ward,93,1535,2167,93,1535,Kisumu East,CORRECT
+1911,Kisumu,Kisumu East Sub County,Kolwa East Ward,93,1535,2168,93,1535,Kisumu East,CORRECT
+1914,Kisumu,Kisumu East Sub County,Kolwa Central Ward,93,1535,2169,93,1535,Kisumu East,CORRECT
+1916,Kisumu,Kisumu West Sub County,Central Kisumu Ward,93,1537,2170,93,1537,Kisumu West,CORRECT
+127,TAITA TAVETA,Voi Sub County,Kaloleni  Ward,59,1279,2171,59,1279,Voi,CORRECT
+1917,Kisumu,Kisumu West Sub County,North Kisumu Ward,93,1537,2172,93,1537,Kisumu West,CORRECT
+1918,Kisumu,Kisumu West Sub County,West Kisumu Ward,93,1537,2173,93,1537,Kisumu West,CORRECT
+1919,Kisumu,Kisumu West Sub County,North West Kisumu Ward,93,1537,2174,93,1537,Kisumu West,CORRECT
+1920,Kisumu,Kisumu Central Sub County,Railways Ward,93,1536,2175,93,1536,Kisumu Central,CORRECT
+1921,Kisumu,Kisumu Central Sub County,Migosi Ward,93,1536,2176,93,1536,Kisumu Central,CORRECT
+1998,Kisii,Nyaribari Chache  Sub County,Ibeno Ward,87,508,2177,87,508,Nyaribari Chache  Sub County,CORRECT
+1999,Kisii,Kitutu Chache North Sub County,Monyerero Ward,87,510,2178,87,510,Kitutu Chache North Sub County,CORRECT
+2001,Kisii,Kitutu Chache North Sub County,Marani Ward,87,510,2179,87,510,Kitutu Chache North Sub County,CORRECT
+2002,Kisii,Kitutu Chache North Sub County,Kegogi Ward,87,510,2180,87,510,Kitutu Chache North Sub County,CORRECT
+2003,Kisii,Kitutu Chache South Sub County,Bogusero Ward,87,485,2181,87,485,Kitutu Chache South Sub County,CORRECT
+2004,Kisii,Kitutu Chache South Sub County,Bogeka Ward,87,485,2182,87,485,Kitutu Chache South Sub County,CORRECT
+2007,Kisii,Kitutu Chache South Sub County,Nyatieko Ward,87,485,2183,87,485,Kitutu Chache South Sub County,CORRECT
+2009,Nairobi,Westlands  Sub County,Karura Ward,,,2184,79,486,Westlands  Sub County,TARGET_UNRESOLVED
+2010,Nairobi,Westlands  Sub County,Kangemi Ward,,,2185,79,486,Westlands  Sub County,TARGET_UNRESOLVED
+2011,Nairobi,Westlands  Sub County,Mountain View Ward,,,2186,79,486,Westlands  Sub County,TARGET_UNRESOLVED
+678,TRANS NZOIA,Kwanza  Sub County,Keiyo Ward,81,1427,2187,81,1427,Kwanza,CORRECT
+2014,Nairobi,Dagoretti North Sub County,Gatina Ward,,,2188,79,487,Dagoretti North Sub County,TARGET_UNRESOLVED
+780,NANDI,Mosop Sub County,Sangalo/kebulonik Ward,88,462,2189,88,462,Mosop Sub County,CORRECT
+786,BARINGO,Tiaty Sub County,Tangulbei/korossi Ward,90,,2190,90,757,Tiaty East,TARGET_UNRESOLVED
+2023,Nairobi,Langata  Sub County,Nairobi West Ward,,,2191,79,1577,Lang'ata,TARGET_UNRESOLVED
+2024,Nairobi,Langata  Sub County,Mugumo-ini Ward,,,2192,79,1577,Lang'ata,TARGET_UNRESOLVED
+787,BARINGO,Tiaty Sub County,Churo/amaya Ward,90,,2193,90,757,Tiaty East,TARGET_UNRESOLVED
+788,BARINGO,Baringo North Sub County,Barwessa Ward,90,1447,2194,90,1447,Baringo North,CORRECT
+789,BARINGO,Baringo North Sub County,Kabartonjo Ward,90,1447,2195,90,1447,Baringo North,CORRECT
+790,BARINGO,Baringo North Sub County,Saimoi/kipsaraman Ward,90,1447,2196,90,1447,Baringo North,CORRECT
+791,BARINGO,Baringo North Sub County,Saimo/soi Ward,90,1447,2197,90,1447,Baringo North,CORRECT
+792,BARINGO,Baringo North Sub County,Bartabwa Ward,90,1447,2198,90,1447,Baringo North,CORRECT
+793,BARINGO,Baringo Central Sub County,Kabarnet Ward,90,1446,2199,90,1446,Baringo Central,CORRECT
+2025,Nairobi,Langata  Sub County,South C Ward,,,2200,79,1577,Lang'ata,TARGET_UNRESOLVED
+795,BARINGO,Baringo Central Sub County,Tenges Ward,90,1446,2201,90,1446,Baringo Central,CORRECT
+796,BARINGO,Baringo Central Sub County,Ewalel/chapchap Ward,90,1446,2202,90,1446,Baringo Central,CORRECT
+797,BARINGO,Baringo Central Sub County,Kapropita Ward,90,1446,2203,90,1446,Baringo Central,CORRECT
+798,BARINGO,Marigat Sub County,Marigat Ward,90,1450,2204,90,1450,Marigat,CORRECT
+799,BARINGO,Marigat Sub County,Iichamus Ward,90,1450,2205,90,1450,Marigat,CORRECT
+800,BARINGO,Marigat Sub County,Mochongoi Ward,90,1450,2206,90,1450,Marigat,CORRECT
+2026,Nairobi,Langata  Sub County,Nyayo Highrise Ward,,,2207,79,1577,Lang'ata,TARGET_UNRESOLVED
+2027,Nairobi,Kibra  Sub County,Laini Saba Ward,,,2208,79,1576,Kibra,TARGET_UNRESOLVED
+930,KAJIADO,Kajiado West Sub County,Mosiro Ward,92,1479,2209,92,1479,Kajiado West,CORRECT
+931,KAJIADO,Loitokitok Sub County,Entonet/lenkism Ward,92,1480,2210,92,1480,Loitokitok,CORRECT
+932,KAJIADO,Loitokitok Sub County,Imbrikani/eselelnkei Ward,92,1480,2211,92,1480,Loitokitok,CORRECT
+933,KAJIADO,Loitokitok Sub County,Kuku Ward,92,1480,2212,92,1480,Loitokitok,CORRECT
+934,KAJIADO,Loitokitok Sub County,Rombo Ward,92,1480,2213,92,1480,Loitokitok,CORRECT
+2028,Nairobi,Kibra  Sub County,Lindi Ward,,,2214,79,1576,Kibra,TARGET_UNRESOLVED
+936,KERICHO,Kipkelion East Sub County,Londiani Ward,56,491,2215,56,491,Kipkelion East Sub County,CORRECT
+2029,Nairobi,Kibra  Sub County,Makina Ward,,,2216,79,1576,Kibra,TARGET_UNRESOLVED
+2031,Nairobi,Kibra  Sub County,Sarang'ombe Ward,,,2217,79,1576,Kibra,TARGET_UNRESOLVED
+2032,Nairobi,Roysambu  Sub County,Githurai Ward,,,2218,79,492,Roysambu  Sub County,TARGET_UNRESOLVED
+2033,Nairobi,Roysambu  Sub County,Kahawa West,,,2219,79,492,Roysambu  Sub County,TARGET_UNRESOLVED
+2036,Nairobi,Roysambu  Sub County,Kahawa,,,2220,79,492,Roysambu  Sub County,TARGET_UNRESOLVED
+2037,Nairobi,Kasarani  Sub County,Clay City,,,2221,79,1575,Kasarani,TARGET_UNRESOLVED
+2040,Nairobi,Kasarani  Sub County,Njiru Ward,,,2222,79,1575,Kasarani,TARGET_UNRESOLVED
+2041,Nairobi,Kasarani  Sub County,Ruai Ward,,,2223,79,1575,Kasarani,TARGET_UNRESOLVED
+2042,Nairobi,Ruaraka  Sub County,Babandogo,,,2224,79,405,Ruaraka  Sub County,TARGET_UNRESOLVED
+2043,Nairobi,Ruaraka  Sub County,Utalii Ward,,,2225,79,405,Ruaraka  Sub County,TARGET_UNRESOLVED
+2048,Nairobi,Embakasi South Sub County,Kwa Njenga Ward,,,2226,79,407,Embakasi South Sub County,TARGET_UNRESOLVED
+2056,Nairobi,Embakasi North Sub County,Dandora Area Iv Ward,,,2227,79,533,Embakasi North Sub County,TARGET_UNRESOLVED
+2049,Nairobi,Embakasi South Sub County,Kwa Reuben Ward,,,2228,79,407,Embakasi South Sub County,TARGET_UNRESOLVED
+2067,Nairobi,Embakasi West Sub County,Umoja I Ward,,,2229,79,534,Embakasi West Sub County,TARGET_UNRESOLVED
+2051,Nairobi,Embakasi South Sub County,Kware Ward,,,2230,79,407,Embakasi South Sub County,TARGET_UNRESOLVED
+2052,Nairobi,Embakasi North Sub County,Kariobangi North Ward,,,2231,79,533,Embakasi North Sub County,TARGET_UNRESOLVED
+2053,Nairobi,Embakasi North Sub County,Dandora Area I Ward,,,2232,79,533,Embakasi North Sub County,TARGET_UNRESOLVED
+2054,Nairobi,Embakasi North Sub County,Dandora Area Ii Ward,,,2233,79,533,Embakasi North Sub County,TARGET_UNRESOLVED
+2055,Nairobi,Embakasi North Sub County,Dandora Area Iii Ward,,,2234,79,533,Embakasi North Sub County,TARGET_UNRESOLVED
+2057,Nairobi,Embakasi Central Sub County,Kayole North Ward,,,2235,79,535,Embakasi Central Sub County,TARGET_UNRESOLVED
+2058,Nairobi,Embakasi Central Sub County,Kayole Central Ward,,,2236,79,535,Embakasi Central Sub County,TARGET_UNRESOLVED
+2068,Nairobi,Embakasi West Sub County,Umoja Ii Ward,,,2237,79,534,Embakasi West Sub County,TARGET_UNRESOLVED
+2059,Nairobi,Embakasi Central Sub County,Kayole South Ward,,,2238,79,535,Embakasi Central Sub County,TARGET_UNRESOLVED
+2074,Nairobi,Makadara  Sub County,Makongeni Ward,,,2239,79,1578,Makadara,TARGET_UNRESOLVED
+2060,Nairobi,Embakasi Central Sub County,Komarock Ward,,,2240,79,535,Embakasi Central Sub County,TARGET_UNRESOLVED
+2061,Nairobi,Embakasi Central Sub County,Matopeni/spring Valley Ward,,,2241,79,535,Embakasi Central Sub County,TARGET_UNRESOLVED
+2076,Nairobi,Kamukunji  Sub County,Eastleigh North Ward,,,2242,79,1574,Kamukunji,TARGET_UNRESOLVED
+2062,Nairobi,Embakasi East Sub County,Upper Savanna Ward,,,2243,79,509,Embakasi East Sub County,TARGET_UNRESOLVED
+2069,Nairobi,Embakasi West Sub County,Mowlem Ward,,,2244,79,534,Embakasi West Sub County,TARGET_UNRESOLVED
+2070,Nairobi,Embakasi West Sub County,Kariobangi South Ward,,,2245,79,534,Embakasi West Sub County,TARGET_UNRESOLVED
+2071,Nairobi,Makadara  Sub County,Maringo/hamza Ward,,,2246,79,1578,Makadara,TARGET_UNRESOLVED
+693,TRANS NZOIA,Kiminini  Sub County,Nabiswa Ward,81,1429,2247,81,1429,Kiminini,CORRECT
+2079,Nairobi,Kamukunji  Sub County,California Ward,,,2248,79,1574,Kamukunji,TARGET_UNRESOLVED
+2075,Nairobi,Kamukunji  Sub County,Pumwani Ward,,,2249,79,1574,Kamukunji,TARGET_UNRESOLVED
+694,TRANS NZOIA,Cherangany Sub County,Sinyerere Ward,81,441,2250,81,441,Cherangany Sub County,CORRECT
+2078,Nairobi,Kamukunji  Sub County,Airbase Ward,,,2251,79,1574,Kamukunji,TARGET_UNRESOLVED
+133,GARISSA,Garissa Sub County,Iftin Ward,60,1283,2252,60,1283,Garissa,CORRECT
+2080,Nairobi,Starehe  Sub County,Nairobi Central Ward,,,2253,79,513,Starehe  Sub County,TARGET_UNRESOLVED
+146,GARISSA,Dadaab Sub County,Dertu Ward,60,1281,2254,60,1281,Dadaab,CORRECT
+147,GARISSA,Dadaab Sub County,Dadaab Ward,60,1281,2255,60,1281,Dadaab,CORRECT
+148,GARISSA,Dadaab Sub County,LABISGALE Ward,60,1281,2256,60,1281,Dadaab,CORRECT
+149,GARISSA,Dadaab Sub County,Damajale Ward,60,1281,2257,60,1281,Dadaab,CORRECT
+150,GARISSA,Dadaab Sub County,Liboi Ward,60,1281,2258,60,1281,Dadaab,CORRECT
+151,GARISSA,Dadaab Sub County,Abakaile Ward,60,1281,2259,60,1281,Dadaab,CORRECT
+756,NANDI,Aldai Sub County,Terik Ward,88,451,2260,88,451,Aldai Sub County,CORRECT
+2081,Nairobi,Starehe  Sub County,Ngara Ward Ward,,,2261,79,513,Starehe  Sub County,TARGET_UNRESOLVED
+2082,Nairobi,Starehe  Sub County,Pangani Ward,,,2262,79,513,Starehe  Sub County,TARGET_UNRESOLVED
+2083,Nairobi,Starehe  Sub County,Ziwani/kariokor,,,2263,79,513,Starehe  Sub County,TARGET_UNRESOLVED
+2086,Nairobi,Mathare  Sub County,Hospital Ward,,,2264,79,1579,Mathare,TARGET_UNRESOLVED
+2087,Nairobi,Mathare  Sub County,Mabatini Ward,,,2265,79,1579,Mathare,TARGET_UNRESOLVED
+2089,Nairobi,Mathare  Sub County,Ngei Ward,,,2266,79,1579,Mathare,TARGET_UNRESOLVED
+2090,Nairobi,Mathare  Sub County,Mlango Kubwa,,,2267,79,1579,Mathare,TARGET_UNRESOLVED
+2091,Nairobi,Mathare  Sub County,Kiamaiko Ward,,,2268,79,1579,Mathare,TARGET_UNRESOLVED
+2092,Nairobi,Westlands  Sub County,Kitisuru Ward,,,2269,79,486,Westlands  Sub County,TARGET_UNRESOLVED
+2093,Muranga,Kangema Sub County,Kanyenya-ini Ward,76,1390,2270,76,1390,Kangema,CORRECT
+2094,Muranga,Kangema Sub County,Muguru Ward,76,1390,2271,76,1390,Kangema,CORRECT
+2095,Muranga,Kangema Sub County,Rwathia Ward,76,1390,2272,76,1390,Kangema,CORRECT
+2096,Muranga,Mathioya Sub County,Gitugi Ward,76,1391,2273,76,1391,Mathioya,CORRECT
+168,WAJIR,Wajir East Sub County,Wagberi Ward,61,1291,2274,61,1291,Wajir East,CORRECT
+2151,Uasin Gishu,Kapseret Sub County,Ngeria Ward,78,1431,2275,78,1431,Kapseret,CORRECT
+2153,Uasin Gishu,Kapseret Sub County,Langas Ward,78,1431,2276,78,1431,Kapseret,CORRECT
+181,WAJIR,Eldas Sub County,Eldas Ward,61,1288,2277,61,1288,Eldas,CORRECT
+2154,Uasin Gishu,Kesses Sub County,Racecourse Ward,78,1432,2278,78,1432,Kesses,CORRECT
+2155,Uasin Gishu,Kesses Sub County,Cheptiret/kipchamo Ward,78,1432,2279,78,1432,Kesses,CORRECT
+2156,Uasin Gishu,Kesses Sub County,Tulwet/chiyat Ward,78,1432,2280,78,1432,Kesses,CORRECT
+2157,Uasin Gishu,Kesses Sub County,Tarakwa Ward,78,1432,2281,78,1432,Kesses,CORRECT
+152,GARISSA,Fafi Sub County,Bura Ward,60,1282,2282,60,1282,Fafi,CORRECT
+2167,Narok,Transmara East Sub County,Kapsasian Ward,80,515,2283,80,515,Transmara East Sub County,CORRECT
+2168,Narok,Narok North Sub County,Olposimoru Ward,80,1471,2284,80,1471,Narok North,CORRECT
+2169,Narok,Narok North Sub County,Olokurto Ward,80,1471,2285,80,1471,Narok North,CORRECT
+2170,Narok,Narok North Sub County,Narok Town Ward,80,1471,2286,80,1471,Narok North,CORRECT
+2171,Narok,Narok North Sub County,Nkareta Ward,80,1471,2287,80,1471,Narok North,CORRECT
+182,WAJIR,Eldas Sub County,Della Ward,61,1288,2288,61,1288,Eldas,CORRECT
+186,WAJIR,Wajir South Sub County,Dadaja bulla Ward,61,1293,2289,61,1293,Wajir South,CORRECT
+187,WAJIR,Wajir South Sub County,Habasswein Ward,61,1293,2290,61,1293,Wajir South,CORRECT
+188,WAJIR,Wajir South Sub County,Lagboghoi south Ward,61,1293,2291,61,1293,Wajir South,CORRECT
+2205,Kiambu,Kabete Sub County,Uthiru Ward,82,1401,2292,82,1401,Kabete,CORRECT
+2206,Kiambu,Kikuyu Sub County,Karai,82,1404,2293,82,1404,Kikuyu,CORRECT
+2207,Kiambu,Kikuyu Sub County,Nachu Ward,82,1404,2294,82,1404,Kikuyu,CORRECT
+2208,Kiambu,Kikuyu Sub County,Sigona Ward,82,1404,2295,82,1404,Kikuyu,CORRECT
+2209,Kiambu,Kikuyu Sub County,Kikuyu Ward,82,1404,2296,82,1404,Kikuyu,CORRECT
+2210,Kiambu,Kikuyu Sub County,Kinoo,82,1404,2297,82,1404,Kikuyu,CORRECT
+2211,Kiambu,Limuru Sub County,Bibirioni Ward,82,1406,2298,82,1406,Limuru,CORRECT
+2212,Kiambu,Limuru Sub County,Limuru Central Ward,82,1406,2299,82,1406,Limuru,CORRECT
+2213,Kiambu,Limuru Sub County,Ndeiya Ward,82,1406,2300,82,1406,Limuru,CORRECT
+2214,Kiambu,Limuru Sub County,Limuru East Ward,82,1406,2301,82,1406,Limuru,CORRECT
+2215,Kiambu,Limuru Sub County,Ngecha Tigoni Ward,82,1406,2302,82,1406,Limuru,CORRECT
+153,GARISSA,Fafi Sub County,Dekaharia Ward,60,1282,2303,60,1282,Fafi,CORRECT
+190,WAJIR,Wajir South Sub County,Diif Ward,61,1293,2304,61,1293,Wajir South,CORRECT
+2240,Kiambu,Ruiru Sub County,Biashara Ward,82,1407,2305,82,1407,Ruiru,CORRECT
+308,THARAKA-NITHI,Tharaka South Sub County,Nkondi Ward,66,1327,2306,66,1327,Tharaka South,CORRECT
+309,THARAKA-NITHI,Tharaka South Sub County,Chiakagira Ward,66,1327,2307,66,1327,Tharaka South,CORRECT
+310,THARAKA-NITHI,Tharaka South Sub County,Marimanti Ward,66,1327,2308,66,1327,Tharaka South,CORRECT
+311,EMBU,Manyatta  Sub County,Ruguru-Ngandori Ward,89,542,2309,89,542,Manyatta  Sub County,CORRECT
+312,EMBU,Manyatta  Sub County,Kithimu Ward,89,542,2310,89,542,Manyatta  Sub County,CORRECT
+313,EMBU,Manyatta  Sub County,Nginda Ward,89,542,2311,89,542,Manyatta  Sub County,CORRECT
+314,EMBU,Manyatta  Sub County,Mbeti north Ward,89,542,2312,89,542,Manyatta  Sub County,CORRECT
+315,EMBU,Manyatta  Sub County,Kirimari Ward,89,542,2313,89,542,Manyatta  Sub County,CORRECT
+316,EMBU,Manyatta  Sub County,Gaturi south Ward,89,542,2314,89,542,Manyatta  Sub County,CORRECT
+317,EMBU,Manyatta  Sub County,Gaturi north Ward,89,542,2315,89,542,Manyatta  Sub County,CORRECT
+318,EMBU,Runyenjes  Sub County,Kaagari South Ward,89,543,2316,89,543,Runyenjes  Sub County,CORRECT
+319,EMBU,Runyenjes  Sub County,Central ward,89,543,2317,89,543,Runyenjes  Sub County,CORRECT
+320,EMBU,Runyenjes  Sub County,Kaagari North Ward,89,543,2318,89,543,Runyenjes  Sub County,CORRECT
+2242,Kiambu,Ruiru Sub County,Kahawa/sukari Ward,82,1407,2319,82,1407,Ruiru,CORRECT
+2244,Kiambu,Ruiru Sub County,Kiuu Ward,82,1407,2320,82,1407,Ruiru,CORRECT
+331,KITUI,Mwingi North Sub County,Ngomeni Ward,68,343,2321,68,343,Mwingi North Sub County,CORRECT
+332,KITUI,Mwingi North Sub County,Kyuso Ward,68,343,2322,68,343,Mwingi North Sub County,CORRECT
+2245,Kiambu,Ruiru Sub County,Mwiki Ward,82,1407,2323,82,1407,Ruiru,CORRECT
+2246,Kiambu,Ruiru Sub County,Mwihoko Ward,82,1407,2324,82,1407,Ruiru,CORRECT
+2247,Kiambu,Githunguri Sub County,Githunguri Ward,82,1399,2325,82,1399,Githunguri,CORRECT
+2248,Bomet,Sotik Sub County,Ndanai/abosi Ward,86,1491,2326,86,1491,Sotik,CORRECT
+2249,Bomet,Sotik Sub County,Chemagel Ward,86,1491,2327,86,1491,Sotik,CORRECT
+2250,Bomet,Sotik Sub County,Kipsonoi Ward,86,1491,2328,86,1491,Sotik,CORRECT
+2251,Bomet,Sotik Sub County,Kapletundo Ward,86,1491,2329,86,1491,Sotik,CORRECT
+2252,Bomet,Sotik Sub County,Rongena/manaret Ward,86,1491,2330,86,1491,Sotik,CORRECT
+2253,Bomet,Chepalungu Sub County,Kong'asis Ward,86,1489,2331,86,1489,Chepalungu,CORRECT
+2254,Bomet,Chepalungu Sub County,Nyangores Ward,86,1489,2332,86,1489,Chepalungu,CORRECT
+2255,Bomet,Chepalungu Sub County,Sigor Ward,86,1489,2333,86,1489,Chepalungu,CORRECT
+2256,Bomet,Chepalungu Sub County,Chebunyo Ward,86,1489,2334,86,1489,Chepalungu,CORRECT
+2257,Bomet,Chepalungu Sub County,Siongiroi Ward,86,1489,2335,86,1489,Chepalungu,CORRECT
+2258,Bomet,Bomet East Sub County,Merigi Ward,86,1488,2336,86,1488,Bomet East,CORRECT
+2259,Bomet,Bomet East Sub County,Kembu Ward,86,1488,2337,86,1488,Bomet East,CORRECT
+2260,Bomet,Bomet East Sub County,Longisa Ward,86,1488,2338,86,1488,Bomet East,CORRECT
+2261,Bomet,Bomet East Sub County,Kipreres  Ward,86,1488,2339,86,1488,Bomet East,CORRECT
+2262,Bomet,Bomet East Sub County,Chemaner Ward,86,1488,2340,86,1488,Bomet East,CORRECT
+2263,Bomet,Bomet Central Sub County,Silibwet Township Ward,86,1492,2341,86,1492,Bomet Central,CORRECT
+2264,Bomet,Bomet Central Sub County,Ndaraweta Ward,86,1492,2342,86,1492,Bomet Central,CORRECT
+2265,Bomet,Bomet Central Sub County,Singorwet Ward,86,1492,2343,86,1492,Bomet Central,CORRECT
+2266,Bomet,Bomet Central Sub County,Chesoen Ward,86,1492,2344,86,1492,Bomet Central,CORRECT
+2267,Bomet,Bomet Central Sub County,Mutarakwa  Ward,86,1492,2345,86,1492,Bomet Central,CORRECT
+2268,Bomet,Konoin Sub County,Chepchabas Ward,86,1490,2346,86,1490,Konoin,CORRECT
+159,GARISSA,Ijara Sub County,Ijara Ward,60,1285,2347,60,1285,Ijara,CORRECT
+198,MANDERA,BANISSA,GUBA,63,518,2348,63,518,BANISSA,CORRECT
+199,MANDERA,BANISSA,MALKAMARI,63,518,2349,63,518,BANISSA,CORRECT
+88,TANA RIVER,Garsen Sub County,Kipini west Ward,57,517,2350,57,517,Garsen Sub County,CORRECT
+89,TANA RIVER,Garsen Sub County,Garsen central Ward,57,517,2351,57,517,Garsen Sub County,CORRECT
+90,TANA RIVER,Garsen Sub County,Garsen west Ward,57,517,2352,57,517,Garsen Sub County,CORRECT
+107,LAMU,LAMU WEST,MKUNUMBI,58,1275,2353,58,1275,Lamu West,CORRECT
+110,LAMU,LAMU WEST,BAHARI,58,1275,2354,58,1275,Lamu West,CORRECT
+194,MANDERA,MANDERA WEST,DANDU,63,1295,2355,63,1295,Mandera West,CORRECT
+195,MANDERA,MANDERA WEST,GITHER,63,1295,2356,63,1295,Mandera West,CORRECT
+200,MANDERA,BANISSA,KILIWAHERI,63,518,2357,63,518,BANISSA,CORRECT
+209,MANDERA,MANDERA SOUTH,ELWAK NORTH,63,325,2358,63,325,MANDERA SOUTH,CORRECT
+230,MARSABIT,NORTH HORR,TURBI,64,1307,2359,64,1307,North Horr,CORRECT
+109,LAMU,LAMU WEST,WITU,58,1275,2360,58,1275,Lamu West,CORRECT
+237,MARSABIT,LAISAMIS,KARGI/SOUTH HORR,64,330,2361,64,330,LAISAMIS,CORRECT
+238,MARSABIT,LAISAMIS,KORR/NGURUNIT,64,330,2362,64,330,LAISAMIS,CORRECT
+91,TANA RIVER,Garsen Sub County,Garsen north Ward,57,517,2363,57,517,Garsen Sub County,CORRECT
+239,MARSABIT,LAISAMIS,LOGOLOGO,64,330,2364,64,330,LAISAMIS,CORRECT
+132,GARISSA,Garissa Sub County,Galbet Ward,60,1283,2365,60,1283,Garissa,CORRECT
+169,WAJIR,Wajir East Sub County,Township Ward,61,1291,2366,61,1291,Wajir East,CORRECT
+170,WAJIR,Wajir East Sub County,Barwaqo Ward,61,1291,2367,61,1291,Wajir East,CORRECT
+176,WAJIR,Wajir West Sub County,Arbajahan Ward,61,1294,2368,61,1294,Wajir West,CORRECT
+178,WAJIR,Wajir West Sub County,ADEMASAJIDE Ward,61,1294,2369,61,1294,Wajir West,CORRECT
+179,WAJIR,Wajir West Sub County,Ganyure Wagalla Ward,61,1294,2370,61,1294,Wajir West,CORRECT
+180,WAJIR,Eldas Sub County,Lakoley south/basir Ward,61,1288,2371,61,1288,Eldas,CORRECT
+299,THARAKA-NITHI,Mwimbi Sub County,Ganga Ward,66,341,2372,66,341,Mwimbi Sub County,CORRECT
+300,THARAKA-NITHI,Mwimbi Sub County,Chogoria Ward,66,341,2373,66,341,Mwimbi Sub County,CORRECT
+301,THARAKA-NITHI,Igambang'ombe Sub County,Mariani Ward,66,1323,2374,66,1323,Igambang'ombe,CORRECT
+302,THARAKA-NITHI,Chuka Sub County,Karingani Ward,66,548,2375,66,548,Chuka Sub County,CORRECT
+303,THARAKA-NITHI,Chuka Sub County,Magumoni Ward,66,548,2376,66,548,Chuka Sub County,CORRECT
+304,THARAKA-NITHI,Chuka Sub County,Mugwe Ward,66,548,2377,66,548,Chuka Sub County,CORRECT
+321,EMBU,Runyenjes  Sub County,Kyeni north Ward,89,543,2378,89,543,Runyenjes  Sub County,CORRECT
+322,EMBU,Runyenjes  Sub County,Kyeni south Ward,89,543,2379,89,543,Runyenjes  Sub County,CORRECT
+323,EMBU,Mbeere South  Sub County,Mwea Ward,89,1331,2380,89,1331,Mbeere South,CORRECT
+324,EMBU,Mbeere South  Sub County,Makima Ward,89,1331,2381,89,1331,Mbeere South,CORRECT
+325,EMBU,Mbeere South  Sub County,Mbeti south Ward,89,1331,2382,89,1331,Mbeere South,CORRECT
+326,EMBU,Mbeere South  Sub County,Mavuria Ward,89,1331,2383,89,1331,Mbeere South,CORRECT
+327,EMBU,Mbeere South  Sub County,Kiambere Ward,89,1331,2384,89,1331,Mbeere South,CORRECT
+328,EMBU,Mbeere North  Sub County,Nthawa Ward,89,1332,2385,89,1332,Mbeere North,CORRECT
+350,KITUI,Kitui Rural Sub County,Kisasi Ward,68,348,2386,68,348,Kitui Rural Sub County,CORRECT
+357,KITUI,Kitui Central  Sub County,Mulango Ward,68,1336,2387,68,1336,Kitui Central,CORRECT
+358,KITUI,Kitui Central  Sub County,Kyangwithya east Ward,68,1336,2388,68,1336,Kitui Central,CORRECT
+361,KITUI,Kitui East Sub County,Chuluni Ward,68,354,2389,68,354,Kitui East Sub County,CORRECT
+366,KITUI,Kitui South Sub County,Mutomo Ward,68,357,2390,68,357,Kitui South Sub County,CORRECT
+367,KITUI,Kitui South Sub County,Mutha Ward,68,357,2391,68,357,Kitui South Sub County,CORRECT
+369,KITUI,Kitui South Sub County,Kanziko Ward,68,357,2392,68,357,Kitui South Sub County,CORRECT
+446,NYANDARUA,Kinangop Sub County,Nyakio Ward,67,1369,2393,67,1369,Kinangop,CORRECT
+447,NYANDARUA,Kinangop Sub County,Githabai Ward,67,1369,2394,67,1369,Kinangop,CORRECT
+448,NYANDARUA,Kinangop Sub County,Magumu Ward,67,1369,2395,67,1369,Kinangop,CORRECT
+451,NYANDARUA,Kipipiri Sub County,Geta Ward,67,1372,2396,67,1372,Kipipiri,CORRECT
+453,NYANDARUA,Olkalou Sub County,Karau Ward,67,374,2397,67,374,Olkalou Sub County,CORRECT
+455,NYANDARUA,Olkalou Sub County,Mirangine Ward,67,374,2398,67,374,Olkalou Sub County,CORRECT
+456,NYANDARUA,Olkalou Sub County,Kaimbaga Ward,67,374,2399,67,374,Olkalou Sub County,CORRECT
+458,NYANDARUA,Oljoroorok Sub County,Gathanji Ward,67,342,2400,67,342,Oljoroorok Sub County,CORRECT
+459,NYANDARUA,Oljoroorok Sub County,Gatimu Ward,67,342,2401,67,342,Oljoroorok Sub County,CORRECT
+460,NYANDARUA,Oljoroorok Sub County,Weru Ward,67,342,2402,67,342,Oljoroorok Sub County,CORRECT
+463,NYANDARUA,Ndaragwa Sub County,Kiritta Ward,67,395,2403,67,395,Ndaragwa Sub County,CORRECT
+464,NYANDARUA,Ndaragwa Sub County,Central Ward,67,395,2404,67,395,Ndaragwa Sub County,CORRECT
+465,NYANDARUA,Ndaragwa Sub County,Shamata Ward,67,395,2405,67,395,Ndaragwa Sub County,CORRECT
+466,NYERI,Tetu Sub County,Dedan kimathi Ward,69,1376,2406,69,1376,Tetu,CORRECT
+467,NYERI,Tetu Sub County,Wamagana Ward,69,1376,2407,69,1376,Tetu,CORRECT
+468,NYERI,Tetu Sub County,Aguthi-gaaki Ward,69,1376,2408,69,1376,Tetu,CORRECT
+469,NYERI,Kieni West Sub County,Mweiga Ward,69,1378,2409,69,1378,Kieni West,CORRECT
+470,NYERI,Kieni East Sub County,Naromoru/kiamathaga Ward,69,1377,2410,69,1377,Kieni East,CORRECT
+471,NYERI,Kieni West Sub County,Mwiyogo/endarasha Ward,69,1378,2411,69,1378,Kieni West,CORRECT
+472,NYERI,Kieni West Sub County,Mugunda Ward,69,1378,2412,69,1378,Kieni West,CORRECT
+473,NYERI,Kieni West Sub County,Gatarakwa Ward,69,1378,2413,69,1378,Kieni West,CORRECT
+474,NYERI,Kieni East Sub County,Thegu river Ward,69,1377,2414,69,1377,Kieni East,CORRECT
+475,NYERI,Kieni East Sub County,Kabaru Ward,69,1377,2415,69,1377,Kieni East,CORRECT
+476,NYERI,Kieni East Sub County,Gakawa Ward,69,1377,2416,69,1377,Kieni East,CORRECT
+477,NYERI,Mathira West Sub County,Ruguru Ward,69,1380,2417,69,1380,Mathira West,CORRECT
+478,NYERI,Mathira East Sub County,Magutu Ward,69,1379,2418,69,1379,Mathira East,CORRECT
+617,TURKANA,Turkana West Sub County,Kakuma Ward,70,1416,2419,70,1416,Turkana West,CORRECT
+621,TURKANA,Turkana West Sub County,Kalobeyei Ward,70,1416,2420,70,1416,Turkana West,CORRECT
+623,TURKANA,Turkana West Sub County,Nanaam Ward,70,1416,2421,70,1416,Turkana West,CORRECT
+627,TURKANA,Turkana Central Sub County,Lodwar Township Ward,70,1412,2422,70,1412,Turkana Central,CORRECT
+628,TURKANA,Turkana Central Sub County,Kanamkemer Ward,70,1412,2423,70,1412,Turkana Central,CORRECT
+629,TURKANA,Loima Sub County,Kotaruk/Lobei Ward,70,1411,2424,70,1411,Loima,CORRECT
+631,TURKANA,Loima Sub County,Loima Ward,70,1411,2425,70,1411,Loima,CORRECT
+634,TURKANA,Turkana South Sub County,Katilu Ward,70,1415,2426,70,1415,Turkana South,CORRECT
+639,TURKANA,Turkana East Sub County,Katilia Ward,70,1413,2427,70,1413,Turkana East,CORRECT
+640,TURKANA,Turkana East Sub County,Lokori/kochodin Ward,70,1413,2428,70,1413,Turkana East,CORRECT
+656,WEST POKOT,Pokot North Sub County,Alale Ward,71,1419,2429,71,1419,Pokot North,CORRECT
+657,WEST POKOT,Pokot South Sub County,Chepareria Ward,71,1420,2430,71,1420,Pokot South,CORRECT
+658,WEST POKOT,Pokot South Sub County,Batei Ward,71,1420,2431,71,1420,Pokot South,CORRECT
+659,WEST POKOT,Pokot South Sub County,Lelan Ward,71,1420,2432,71,1420,Pokot South,CORRECT
+660,WEST POKOT,Pokot South Sub County,Tapach Ward,71,1420,2433,71,1420,Pokot South,CORRECT
+661,SAMBURU,Samburu Central Sub County,Lodokejek Ward,72,1422,2434,72,1422,Samburu Central,CORRECT
+679,TRANS NZOIA,Kwanza  Sub County,Bidii Ward,81,1427,2435,81,1427,Kwanza,CORRECT
+685,TRANS NZOIA,Saboti  Sub County,Tuwani Ward,81,425,2436,81,425,Saboti  Sub County,CORRECT
+686,TRANS NZOIA,Saboti  Sub County,Saboti Ward,81,425,2437,81,425,Saboti  Sub County,CORRECT
+687,TRANS NZOIA,Saboti  Sub County,Machewa Ward,81,425,2438,81,425,Saboti  Sub County,CORRECT
+691,TRANS NZOIA,Kiminini  Sub County,Hospital Ward,81,1429,2439,81,1429,Kiminini,CORRECT
+692,TRANS NZOIA,Kiminini  Sub County,Sikhendu Ward,81,1429,2440,81,1429,Kiminini,CORRECT
+700,TRANS NZOIA,Cherangany Sub County,Sitatunga Ward,81,441,2441,81,441,Cherangany Sub County,CORRECT
+736,ELGEYO-MARAKWET,Marakwet West Sub County,Sengwer Ward,85,1439,2442,85,1439,Marakwet West,CORRECT
+737,ELGEYO-MARAKWET,Marakwet West Sub County,Cherangany  Ward,85,1439,2443,85,1439,Marakwet West,CORRECT
+738,ELGEYO-MARAKWET,Marakwet West Sub County,Moiben Kuserwo Ward,85,1439,2444,85,1439,Marakwet West,CORRECT
+739,ELGEYO-MARAKWET,Marakwet West Sub County,Kapsowar Ward,85,1439,2445,85,1439,Marakwet West,CORRECT
+740,ELGEYO-MARAKWET,Marakwet West Sub County,Arror Ward,85,1439,2446,85,1439,Marakwet West,CORRECT
+741,ELGEYO-MARAKWET,Keiyo North Sub County,Kamariny Ward,85,1436,2447,85,1436,Keiyo North,CORRECT
+742,ELGEYO-MARAKWET,Keiyo North Sub County,Emsoo Ward,85,1436,2448,85,1436,Keiyo North,CORRECT
+743,ELGEYO-MARAKWET,Keiyo North Sub County,Tambach Ward,85,1436,2449,85,1436,Keiyo North,CORRECT
+744,ELGEYO-MARAKWET,Keiyo North Sub County,Kapchemutwa Ward,85,1436,2450,85,1436,Keiyo North,CORRECT
+745,ELGEYO-MARAKWET,Keiyo South Sub County,Kaptarakwa Ward,85,1437,2451,85,1437,Keiyo South,CORRECT
+746,ELGEYO-MARAKWET,Keiyo South Sub County,Chepkorio Ward,85,1437,2452,85,1437,Keiyo South,CORRECT
+750,ELGEYO-MARAKWET,Keiyo South Sub County,Metkei Ward,85,1437,2453,85,1437,Keiyo South,CORRECT
+751,NANDI,Tinderet Sub County,Songhor/Soba Ward,88,1445,2454,88,1445,Tinderet,CORRECT
+752,NANDI,Tinderet Sub County,Tinderet Ward,88,1445,2455,88,1445,Tinderet,CORRECT
+753,NANDI,Tinderet Sub County,Chemelil/chemase Ward,88,1445,2456,88,1445,Tinderet,CORRECT
+754,NANDI,Nandi East Sub County,Kapsimotwo Ward,88,1442,2457,88,1442,Nandi East,CORRECT
+763,NANDI,Nandi East Sub County,Ol'lessos Ward,88,1442,2458,88,1442,Nandi East,CORRECT
+764,NANDI,Nandi East Sub County,Kapchorua Ward,88,1442,2459,88,1442,Nandi East,CORRECT
+766,NANDI,Chesumei Sub County,Kosirai Ward,88,1440,2460,88,1440,Chesumei,CORRECT
+768,NANDI,Chesumei Sub County,Kaptel/kamoiywo Ward,88,1440,2461,88,1440,Chesumei,CORRECT
+769,NANDI,Chesumei Sub County,Kiptuiya Ward,88,1440,2462,88,1440,Chesumei,CORRECT
+771,NANDI,Emgwen Sub County,Kapkangani Ward,88,456,2463,88,456,Emgwen Sub County,CORRECT
+774,NANDI,Mosop Sub County,Chepterwai Ward,88,462,2464,88,462,Mosop Sub County,CORRECT
+775,NANDI,Mosop Sub County,Kipkaren Ward,88,462,2465,88,462,Mosop Sub County,CORRECT
+776,NANDI,Mosop Sub County,Kurgung/surungai Ward,88,462,2466,88,462,Mosop Sub County,CORRECT
+777,NANDI,Mosop Sub County,Kabiyet Ward,88,462,2467,88,462,Mosop Sub County,CORRECT
+779,NANDI,Mosop Sub County,Kabisaga Ward,88,462,2468,88,462,Mosop Sub County,CORRECT
+813,LAIKIPIA,Laikipia West Sub County,Githiga Ward,91,1457,2469,91,1457,Laikipia West,CORRECT
+956,KERICHO,Bureti Sub County,Kapkatet Ward,56,1483,2470,56,1483,Bureti,CORRECT
+959,KERICHO,Belgut Sub County,Cheptororiet/seretut Ward,56,1482,2471,56,1482,Belgut,CORRECT

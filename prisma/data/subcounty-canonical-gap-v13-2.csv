@@ -1,0 +1,2 @@
+county,normalizedCounty,prismaCountyId,authoritativeSubcounty,normalizedAuthoritativeSubcounty,prismaSubcountyId,prismaSubcountyName,wardCount,wardGids,classification,bestCanonicalCode,bestCanonicalCountyCode,bestCanonicalName,bestClassification,bestScore,editSimilarity,tokenSimilarity,alternative1,alternative2,alternative3,alternative4,alternative5,note
+BARINGO,baringo,90,Tiaty Sub County,tiaty,757,Tiaty East,7,781|782|783|784|785|786|787,CANONICAL_FOUND,3007,030,Tiaty East,ALIAS,0.980000,1.000000,1.000000,,,,,,Canonical source match identified as ALIAS.

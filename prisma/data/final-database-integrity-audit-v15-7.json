@@ -1,0 +1,354 @@
+{
+  "auditVersion": "V15.7",
+  "auditType": "Independent post-consolidation database integrity audit",
+  "mode": "READ_ONLY",
+  "generatedAt": "2026-09-11T09:58:07.330Z",
+  "status": "PASS",
+  "baseline": {
+    "counties": 47,
+    "subCounties": 414,
+    "wards": 1450,
+    "farmers": 1,
+    "farms": 1,
+    "businessPartners": 0,
+    "commodityTransactions": 0
+  },
+  "expectedCounts": {
+    "counties": 47,
+    "subCounties": 414,
+    "wards": 1450
+  },
+  "sourceGidIntegrity": {
+    "authoritativeFeatures": 1450,
+    "authoritativeNumericGids": 1450,
+    "authoritativeUniqueGids": 1450,
+    "databaseWards": 1450,
+    "databaseUniqueSourceGids": 1450,
+    "nullDatabaseSourceGids": 0,
+    "missingAuthoritativeGids": [],
+    "unexpectedDatabaseGids": []
+  },
+  "wardRelationalIntegrity": {
+    "nullSubCounty": 0,
+    "missingSubCounty": 0,
+    "missingCounty": 0,
+    "countySubCountyMismatches": 0
+  },
+  "deletedSubCountyVerification": {
+    "deletedIds": [
+      376,
+      411,
+      515
+    ],
+    "deletedIdsStillPresent": [],
+    "wardRefs": 0,
+    "farmerRefs": 0,
+    "farmRefs": 0,
+    "businessPartnerRefs": 0,
+    "commoditySourceRefs": 0,
+    "commodityDestinationRefs": 0
+  },
+  "canonicalTargets": [
+    {
+      "countyName": "Nyeri",
+      "countyId": 69,
+      "targetId": 1382,
+      "targetName": "Mukurwe-ini",
+      "targetWardCount": 4,
+      "expectedWardCount": 4,
+      "expectedGids": "487|488|489|490",
+      "actualGids": "487|488|489|490",
+      "ownershipStatus": "PASS"
+    },
+    {
+      "countyName": "Narok",
+      "countyId": 80,
+      "targetId": 1475,
+      "targetName": "Trans Mara West",
+      "targetWardCount": 6,
+      "expectedWardCount": 6,
+      "expectedGids": "2158|2159|2160|2161|2162|2163",
+      "actualGids": "2158|2159|2160|2161|2162|2163",
+      "ownershipStatus": "PASS"
+    },
+    {
+      "countyName": "Narok",
+      "countyId": 80,
+      "targetId": 1474,
+      "targetName": "Trans Mara East",
+      "targetWardCount": 4,
+      "expectedWardCount": 4,
+      "expectedGids": "2164|2165|2166|2167",
+      "actualGids": "2164|2165|2166|2167",
+      "ownershipStatus": "PASS"
+    }
+  ],
+  "repairedAuthoritativeCorrespondence": [
+    {
+      "gid": 487,
+      "authoritativeCounty": "NYERI",
+      "authoritativeSubCounty": "Mukurweini Sub County",
+      "authoritativeWard": "Gikondi Ward",
+      "databaseWardId": 1494,
+      "databaseSubCountyId": 1382,
+      "databaseCountyId": 69,
+      "expectedTargetId": 1382,
+      "status": "PASS"
+    },
+    {
+      "gid": 488,
+      "authoritativeCounty": "NYERI",
+      "authoritativeSubCounty": "Mukurweini Sub County",
+      "authoritativeWard": "Rugi Ward",
+      "databaseWardId": 1495,
+      "databaseSubCountyId": 1382,
+      "databaseCountyId": 69,
+      "expectedTargetId": 1382,
+      "status": "PASS"
+    },
+    {
+      "gid": 489,
+      "authoritativeCounty": "NYERI",
+      "authoritativeSubCounty": "Mukurweini Sub County",
+      "authoritativeWard": "Mukurwe-ini west Ward",
+      "databaseWardId": 1496,
+      "databaseSubCountyId": 1382,
+      "databaseCountyId": 69,
+      "expectedTargetId": 1382,
+      "status": "PASS"
+    },
+    {
+      "gid": 490,
+      "authoritativeCounty": "NYERI",
+      "authoritativeSubCounty": "Mukurweini Sub County",
+      "authoritativeWard": "Mukurwe-ini central Ward",
+      "databaseWardId": 1497,
+      "databaseSubCountyId": 1382,
+      "databaseCountyId": 69,
+      "expectedTargetId": 1382,
+      "status": "PASS"
+    },
+    {
+      "gid": 2158,
+      "authoritativeCounty": "Narok",
+      "authoritativeSubCounty": "Transmara West Sub County",
+      "authoritativeWard": "Kilgoris Central  Ward",
+      "databaseWardId": 1641,
+      "databaseSubCountyId": 1475,
+      "databaseCountyId": 80,
+      "expectedTargetId": 1475,
+      "status": "PASS"
+    },
+    {
+      "gid": 2159,
+      "authoritativeCounty": "Narok",
+      "authoritativeSubCounty": "Transmara West Sub County",
+      "authoritativeWard": "Keyian Ward",
+      "databaseWardId": 2071,
+      "databaseSubCountyId": 1475,
+      "databaseCountyId": 80,
+      "expectedTargetId": 1475,
+      "status": "PASS"
+    },
+    {
+      "gid": 2160,
+      "authoritativeCounty": "Narok",
+      "authoritativeSubCounty": "Transmara West Sub County",
+      "authoritativeWard": "Angata Barikoi Ward",
+      "databaseWardId": 2072,
+      "databaseSubCountyId": 1475,
+      "databaseCountyId": 80,
+      "expectedTargetId": 1475,
+      "status": "PASS"
+    },
+    {
+      "gid": 2161,
+      "authoritativeCounty": "Narok",
+      "authoritativeSubCounty": "Transmara West Sub County",
+      "authoritativeWard": "Shankoe Ward",
+      "databaseWardId": 2073,
+      "databaseSubCountyId": 1475,
+      "databaseCountyId": 80,
+      "expectedTargetId": 1475,
+      "status": "PASS"
+    },
+    {
+      "gid": 2162,
+      "authoritativeCounty": "Narok",
+      "authoritativeSubCounty": "Transmara West Sub County",
+      "authoritativeWard": "Kimintet Ward",
+      "databaseWardId": 2074,
+      "databaseSubCountyId": 1475,
+      "databaseCountyId": 80,
+      "expectedTargetId": 1475,
+      "status": "PASS"
+    },
+    {
+      "gid": 2163,
+      "authoritativeCounty": "Narok",
+      "authoritativeSubCounty": "Transmara West Sub County",
+      "authoritativeWard": "Lolgorian Ward",
+      "databaseWardId": 2075,
+      "databaseSubCountyId": 1475,
+      "databaseCountyId": 80,
+      "expectedTargetId": 1475,
+      "status": "PASS"
+    },
+    {
+      "gid": 2164,
+      "authoritativeCounty": "Narok",
+      "authoritativeSubCounty": "Transmara East Sub County",
+      "authoritativeWard": "Iikerin Ward",
+      "databaseWardId": 2076,
+      "databaseSubCountyId": 1474,
+      "databaseCountyId": 80,
+      "expectedTargetId": 1474,
+      "status": "PASS"
+    },
+    {
+      "gid": 2165,
+      "authoritativeCounty": "Narok",
+      "authoritativeSubCounty": "Transmara East Sub County",
+      "authoritativeWard": "Ololmasani Ward",
+      "databaseWardId": 2077,
+      "databaseSubCountyId": 1474,
+      "databaseCountyId": 80,
+      "expectedTargetId": 1474,
+      "status": "PASS"
+    },
+    {
+      "gid": 2166,
+      "authoritativeCounty": "Narok",
+      "authoritativeSubCounty": "Transmara East Sub County",
+      "authoritativeWard": "Mogondo Ward",
+      "databaseWardId": 2078,
+      "databaseSubCountyId": 1474,
+      "databaseCountyId": 80,
+      "expectedTargetId": 1474,
+      "status": "PASS"
+    },
+    {
+      "gid": 2167,
+      "authoritativeCounty": "Narok",
+      "authoritativeSubCounty": "Transmara East Sub County",
+      "authoritativeWard": "Kapsasian Ward",
+      "databaseWardId": 2283,
+      "databaseSubCountyId": 1474,
+      "databaseCountyId": 80,
+      "expectedTargetId": 1474,
+      "status": "PASS"
+    }
+  ],
+  "duplicateNormalizedIdentities": {
+    "count": 0,
+    "identities": []
+  },
+  "repairedPairs": [
+    {
+      "countyName": "Nyeri",
+      "countyId": 69,
+      "oldSubCountyId": 376,
+      "oldSubCountyName": "Mukurweini Sub County",
+      "targetSubCountyId": 1382,
+      "targetSubCountyName": "Mukurwe-ini",
+      "expectedGids": [
+        487,
+        488,
+        489,
+        490
+      ]
+    },
+    {
+      "countyName": "Narok",
+      "countyId": 80,
+      "oldSubCountyId": 411,
+      "oldSubCountyName": "Transmara West Sub County",
+      "targetSubCountyId": 1475,
+      "targetSubCountyName": "Trans Mara West",
+      "expectedGids": [
+        2158,
+        2159,
+        2160,
+        2161,
+        2162,
+        2163
+      ]
+    },
+    {
+      "countyName": "Narok",
+      "countyId": 80,
+      "oldSubCountyId": 515,
+      "oldSubCountyName": "Transmara East Sub County",
+      "targetSubCountyId": 1474,
+      "targetSubCountyName": "Trans Mara East",
+      "expectedGids": [
+        2164,
+        2165,
+        2166,
+        2167
+      ]
+    }
+  ],
+  "diagnosticRows": [
+    {
+      "countyName": "Nyeri",
+      "countyId": 69,
+      "oldSubCountyId": 376,
+      "oldSubCountyName": "Mukurweini Sub County",
+      "targetSubCountyId": 1382,
+      "targetSubCountyName": "Mukurwe-ini",
+      "expectedWardCount": 4,
+      "actualWardCount": 4,
+      "expectedGids": "487|488|489|490",
+      "actualGids": "487|488|489|490",
+      "deletedOldIdPresent": false,
+      "targetPresent": true,
+      "status": "PASS"
+    },
+    {
+      "countyName": "Narok",
+      "countyId": 80,
+      "oldSubCountyId": 411,
+      "oldSubCountyName": "Transmara West Sub County",
+      "targetSubCountyId": 1475,
+      "targetSubCountyName": "Trans Mara West",
+      "expectedWardCount": 6,
+      "actualWardCount": 6,
+      "expectedGids": "2158|2159|2160|2161|2162|2163",
+      "actualGids": "2158|2159|2160|2161|2162|2163",
+      "deletedOldIdPresent": false,
+      "targetPresent": true,
+      "status": "PASS"
+    },
+    {
+      "countyName": "Narok",
+      "countyId": 80,
+      "oldSubCountyId": 515,
+      "oldSubCountyName": "Transmara East Sub County",
+      "targetSubCountyId": 1474,
+      "targetSubCountyName": "Trans Mara East",
+      "expectedWardCount": 4,
+      "actualWardCount": 4,
+      "expectedGids": "2164|2165|2166|2167",
+      "actualGids": "2164|2165|2166|2167",
+      "deletedOldIdPresent": false,
+      "targetPresent": true,
+      "status": "PASS"
+    }
+  ],
+  "errors": [],
+  "warnings": [],
+  "invariants": {
+    "countyCountPass": true,
+    "subCountyCountPass": true,
+    "wardCountPass": true,
+    "uniqueSourceGidPass": true,
+    "deletedIdsAbsent": true,
+    "canonicalTargetsPresent": true,
+    "repairedWardGidsPresent": true,
+    "wardRelationalIntegrityPass": true,
+    "deletedIdForeignKeysClear": true,
+    "repairedAuthoritativeCorrespondencePass": true,
+    "repairedPairDuplicateCheckPass": true
+  }
+}

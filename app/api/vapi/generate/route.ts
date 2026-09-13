@@ -1,149 +1,153 @@
-// app/api/vapi/generate/route.ts – v9.1 (Poultry & Dairy Business Plan Support)
+// C:\Users\USER\AgriIntelAIHugos\app\api\vapi\generate\route.ts
+
+// Complete Poultry Feed Formulation API
+// V40.20 SECURITY-HARDENED VERSION
+//
+// SECURITY INVARIANT:
+//   Client-supplied userid is NEVER trusted for authentication,
+//   authorization, or Firestore session ownership.
+//
+//   Authoritative identity:
+//     getCurrentUser()
+//          ↓
+//     authenticatedFirebaseUid
+//          ↓
+//     farmer_sessions/{sessionId}.userId
+//
+// PostgreSQL mutations: NONE.
+
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/firebase/admin";
-import { soilTestInterpreter } from "@/lib/soilTestInterpreter";
-import { fertilizerCalculator } from "@/lib/fertilizerCalculator";
-import { generateRecommendations } from "@/lib/recommendationEngine";
-import { getSpacingOptions } from "@/lib/data/spacing";
-import { getPlantingAdvice, getPlantingAdviceText } from "@/lib/data/plantingDates";
-import { COUNTRY_CURRENCY_MAP } from "@/lib/config/currency";
-import { calculateAndFormatProfit } from "@/lib/utils/profitCalculation";
-import { calculateAndFormatPoultryProfit } from "@/lib/utils/poultryProfitCalculation";
-import { calculateAndFormatDairyProfit } from "@/lib/utils/dairyProfitCalculation";
+import {
+  COUNTRY_CURRENCY_MAP,
+  DEFAULT_CURRENCY,
+} from "@/lib/config/currency";
+import { formulateFeed } from "@/lib/feedFormulation";
+import { getCurrentUser } from "@/lib/actions/auth.action";
 
-console.log("Farmer Session Generation Route Loaded - v9.1 (Poultry & Dairy Business Plan)");
+console.log("🐔 Poultry Feed Formulation Route Loaded");
 
-const withTimeout = <T>(promise: Promise<T>, ms: number, errorMessage: string = "Operation timed out"): Promise<T> => {
+// ============================================================
+// AUTHENTICATED FIREBASE UID
+// ============================================================
+//
+// SECURITY BOUNDARY:
+//
+// The authenticated Firebase UID MUST come from the server-side
+// authentication context returned by getCurrentUser().
+//
+// The request body is NOT allowed to determine identity.
+//
+// This function deliberately does not inspect:
+//   body.userid
+//   body.userId
+//   body.uid
+//
+// The returned UID is the only identity value allowed to become
+// farmer_sessions.userId.
+//
+
+async function getAuthenticatedFirebaseUid(): Promise<string | null> {
+  const currentUser = await getCurrentUser();
+
+  if (!currentUser) {
+    return null;
+  }
+
+  const firebaseUid =
+    typeof currentUser.id === "string"
+      ? currentUser.id
+      : typeof (currentUser as { uid?: unknown }).uid === "string"
+        ? (currentUser as { uid: string }).uid
+        : null;
+
+  if (!firebaseUid || firebaseUid.trim().length === 0) {
+    return null;
+  }
+
+  return firebaseUid.trim();
+}
+
+// ============================================================
+// TIMEOUT UTILITY
+// ============================================================
+
+const withTimeout = <T>(
+  promise: Promise<T>,
+  ms: number,
+  errorMessage: string = "Operation timed out",
+): Promise<T> => {
   let timeoutId: NodeJS.Timeout;
+
   const timeoutPromise = new Promise<T>((_, reject) => {
     timeoutId = setTimeout(() => reject(new Error(errorMessage)), ms);
   });
-  return Promise.race([promise, timeoutPromise]).finally(() => clearTimeout(timeoutId));
+
+  return Promise.race([promise, timeoutPromise]).finally(() =>
+    clearTimeout(timeoutId),
+  );
 };
 
+// ============================================================
+// CACHING
+// ============================================================
+
 const cache = new Map();
+
 const CACHE_TTL = 10 * 60 * 1000;
 
 function getCacheKey(inputs: any): string {
   const {
-    userLanguage,
-    primaryCrop,
-    hasDoneSoilTest,
-    farmSize,
-    soilTestPH,
-    soilTestP,
-    soilTestK,
-    actualYieldKg,
-    pricePerKg,
-    totalCosts,
+    breed,
+    stage,
+    quantityKg,
+    includeCoccidiostat,
     country,
-    plantsDamaged,
-    deficiencySymptoms,
-    deficiencyLocation,
-    spacing,
-    storageMethod,
-    wantsNutritionBenefits,
-    isPoultry,
-    poultry_breed,
-    poultry_system,
-    poultry_flock_size,
-    poultry_age_weeks,
-    isDairy,
-    dairy_breed,
-    dairy_cow_category,
+    ingredientPrices,
+    availableIngredients,
+    numberOfBirds,
+    salePricePerBird,
+    pricePerEgg,
   } = inputs;
-  return JSON.stringify({
-    lang: userLanguage,
-    crop: primaryCrop,
-    soilTest: hasDoneSoilTest,
-    size: farmSize,
-    ph: soilTestPH,
-    p: soilTestP,
-    k: soilTestK,
-    yield: actualYieldKg,
-    price: pricePerKg,
-    costs: totalCosts,
+
+  const priceString = ingredientPrices
+    ? JSON.stringify(ingredientPrices)
+    : "";
+
+  const availString = availableIngredients
+    ? JSON.stringify(availableIngredients)
+    : "";
+
+  const key = JSON.stringify({
+    breed,
+    stage,
+    quantityKg,
+    includeCoccidiostat,
     country,
-    damaged: plantsDamaged,
-    defSym: deficiencySymptoms,
-    defLoc: deficiencyLocation,
-    spacing,
-    storage: storageMethod,
-    wants: wantsNutritionBenefits,
-    isPoultry,
-    poultry_breed,
-    poultry_system,
-    poultry_flock_size,
-    poultry_age_weeks,
-    isDairy,
-    dairy_breed,
-    dairy_cow_category,
+    priceString,
+    availString,
+    numberOfBirds,
+    salePricePerBird,
+    pricePerEgg,
   });
+
+  console.log(`🔑 [getCacheKey] Generated key: ${key}`);
+
+  return key;
 }
 
-function cleanUserInput(input: string | undefined): string | undefined {
-  if (!input) return input;
-  return input.split(',')
-    .map(item => item.trim())
-    .filter(item =>
-      item.length > 0 &&
-      !item.includes('_') &&
-      !item.toLowerCase().includes('underscore') &&
-      !/^[A-Z][a-z]+ [A-Z][a-z]+\.?$/.test(item)
-    )
-    .join(', ');
-}
+// ============================================================
+// CURRENCY HELPERS
+// ============================================================
 
-const defaultYieldsKg: Record<string, number> = {
-  maize: 2700, rice: 2700, wheat: 2000, barley: 2000, sorghum: 1500, millet: 1200,
-  beans: 1200, cowpeas: 800, "green grams": 800, groundnuts: 1000, "soya beans": 1000,
-  tomatoes: 15000, onions: 8000, carrots: 10000, cabbages: 12000, kales: 8000,
-  brinjals: 10000, capsicums: 8000, chillies: 6000, "french beans": 5000,
-  bananas: 6000, mangoes: 8000, avocados: 2000, oranges: 10000, pineapples: 20000,
-  cassava: 8000, "sweet potatoes": 7000, "irish potatoes": 10000,
-  coffee: 2000, tea: 2500, sugarcane: 40000, sunflower: 1500,
-  asparagus: 3000, spinach: 8000, okra: 7000, lettuce: 8000,
-  ginger: 8000, turmeric: 6000, garlic: 5000,
-  watermelon: 15000, pawpaws: 10000, "passion fruit": 8000,
-  macadamia: 4000, cashew: 2000, coconut: 3000, cayenne: 8000,
-};
-
-function getCropDefaultYieldKg(crop: string): number {
-  const key = crop.toLowerCase();
-  return defaultYieldsKg[key] || 2000;
-}
-
-function getDefaultPricePerKg(crop: string): number {
-  const defaultPrices: Record<string, number> = {
-    maize: 40, beans: 80, tomatoes: 40, onions: 50, cabbages: 25,
-    kales: 20, brinjals: 30, capsicums: 50, chillies: 80, carrots: 40,
-    bananas: 30, mangoes: 50, avocados: 40, oranges: 40, pineapples: 40,
-    cassava: 20, sweet_potatoes: 25, irish_potatoes: 30, coffee: 300,
-    tea: 200, sugarcane: 5, sunflower: 60, asparagus: 100, spinach: 25,
-    okra: 35, lettuce: 30, ginger: 80, turmeric: 100, garlic: 200,
-    watermelon: 30, pawpaws: 30, passion_fruit: 50, macadamia: 150,
-    cashew: 100, coconut: 20, rice: 60, wheat: 45, sorghum: 45,
-    millet: 50, groundnuts: 120, soya_beans: 60, cowpeas: 70,
-    green_grams: 70, pigeonpeas: 70, cayenne: 80
-  };
-  const key = crop.toLowerCase().replace(/ /g, '_');
-  return defaultPrices[key] || 40;
-}
-
-function formatCurrencyForCountry(amount: number, country: string = 'kenya'): string {
-  const normalizedCountry = country.toLowerCase();
-  const currency = COUNTRY_CURRENCY_MAP[normalizedCountry] || COUNTRY_CURRENCY_MAP.kenya;
-  return new Intl.NumberFormat(currency.locale, {
-    style: 'currency',
-    currency: currency.code,
-    minimumFractionDigits: 0,
-    maximumFractionDigits: currency.decimalPlaces
-  }).format(amount);
-}
-
-function getCurrencyForCountry(country: string = 'kenya'): { symbol: string; name: string; code: string } {
+function getCurrencyForCountry(
+  country: string = "kenya",
+): { symbol: string; name: string; code: string } {
   const normalized = country.toLowerCase();
-  const currency = COUNTRY_CURRENCY_MAP[normalized] || COUNTRY_CURRENCY_MAP.kenya;
+
+  const currency =
+    COUNTRY_CURRENCY_MAP[normalized] || COUNTRY_CURRENCY_MAP.kenya;
+
   return {
     symbol: currency.symbol,
     name: currency.name,
@@ -151,1512 +155,739 @@ function getCurrencyForCountry(country: string = 'kenya'): { symbol: string; nam
   };
 }
 
-// ========== NPK PARSING ==========
-function parseNPK(fertilizerName: string): { n: number; p: number; k: number } {
-  const name = fertilizerName.toLowerCase();
-  const match = name.match(/(\d+)[\s-]*(\d+)[\s-]*(\d+)/);
-  if (match) {
-    const n = parseInt(match[1]) || 0;
-    const p = parseInt(match[2]) || 0;
-    const k = parseInt(match[3]) || 0;
-    return { n, p, k };
-  }
-  if (name.includes('dap')) return { n: 18, p: 46, k: 0 };
-  if (name.includes('urea')) return { n: 46, p: 0, k: 0 };
-  if (name.includes('can')) return { n: 27, p: 0, k: 0 };
-  if (name.includes('mop')) return { n: 0, p: 0, k: 60 };
-  if (name.includes('sop')) return { n: 0, p: 0, k: 50 };
-  if (name.includes('tsp')) return { n: 0, p: 46, k: 0 };
-  if (name.includes('ssp')) return { n: 0, p: 20, k: 0 };
-  return { n: 0, p: 0, k: 0 };
+function formatCurrencyForCountry(
+  amount: number,
+  country: string = "kenya",
+): string {
+  const normalized = country.toLowerCase();
+
+  const currency =
+    COUNTRY_CURRENCY_MAP[normalized] || COUNTRY_CURRENCY_MAP.kenya;
+
+  return new Intl.NumberFormat(currency.locale, {
+    style: "currency",
+    currency: currency.code,
+    minimumFractionDigits: 0,
+    maximumFractionDigits: currency.decimalPlaces,
+  }).format(amount);
 }
 
-// ========== BUILD EXTENSION PLAN (No Soil Test) ==========
-function buildExtensionFertilizerPlan(
-  plantingFertilizerType: string,
-  plantingFertilizerQuantity: number,
-  plantingFertilizerCost: number,
-  topdressingFertilizerType: string,
-  topdressingFertilizerQuantity: number,
-  topdressingFertilizerCost: number,
-  potassiumFertilizerType: string,
-  potassiumFertilizerQuantity: number,
-  potassiumFertilizerCost: number,
-  farmSize: number,
-  spacingInfo: any | null,
-  plantingNutrients: any = {},
-  topdressingNutrients: any = {},
-  potassiumNutrients: any = {}
-) {
-  const defaultCost = 2500;
-  const plantingCostPer50kg = plantingFertilizerCost || defaultCost;
-  const topdressingCostPer50kg = topdressingFertilizerCost || defaultCost;
-  const potassiumCostPer50kg = potassiumFertilizerCost || defaultCost;
+// ============================================================
+// POST HANDLER
+// ============================================================
 
-  let plantsPerAcre = 20000;
-  if (spacingInfo && spacingInfo.plantsPerAcre) plantsPerAcre = spacingInfo.plantsPerAcre;
-  const totalPlants = plantsPerAcre * farmSize;
-
-  const pNPK = parseNPK(plantingFertilizerType);
-  const tNPK = parseNPK(topdressingFertilizerType);
-  const kNPK = parseNPK(potassiumFertilizerType);
-
-  function formatExtraNutrients(nutrients: any): string {
-    if (!nutrients || typeof nutrients !== 'object') return "";
-    const map: Record<string, string> = {
-      sulfur: "S", calcium: "Ca", magnesium: "Mg",
-      zinc: "Zn", boron: "B", copper: "Cu", manganese: "Mn"
-    };
-    const parts = Object.entries(nutrients)
-      .filter(([key, val]) => val > 0 && map[key])
-      .map(([key, val]) => `${map[key]}:${val}%`);
-    return parts.join(", ");
-  }
-
-  const plantingRec = {
-    kgNeeded: plantingFertilizerQuantity || 0,
-    name: plantingFertilizerType || "Planting Fertilizer",
-    cost: plantingFertilizerQuantity ? (plantingFertilizerQuantity / 50) * plantingCostPer50kg : 0,
-    n: pNPK.n,
-    p: pNPK.p,
-    k: pNPK.k,
-    extraNutrients: formatExtraNutrients(plantingNutrients),
-    fertilizerId: plantingFertilizerType || "",
-    brand: plantingFertilizerType || "",
-    npk: `${pNPK.n}-${pNPK.p}-${pNPK.k}`,
-    pricePer50kg: plantingCostPer50kg,
-    packageSizes: [],
-    provides: {
-      n: plantingFertilizerQuantity ? (plantingFertilizerQuantity * pNPK.n / 100) : 0,
-      p: plantingFertilizerQuantity ? (plantingFertilizerQuantity * pNPK.p / 100) : 0,
-      k: plantingFertilizerQuantity ? (plantingFertilizerQuantity * pNPK.k / 100) : 0,
-    },
-    amountKg: plantingFertilizerQuantity || 0,
-  };
-
-  const topdressingRec = {
-    kgNeeded: topdressingFertilizerQuantity || 0,
-    name: topdressingFertilizerType || "Topdressing Fertilizer",
-    cost: topdressingFertilizerQuantity ? (topdressingFertilizerQuantity / 50) * topdressingCostPer50kg : 0,
-    n: tNPK.n,
-    p: tNPK.p,
-    k: tNPK.k,
-    extraNutrients: formatExtraNutrients(topdressingNutrients),
-    fertilizerId: topdressingFertilizerType || "",
-    brand: topdressingFertilizerType || "",
-    npk: `${tNPK.n}-${tNPK.p}-${tNPK.k}`,
-    pricePer50kg: topdressingCostPer50kg,
-    packageSizes: [],
-    provides: {
-      n: topdressingFertilizerQuantity ? (topdressingFertilizerQuantity * tNPK.n / 100) : 0,
-      p: topdressingFertilizerQuantity ? (topdressingFertilizerQuantity * tNPK.p / 100) : 0,
-      k: topdressingFertilizerQuantity ? (topdressingFertilizerQuantity * tNPK.k / 100) : 0,
-    },
-    amountKg: topdressingFertilizerQuantity || 0,
-  };
-
-  const potassiumRec = {
-    kgNeeded: potassiumFertilizerQuantity || 0,
-    name: potassiumFertilizerType || "Potassium Fertilizer",
-    cost: potassiumFertilizerQuantity ? (potassiumFertilizerQuantity / 50) * potassiumCostPer50kg : 0,
-    n: kNPK.n,
-    p: kNPK.p,
-    k: kNPK.k,
-    extraNutrients: formatExtraNutrients(potassiumNutrients),
-    fertilizerId: potassiumFertilizerType || "",
-    brand: potassiumFertilizerType || "",
-    npk: `${kNPK.n}-${kNPK.p}-${kNPK.k}`,
-    pricePer50kg: potassiumCostPer50kg,
-    packageSizes: [],
-    provides: {
-      n: potassiumFertilizerQuantity ? (potassiumFertilizerQuantity * kNPK.n / 100) : 0,
-      p: potassiumFertilizerQuantity ? (potassiumFertilizerQuantity * kNPK.p / 100) : 0,
-      k: potassiumFertilizerQuantity ? (potassiumFertilizerQuantity * kNPK.k / 100) : 0,
-    },
-    amountKg: potassiumFertilizerQuantity || 0,
-  };
-
-  const recommendations = [plantingRec];
-  if (topdressingRec.kgNeeded > 0) recommendations.push(topdressingRec);
-  if (potassiumRec.kgNeeded > 0 && potassiumFertilizerType !== "None - I don't use potassium") recommendations.push(potassiumRec);
-
-  const totalCost = recommendations.reduce((sum, r) => sum + r.cost, 0);
-
-  return {
-    totalCost: totalCost,
-    farmSize: farmSize,
-    plantingRecommendations: [plantingRec],
-    topDressingRecommendations: [topdressingRec, potassiumRec].filter(r => r.kgNeeded > 0 && r.name !== "None - I don't use potassium"),
-    perPlant: {
-      dapGrams: totalPlants ? (plantingRec.kgNeeded * 1000) / totalPlants : 0,
-      ureaGrams: totalPlants ? (topdressingRec.kgNeeded * 1000) / totalPlants : 0,
-      mopGrams: totalPlants ? (potassiumRec.kgNeeded * 1000) / totalPlants : 0,
-      totalGrams: totalPlants ? ((plantingRec.kgNeeded + topdressingRec.kgNeeded + potassiumRec.kgNeeded) * 1000) / totalPlants : 0,
-    }
-  };
-}
-
-function buildDefaultFertilizerPlan(crop: string, farmSize: number, spacingInfo: any | null) {
-  const dapKg = 50;
-  const ureaKg = 50;
-  const dapCost = 3500;
-  const ureaCost = 2800;
-  let plantsPerAcre = 20000;
-  if (spacingInfo && spacingInfo.plantsPerAcre) plantsPerAcre = spacingInfo.plantsPerAcre;
-  const totalPlants = plantsPerAcre * farmSize;
-  return {
-    totalCost: dapCost + ureaCost,
-    farmSize,
-    plantingRecommendations: [
-      { kgNeeded: dapKg, name: "DAP", cost: dapCost, n: 18, p: 46, k: 0, extraNutrients: "" }
-    ],
-    topDressingRecommendations: [
-      { kgNeeded: ureaKg, name: "UREA", cost: ureaCost, n: 46, p: 0, k: 0, extraNutrients: "" }
-    ],
-    perPlant: {
-      dapGrams: totalPlants ? (dapKg * 1000) / totalPlants : 0,
-      ureaGrams: totalPlants ? (ureaKg * 1000) / totalPlants : 0,
-      mopGrams: 0,
-      totalGrams: totalPlants ? ((dapKg + ureaKg) * 1000) / totalPlants : 0,
-    }
-  };
-}
-
-function transformFertilizerPlanForEngine(plan: any): any {
-  if (!plan) return null;
-  const transformed: any = {
-    totalCost: plan.totalCost,
-    farmSize: plan.farmSize,
-    perPlant: plan.perPlant,
-    limeRecommendations: plan.limeRecommendations || null,
-  };
-
-  if (plan.plantingRecommendations && plan.plantingRecommendations.length > 0) {
-    const pf = plan.plantingRecommendations[0];
-    const amountKg = pf.amountKg ?? pf.kgNeeded ?? 0;
-    const pricePer50kg = pf.pricePer50kg ?? 0;
-    const totalCost = (amountKg / 50) * pricePer50kg;
-    transformed.plantingFertilizer = {
-      fertilizerId: pf.fertilizerId,
-      brand: pf.brand,
-      name: pf.brand,
-      npk: pf.npk,
-      kgNeeded: amountKg,
-      cost: totalCost,
-      pricePer50kg: pf.pricePer50kg,
-      packageSizes: pf.packageSizes,
-      n: pf.provides?.n ?? 0,
-      p: pf.provides?.p ?? 0,
-      k: pf.provides?.k ?? 0,
-      extraNutrients: pf.extraNutrients || "",
-    };
-  }
-
-  if (plan.topDressingRecommendations && plan.topDressingRecommendations.length > 0) {
-    transformed.topdressingFertilizers = plan.topDressingRecommendations.map((tf: any) => {
-      const amountKg = tf.amountKg ?? tf.kgNeeded ?? 0;
-      const pricePer50kg = tf.pricePer50kg ?? 0;
-      const totalCost = (amountKg / 50) * pricePer50kg;
-      return {
-        fertilizerId: tf.fertilizerId,
-        brand: tf.brand,
-        name: tf.brand,
-        npk: tf.npk,
-        kgNeeded: amountKg,
-        cost: totalCost,
-        pricePer50kg: tf.pricePer50kg,
-        packageSizes: tf.packageSizes,
-        n: tf.provides?.n ?? 0,
-        p: tf.provides?.p ?? 0,
-        k: tf.provides?.k ?? 0,
-        extraNutrients: tf.extraNutrients || "",
-      };
-    });
-  }
-
-  return transformed;
-}
-
-function addLineBreaksForVoice(recommendations: any): any {
-  if (!recommendations) return recommendations;
-
-  const processText = (text: string): string => {
-    if (!text) return text;
-    let result = text
-      .replace(/([^•])(• )/g, '$1\n$2')
-      .replace(/([^⚠️])(⚠️)/g, '$1\n$2')
-      .replace(/([^0-9])(\d+\. )/g, '$1\n$2')
-      .replace(/(?<!\d)([.!?]) /g, '$1\n ');
-    if (result.startsWith('\n')) result = result.substring(1);
-    return result;
-  };
-
-  if (recommendations.structuredList && Array.isArray(recommendations.structuredList)) {
-    recommendations.structuredList = recommendations.structuredList.map((item: any) => {
-      if (!item || !item.params) return item;
-      return {
-        ...item,
-        params: {
-          ...item.params,
-          content: item.params.content ? processText(item.params.content) : item.params.content
-        }
-      };
-    });
-  }
-
-  if (recommendations.list && Array.isArray(recommendations.list)) {
-    recommendations.list = recommendations.list.map((item: any) => {
-      if (!item || !item.params) return item;
-      return {
-        ...item,
-        params: {
-          ...item.params,
-          content: item.params.content ? processText(item.params.content) : item.params.content
-        }
-      };
-    });
-  }
-
-  if (recommendations.financialAdvice && typeof recommendations.financialAdvice === 'string') {
-    recommendations.financialAdvice = processText(recommendations.financialAdvice);
-  }
-
-  return recommendations;
-}
-
-// =============================================================
-// MAIN POST HANDLER
-// =============================================================
 export async function POST(request: NextRequest) {
   try {
-    console.log("🚀🚀🚀 USING V9.1 ROUTE (Poultry & Dairy Business Plan) 🚀🚀🚀");
+    console.log("🐔 Poultry Feed Formulation API called");
+
+    // ========================================================
+    // 1. AUTHENTICATE REQUEST
+    // ========================================================
+    //
+    // CRITICAL SECURITY BOUNDARY:
+    //
+    // Authentication happens before trusting ANY client
+    // supplied identity information.
+    //
+    // The client cannot choose the Firebase UID.
+    //
+    // The authenticated identity comes exclusively from:
+    //
+    //     getCurrentUser()
+    //
+    // and is then used as:
+    //
+    //     farmer_sessions.userId
+    //
+    // ========================================================
+
+    const authenticatedFirebaseUid =
+      await getAuthenticatedFirebaseUid();
+
+    if (!authenticatedFirebaseUid) {
+      console.warn(
+        "🔒 Unauthorized /api/vapi/generate request rejected",
+      );
+
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Unauthorized",
+        },
+        { status: 401 },
+      );
+    }
+
+    console.log(
+      `🔐 Authenticated Firebase UID resolved server-side: ${authenticatedFirebaseUid}`,
+    );
+
+    // ========================================================
+    // 2. PARSE REQUEST BODY
+    // ========================================================
+
     const body = await request.json();
-    const cookieLanguage = request.cookies.get('preferred-language')?.value;
+
+    // IMPORTANT:
+    //
+    // Do NOT log the complete request body.
+    //
+    // The body is client-controlled and may contain:
+    //   - forged userid values
+    //   - farmer information
+    //   - ingredient pricing
+    //   - other request data
+    //
+    // Log only non-sensitive operational information.
+
+    console.log("📥 [POST] Request body received");
+
+    const cookieLanguage =
+      request.cookies.get("preferred-language")?.value;
+
     const bodyLanguage = body.language;
-    const userLanguage = bodyLanguage || cookieLanguage || 'en';
-    console.log(`🌐 Generating recommendations in language: ${userLanguage}`);
+
+    const userLanguage =
+      bodyLanguage || cookieLanguage || "en";
+
+    console.log(
+      `🌐 Generating feed formulation in language: ${userLanguage}`,
+    );
+
+    // ========================================================
+    // 3. EXTRACT FORMULATION INPUTS
+    // ========================================================
+    //
+    // userid is intentionally extracted into a throwaway
+    // variable ONLY so that an old/client payload containing
+    // userid remains backward-compatible.
+    //
+    // It MUST NEVER be used for authentication or ownership.
+    //
+    // Security invariant:
+    //
+    //   _clientSuppliedUserId !== authenticatedFirebaseUid
+    //
+    // does not matter.
+    //
+    // The authenticated Firebase UID remains authoritative.
+    //
 
     const {
-      // Common fields (all species)
-      farmerName, phoneNumber, subCounty, ward, village, totalFarmSize, cultivatedAcres, waterSources,
-      crops, cropVarieties, cropAcres, plantingDate, seedSource, spacing, seedRate,
-      usePlantingFertilizer, plantingFertilizerType, plantingFertilizerQuantity,
-      useTopdressingFertilizer, topdressingFertilizerType, topdressingFertilizerQuantity,
-      potassiumFertilizerType,
-      commonPests, commonDiseases, actualYieldKg, pricePerKg, storageMethod,
-      ploughingCost, plantingLabourCost, weedingCost, harvestingCost,
-      transportCostTotal, packagingCostTotal, miscellaneousCostTotal,
-      hasDoneSoilTest, soilTestDate, soilTestPH, soilTestPHRating, soilTestP, soilTestPRating,
-      soilTestK, soilTestKRating, soilTestNPercent, soilTestNPercentRating,
-      soilTestCa, soilTestCaRating, soilTestMg, soilTestMgRating, soilTestNa, soilTestNaRating,
-      soilTestOC, soilTestOCRating, soilTestOM, soilTestOMRating, soilTestCEC, soilTestCECRating,
-      targetYield, recCalciticLime, recDolomiticLime,
-      recPlantingFertilizer, recPlantingQuantity,
-      recTopdressingFertilizer, recTopdressingQuantity,
-      recPotassiumFertilizer, recPotassiumQuantity,
-      plantingFertilizerNutrients, topdressingFertilizerNutrients, potassiumFertilizerNutrients,
-      plantingFertilizerToUse, plantingFertilizerCost,
-      topdressingFertilizerToUse, topdressingFertilizerCost,
-      potassiumFertilizerToUse, potassiumFertilizerCost,
-      plantingFertilizerQuantity: plantingFertilizerQuantityKg,
-      topdressingFertilizerQuantity: topdressingFertilizerQuantityKg,
-      potassiumFertilizerQuantity: potassiumFertilizerQuantityKg,
-      calciticLimePricePerBag, dolomiticLimePricePerBag,
-      plantsDamaged, seedCost, season, county, acres, conservationPractices,
-      useCertifiedSeed, seedQuantity, userid, country,
-      deficiencySymptoms, deficiencyLocation, wantsNutritionBenefits,
-      modules,
-
-      // ===== POULTRY FIELDS =====
-      isPoultry,
-      poultry_breed,
-      poultry_system,
-      poultry_flock_size,
-      poultry_age_weeks,
-      poultry_farming_goal,
-      poultry_location_region,
-      poultry_rainfall_pattern,
-      poultry_altitude,
-      poultry_feed_type,
-      poultry_feed_cost_kg,
-      poultry_vaccination_done,
-      poultry_mortality_count,
-      poultry_chick_cost,
-      poultry_egg_price,
-      poultry_meat_price,
-      poultry_house_size_m2,
-      poultry_disease,
-      poultry_disease_symptoms,
-      poultry_mortality_count_disease,
-      poultry_disease_duration,
-
-      // ===== FEED FORMULATION FIELDS =====
-      availableIngredients,
-      ingredientPrices,
-      poultryStage,
-      batchSize,
+      breed,
+      stage,
+      quantityKg,
       includeCoccidiostat,
-      ageWeeks,
-
-      // ===== DAIRY FIELDS =====
-      isDairy,
-      dairyCowCategory,
-      dairyBodyWeightKg,
-      dairyBreed,
-      dairyDiseaseSelect,
-      dairySymptoms,
-      dairyMortalityCount,
-      dairyHealthDuration,
-      dairyMilkYieldPerDay,
-      dairyMilkPricePerLitre,
-      dairyFeedCostPerDay,
-      dairyVetCostPerMonth,
-      dairyDaysSinceCalving,
-      dairyHeatObserved,
-      dairyLastInseminationDate,
-      dairyBreedingMethod,
-      dairyReproductiveProblems,
-      dairyBusinessInterest,
-      calfAgeWeeks,
-      calfFeedingMethod,
-      calfMilkLitresPerDay,
-      calfReceivedColostrum,
-      calfHousingType,
-      calfHealthIssues,
-      dairyConcentrateBrand,
-      dairyConcentrateProduct,
-      dairyConcentrateInclusion,
-      dairyConcentrateMaizeKg,
-      dairyConcentrateSaltKg,
-      dairyConcentrateCalciumSource,
-      dairyConcentrateCalciumKg,
-      dairyDeficiencySymptoms,
-      dairyManagementFocus,
-      dairyAvailableForages,
-      dairyAvailableGrains,
-      dairyAvailableProtein,
-      dairyAvailableMinerals,
-      dairyQuantityToMix,
-      dairyForageType,
-      dairyForageKgPerDay,
-      dairyConcentrateType,
-      dairyConcentrateKgPerDay,
-      dairyMilkYield,
-      dairyMilkPrice,
-      dairyVetCostMonth,
-      dairyOtherCosts,
-      dairyHousingType,
-      numberOfCowsHoused,
-      floorSpacePerCowM2,
-      dairyVentilationRating,
-      beddingType,
-      milkYieldCurrent,
-      milkFatPercent,
-      milkProteinPercent,
-      daysInMilk,
-      parity,
-      dairyParasiteSigns,
-      dairyLastDeworming,
-      dairyLastHoofTrimming,
-      dairyLastVaccination,
-      dairyNextVaccinationDue,
-      dairyReminderTopics,
-
-      // ===== BUSINESS PLAN FIELDS (shared) =====
-      businessName,
-      businessVision,
-      businessMission,
-      shortTermGoals,
-      midTermGoals,
-      longTermGoals,
-      targetCustomers,
-      communicationChannels,
-      fallbackPlan,
-      competitiveAdvantage,
-      paymentModes,
-      businessPositions,
-      positionHeads,
-      products,
-      productionInputs,
-
-      // ===== POULTRY & DAIRY BUSINESS PLAN SPECIFIC FIELDS =====
-      poultryProducts,
-      poultryProductionInputs,
-      dairyProducts,
-      dairyProductionInputs,
-    } = body;
-
-    // Log received data
-    console.log("🧾 [BACKEND] Received availableIngredients:", availableIngredients);
-    console.log("🧾 [BACKEND] Received ingredientPrices:", ingredientPrices);
-    console.log("🧾 [BACKEND] Received poultryStage:", poultryStage);
-    console.log("🧾 [BACKEND] Received batchSize:", batchSize);
-    console.log("🧾 [BACKEND] Received includeCoccidiostat:", includeCoccidiostat);
-    console.log("🧾 [BACKEND] Received ageWeeks:", ageWeeks);
-
-    // Basic validation (userid is always required)
-    if (!userid) {
-      console.error("Missing required fields: userid");
-      return NextResponse.json({ error: "Missing required fields: userid is required" }, { status: 400 });
-    }
-
-    const currencyConfig = getCurrencyForCountry(country);
-
-    // ============================================================
-    // DAIRY PATH
-    // ============================================================
-    if (isDairy) {
-      console.log(`🐄 Generating dairy recommendations for breed: ${dairyBreed}, category: ${dairyCowCategory}`);
-
-      const farmerData = {
-        farmerName: farmerName || 'Farmer',
-        country: country || 'kenya',
-        language: userLanguage,
-        currencySymbol: currencyConfig.symbol,
-        currencyName: currencyConfig.name,
-        county: county || '',
-        // Dairy core
-        dairyCowCategory: dairyCowCategory || 'lactating',
-        dairyBodyWeightKg: parseFloat(dairyBodyWeightKg) || 500,
-        dairyBreed: dairyBreed || 'fh',
-        dairyDiseaseSelect: dairyDiseaseSelect || '',
-        dairySymptoms: dairySymptoms ? (typeof dairySymptoms === 'string' ? dairySymptoms.split(',').map((s: string) => s.trim()) : dairySymptoms) : [],
-        dairyMortalityCount: parseInt(dairyMortalityCount) || 0,
-        dairyHealthDuration: dairyHealthDuration || 'less_than_3_days',
-        dairyMilkYieldPerDay: parseFloat(dairyMilkYieldPerDay) || 10,
-        dairyMilkPricePerLitre: parseFloat(dairyMilkPricePerLitre) || 40,
-        dairyFeedCostPerDay: parseFloat(dairyFeedCostPerDay) || 100,
-        dairyVetCostPerMonth: parseFloat(dairyVetCostPerMonth) || 500,
-        // Breeding
-        dairyDaysSinceCalving: dairyDaysSinceCalving || '',
-        dairyHeatObserved: dairyHeatObserved || '',
-        dairyLastInseminationDate: dairyLastInseminationDate || '',
-        dairyBreedingMethod: dairyBreedingMethod || '',
-        dairyReproductiveProblems: dairyReproductiveProblems || '',
-        // Business
-        dairyBusinessInterest: dairyBusinessInterest || '',
-        // Calf
-        calfAgeWeeks: calfAgeWeeks || '',
-        calfFeedingMethod: calfFeedingMethod || '',
-        calfMilkLitresPerDay: calfMilkLitresPerDay || '',
-        calfReceivedColostrum: calfReceivedColostrum || '',
-        calfHousingType: calfHousingType || '',
-        calfHealthIssues: calfHealthIssues || '',
-        // Concentrate
-        dairyConcentrateBrand: dairyConcentrateBrand || '',
-        dairyConcentrateProduct: dairyConcentrateProduct || '',
-        dairyConcentrateInclusion: dairyConcentrateInclusion || '',
-        dairyConcentrateMaizeKg: dairyConcentrateMaizeKg || '',
-        dairyConcentrateSaltKg: dairyConcentrateSaltKg || '',
-        dairyConcentrateCalciumSource: dairyConcentrateCalciumSource || '',
-        dairyConcentrateCalciumKg: dairyConcentrateCalciumKg || '',
-        // Deficiency
-        dairyDeficiencySymptoms: dairyDeficiencySymptoms || '',
-        // DosDonts
-        dairyManagementFocus: dairyManagementFocus || '',
-        // Feed
-        dairyAvailableForages: dairyAvailableForages || '',
-        dairyAvailableGrains: dairyAvailableGrains || '',
-        dairyAvailableProtein: dairyAvailableProtein || '',
-        dairyAvailableMinerals: dairyAvailableMinerals || '',
-        dairyQuantityToMix: dairyQuantityToMix || '',
-        // FeedPerDay
-        dairyForageType: dairyForageType || '',
-        dairyForageKgPerDay: dairyForageKgPerDay || '',
-        dairyConcentrateType: dairyConcentrateType || '',
-        dairyConcentrateKgPerDay: dairyConcentrateKgPerDay || '',
-        dairyMilkYield: dairyMilkYield || '',
-        // Financial (extra)
-        dairyMilkPrice: dairyMilkPrice || '',
-        dairyVetCostMonth: dairyVetCostMonth || '',
-        dairyOtherCosts: dairyOtherCosts || '',
-        // Housing
-        dairyHousingType: dairyHousingType || '',
-        numberOfCowsHoused: numberOfCowsHoused || '',
-        floorSpacePerCowM2: floorSpacePerCowM2 || '',
-        dairyVentilationRating: dairyVentilationRating || '',
-        beddingType: beddingType || '',
-        // Milk
-        milkYieldCurrent: milkYieldCurrent || '',
-        milkFatPercent: milkFatPercent || '',
-        milkProteinPercent: milkProteinPercent || '',
-        daysInMilk: daysInMilk || '',
-        parity: parity || '',
-        // Parasite
-        dairyParasiteSigns: dairyParasiteSigns || '',
-        // Reminder
-        dairyLastDeworming: dairyLastDeworming || '',
-        dairyLastHoofTrimming: dairyLastHoofTrimming || '',
-        dairyLastVaccination: dairyLastVaccination || '',
-        dairyNextVaccinationDue: dairyNextVaccinationDue || '',
-        dairyReminderTopics: dairyReminderTopics || '',
-      };
-
-      let recommendationsOutput = await withTimeout(
-        generateRecommendations({
-          hasSoilTest: false,
-          soilAnalysis: null,
-          fertilizerPlan: null,
-          crop: '',
-          crops: [],
-          farmerData: farmerData,
-          modules: modules || [],
-          isPoultry: false,
-          isDairy: true,
-        }),
-        600000,
-        "Recommendation generation timed out after 600 seconds"
-      );
-
-      recommendationsOutput = addLineBreaksForVoice(recommendationsOutput);
-
-      // ===== DAIRY BUSINESS PLAN MODULE =====
-      if (recommendationsOutput) {
-        if (!recommendationsOutput.structuredList) {
-          recommendationsOutput.structuredList = [];
-        }
-
-        // ---- Dairy Business Plan ----
-        // FIX: Removed `&& dairyBreed` – always include if module is present
-        if (modules && modules.includes("business")) {
-          const breedDisplay = dairyBreed || "Dairy";
-          const dairyBusinessContent = `
-📋 **Business Plan – Dairy Enterprise (${breedDisplay})**
-
-**1. Business Identity**
-- **Name:** ${businessName || "Not provided"}
-- **Vision:** ${businessVision || "Not provided"}
-- **Mission:** ${businessMission || "Not provided"}
-
-**2. Goals**
-- **Short‑term (3–6 mo):** ${shortTermGoals || "Not provided"}
-- **Mid‑term (1 yr):** ${midTermGoals || "Not provided"}
-- **Long‑term (3–6 yr):** ${longTermGoals || "Not provided"}
-
-**3. Marketing**
-- **Target customers:** ${targetCustomers || "Not provided"}
-- **Communication channels:** ${communicationChannels || "Not provided"}
-- **Fallback plan:** ${fallbackPlan || "Not provided"}
-
-**4. Competitive Edge**
-- **Advantage:** ${competitiveAdvantage || "Not provided"}
-- **Payment modes:** ${paymentModes || "Not provided"}
-
-**5. Team**
-- **Positions:** ${businessPositions || "Not provided"}
-- **Heads:** ${positionHeads || "Not provided"}
-
-**6. Products**
-${dairyProducts || "Not provided"}
-
-**7. Production Inputs**
-${dairyProductionInputs || "Not provided"}
-          `.trim();
-
-          recommendationsOutput.structuredList.push({
-            key: "business_plan_grouped",
-            params: { content: dairyBusinessContent },
-          });
-        }
-
-        // ---- Dairy Profit Calculation ----
-        if (modules && modules.includes("profit")) {
-          const dairyProfitInputs = {
-            country: country || 'kenya',
-            enterpriseName: dairyBreed || 'Dairy',
-            milkYieldPerCowPerDay: parseFloat(dairyMilkYieldPerDay) || 0,
-            numberOfLactatingCows: parseInt(dairyCowCategory === 'lactating' ? '1' : '0') || 1,
-            milkPricePerLitre: parseFloat(dairyMilkPricePerLitre) || 0,
-            feedCostPerCowPerDay: parseFloat(dairyFeedCostPerDay) || 0,
-            concentrateCostPerCowPerDay: parseFloat(dairyConcentrateInclusion) || 0,
-            forageCostPerCowPerDay: 0,
-            vetCostPerMonth: parseFloat(dairyVetCostPerMonth) || 0,
-            medicineCostPerMonth: 0,
-            labourCostPerMonth: parseFloat(dairyOtherCosts) || 0,
-            utilitiesCostPerMonth: 0,
-            transportCostPerMonth: 0,
-            aiCostPerMonth: 0,
-            miscellaneousCostPerMonth: parseFloat(dairyOtherCosts) || 0,
-            otherProductsRevenue: 0,
-          };
-
-          try {
-            const profitResult = calculateAndFormatDairyProfit(dairyProfitInputs);
-            recommendationsOutput.structuredList.push({
-              key: "profit_analysis_grouped",
-              params: { content: profitResult.summaryText },
-            });
-            recommendationsOutput.profitAnalysis = profitResult;
-          } catch (err) {
-            console.error("Dairy profit calculation error:", err);
-          }
-        }
-      }
-
-      const sessionRef = db.collection("farmer_sessions").doc();
-      const sessionId = sessionRef.id;
-
-      const farmerSession = {
-        id: sessionId,
-        userId: userid,
-        language: userLanguage,
-        farmerName,
-        phoneNumber,
-        county,
-        subCounty,
-        ward,
-        village,
-        country: country || 'kenya',
-        species: "dairy",
-        isDairy: true,
-        dairy: {
-          cowCategory: dairyCowCategory,
-          bodyWeightKg: parseFloat(dairyBodyWeightKg) || 500,
-          breed: dairyBreed,
-          diseaseSelect: dairyDiseaseSelect || '',
-          symptoms: dairySymptoms,
-          mortalityCount: parseInt(dairyMortalityCount) || 0,
-          healthDuration: dairyHealthDuration,
-          milkYieldPerDay: parseFloat(dairyMilkYieldPerDay) || 10,
-          milkPricePerLitre: parseFloat(dairyMilkPricePerLitre) || 40,
-          feedCostPerDay: parseFloat(dairyFeedCostPerDay) || 100,
-          vetCostPerMonth: parseFloat(dairyVetCostPerMonth) || 500,
-          daysSinceCalving: dairyDaysSinceCalving || '',
-          heatObserved: dairyHeatObserved || '',
-          lastInseminationDate: dairyLastInseminationDate || '',
-          breedingMethod: dairyBreedingMethod || '',
-          reproductiveProblems: dairyReproductiveProblems || '',
-          businessInterest: dairyBusinessInterest || '',
-          calfAgeWeeks: calfAgeWeeks || '',
-          calfFeedingMethod: calfFeedingMethod || '',
-          calfMilkLitresPerDay: calfMilkLitresPerDay || '',
-          calfReceivedColostrum: calfReceivedColostrum || '',
-          calfHousingType: calfHousingType || '',
-          calfHealthIssues: calfHealthIssues || '',
-          concentrateBrand: dairyConcentrateBrand || '',
-          concentrateProduct: dairyConcentrateProduct || '',
-          concentrateInclusion: dairyConcentrateInclusion || '',
-          concentrateMaizeKg: dairyConcentrateMaizeKg || '',
-          concentrateSaltKg: dairyConcentrateSaltKg || '',
-          concentrateCalciumSource: dairyConcentrateCalciumSource || '',
-          concentrateCalciumKg: dairyConcentrateCalciumKg || '',
-          deficiencySymptoms: dairyDeficiencySymptoms || '',
-          managementFocus: dairyManagementFocus || '',
-          availableForages: dairyAvailableForages || '',
-          availableGrains: dairyAvailableGrains || '',
-          availableProtein: dairyAvailableProtein || '',
-          availableMinerals: dairyAvailableMinerals || '',
-          quantityToMix: dairyQuantityToMix || '',
-          forageType: dairyForageType || '',
-          forageKgPerDay: dairyForageKgPerDay || '',
-          concentrateType: dairyConcentrateType || '',
-          concentrateKgPerDay: dairyConcentrateKgPerDay || '',
-          milkYield: dairyMilkYield || '',
-          milkPrice: dairyMilkPrice || '',
-          vetCostMonth: dairyVetCostMonth || '',
-          otherCosts: dairyOtherCosts || '',
-          housingType: dairyHousingType || '',
-          numberOfCowsHoused: numberOfCowsHoused || '',
-          floorSpacePerCowM2: floorSpacePerCowM2 || '',
-          ventilationRating: dairyVentilationRating || '',
-          beddingType: beddingType || '',
-          milkYieldCurrent: milkYieldCurrent || '',
-          milkFatPercent: milkFatPercent || '',
-          milkProteinPercent: milkProteinPercent || '',
-          daysInMilk: daysInMilk || '',
-          parity: parity || '',
-          parasiteSigns: dairyParasiteSigns || '',
-          lastDeworming: dairyLastDeworming || '',
-          lastHoofTrimming: dairyLastHoofTrimming || '',
-          lastVaccination: dairyLastVaccination || '',
-          nextVaccinationDue: dairyNextVaccinationDue || '',
-          reminderTopics: dairyReminderTopics || '',
-        },
-        recommendations: recommendationsOutput.list || [],
-        financialAdvice: recommendationsOutput.financialAdvice || null,
-        structuredList: recommendationsOutput.structuredList || [],
-        structuredFinancialAdvice: recommendationsOutput.structuredFinancialAdvice || null,
-        metadata: {
-          createdAt: new Date().toISOString(),
-          source: "dairy-v9.1",
-          version: "9.1"
-        }
-      };
-
-      await sessionRef.set(farmerSession);
-      console.log(`✅ Saved dairy session ${sessionId} for breed ${dairyBreed}. Recommendations count: ${recommendationsOutput.structuredList?.length || 0}`);
-
-      return NextResponse.json({
-        success: true,
-        sessionId: sessionId,
-        structuredList: recommendationsOutput.structuredList || [],
-        structuredFinancialAdvice: recommendationsOutput.structuredFinancialAdvice || null,
-        financialAdvice: recommendationsOutput.financialAdvice || null,
-        recommendations: recommendationsOutput.list || [],
-        welcomeMessage: `Welcome ${farmerName || "Farmer"}! I've prepared your dairy recommendations for ${dairyBreed}.`
-      }, { status: 200 });
-    }
-
-    // ============================================================
-    // POULTRY PATH (including feed formulation)
-    // ============================================================
-    if (isPoultry) {
-      console.log(`🐔 Generating poultry recommendations for breed: ${poultry_breed}, system: ${poultry_system}, flock: ${poultry_flock_size}`);
-
-      const farmerData = {
-        farmerName: farmerName || 'Farmer',
-        country: country || 'kenya',
-        language: userLanguage,
-        currencySymbol: currencyConfig.symbol,
-        currencyName: currencyConfig.name,
-        county: county || '',
-        poultry_breed: poultry_breed || 'Sussex',
-        poultry_system: poultry_system || 'deep_litter',
-        poultry_flock_size: parseInt(poultry_flock_size) || 100,
-        poultry_age_weeks: parseInt(poultry_age_weeks) || 0,
-        poultry_farming_goal: poultry_farming_goal || 'Both',
-        poultry_location_region: poultry_location_region || 'Moderate',
-        poultry_rainfall_pattern: poultry_rainfall_pattern || 'Wet',
-        poultry_altitude: poultry_altitude || 'Lowland',
-        poultry_feed_type: poultry_feed_type || 'Mash',
-        poultry_feed_cost_kg: parseFloat(poultry_feed_cost_kg) || 65,
-        poultry_vaccination_done: poultry_vaccination_done || 'No',
-        poultry_mortality_count: parseInt(poultry_mortality_count) || 0,
-        poultry_chick_cost: parseFloat(poultry_chick_cost) || 120,
-        poultry_egg_price: parseFloat(poultry_egg_price) || 280,
-        poultry_meat_price: parseFloat(poultry_meat_price) || 350,
-        poultry_house_size_m2: parseFloat(poultry_house_size_m2) || 40,
-        poultry_disease: poultry_disease || '',
-        poultry_disease_symptoms: poultry_disease_symptoms || '',
-        poultry_mortality_count_disease: parseInt(poultry_mortality_count_disease) || 0,
-        poultry_disease_duration: poultry_disease_duration || '',
-        availableIngredients: availableIngredients || [],
-        ingredientPrices: ingredientPrices || "{}",
-        poultryStage: poultryStage || '',
-        batchSize: batchSize || '',
-        includeCoccidiostat: includeCoccidiostat || 'No',
-        ageWeeks: ageWeeks || '',
-      };
-
-      let recommendationsOutput = await withTimeout(
-        generateRecommendations({
-          hasSoilTest: false,
-          soilAnalysis: null,
-          fertilizerPlan: null,
-          crop: '',
-          crops: [],
-          farmerData: farmerData,
-          modules: modules || [],
-          isPoultry: true,
-          poultrySpecies: 'chicken',
-        }),
-        600000,
-        "Recommendation generation timed out after 600 seconds"
-      );
-
-      recommendationsOutput = addLineBreaksForVoice(recommendationsOutput);
-
-      // ===== POULTRY BUSINESS PLAN MODULE =====
-      if (recommendationsOutput) {
-        if (!recommendationsOutput.structuredList) {
-          recommendationsOutput.structuredList = [];
-        }
-
-        // ---- Poultry Business Plan ----
-        // FIX: Removed `&& poultry_breed` – always include if module is present
-        if (modules && modules.includes("business")) {
-          const breedDisplay = poultry_breed || "Poultry";
-          const poultryBusinessContent = `
-📋 **Business Plan – Poultry Enterprise (${breedDisplay})**
-
-**1. Business Identity**
-- **Name:** ${businessName || "Not provided"}
-- **Vision:** ${businessVision || "Not provided"}
-- **Mission:** ${businessMission || "Not provided"}
-
-**2. Goals**
-- **Short‑term (3–6 mo):** ${shortTermGoals || "Not provided"}
-- **Mid‑term (1 yr):** ${midTermGoals || "Not provided"}
-- **Long‑term (3–6 yr):** ${longTermGoals || "Not provided"}
-
-**3. Marketing**
-- **Target customers:** ${targetCustomers || "Not provided"}
-- **Communication channels:** ${communicationChannels || "Not provided"}
-- **Fallback plan:** ${fallbackPlan || "Not provided"}
-
-**4. Competitive Edge**
-- **Advantage:** ${competitiveAdvantage || "Not provided"}
-- **Payment modes:** ${paymentModes || "Not provided"}
-
-**5. Team**
-- **Positions:** ${businessPositions || "Not provided"}
-- **Heads:** ${positionHeads || "Not provided"}
-
-**6. Products**
-${poultryProducts || "Not provided"}
-
-**7. Production Inputs**
-${poultryProductionInputs || "Not provided"}
-          `.trim();
-
-          recommendationsOutput.structuredList.push({
-            key: "business_plan_grouped",
-            params: { content: poultryBusinessContent },
-          });
-        }
-
-        // ---- Poultry Profit Calculation ----
-        if (modules && modules.includes("profit")) {
-          const poultryProfitInputs = {
-            country: country || 'kenya',
-            enterpriseName: poultry_breed || 'Poultry',
-            eggProductionPerDay: 0,
-            eggPricePerTray: parseFloat(poultry_egg_price) || 0,
-            birdsSold: parseInt(poultry_flock_size) || 0,
-            meatWeightKg: 2.0,
-            meatPricePerKg: parseFloat(poultry_meat_price) || 0,
-            dayOldChicksCost: parseFloat(poultry_chick_cost) || 0,
-            birdPurchaseCount: parseInt(poultry_flock_size) || 0,
-            feedCostPerKg: parseFloat(poultry_feed_cost_kg) || 0,
-            feedKgPerBird: poultry_age_weeks ? poultry_age_weeks * 0.1 : 0,
-            vaccinationCostPerBird: 10,
-            medicationCostPerBird: 5,
-            labourCostTotal: 0,
-            utilitiesCostTotal: 0,
-            transportCostTotal: 0,
-            miscellaneousCostTotal: 0,
-            numberOfBirds: parseInt(poultry_flock_size) || 0,
-            cycleDurationDays: 42,
-          };
-
-          try {
-            const profitResult = calculateAndFormatPoultryProfit(poultryProfitInputs);
-            recommendationsOutput.structuredList.push({
-              key: "profit_analysis_grouped",
-              params: { content: profitResult.summaryText },
-            });
-            recommendationsOutput.profitAnalysis = profitResult;
-          } catch (err) {
-            console.error("Poultry profit calculation error:", err);
-          }
-        }
-      }
-
-      const sessionRef = db.collection("farmer_sessions").doc();
-      const sessionId = sessionRef.id;
-
-      const farmerSession = {
-        id: sessionId,
-        userId: userid,
-        language: userLanguage,
-        farmerName,
-        phoneNumber,
-        county,
-        subCounty,
-        ward,
-        village,
-        country: country || 'kenya',
-        species: "poultry",
-        isPoultry: true,
-        poultry: {
-          breed: poultry_breed,
-          system: poultry_system,
-          flockSize: parseInt(poultry_flock_size) || 100,
-          ageWeeks: parseInt(poultry_age_weeks) || 0,
-          farmingGoal: poultry_farming_goal,
-          locationRegion: poultry_location_region,
-          rainfallPattern: poultry_rainfall_pattern,
-          altitude: poultry_altitude,
-          feedType: poultry_feed_type,
-          feedCostKg: parseFloat(poultry_feed_cost_kg) || 65,
-          vaccinationDone: poultry_vaccination_done,
-          mortalityCount: parseInt(poultry_mortality_count) || 0,
-          chickCost: parseFloat(poultry_chick_cost) || 120,
-          eggPrice: parseFloat(poultry_egg_price) || 280,
-          meatPrice: parseFloat(poultry_meat_price) || 350,
-          houseSizeM2: parseFloat(poultry_house_size_m2) || 40,
-          disease: poultry_disease || '',
-          diseaseSymptoms: poultry_disease_symptoms || '',
-          mortalityCountDisease: parseInt(poultry_mortality_count_disease) || 0,
-          diseaseDuration: poultry_disease_duration || '',
-          feedFormulation: {
-            availableIngredients: availableIngredients || [],
-            ingredientPrices: ingredientPrices || "{}",
-            poultryStage: poultryStage || '',
-            batchSize: batchSize || '',
-            includeCoccidiostat: includeCoccidiostat || 'No',
-            ageWeeks: ageWeeks || '',
-          }
-        },
-        recommendations: recommendationsOutput.list || [],
-        financialAdvice: recommendationsOutput.financialAdvice || null,
-        structuredList: recommendationsOutput.structuredList || [],
-        structuredFinancialAdvice: recommendationsOutput.structuredFinancialAdvice || null,
-        metadata: {
-          createdAt: new Date().toISOString(),
-          source: "poultry-v9.1",
-          version: "9.1"
-        }
-      };
-
-      await sessionRef.set(farmerSession);
-      console.log(`✅ Saved poultry session ${sessionId} for ${poultry_breed}. Recommendations count: ${recommendationsOutput.structuredList?.length || 0}`);
-
-      return NextResponse.json({
-        success: true,
-        sessionId: sessionId,
-        structuredList: recommendationsOutput.structuredList || [],
-        structuredFinancialAdvice: recommendationsOutput.structuredFinancialAdvice || null,
-        financialAdvice: recommendationsOutput.financialAdvice || null,
-        recommendations: recommendationsOutput.list || [],
-        welcomeMessage: `Welcome ${farmerName || "Farmer"}! I've prepared your poultry recommendations for ${poultry_breed}.`
-      }, { status: 200 });
-    }
-
-    // ============================================================
-    // CROP PATH
-    // ============================================================
-    if (!crops || !county) {
-      console.error("Missing required fields for crops:", { crops, county });
-      return NextResponse.json({ error: "Missing required fields: crops, county are required for crop path" }, { status: 400 });
-    }
-
-    const cropsArray = crops.split(",").map((c: string) => c.trim());
-    const primaryCrop = cropsArray[0];
-    const farmSize = parseFloat(cropAcres) || parseFloat(acres) || 1;
-
-    let plantingAdvice = null;
-    let plantingAdviceText = null;
-    if (plantingDate && primaryCrop && country) {
-      plantingAdvice = getPlantingAdvice(primaryCrop, country, county, plantingDate);
-      plantingAdviceText = getPlantingAdviceText(primaryCrop, country, county, plantingDate);
-      console.log(`🌱 Planting advice for ${primaryCrop} in ${country}/${county}: ${plantingAdvice}`);
-    }
-
-    let spacingInfo = null;
-    let spacingWarning: string | null = null;
-    if (spacing && primaryCrop) {
-      const spacingOptions = getSpacingOptions(primaryCrop);
-      const selectedSpacing = spacingOptions.find(s => s.label === spacing);
-      if (selectedSpacing) {
-        spacingInfo = {
-          rowCm: selectedSpacing.rowCm,
-          plantCm: selectedSpacing.plantCm,
-          seedsPerHole: selectedSpacing.seedsPerHole,
-          label: selectedSpacing.label,
-          plantsPerAcre: selectedSpacing.plantsPerAcre
-        };
-        console.log(`📏 Spacing info: ${selectedSpacing.label} = ${selectedSpacing.plantsPerAcre.toLocaleString()} plants/acre`);
-      }
-    }
-
-    let validatedYieldKg = parseFloat(actualYieldKg) || 0;
-    let validatedPricePerKg = parseFloat(pricePerKg) || 0;
-    let yieldWarnings: string[] = [];
-    let priceWarnings: string[] = [];
-
-    if (validatedYieldKg === 0 && primaryCrop) {
-      validatedYieldKg = getCropDefaultYieldKg(primaryCrop) * farmSize;
-      yieldWarnings.push(`Using default yield of ${validatedYieldKg.toLocaleString()} kg for ${primaryCrop}`);
-    }
-    if (validatedPricePerKg === 0 && primaryCrop) {
-      validatedPricePerKg = getDefaultPricePerKg(primaryCrop);
-      priceWarnings.push(`Using default price of ${validatedPricePerKg} ${currencyConfig.symbol}/kg for ${primaryCrop}`);
-    }
-
-    const revenue = validatedYieldKg * validatedPricePerKg;
-    const seedCostValue = parseFloat(seedCost) || 0;
-    const ploughingCostValue = parseFloat(ploughingCost) || 0;
-    const plantingLabourCostValue = parseFloat(plantingLabourCost) || 0;
-    const weedingCostValue = parseFloat(weedingCost) || 0;
-    const harvestingCostValue = parseFloat(harvestingCost) || 0;
-    const transportCostValue = parseFloat(transportCostTotal) || 0;
-    const packagingCostValue = parseFloat(packagingCostTotal) || 0;
-    const miscellaneousCostValue = parseFloat(miscellaneousCostTotal) || 0;
-
-    const totalCosts = seedCostValue + ploughingCostValue + plantingLabourCostValue +
-                       weedingCostValue + harvestingCostValue + transportCostValue +
-                       packagingCostValue + miscellaneousCostValue;
-
-    const grossMargin = revenue - totalCosts;
-    const marginPercentage = totalCosts > 0 ? (grossMargin / revenue) * 100 : 0;
-
-    const grossMarginAnalysis = {
-      crop: primaryCrop, farmSize, yieldKg: validatedYieldKg, pricePerKg: validatedPricePerKg,
-      revenue, seedCost: seedCostValue,
-      labourCosts: {
-        ploughing: ploughingCostValue, planting: plantingLabourCostValue,
-        weeding: weedingCostValue, harvesting: harvestingCostValue,
-        total: ploughingCostValue + plantingLabourCostValue + weedingCostValue + harvestingCostValue
-      },
-      transportCost: transportCostValue, packagingCost: packagingCostValue,
-      miscellaneousCost: miscellaneousCostValue, totalCosts, grossMargin, marginPercentage
-    };
-
-    let soilAnalysis = null;
-    let fertilizerPlan = null;
-
-    if (hasDoneSoilTest === "Yes" && soilTestDate) {
-      try {
-        const soilTestData = {
-          testDate: soilTestDate, ph: parseFloat(soilTestPH) || 0,
-          phosphorus: parseFloat(soilTestP) || 0, potassium: parseFloat(soilTestK) || 0,
-          calcium: parseFloat(soilTestCa) || 0, magnesium: parseFloat(soilTestMg) || 0,
-          sodium: parseFloat(soilTestNa) || 0, totalNitrogen: parseFloat(soilTestNPercent) || 0,
-          organicCarbon: parseFloat(soilTestOC) || 0, organicMatter: parseFloat(soilTestOM) || 0,
-          cec: parseFloat(soilTestCEC) || 0, phRating: soilTestPHRating || '',
-          phosphorusRating: soilTestPRating || '', potassiumRating: soilTestKRating || '',
-          calciumRating: soilTestCaRating || '', magnesiumRating: soilTestMgRating || '',
-          sodiumRating: soilTestNaRating || '', totalNitrogenRating: soilTestNPercentRating || '',
-          organicCarbonRating: soilTestOCRating || '', organicMatterRating: soilTestOMRating || '',
-          cecRating: soilTestCECRating || '', targetYield: targetYield ? parseFloat(targetYield) : null,
-          recCalciticLime: recCalciticLime ? parseFloat(recCalciticLime) : null,
-          recDolomiticLime: recDolomiticLime ? parseFloat(recDolomiticLime) : null,
-          recPlantingFertilizer: recPlantingFertilizer || null,
-          recPlantingQuantity: recPlantingQuantity ? parseFloat(recPlantingQuantity) : null,
-          recTopdressingFertilizer: recTopdressingFertilizer || null,
-          recTopdressingQuantity: recTopdressingQuantity ? parseFloat(recTopdressingQuantity) : null,
-          recPotassiumFertilizer: recPotassiumFertilizer || null,
-          recPotassiumQuantity: recPotassiumQuantity ? parseFloat(recPotassiumQuantity) : null,
-          plantingFertilizerNutrients: plantingFertilizerNutrients || null,
-          topdressingFertilizerNutrients: topdressingFertilizerNutrients || null,
-          potassiumFertilizerNutrients: potassiumFertilizerNutrients || null,
-          crops: primaryCrop, cropAcres: farmSize
-        };
-        soilAnalysis = soilTestInterpreter.interpretSoilTest(soilTestData);
-        soilAnalysis = { ...soilAnalysis, ...soilTestData };
-        console.log("📊 Soil Analysis created");
-
-        const hasRecommendations = recPlantingFertilizer || recTopdressingFertilizer || recPotassiumFertilizer;
-        const hasUserSelections = plantingFertilizerToUse || topdressingFertilizerToUse || potassiumFertilizerToUse;
-
-        if (hasRecommendations || hasUserSelections) {
-          console.log("📊 Calculating fertilizer plan with:", {
-            recPlantingFertilizer, recPlantingQuantity,
-            recTopdressingFertilizer, recTopdressingQuantity,
-            recPotassiumFertilizer, recPotassiumQuantity,
-            plantingFertilizerToUse, topdressingFertilizerToUse, potassiumFertilizerToUse
-          });
-          fertilizerPlan = fertilizerCalculator.calculateFromRecommendations(
-            {
-              targetYield: soilTestData.targetYield || 2000,
-              plantingFertilizer: recPlantingFertilizer || "",
-              plantingQuantity: recPlantingQuantity ? parseFloat(recPlantingQuantity) : 50,
-              topdressingFertilizer: recTopdressingFertilizer || "",
-              topdressingQuantity: recTopdressingQuantity ? parseFloat(recTopdressingQuantity) : 0,
-              potassiumFertilizer: recPotassiumFertilizer || "",
-              potassiumQuantity: recPotassiumQuantity ? parseFloat(recPotassiumQuantity) : 0
-            },
-            {
-              planting: plantingFertilizerToUse ? [plantingFertilizerToUse] : [],
-              topdressing: topdressingFertilizerToUse ? [topdressingFertilizerToUse] : [],
-              potassium: potassiumFertilizerToUse ? [potassiumFertilizerToUse] : []
-            },
-            {
-              plantingCost: plantingFertilizerCost ? parseFloat(plantingFertilizerCost) : 0,
-              topdressingCost: topdressingFertilizerCost ? parseFloat(topdressingFertilizerCost) : 0,
-              potassiumCost: potassiumFertilizerCost ? parseFloat(potassiumFertilizerCost) : 0
-            },
-            farmSize, spacingInfo, country || 'kenya', primaryCrop
-          );
-          console.log("✅ Fertilizer plan calculated:", fertilizerPlan ? {
-            totalCost: fertilizerPlan.totalCost,
-            plantingCount: fertilizerPlan.plantingRecommendations?.length,
-            topdressingCount: fertilizerPlan.topDressingRecommendations?.length
-          } : "No plan generated");
-        }
-      } catch (error) {
-        console.error("Error processing soil test:", error);
-      }
-    } else if (hasDoneSoilTest === "No") {
-      console.log("🔄 No soil test – building fertilizer plan from extension officer inputs");
-      const pFertType = plantingFertilizerType || plantingFertilizerToUse || "";
-      const pFertQty = parseFloat(plantingFertilizerQuantityKg || plantingFertilizerQuantity || 0);
-      const pFertCost = parseFloat(plantingFertilizerCost || 0);
-      const tFertType = topdressingFertilizerType || topdressingFertilizerToUse || "";
-      const tFertQty = parseFloat(topdressingFertilizerQuantityKg || topdressingFertilizerQuantity || 0);
-      const tFertCost = parseFloat(topdressingFertilizerCost || 0);
-      const kFertType = potassiumFertilizerType || potassiumFertilizerToUse || "";
-      const kFertQty = parseFloat(potassiumFertilizerQuantityKg || potassiumFertilizerQuantity || 0);
-      const kFertCost = parseFloat(potassiumFertilizerCost || 0);
-
-      if (!pFertType && !tFertType && !kFertType) {
-        console.log("⚠️ No extension inputs provided – using default plan");
-        fertilizerPlan = buildDefaultFertilizerPlan(primaryCrop, farmSize, spacingInfo);
-      } else {
-        fertilizerPlan = buildExtensionFertilizerPlan(
-          pFertType, pFertQty, pFertCost,
-          tFertType, tFertQty, tFertCost,
-          kFertType, kFertQty, kFertCost,
-          farmSize, spacingInfo,
-          plantingFertilizerNutrients,
-          topdressingFertilizerNutrients,
-          potassiumFertilizerNutrients
-        );
-        console.log("✅ Extension-based fertilizer plan built:", fertilizerPlan);
-      }
-    }
-
-    if (!fertilizerPlan) {
-      console.log("⚠️ No fertilizer plan – using default plan");
-      fertilizerPlan = buildDefaultFertilizerPlan(primaryCrop, farmSize, spacingInfo);
-    }
-
-    // ===== LIME HANDLING =====
-    const hasCalcitic = recCalciticLime !== undefined && recCalciticLime !== null && recCalciticLime !== "";
-    const hasDolomitic = recDolomiticLime !== undefined && recDolomiticLime !== null && recDolomiticLime !== "";
-
-    let calciticKg = hasCalcitic ? parseFloat(recCalciticLime) : 0;
-    let dolomiticKg = hasDolomitic ? parseFloat(recDolomiticLime) : 0;
-
-    const calciticPrice = calciticLimePricePerBag ? parseFloat(calciticLimePricePerBag) : 300;
-    const dolomiticPrice = dolomiticLimePricePerBag ? parseFloat(dolomiticLimePricePerBag) : 350;
-
-    const calciticCost = Math.ceil(calciticKg / 50) * calciticPrice;
-    const dolomiticCost = Math.ceil(dolomiticKg / 50) * dolomiticPrice;
-    const limeCost = calciticCost + dolomiticCost;
-
-    fertilizerPlan.totalCost = (fertilizerPlan.totalCost || 0) + limeCost;
-    fertilizerPlan.limeRecommendations = {
-      calcitic: { kgNeeded: calciticKg, pricePer50kg: calciticPrice, cost: calciticCost },
-      dolomitic: { kgNeeded: dolomiticKg, pricePer50kg: dolomiticPrice, cost: dolomiticCost }
-    };
-    console.log(`🧪 Lime: calcitic ${calciticKg}kg (${calciticCost} Ksh), dolomitic ${dolomiticKg}kg (${dolomiticCost} Ksh), total lime cost ${limeCost} Ksh`);
-
-    // ===== GENERATE RECOMMENDATIONS =====
-    console.log("🔍 Raw fertilizerPlan before transform:", JSON.stringify(fertilizerPlan, null, 2));
-    const engineFertilizerPlan = transformFertilizerPlanForEngine(fertilizerPlan);
-    console.log("🔍 Transformed engineFertilizerPlan:", JSON.stringify(engineFertilizerPlan, null, 2));
-
-    let recommendationsOutput = null;
-    const cacheKey = getCacheKey({
-      userLanguage, primaryCrop, hasDoneSoilTest, farmSize,
-      soilTestPH, soilTestP, soilTestK, actualYieldKg: validatedYieldKg,
-      pricePerKg: validatedPricePerKg, totalCosts, country, plantsDamaged,
-      deficiencySymptoms, deficiencyLocation, spacing, storageMethod, wantsNutritionBenefits,
-      isPoultry: false, poultry_breed: null, poultry_system: null, poultry_flock_size: null, poultry_age_weeks: null,
-      isDairy: false, dairy_breed: null, dairy_cow_category: null
-    });
-
-    if (cache.has(cacheKey)) {
-      const cached = cache.get(cacheKey);
-      if (Date.now() - cached.timestamp < CACHE_TTL) {
-        console.log("✅ Using cached recommendations");
-        recommendationsOutput = cached.data;
-      } else {
-        cache.delete(cacheKey);
-      }
-    }
-
-    if (!recommendationsOutput) {
-      console.log("📋 Generating fresh recommendations for:", primaryCrop);
-      try {
-        recommendationsOutput = await withTimeout(
-          generateRecommendations({
-            hasSoilTest: hasDoneSoilTest === "Yes",
-            soilAnalysis,
-            fertilizerPlan: engineFertilizerPlan,
-            crop: primaryCrop,
-            crops: cropsArray,
-            farmerData: {
-              farmerName: farmerName || 'Farmer',
-              usePlantingFertilizer, useTopdressingFertilizer,
-              conservationPractices: cleanUserInput(conservationPractices),
-              commonPests: cleanUserInput(commonPests),
-              commonDiseases: cleanUserInput(commonDiseases),
-              managementLevel: "Medium",
-              actualYieldKg: validatedYieldKg,
-              pricePerKg: validatedPricePerKg,
-              totalCosts: totalCosts,
-              country: country || 'kenya',
-              limePricePerBag: calciticPrice,
-              recCalciticLime: calciticKg,
-              recDolomiticLime: dolomiticKg,
-              dolomiticLimePricePerBag: dolomiticPrice,
-              plantsDamaged: plantsDamaged ? parseInt(plantsDamaged) : null,
-              language: userLanguage,
-              deficiencySymptoms, deficiencyLocation,
-              spacing: spacing,
-              storageMethod: storageMethod,
-              wantsNutritionBenefits: wantsNutritionBenefits === true || wantsNutritionBenefits === "Yes",
-              currencySymbol: currencyConfig.symbol,
-              currencyName: currencyConfig.name,
-            },
-            modules: modules || [],
-          }),
-          600000,
-          "Recommendation generation timed out after 600 seconds"
-        );
-        cache.set(cacheKey, { data: recommendationsOutput, timestamp: Date.now() });
-        console.log("✅ Recommendations generated and cached");
-      } catch (error: any) {
-        console.error("❌ Error generating recommendations:", error);
-        const profitStatus = grossMargin >= 0 ? "profit" : "loss";
-        recommendationsOutput = {
-          list: [
-            { key: "welcome_message", params: { content: `Welcome ${farmerName || "Farmer"}! I've analyzed your ${primaryCrop} farm.` } },
-            { key: "financial_summary", params: { content: `Revenue: ${formatCurrencyForCountry(revenue, country)} | Costs: ${formatCurrencyForCountry(totalCosts, country)} | ${profitStatus === "profit" ? "Profit" : "Loss"}: ${formatCurrencyForCountry(Math.abs(grossMargin), country)}` } }
-          ],
-          financialAdvice: `Keep tracking your costs and yields. Every kilogram counts!`,
-          structuredList: [
-            { key: "quick_summary", params: { content: `${primaryCrop.toUpperCase()} Enterprise: ${validatedYieldKg.toLocaleString()} kg @ ${formatCurrencyForCountry(validatedPricePerKg, country)}/kg = ${formatCurrencyForCountry(revenue, country)} revenue` } }
-          ],
-          structuredFinancialAdvice: null
-        };
-      }
-    }
-
-    // ============================================================
-    // CROP MODULE-SPECIFIC STRUCTURED ITEMS (GAP, Profit, Business Plan)
-    // ============================================================
-    if (recommendationsOutput) {
-      if (!recommendationsOutput.structuredList) {
-        recommendationsOutput.structuredList = [];
-      }
-
-      // ---- 1. GAP Module ----
-      if (modules && modules.includes("gap") && primaryCrop) {
-        const gapKey = `gap_${primaryCrop.toLowerCase().replace(/ /g, '_')}`;
-        recommendationsOutput.structuredList.push({
-          key: "gap_grouped",
-          params: {
-            title: `🌱 Good Agricultural Practices for ${primaryCrop}`,
-            gapKey: gapKey,
-            remember: "REMEMBER: Every practice you do well puts more money in your pocket",
-          },
-        });
-      }
-
-      // ---- 2. Profit Calculation Module ----
-      if (modules && modules.includes("profit") && primaryCrop) {
-        const profitInputs = {
-          cropName: primaryCrop,
-          country: country || 'kenya',
-          actualYieldKg: validatedYieldKg,
-          pricePerKg: validatedPricePerKg,
-          plantingMaterialCost: parseFloat(body.plantingMaterialCost) || parseFloat(body.seedCost) || 0,
-          plantingFertilizerCost: parseFloat(body.plantingFertilizerCost) || parseFloat(body.plantingFertilizerCostFromSoil) || 0,
-          plantingFertilizerQuantity: parseFloat(body.plantingFertilizerQuantityKg) || parseFloat(body.plantingFertilizerQuantity) || 0,
-          topdressingFertilizerCost: parseFloat(body.topdressingFertilizerCost) || 0,
-          topdressingFertilizerQuantity: parseFloat(body.topdressingFertilizerQuantityKg) || parseFloat(body.topdressingFertilizerQuantity) || 0,
-          potassiumFertilizerCost: parseFloat(body.potassiumFertilizerCost) || 0,
-          potassiumFertilizerQuantity: parseFloat(body.potassiumFertilizerQuantityKg) || parseFloat(body.potassiumFertilizerQuantity) || 0,
-          calciticLimePricePerBag: parseFloat(body.calciticLimePricePerBag) || 0,
-          recCalciticLime: parseFloat(body.recCalciticLime) || 0,
-          dolomiticLimePricePerBag: parseFloat(body.dolomiticLimePricePerBag) || 0,
-          recDolomiticLime: parseFloat(body.recDolomiticLime) || 0,
-          ploughingCost: parseFloat(body.ploughingCost) || 0,
-          plantingLabourCost: parseFloat(body.plantingLabourCost) || 0,
-          weedingCost: parseFloat(body.weedingCost) || 0,
-          harvestingCost: parseFloat(body.harvestingCost) || 0,
-          transportCostTotal: parseFloat(body.transportCostTotal) || 0,
-          packagingCostTotal: parseFloat(body.packagingCostTotal) || 0,
-          miscellaneousCostTotal: parseFloat(body.miscellaneousCostTotal) || 0,
-        };
-
-        try {
-          const profitResult = calculateAndFormatProfit(profitInputs);
-          recommendationsOutput.structuredList.push({
-            key: "profit_analysis_grouped",
-            params: { content: profitResult.summaryText },
-          });
-          recommendationsOutput.profitAnalysis = profitResult;
-        } catch (err) {
-          console.error("Crop profit calculation error:", err);
-        }
-      }
-
-      // ---- 3. Business Plan Module ----
-      if (modules && modules.includes("business") && primaryCrop) {
-        const businessContent = `
-📋 **Business Plan – ${primaryCrop} Enterprise**
-
-**1. Business Identity**
-- **Name:** ${businessName || "Not provided"}
-- **Vision:** ${businessVision || "Not provided"}
-- **Mission:** ${businessMission || "Not provided"}
-
-**2. Goals**
-- **Short‑term (3–6 mo):** ${shortTermGoals || "Not provided"}
-- **Mid‑term (1 yr):** ${midTermGoals || "Not provided"}
-- **Long‑term (3–6 yr):** ${longTermGoals || "Not provided"}
-
-**3. Marketing**
-- **Target customers:** ${targetCustomers || "Not provided"}
-- **Communication channels:** ${communicationChannels || "Not provided"}
-- **Fallback plan:** ${fallbackPlan || "Not provided"}
-
-**4. Competitive Edge**
-- **Advantage:** ${competitiveAdvantage || "Not provided"}
-- **Payment modes:** ${paymentModes || "Not provided"}
-
-**5. Team**
-- **Positions:** ${businessPositions || "Not provided"}
-- **Heads:** ${positionHeads || "Not provided"}
-
-**6. Products**
-${products || "Not provided"}
-
-**7. Production Inputs**
-${productionInputs || "Not provided"}
-        `.trim();
-
-        recommendationsOutput.structuredList.push({
-          key: "business_plan_grouped",
-          params: { content: businessContent },
-        });
-      }
-    }
-
-    // ===== POST-PROCESS: INSERT LIME AFTER FERTILIZER PLAN =====
-    if (recommendationsOutput && modules && modules.includes("fertilizer_plan")) {
-      const showLime = (hasCalcitic || hasDolomitic) || (calciticKg > 0 || dolomiticKg > 0);
-      let limeContent = "";
-      if (showLime) {
-        limeContent = "Lime Recommendations (based on your soil test)\n";
-        const calciticBags = Math.ceil(calciticKg / 50);
-        const calciticCostDisplay = calciticBags * calciticPrice;
-        limeContent += `- Calcitic Lime: ${calciticKg.toFixed(0)} kg/acre (${calciticBags} bag(s) of 50kg)\n  Cost: ${formatCurrencyForCountry(calciticCostDisplay, country)}\n`;
-        const dolomiticBags = Math.ceil(dolomiticKg / 50);
-        const dolomiticCostDisplay = dolomiticBags * dolomiticPrice;
-        limeContent += `- Dolomitic Lime: ${dolomiticKg.toFixed(0)} kg/acre (${dolomiticBags} bag(s) of 50kg)\n  Cost: ${formatCurrencyForCountry(dolomiticCostDisplay, country)}\n`;
-        limeContent += "- Apply lime 2–3 months before planting.";
-      }
-
-      if (limeContent) {
-        const structuredList = recommendationsOutput.structuredList || [];
-        const existingLimeIndex = structuredList.findIndex((item: any) => item.key === "lime_recommendation");
-        if (existingLimeIndex !== -1) structuredList.splice(existingLimeIndex, 1);
-        let insertIndex = structuredList.findIndex((item: any) => item.key === "fertilizer_header_grouped");
-        if (insertIndex === -1) insertIndex = structuredList.findIndex((item: any) => item.key === "confidence_label");
-        if (insertIndex === -1) insertIndex = 1;
-        structuredList.splice(insertIndex + 1, 0, { key: "lime_recommendation", params: { content: limeContent } });
-        recommendationsOutput.structuredList = structuredList;
-        const hasLimeInList = recommendationsOutput.list.some((item: any) => item.key === "lime_recommendation");
-        if (!hasLimeInList) recommendationsOutput.list.push({ key: "lime_recommendation", params: { content: limeContent } });
-      }
-    }
-
-    if (recommendationsOutput) {
-      recommendationsOutput = addLineBreaksForVoice(recommendationsOutput);
-    }
-
-    const sessionRef = db.collection("farmer_sessions").doc();
-    const sessionId = sessionRef.id;
-
-    const farmerSession = {
-      id: sessionId,
-      userId: userid,
-      language: userLanguage,
-      farmerName,
-      phoneNumber,
       county,
       subCounty,
       ward,
       village,
-      country: country || 'kenya',
-      crops: cropsArray,
-      primaryCrop,
-      cropAcres: farmSize,
-      yieldData: { actualKg: validatedYieldKg, pricePerKg: validatedPricePerKg, revenue, warnings: [...yieldWarnings, ...priceWarnings] },
-      seedCost: seedCostValue,
-      seedRate: parseFloat(seedRate) || parseFloat(seedQuantity) || null,
-      labourCosts: { ploughing: ploughingCostValue, planting: plantingLabourCostValue, weeding: weedingCostValue, harvesting: harvestingCostValue },
-      transportCostTotal: transportCostValue,
-      packagingCostTotal: packagingCostValue,
-      miscellaneousCostTotal: miscellaneousCostValue,
-      spacing,
-      spacingInfo,
-      spacingWarning,
-      grossMarginAnalysis,
-      plantingDate,
-      plantingAdvice,
-      plantingAdviceText,
-      commonPests: cleanUserInput(commonPests) ? cleanUserInput(commonPests).split(',').map((p: string) => p.trim()) : [],
-      commonDiseases: cleanUserInput(commonDiseases) ? cleanUserInput(commonDiseases).split(',').map((d: string) => d.trim()) : [],
-      storageMethod,
-      conservationPractices: cleanUserInput(conservationPractices) ? cleanUserInput(conservationPractices).split(',').map((p: string) => p.trim()) : [],
-      recommendations: recommendationsOutput.list,
-      financialAdvice: recommendationsOutput.financialAdvice,
-      structuredList: recommendationsOutput.structuredList || [],
-      structuredFinancialAdvice: recommendationsOutput.structuredFinancialAdvice || null,
-      fertilizerPlan: {
-        ...fertilizerPlan,
-        limeRecommendations: fertilizerPlan.limeRecommendations,
-      },
-      soilTest: hasDoneSoilTest === "Yes" ? {
-        testDate: soilTestDate, ph: soilTestPH ? parseFloat(soilTestPH) : null, phRating: soilTestPHRating,
-        phosphorus: soilTestP ? parseFloat(soilTestP) : null, phosphorusRating: soilTestPRating,
-        potassium: soilTestK ? parseFloat(soilTestK) : null, potassiumRating: soilTestKRating,
-        totalNitrogen: soilTestNPercent ? parseFloat(soilTestNPercent) : null, totalNitrogenRating: soilTestNPercentRating,
-        calcium: soilTestCa ? parseFloat(soilTestCa) : null, calciumRating: soilTestCaRating,
-        magnesium: soilTestMg ? parseFloat(soilTestMg) : null, magnesiumRating: soilTestMgRating,
-        sodium: soilTestNa ? parseFloat(soilTestNa) : null, sodiumRating: soilTestNaRating,
-        organicCarbon: soilTestOC ? parseFloat(soilTestOC) : null, organicCarbonRating: soilTestOCRating,
-        organicMatter: soilTestOM ? parseFloat(soilTestOM) : null, organicMatterRating: soilTestOMRating,
-        cec: soilTestCEC ? parseFloat(soilTestCEC) : null, cecRating: soilTestCECRating,
-        targetYield: targetYield ? parseFloat(targetYield) : null,
-        recCalciticLime: calciticKg > 0 ? calciticKg : null,
-        recDolomiticLime: dolomiticKg > 0 ? dolomiticKg : null,
-        recPlantingFertilizer, recPlantingQuantity, recTopdressingFertilizer, recTopdressingQuantity,
-        recPotassiumFertilizer, recPotassiumQuantity,
-        plantingFertilizerNutrients, topdressingFertilizerNutrients, potassiumFertilizerNutrients,
-        plantingFertilizerToUse, plantingFertilizerCost, topdressingFertilizerToUse, topdressingFertilizerCost,
-        potassiumFertilizerToUse, potassiumFertilizerCost,
-      } : null,
-      extensionInputs: hasDoneSoilTest === "No" ? {
-        plantingFertilizerType: plantingFertilizerType || plantingFertilizerToUse || "",
-        plantingFertilizerQuantity: parseFloat(plantingFertilizerQuantityKg || plantingFertilizerQuantity || 0),
-        plantingFertilizerCost: parseFloat(plantingFertilizerCost || 0),
-        topdressingFertilizerType: topdressingFertilizerType || topdressingFertilizerToUse || "",
-        topdressingFertilizerQuantity: parseFloat(topdressingFertilizerQuantityKg || topdressingFertilizerQuantity || 0),
-        topdressingFertilizerCost: parseFloat(topdressingFertilizerCost || 0),
-        potassiumFertilizerType: potassiumFertilizerType || potassiumFertilizerToUse || "",
-        potassiumFertilizerQuantity: parseFloat(potassiumFertilizerQuantityKg || potassiumFertilizerQuantity || 0),
-        potassiumFertilizerCost: parseFloat(potassiumFertilizerCost || 0),
-        plantingFertilizerNutrients: plantingFertilizerNutrients || null,
-        topdressingFertilizerNutrients: topdressingFertilizerNutrients || null,
-        potassiumFertilizerNutrients: potassiumFertilizerNutrients || null,
-      } : null,
-      useCertifiedSeed: useCertifiedSeed === "yes",
-      deficiencySymptoms: deficiencySymptoms || null,
-      deficiencyLocation: deficiencyLocation || null,
-      wantsNutritionBenefits: wantsNutritionBenefits === true || wantsNutritionBenefits === "Yes",
-      plantsDamaged: plantsDamaged ? parseInt(plantsDamaged) : null,
-      metadata: {
-        warnings: { yield: yieldWarnings, price: priceWarnings, spacing: spacingWarning ? [spacingWarning] : [] },
-        createdAt: new Date().toISOString(),
-        source: "logic-based",
-        version: "9.1"
+      country,
+
+      // ======================================================
+      // SECURITY:
+      // Client-supplied identity is deliberately discarded.
+      // ======================================================
+      userid: _clientSuppliedUserId,
+
+      farmerName,
+      ingredientPrices,
+      availableIngredients = [],
+
+      // NEW FIELDS
+      numberOfBirds = 0,
+      salePricePerBird = 0,
+      pricePerEgg = 0,
+    } = body;
+
+    // Prevent accidental future use.
+    void _clientSuppliedUserId;
+
+    console.log(
+      `🔢 [POST] Extracted numberOfBirds: ${numberOfBirds} (type: ${typeof numberOfBirds})`,
+    );
+
+    console.log(
+      `🔢 [POST] Extracted salePricePerBird: ${salePricePerBird}`,
+    );
+
+    console.log(
+      `🔢 [POST] Extracted pricePerEgg: ${pricePerEgg}`,
+    );
+
+    // ========================================================
+    // 4. VALIDATE REQUIRED FORMULATION FIELDS
+    // ========================================================
+
+    if (!breed || !stage || !quantityKg || !country) {
+      console.error("Missing required fields:", {
+        breed,
+        stage,
+        quantityKg,
+        country,
+      });
+
+      return NextResponse.json(
+        {
+          success: false,
+          error:
+            "Missing required fields: breed, stage, quantityKg, and country are required",
+        },
+        { status: 400 },
+      );
+    }
+
+    const normalizedCountry = country.toLowerCase();
+
+    // ========================================================
+    // 5. CACHE KEY
+    // ========================================================
+
+    const cacheKey = getCacheKey({
+      breed,
+      stage,
+      quantityKg,
+      includeCoccidiostat,
+      country: normalizedCountry,
+      ingredientPrices,
+      availableIngredients,
+      numberOfBirds,
+      salePricePerBird,
+      pricePerEgg,
+    });
+
+    let feedResult: any = null;
+
+    // ========================================================
+    // 6. CACHE LOOKUP
+    // ========================================================
+
+    if (cache.has(cacheKey)) {
+      const cached = cache.get(cacheKey);
+
+      if (Date.now() - cached.timestamp < CACHE_TTL) {
+        console.log("✅ Using cached feed formulation");
+
+        feedResult = cached.data;
+      } else {
+        console.log("⏰ Cache expired, deleting...");
+
+        cache.delete(cacheKey);
       }
+    }
+
+    // ========================================================
+    // 7. FEED FORMULATION
+    // ========================================================
+
+    if (!feedResult) {
+      console.log("📋 Calculating fresh feed formulation...");
+
+      try {
+        const formulateParams = {
+          breed,
+          stage,
+          quantityKg: parseFloat(quantityKg),
+
+          includeCoccidiostat:
+            includeCoccidiostat === "Yes" ||
+            includeCoccidiostat === true,
+
+          country: normalizedCountry,
+
+          ingredientPrices:
+            ingredientPrices || {},
+
+          availableIngredients:
+            availableIngredients || [],
+
+          numberOfBirds:
+            parseFloat(numberOfBirds) || 0,
+
+          salePricePerBird:
+            parseFloat(salePricePerBird) || 0,
+
+          pricePerEgg:
+            parseFloat(pricePerEgg) || 0,
+        };
+
+        console.log(
+          "📤 [POST] Calling formulateFeed with params:",
+          JSON.stringify(formulateParams, null, 2),
+        );
+
+        feedResult = await withTimeout(
+          (async () => {
+            const result =
+              await formulateFeed(formulateParams);
+
+            console.log(
+              "✅ [POST] formulateFeed returned result. structuredList keys:",
+              result.structuredList.map(
+                (item) => item.key,
+              ),
+            );
+
+            return result;
+          })(),
+          30000,
+          "Feed formulation timed out after 30 seconds",
+        );
+
+        cache.set(cacheKey, {
+          data: feedResult,
+          timestamp: Date.now(),
+        });
+
+        console.log(
+          "✅ Feed formulation completed and cached",
+        );
+      } catch (error: any) {
+        console.error(
+          "❌ Error formulating feed:",
+          error,
+        );
+
+        throw new Error(
+          `Formulation error: ${error.message}`,
+        );
+      }
+    }
+
+    // ========================================================
+    // 8. BUILD INGREDIENT TABLE
+    // ========================================================
+
+    const ingredients =
+      feedResult.ingredients || [];
+
+    const totalCost =
+      feedResult.totalCost || 0;
+
+    const nutrition =
+      feedResult.nutritionalSummary || {
+        protein: 0,
+        calcium: 0,
+        energy: 0,
+      };
+
+    console.log(
+      `📊 [POST] Building ingredient table with ${ingredients.length} ingredients`,
+    );
+
+    const tableRows = ingredients.map(
+      (ing: any) => {
+        const qty =
+          ing.amountKg.toFixed(2);
+
+        const pricePerKg =
+          formatCurrencyForCountry(
+            ing.pricePerKg,
+            normalizedCountry,
+          );
+
+        const total =
+          formatCurrencyForCountry(
+            ing.cost,
+            normalizedCountry,
+          );
+
+        return `<tr>
+        <td>${ing.name}</td>
+        <td>${qty}</td>
+        <td>${pricePerKg}</td>
+        <td>${total}</td>
+      </tr>`;
+      },
+    );
+
+    const totalFormatted =
+      formatCurrencyForCountry(
+        totalCost,
+        normalizedCountry,
+      );
+
+    const tableHTML = `
+<style>
+.ingredient-table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 14px; background: #ffffff; border-radius: 8px; overflow: hidden; }
+.ingredient-table th { background: #2563eb; color: #ffffff; padding: 10px 12px; text-align: left; font-weight: 600; }
+.ingredient-table td { background: #ffffff; color: #1e293b; padding: 8px 12px; border-bottom: 1px solid #e2e8f0; }
+.ingredient-table .total-row { background: #f8fafc; font-weight: bold; }
+.ingredient-table .total-row td { border-top: 2px solid #2563eb; background: #f8fafc; }
+.ingredient-table tr:last-child td { border-bottom: none; }
+.ingredient-table .total-row td:first-child { font-weight: bold; }
+.ingredient-table .total-row td:last-child { font-weight: bold; }
+</style>
+<table class="ingredient-table">
+  <thead>
+    <tr>
+      <th>Ingredient</th>
+      <th>Quantity (kg)</th>
+      <th>Price per kg</th>
+      <th>Total Cost</th>
+    </tr>
+  </thead>
+  <tbody>
+    ${tableRows.join("")}
+    <tr class="total-row">
+      <td><strong>TOTAL</strong></td>
+      <td></td>
+      <td></td>
+      <td><strong>${totalFormatted}</strong></td>
+    </tr>
+  </tbody>
+</table>
+`;
+
+    // ========================================================
+    // 9. BUILD STRUCTURED LIST
+    // ========================================================
+
+    console.log(
+      "🔄 [POST] Building new structured list from feedResult.structuredList",
+    );
+
+    const newStructuredList: any[] = [];
+
+    for (const item of feedResult.structuredList) {
+      if (item.key === "ingredient_list") {
+        newStructuredList.push({
+          key: "ingredient_table",
+          params: {
+            content: tableHTML,
+          },
+        });
+
+        console.log(
+          "🔄 [POST] Replaced ingredient_list with ingredient_table",
+        );
+      } else if (item.key === "total_cost") {
+        console.log(
+          "🔄 [POST] Skipping total_cost (will be re-added later)",
+        );
+
+        continue;
+      } else {
+        newStructuredList.push(item);
+
+        console.log(
+          `🔄 [POST] Added item with key: ${item.key}`,
+        );
+      }
+    }
+
+    // ========================================================
+    // 10. RE-ADD TOTAL COST
+    // ========================================================
+
+    const totalCostItem = {
+      key: "total_cost",
+      params: {
+        content: `Total Cost: ${totalFormatted}`,
+      },
     };
 
-    await sessionRef.set(farmerSession);
-    console.log(`✅ Saved farmer session ${sessionId} for ${primaryCrop}. Recommendations count: ${recommendationsOutput.structuredList?.length || 0}`);
+    const tableIndex =
+      newStructuredList.findIndex(
+        (item) =>
+          item.key === "ingredient_table",
+      );
 
-    return NextResponse.json({
-      success: true,
-      sessionId: sessionId,
-      grossMarginAnalysis,
-      recommendations: recommendationsOutput.list,
-      structuredList: recommendationsOutput.structuredList,
-      structuredFinancialAdvice: recommendationsOutput.structuredFinancialAdvice,
-      financialAdvice: recommendationsOutput.financialAdvice,
-      fertilizerPlan: fertilizerPlan,
-      warnings: { yield: yieldWarnings, price: priceWarnings, spacing: spacingWarning },
-      welcomeMessage: `Welcome ${farmerName || "Farmer"}! I've prepared your recommendations for ${primaryCrop}.`
-    }, { status: 200 });
+    if (tableIndex !== -1) {
+      newStructuredList.splice(
+        tableIndex + 1,
+        0,
+        totalCostItem,
+      );
 
+      console.log(
+        "🔄 [POST] Inserted total_cost after ingredient_table",
+      );
+    } else {
+      newStructuredList.push(
+        totalCostItem,
+      );
+
+      console.log(
+        "🔄 [POST] Pushed total_cost at end",
+      );
+    }
+
+    feedResult.structuredList =
+      newStructuredList;
+
+    console.log(
+      "📋 [POST] Final structuredList keys:",
+      newStructuredList.map(
+        (item) => item.key,
+      ),
+    );
+
+    const hasWeeklyPlan =
+      newStructuredList.some(
+        (item) =>
+          item.key === "weekly_feed_plan",
+      );
+
+    console.log(
+      `📋 [POST] weekly_feed_plan exists in final list? ${hasWeeklyPlan}`,
+    );
+
+    // ========================================================
+    // 11. CREATE FIRESTORE FARMER SESSION
+    // ========================================================
+    //
+    // CRITICAL V40.20 SECURITY BOUNDARY:
+    //
+    //     farmerSession.userId
+    //
+    // MUST ALWAYS equal:
+    //
+    //     authenticatedFirebaseUid
+    //
+    // It MUST NEVER equal:
+    //
+    //     body.userid
+    //
+    // This is the ownership root used later by:
+    //
+    //     /api/farmer/query
+    //
+    // to authorize access to this session.
+    //
+    // Therefore:
+    //
+    //     Firebase Auth identity
+    //              ↓
+    //     authenticatedFirebaseUid
+    //              ↓
+    //     Firestore userId
+    //              ↓
+    //     query ownership check
+    //
+    // ========================================================
+
+    const sessionRef =
+      db.collection("farmer_sessions").doc();
+
+    const sessionId =
+      sessionRef.id;
+
+    const farmerSession = {
+      id: sessionId,
+
+      // ======================================================
+      // SECURITY CRITICAL:
+      //
+      // NEVER replace this with:
+      //
+      //   body.userid
+      //
+      //   _clientSuppliedUserId
+      //
+      //   farmerSession.userid
+      //
+      // The authenticated server-side Firebase UID is the
+      // authoritative session owner.
+      // ======================================================
+
+      userId: authenticatedFirebaseUid,
+
+      language: userLanguage,
+
+      farmerName:
+        farmerName || "Farmer",
+
+      breed,
+
+      stage,
+
+      quantityKg:
+        parseFloat(quantityKg),
+
+      includeCoccidiostat:
+        includeCoccidiostat === "Yes" ||
+        includeCoccidiostat === true,
+
+      ingredientPrices:
+        ingredientPrices || {},
+
+      availableIngredients:
+        availableIngredients || [],
+
+      county:
+        county || "",
+
+      subCounty:
+        subCounty || "",
+
+      ward:
+        ward || "",
+
+      village:
+        village || "",
+
+      country:
+        normalizedCountry,
+
+      // ======================================================
+      // ECONOMIC / PRODUCTION FIELDS
+      // ======================================================
+
+      numberOfBirds:
+        parseFloat(numberOfBirds) || 0,
+
+      salePricePerBird:
+        parseFloat(salePricePerBird) || 0,
+
+      pricePerEgg:
+        parseFloat(pricePerEgg) || 0,
+
+      // ======================================================
+      // FORMULATION RESULT
+      // ======================================================
+
+      feedName:
+        feedResult.feedName || "",
+
+      recipeName:
+        feedResult.recipeName || "",
+
+      feedResult: {
+        ingredients:
+          feedResult.ingredients,
+
+        totalCost:
+          feedResult.totalCost,
+
+        nutritionalSummary:
+          feedResult.nutritionalSummary,
+
+        mixingInstructions:
+          feedResult.mixingInstructions,
+
+        warnings:
+          feedResult.warnings,
+      },
+
+      structuredList:
+        feedResult.structuredList,
+
+      // ======================================================
+      // METADATA
+      // ======================================================
+
+      metadata: {
+        createdAt:
+          new Date().toISOString(),
+
+        source:
+          "poultry-feed-formulation",
+
+        version:
+          "2.5",
+
+        // Security provenance marker.
+        identitySource:
+          "getCurrentUser",
+
+        // Explicitly documents that ownership was not
+        // derived from client input.
+        ownershipSource:
+          "authenticated-firebase-uid",
+      },
+    };
+
+    // ========================================================
+    // 12. PERSIST FIRESTORE SESSION
+    // ========================================================
+
+    await sessionRef.set(
+      farmerSession,
+    );
+
+    console.log(
+      `✅ Saved poultry session ${sessionId} for ${breed} ${stage}`,
+    );
+
+    console.log(
+      `🔐 Session ownership established server-side for authenticated Firebase UID`,
+    );
+
+    // ========================================================
+    // 13. RESPONSE
+    // ========================================================
+
+    return NextResponse.json(
+      {
+        success: true,
+
+        sessionId:
+
+          sessionId,
+
+        feedName:
+          feedResult.feedName || "",
+
+        recipeName:
+          feedResult.recipeName || "",
+
+        structuredList:
+          feedResult.structuredList,
+
+        feedResult: {
+          ingredients:
+            feedResult.ingredients,
+
+          totalCost:
+            feedResult.totalCost,
+
+          nutritionalSummary:
+            feedResult.nutritionalSummary,
+
+          mixingInstructions:
+            feedResult.mixingInstructions,
+
+          warnings:
+            feedResult.warnings,
+        },
+
+        welcomeMessage:
+          `Welcome ${
+            farmerName || "Farmer"
+          }! I've prepared your ${breed} ${stage} feed formula for ${quantityKg} kg.`,
+      },
+      { status: 200 },
+    );
   } catch (error: any) {
-    console.error("API Route Error:", error);
-    return NextResponse.json({ success: false, error: error.message || "Unknown error occurred" }, { status: 500 });
+    console.error(
+      "❌ API Route Error:",
+      error,
+    );
+
+    return NextResponse.json(
+      {
+        success: false,
+        error:
+          error.message ||
+          "Unknown error occurred",
+      },
+      { status: 500 },
+    );
   }
 }
+
+// ============================================================
+// GET
+// ============================================================
 
 export async function GET() {
   return NextResponse.json({
     status: "operational",
-    message: "Farmer Session Generation API - v9.1: Poultry & Dairy Business Plan Support",
-    version: "9.1"
+
+    message:
+      "Poultry Feed Formulation API - v2.5 (LP optimization, 17 ingredients, table, enhanced mixing)",
+
+    version: "2.5",
   });
 }

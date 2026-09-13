@@ -1491,6 +1491,24 @@ enum BusinessPartnerType {
   RESEARCH_INSTITUTION
   UNIVERSITY
 }
+enum PermissionCategory {
+  SYSTEM
+  ANALYTICS
+  CALENDAR
+  COOPERATIVE
+  CRM
+  DOCUMENTS
+  FINANCE
+  GOVERNMENT
+  INVENTORY
+  KNOWLEDGE
+  LIVESTOCK
+  MARKETPLACE
+  NOTIFICATIONS
+  PROCUREMENT
+  WAREHOUSE
+}
+
 model Role {
   id          Int      @id @default(autoincrement())
   name        String   @unique
@@ -1498,63 +1516,247 @@ model Role {
   createdAt   DateTime @default(now())
 
   users User[]
+  rolePermissions RolePermission[]
+}
+
+model Permission {
+  id          String             @id @default(cuid())
+  name        String             @unique
+  module          String
+  description String?
+  category    PermissionCategory
+
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+
+  rolePermissions RolePermission[]
+
+  @@map("permissions")
+}
+
+
+model RolePermission {
+  id String @id @default(cuid())
+
+  roleId String
+  permissionId String
+
+  role Role @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  permission Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@unique([roleId, permissionId])
+
+  @@map("role_permissions")
 }
 
 model User {
-  id       Int    @id @default(autoincrement())
-  name     String
-  email    String @unique
-  password String
+  id                    Int                    @id @default(autoincrement())
+
+  //====================================================
+  // Firebase Authentication
+  //====================================================
+
+  firebaseUid           String                 @unique
+
+  email                 String                 @unique
+
+  emailVerified         Boolean                @default(false)
+
+  //====================================================
+  // Basic Profile
+  //====================================================
+
+  name                  String
+
+  firstName             String?
+
+  lastName              String?
+
+  phoneNumber           String?
+
+  photoURL              String?
+
+  active                Boolean                @default(true)
+
+  lastLoginAt           DateTime?
+
+  createdAt             DateTime               @default(now())
+
+  updatedAt             DateTime               @updatedAt
+
+  //====================================================
+  // Security / Authorization
+  //====================================================
 
   roleId                Int
+
+  tenantId              Int?
+
   role                  Role                   @relation(fields: [roleId], references: [id])
-  uploadedDocuments     Document[]             @relation("UserUploadedDocuments")
-  notifications         Notification[]
-  notificationTemplates NotificationTemplate[]
-  assignedTasks         Task[]
-  createdTasks          Task[]                 @relation("TaskCreator")
-  calendarEvents        CalendarEvent[]
-  createdAt             DateTime               @default(now())
-  farmer                Farmer?
-  knowledgeArticles     KnowledgeArticle[]
-  conductedAudits       FarmAudit[]
-  correctiveActions     CorrectiveAction[]
-  dashboards            Dashboard[]
-  reports               Report[]
+
+  tenant                Tenant?                @relation(fields: [tenantId], references: [id])
+
+  //====================================================
+  // AI
+  //====================================================
+
+  aiDecisions           AIDecision[]
+
   predictions           AIModelPrediction[]
-  traceabilityEvents    TraceabilityEvent[]
-  purchaseRequests      PurchaseRequest[]
-  approvedPurchases     PurchaseOrder[]
+
+  decisionFeedback      DecisionFeedback[]
+
+  //====================================================
+  // API / Integrations
+  //====================================================
+
+  apiKeys               ApiKey[]
+
+  //====================================================
+  // Backup / Recovery
+  //====================================================
+
+  backupsCreated        BackupJob[]
+
+  restoresPerformed     RestoreJob[]
+
+  //====================================================
+  // Calendar
+  //====================================================
+
+  calendarEvents        CalendarEvent[]
+
+  //====================================================
+  // Cooperative
+  //====================================================
+
+  organizedMeetings     CooperativeMeeting[]
+
+  //====================================================
+  // Audit
+  //====================================================
+
+  correctiveActions     CorrectiveAction[]
+
+  conductedAudits       FarmAudit[]
+
+  //====================================================
+  // CRM
+  //====================================================
+
   customerInteractions  CustomerInteraction[]
 
-  salesOpportunities SalesOpportunity[]
-  organizedMeetings  CooperativeMeeting[]
-  apiKeys            ApiKey[]
-  userPreferences    UserPreference[]
-  importJobs         ImportJob[]
-  migrationJobs      MigrationJob[]
-  exportJobs         ExportJob[]
-  backupsCreated     BackupJob[]
-  restoresPerformed  RestoreJob[]
-  subscription       Subscription?
+  salesOpportunities    SalesOpportunity[]
 
-  payments Payment[]
+  //====================================================
+  // Dashboards
+  //====================================================
 
-  invoices     Invoice[]
-  usageMetrics UsageMetric[]
-  tenantId     Int?
+  dashboards            Dashboard[]
 
-  tenant Tenant? @relation(fields: [tenantId], references: [id])
+  //====================================================
+  // Documents
+  //====================================================
 
-  tenantMemberships TenantMembership[]
-  devices           UserDevice[]
+  uploadedDocuments     Document[]
+                           @relation("UserUploadedDocuments")
 
-  syncLogs    SyncLog[]
-  aiDecisions AIDecision[]
+  //====================================================
+  // Import / Export
+  //====================================================
 
-  decisionFeedback DecisionFeedback[]
+  exportJobs            ExportJob[]
+
+  importJobs            ImportJob[]
+
+  migrationJobs         MigrationJob[]
+
+  //====================================================
+  // Farmer
+  //====================================================
+
+  farmer                Farmer?
+
+  //====================================================
+  // Finance
+  //====================================================
+
+  invoices              Invoice[]
+
+  payments              Payment[]
+
+  //====================================================
+  // Knowledge Base
+  //====================================================
+
+  knowledgeArticles     KnowledgeArticle[]
+
+  //====================================================
+  // Notifications
+  //====================================================
+
+  notifications         Notification[]
+
+  notificationTemplates NotificationTemplate[]
+
+  //====================================================
+  // Procurement
+  //====================================================
+
+  approvedPurchases     PurchaseOrder[]
+
+  purchaseRequests      PurchaseRequest[]
+
+  //====================================================
+  // Reports
+  //====================================================
+
+  reports               Report[]
+
+  //====================================================
+  // Subscription
+  //====================================================
+
+  subscription          Subscription?
+
+  usageMetrics          UsageMetric[]
+
+  //====================================================
+  // Synchronization
+  //====================================================
+
+  syncLogs              SyncLog[]
+
+  devices               UserDevice[]
+
+  //====================================================
+  // Tasks
+  //====================================================
+
+  assignedTasks         Task[]
+
+  createdTasks          Task[]
+                           @relation("TaskCreator")
+
+  //====================================================
+  // Multi-Tenant
+  //====================================================
+
+  tenantMemberships     TenantMembership[]
+
+  //====================================================
+  // Traceability
+  //====================================================
+
+  traceabilityEvents    TraceabilityEvent[]
+
+  //====================================================
+  // Preferences
+  //====================================================
+
+  userPreferences       UserPreference[]
 }
-
 model Country {
   id        Int      @id @default(autoincrement())
   name      String   @unique

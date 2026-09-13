@@ -121,11 +121,37 @@ const AuthForm = ({ type }: { type: FormType }) => {
           password
         );
 
-        const idToken = await userCredential.user.getIdToken();
-        await signIn({ email, idToken });
+        const idToken = await userCredential.user.getIdToken(true);
+
+        // Existing session cookie
+        const loginResult = await signIn({ email, idToken });
+
+        if (!loginResult.success) {
+          toast.error(loginResult.message);
+          return;
+        }
+
+        // NEW: Sync Firebase user into PostgreSQL
+        const syncResponse = await fetch("/api/auth/sync", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            idToken,
+          }),
+        });
+
+        const syncResult = await syncResponse.json();
+
+        if (!syncResult.success) {
+          toast.error(syncResult.message);
+          return;
+        }
 
         toast.success("Signed in successfully.");
-        setTimeout(() => window.location.href = "/", 100);
+        router.push("/");
+        router.refresh();
       }
     } catch (error: any) {
       toast.error(error.message);
@@ -168,11 +194,40 @@ const AuthForm = ({ type }: { type: FormType }) => {
           result.password!
         );
 
-        const idToken = await userCredential.user.getIdToken();
-        await signIn({ email: result.email!, idToken });
+        const idToken = await userCredential.user.getIdToken(true);
+
+        // Existing session cookie
+        const loginResult = await signIn({
+          email: result.email!,
+          idToken,
+        });
+
+        if (!loginResult.success) {
+          toast.error(loginResult.message);
+          return;
+        }
+
+        // NEW: Sync Firebase user into PostgreSQL
+        const syncResponse = await fetch("/api/auth/sync", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            idToken,
+          }),
+        });
+
+        const syncResult = await syncResponse.json();
+
+        if (!syncResult.success) {
+          toast.error(syncResult.message);
+          return;
+        }
 
         toast.success("Signed in successfully.");
-        setTimeout(() => window.location.href = "/", 100);
+        router.push("/");
+        router.refresh();
       }
     } catch (error: any) {
       toast.error(error.message);

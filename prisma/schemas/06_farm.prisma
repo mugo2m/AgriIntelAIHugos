@@ -37,7 +37,7 @@ model Farm {
   incomes                Income[]
   budgets                Budget[]
   suppliers              Supplier[]
-  buyers                 Buyer[]
+  buyers                 Buyer[] @relation("FarmBuyers")
   livestock              Livestock[]
   employees              Employee[]
   recommendations        AIRecommendation[]

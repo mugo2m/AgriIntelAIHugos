@@ -1,0 +1,54 @@
+{
+  "audit": "V13.2",
+  "description": "Read-only canonical source gap and name reconciliation audit.",
+  "readOnly": true,
+  "sourceFiles": {
+    "canonicalSubcounties": "prisma\\data\\subcounties.json",
+    "authoritativeGeoJSON": "prisma\\data\\kenya-wards-1450.geojson"
+  },
+  "counts": {
+    "canonicalSourceRecords": 330,
+    "geojsonFeatures": 1450,
+    "databaseCounties": 47,
+    "databaseSubcounties": 539,
+    "databaseWards": 1450,
+    "unresolvedAuthoritativeSubcounties": 1,
+    "canonicalFound": 1,
+    "countyAliasRequired": 0,
+    "noCanonicalMatch": 0
+  },
+  "results": [
+    {
+      "county": "BARINGO",
+      "normalizedCounty": "baringo",
+      "prismaCountyId": 90,
+      "authoritativeSubcounty": "Tiaty Sub County",
+      "normalizedAuthoritativeSubcounty": "tiaty",
+      "prismaSubcountyId": 757,
+      "prismaSubcountyName": "Tiaty East",
+      "wardCount": 7,
+      "wardGids": [
+        781,
+        782,
+        783,
+        784,
+        785,
+        786,
+        787
+      ],
+      "classification": "CANONICAL_FOUND",
+      "bestMatch": {
+        "canonicalCode": "3007",
+        "canonicalCountyCode": "030",
+        "canonicalName": "Tiaty East",
+        "headquarters": null,
+        "classification": "ALIAS",
+        "score": 0.98,
+        "editSimilarity": 1,
+        "tokenSimilarity": 1
+      },
+      "alternativeMatches": [],
+      "note": "Canonical source match identified as ALIAS."
+    }
+  ]
+}

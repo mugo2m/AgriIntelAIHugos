@@ -1,0 +1,93 @@
+gid,wardId,wardName,authoritativeCounty,authoritativeSubCounty,databaseCounty,databaseCountyId,databaseSubCounty,databaseSubCountyId,countyIdentityMatch,subCountyIdentityMatch,status,countyNormalizedAuthoritative,countyNormalizedDatabase,subCountyNormalizedAuthoritative,subCountyNormalizedDatabase,wardUid,wardScuid,wardCuid,population2009
+2044,1616,Mathare North Ward,Nairobi,Ruaraka  Sub County,Nairobi City,79,Ruaraka  Sub County,405,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,ruaraka,ruaraka,,,,55158
+2047,1619,Imara Daima Ward,Nairobi,Embakasi South Sub County,Nairobi City,79,Embakasi South Sub County,407,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,embakasisouth,embakasisouth,,,,70641
+781,1837,Tirioko Ward,BARINGO,Tiaty Sub County,Baringo,90,Tiaty East,757,true,false,UNRESOLVED,baringo,baringo,tiaty,tiatyeast,,,,23669
+782,1838,Kolowa Ward,BARINGO,Tiaty Sub County,Baringo,90,Tiaty East,757,true,false,UNRESOLVED,baringo,baringo,tiaty,tiatyeast,,,,19499
+783,1839,Ribkwo Ward,BARINGO,Tiaty Sub County,Baringo,90,Tiaty East,757,true,false,UNRESOLVED,baringo,baringo,tiaty,tiatyeast,,,,14572
+784,1840,Silale Ward,BARINGO,Tiaty Sub County,Baringo,90,Tiaty East,757,true,false,UNRESOLVED,baringo,baringo,tiaty,tiatyeast,,,,21947
+785,1841,Loiyamorok Ward,BARINGO,Tiaty Sub County,Baringo,90,Tiaty East,757,true,false,UNRESOLVED,baringo,baringo,tiaty,tiatyeast,,,,13885
+2008,1943,Parklands/highridge Ward,Nairobi,Westlands  Sub County,Nairobi City,79,Westlands  Sub County,486,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,westlands,westlands,,,,38384
+2012,1944,Kilimani Ward,Nairobi,Dagoretti North Sub County,Nairobi City,79,Dagoretti North Sub County,487,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,dagorettinorth,dagorettinorth,,,,43122
+2015,1945,Kileleshwa Ward,Nairobi,Dagoretti North Sub County,Nairobi City,79,Dagoretti North Sub County,487,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,dagorettinorth,dagorettinorth,,,,27202
+2030,1957,Woodley/kenyatta Golf Course Ward,Nairobi,Kibra  Sub County,Nairobi City,79,Kibra,1576,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,kibra,kibra,,,,35355
+2034,1965,Zimmerman Ward,Nairobi,Roysambu  Sub County,Nairobi City,79,Roysambu  Sub County,492,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,roysambu,roysambu,,,,38912
+2035,1966,Roysambu Ward,Nairobi,Roysambu  Sub County,Nairobi City,79,Roysambu  Sub County,492,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,roysambu,roysambu,,,,40331
+2038,1967,Mwiki Ward,Nairobi,Kasarani  Sub County,Nairobi City,79,Kasarani,1575,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,kasarani,kasarani,,,,39156
+2039,1968,Kasarani Ward,Nairobi,Kasarani  Sub County,Nairobi City,79,Kasarani,1575,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,kasarani,kasarani,,,,21353
+2045,1970,Lucky Summer Ward,Nairobi,Ruaraka  Sub County,Nairobi City,79,Ruaraka  Sub County,405,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,ruaraka,ruaraka,,,,20705
+2046,1971,Korogocho Ward,Nairobi,Ruaraka  Sub County,Nairobi City,79,Ruaraka  Sub County,405,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,ruaraka,ruaraka,,,,41946
+2050,1974,Pipeline Ward,Nairobi,Embakasi South Sub County,Nairobi City,79,Embakasi South Sub County,407,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,embakasisouth,embakasisouth,,,,56198
+2063,2050,Lower Savanna Ward,Nairobi,Embakasi East Sub County,Nairobi City,79,Embakasi East Sub County,509,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,embakasieast,embakasieast,,,,30751
+2064,2051,Embakasi Ward,Nairobi,Embakasi East Sub County,Nairobi City,79,Embakasi East Sub County,509,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,embakasieast,embakasieast,,,,34084
+2065,2052,Utawala Ward,Nairobi,Embakasi East Sub County,Nairobi City,79,Embakasi East Sub County,509,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,embakasieast,embakasieast,,,,30950
+2066,2053,Mihango Ward,Nairobi,Embakasi East Sub County,Nairobi City,79,Embakasi East Sub County,509,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,embakasieast,embakasieast,,,,22936
+2072,2056,Viwandani Ward,Nairobi,Makadara  Sub County,Nairobi City,79,Makadara,1578,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,makadara,makadara,,,,44881
+2073,2057,Harambee Ward,Nairobi,Makadara  Sub County,Nairobi City,79,Makadara,1578,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,makadara,makadara,,,,55456
+2077,2058,Eastleigh South Ward,Nairobi,Kamukunji  Sub County,Nairobi City,79,Kamukunji,1574,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,kamukunji,kamukunji,,,,66264
+2013,2064,Kawangware Ward,Nairobi,Dagoretti North Sub County,Nairobi City,79,Dagoretti North Sub County,487,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,dagorettinorth,dagorettinorth,,,,27401
+2084,2065,Landimawe Ward,Nairobi,Starehe  Sub County,Nairobi City,79,Starehe  Sub County,513,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,starehe,starehe,,,,26509
+2085,2066,Nairobi South Ward,Nairobi,Starehe  Sub County,Nairobi City,79,Starehe  Sub County,513,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,starehe,starehe,,,,53303
+2088,2067,Huruma Ward,Nairobi,Mathare  Sub County,Nairobi City,79,Mathare,1579,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,mathare,mathare,,,,37972
+2016,2116,Kabiro Ward,Nairobi,Dagoretti North Sub County,Nairobi City,79,Dagoretti North Sub County,487,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,dagorettinorth,dagorettinorth,,,,40013
+2017,2117,Mutu-ini Ward,Nairobi,Dagoretti South Sub County,Nairobi City,79,Dagoretti South Sub County,524,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,dagorettisouth,dagorettisouth,,,,17973
+2018,2118,Ngando Ward,Nairobi,Dagoretti South Sub County,Nairobi City,79,Dagoretti South Sub County,524,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,dagorettisouth,dagorettisouth,,,,34014
+2019,2119,Riruta Ward,Nairobi,Dagoretti South Sub County,Nairobi City,79,Dagoretti South Sub County,524,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,dagorettisouth,dagorettisouth,,,,65320
+2020,2120,Uthiru/ruthimitu Ward,Nairobi,Dagoretti South Sub County,Nairobi City,79,Dagoretti South Sub County,524,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,dagorettisouth,dagorettisouth,,,,32575
+2021,2121,Waithaka Ward,Nairobi,Dagoretti South Sub County,Nairobi City,79,Dagoretti South Sub County,524,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,dagorettisouth,dagorettisouth,,,,31054
+2022,2122,Karen Ward,Nairobi,Langata  Sub County,Nairobi City,79,Lang'ata,1577,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,langata,langata,,,,33303
+2009,2184,Karura Ward,Nairobi,Westlands  Sub County,Nairobi City,79,Westlands  Sub County,486,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,westlands,westlands,,,,26453
+2010,2185,Kangemi Ward,Nairobi,Westlands  Sub County,Nairobi City,79,Westlands  Sub County,486,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,westlands,westlands,,,,44564
+2011,2186,Mountain View Ward,Nairobi,Westlands  Sub County,Nairobi City,79,Westlands  Sub County,486,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,westlands,westlands,,,,36135
+2014,2188,Gatina Ward,Nairobi,Dagoretti North Sub County,Nairobi City,79,Dagoretti North Sub County,487,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,dagorettinorth,dagorettinorth,,,,45872
+786,2190,Tangulbei/korossi Ward,BARINGO,Tiaty Sub County,Baringo,90,Tiaty East,757,true,false,UNRESOLVED,baringo,baringo,tiaty,tiatyeast,,,,18390
+2023,2191,Nairobi West Ward,Nairobi,Langata  Sub County,Nairobi City,79,Lang'ata,1577,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,langata,langata,,,,33377
+2024,2192,Mugumo-ini Ward,Nairobi,Langata  Sub County,Nairobi City,79,Lang'ata,1577,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,langata,langata,,,,47037
+787,2193,Churo/amaya Ward,BARINGO,Tiaty Sub County,Baringo,90,Tiaty East,757,true,false,UNRESOLVED,baringo,baringo,tiaty,tiatyeast,,,,21227
+2025,2200,South C Ward,Nairobi,Langata  Sub County,Nairobi City,79,Lang'ata,1577,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,langata,langata,,,,47202
+2026,2207,Nyayo Highrise Ward,Nairobi,Langata  Sub County,Nairobi City,79,Lang'ata,1577,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,langata,langata,,,,24191
+2027,2208,Laini Saba Ward,Nairobi,Kibra  Sub County,Nairobi City,79,Kibra,1576,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,kibra,kibra,,,,28182
+2028,2214,Lindi Ward,Nairobi,Kibra  Sub County,Nairobi City,79,Kibra,1576,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,kibra,kibra,,,,52521
+2029,2216,Makina Ward,Nairobi,Kibra  Sub County,Nairobi City,79,Kibra,1576,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,kibra,kibra,,,,35028
+2031,2217,Sarang'ombe Ward,Nairobi,Kibra  Sub County,Nairobi City,79,Kibra,1576,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,kibra,kibra,,,,54347
+2032,2218,Githurai Ward,Nairobi,Roysambu  Sub County,Nairobi City,79,Roysambu  Sub County,492,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,roysambu,roysambu,,,,47188
+2033,2219,Kahawa West,Nairobi,Roysambu  Sub County,Nairobi City,79,Roysambu  Sub County,492,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,roysambu,roysambu,,,,39994
+2036,2220,Kahawa,Nairobi,Roysambu  Sub County,Nairobi City,79,Roysambu  Sub County,492,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,roysambu,roysambu,,,,25265
+2037,2221,Clay City,Nairobi,Kasarani  Sub County,Nairobi City,79,Kasarani,1575,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,kasarani,kasarani,,,,39963
+2040,2222,Njiru Ward,Nairobi,Kasarani  Sub County,Nairobi City,79,Kasarani,1575,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,kasarani,kasarani,,,,34523
+2041,2223,Ruai Ward,Nairobi,Kasarani  Sub County,Nairobi City,79,Kasarani,1575,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,kasarani,kasarani,,,,35961
+2042,2224,Babandogo,Nairobi,Ruaraka  Sub County,Nairobi City,79,Ruaraka  Sub County,405,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,ruaraka,ruaraka,,,,40036
+2043,2225,Utalii Ward,Nairobi,Ruaraka  Sub County,Nairobi City,79,Ruaraka  Sub County,405,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,ruaraka,ruaraka,,,,36275
+2048,2226,Kwa Njenga Ward,Nairobi,Embakasi South Sub County,Nairobi City,79,Embakasi South Sub County,407,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,embakasisouth,embakasisouth,,,,24359
+2056,2227,Dandora Area Iv Ward,Nairobi,Embakasi North Sub County,Nairobi City,79,Embakasi North Sub County,533,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,embakasinorth,embakasinorth,,,,45567
+2049,2228,Kwa Reuben Ward,Nairobi,Embakasi South Sub County,Nairobi City,79,Embakasi South Sub County,407,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,embakasisouth,embakasisouth,,,,26015
+2067,2229,Umoja I Ward,Nairobi,Embakasi West Sub County,Nairobi City,79,Embakasi West Sub County,534,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,embakasiwest,embakasiwest,,,,47811
+2051,2230,Kware Ward,Nairobi,Embakasi South Sub County,Nairobi City,79,Embakasi South Sub County,407,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,embakasisouth,embakasisouth,,,,23829
+2052,2231,Kariobangi North Ward,Nairobi,Embakasi North Sub County,Nairobi City,79,Embakasi North Sub County,533,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,embakasinorth,embakasinorth,,,,39342
+2053,2232,Dandora Area I Ward,Nairobi,Embakasi North Sub County,Nairobi City,79,Embakasi North Sub County,533,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,embakasinorth,embakasinorth,,,,22802
+2054,2233,Dandora Area Ii Ward,Nairobi,Embakasi North Sub County,Nairobi City,79,Embakasi North Sub County,533,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,embakasinorth,embakasinorth,,,,33675
+2055,2234,Dandora Area Iii Ward,Nairobi,Embakasi North Sub County,Nairobi City,79,Embakasi North Sub County,533,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,embakasinorth,embakasinorth,,,,40002
+2057,2235,Kayole North Ward,Nairobi,Embakasi Central Sub County,Nairobi City,79,Embakasi Central Sub County,535,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,embakasicentral,embakasicentral,,,,39292
+2058,2236,Kayole Central Ward,Nairobi,Embakasi Central Sub County,Nairobi City,79,Embakasi Central Sub County,535,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,embakasicentral,embakasicentral,,,,50712
+2068,2237,Umoja Ii Ward,Nairobi,Embakasi West Sub County,Nairobi City,79,Embakasi West Sub County,534,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,embakasiwest,embakasiwest,,,,53666
+2059,2238,Kayole South Ward,Nairobi,Embakasi Central Sub County,Nairobi City,79,Embakasi Central Sub County,535,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,embakasicentral,embakasicentral,,,,50317
+2074,2239,Makongeni Ward,Nairobi,Makadara  Sub County,Nairobi City,79,Makadara,1578,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,makadara,makadara,,,,31022
+2060,2240,Komarock Ward,Nairobi,Embakasi Central Sub County,Nairobi City,79,Embakasi Central Sub County,535,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,embakasicentral,embakasicentral,,,,35628
+2061,2241,Matopeni/spring Valley Ward,Nairobi,Embakasi Central Sub County,Nairobi City,79,Embakasi Central Sub County,535,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,embakasicentral,embakasicentral,,,,14930
+2076,2242,Eastleigh North Ward,Nairobi,Kamukunji  Sub County,Nairobi City,79,Kamukunji,1574,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,kamukunji,kamukunji,,,,43258
+2062,2243,Upper Savanna Ward,Nairobi,Embakasi East Sub County,Nairobi City,79,Embakasi East Sub County,509,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,embakasieast,embakasieast,,,,45137
+2069,2244,Mowlem Ward,Nairobi,Embakasi West Sub County,Nairobi City,79,Embakasi West Sub County,534,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,embakasiwest,embakasiwest,,,,22953
+2070,2245,Kariobangi South Ward,Nairobi,Embakasi West Sub County,Nairobi City,79,Embakasi West Sub County,534,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,embakasiwest,embakasiwest,,,,33036
+2071,2246,Maringo/hamza Ward,Nairobi,Makadara  Sub County,Nairobi City,79,Makadara,1578,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,makadara,makadara,,,,52293
+2079,2248,California Ward,Nairobi,Kamukunji  Sub County,Nairobi City,79,Kamukunji,1574,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,kamukunji,kamukunji,,,,21699
+2075,2249,Pumwani Ward,Nairobi,Kamukunji  Sub County,Nairobi City,79,Kamukunji,1574,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,kamukunji,kamukunji,,,,37602
+2078,2251,Airbase Ward,Nairobi,Kamukunji  Sub County,Nairobi City,79,Kamukunji,1574,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,kamukunji,kamukunji,,,,43168
+2080,2253,Nairobi Central Ward,Nairobi,Starehe  Sub County,Nairobi City,79,Starehe  Sub County,513,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,starehe,starehe,,,,13328
+2081,2261,Ngara Ward Ward,Nairobi,Starehe  Sub County,Nairobi City,79,Starehe  Sub County,513,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,starehe,starehe,,,,25354
+2082,2262,Pangani Ward,Nairobi,Starehe  Sub County,Nairobi City,79,Starehe  Sub County,513,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,starehe,starehe,,,,37062
+2083,2263,Ziwani/kariokor,Nairobi,Starehe  Sub County,Nairobi City,79,Starehe  Sub County,513,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,starehe,starehe,,,,10488
+2086,2264,Hospital Ward,Nairobi,Mathare  Sub County,Nairobi City,79,Mathare,1579,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,mathare,mathare,,,,20463
+2087,2265,Mabatini Ward,Nairobi,Mathare  Sub County,Nairobi City,79,Mathare,1579,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,mathare,mathare,,,,28260
+2089,2266,Ngei Ward,Nairobi,Mathare  Sub County,Nairobi City,79,Mathare,1579,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,mathare,mathare,,,,34523
+2090,2267,Mlango Kubwa,Nairobi,Mathare  Sub County,Nairobi City,79,Mathare,1579,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,mathare,mathare,,,,38374
+2091,2268,Kiamaiko Ward,Nairobi,Mathare  Sub County,Nairobi City,79,Mathare,1579,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,mathare,mathare,,,,33824
+2092,2269,Kitisuru Ward,Nairobi,Westlands  Sub County,Nairobi City,79,Westlands  Sub County,486,false,true,SOURCE_DB_CONTRADICTION,nairobi,nairobicity,westlands,westlands,,,,31242

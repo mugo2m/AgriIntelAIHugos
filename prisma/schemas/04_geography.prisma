@@ -1,64 +1,106 @@
 model Country {
-  id        Int      @id @default(autoincrement())
-  name      String   @unique
-  code      String?  @unique
-  createdAt DateTime @default(now())
+  id                      Int                    @id @default(autoincrement())
+  name                    String                 @unique
+  code                    String?                @unique
+  createdAt               DateTime               @default(now())
 
-  counties County[]
+  businessPartners        BusinessPartner[]
+  buyers                  Buyer[]                @relation("CountryBuyers")
+  destinationTransactions CommodityTransaction[] @relation("DestinationCountry")
+  sourceTransactions      CommodityTransaction[] @relation("SourceCountry")
+  counties                County[]
+  farms                   Farm[]
 }
 
 model County {
-  id        Int      @id @default(autoincrement())
-  name      String
-  code      String?  @unique
-  createdAt DateTime @default(now())
+  id                      Int                    @id @default(autoincrement())
+  name                    String
+  code                    String?                @unique
+  createdAt               DateTime               @default(now())
+  countryId               Int
 
-  countryId Int
-  country   Country @relation(fields: [countryId], references: [id])
-
-  subCounties SubCounty[]
-  farmers     Farmer[]
+  businessPartners        BusinessPartner[]
+  buyers                  Buyer[]                @relation("CountyBuyers")
+  destinationTransactions CommodityTransaction[] @relation("DestinationCounty")
+  sourceTransactions      CommodityTransaction[] @relation("SourceCounty")
+  country                 Country                @relation(fields: [countryId], references: [id])
+  farms                   Farm[]
+  farmers                 Farmer[]
+  subCounties             SubCounty[]
+  constituencies          Constituency[]
+  wards                   Ward[]
 
   @@unique([countryId, name])
 }
 
 model SubCounty {
-  id        Int      @id @default(autoincrement())
-  name      String
-  createdAt DateTime @default(now())
+  id                      Int                    @id @default(autoincrement())
+  name                    String
+  createdAt               DateTime               @default(now())
+  countyId                Int
 
-  countyId Int
-  county   County @relation(fields: [countyId], references: [id])
-
-  wards   Ward[]
-  farmers Farmer[]
+  businessPartners        BusinessPartner[]
+  destinationTransactions CommodityTransaction[] @relation("DestinationSubCounty")
+  sourceTransactions      CommodityTransaction[] @relation("SourceSubCounty")
+  farms                   Farm[]
+  farmers                 Farmer[]
+  county                  County                 @relation(fields: [countyId], references: [id])
+  wards                   Ward[]
 
   @@unique([countyId, name])
 }
 
+model Constituency {
+  id          Int      @id @default(autoincrement())
+  name        String
+  code        String?
+  createdAt   DateTime @default(now())
+  countyId    Int
+
+  county      County   @relation(fields: [countyId], references: [id])
+  wards       Ward[]
+
+  @@unique([countyId, name])
+  @@index([countyId])
+}
+
 model Ward {
-  id        Int      @id @default(autoincrement())
-  name      String
-  createdAt DateTime @default(now())
+  id                      Int                    @id @default(autoincrement())
+  name                    String
+  code                    String?
+  sourceGid               Int?
+  sourceUid               String?
 
-  subCountyId Int
-  subCounty   SubCounty @relation(fields: [subCountyId], references: [id])
+  countyId                Int
+  constituencyId          Int
 
-  villages Village[]
-  farmers  Farmer[]
+  county                  County                 @relation(fields: [countyId], references: [id])
+  constituency            Constituency           @relation(fields: [constituencyId], references: [id])
 
-  @@unique([subCountyId, name])
+  businessPartners        BusinessPartner[]
+  destinationTransactions CommodityTransaction[] @relation("DestinationWard")
+  sourceTransactions      CommodityTransaction[] @relation("SourceWard")
+  farms                   Farm[]
+  farmers                 Farmer[]
+  villages                Village[]
+  subCounty               SubCounty?             @relation(fields: [subCountyId], references: [id])
+  subCountyId             Int?
+
+  @@unique([constituencyId, name])
+  @@index([countyId])
+  @@index([constituencyId])
 }
 
 model Village {
-  id        Int      @id @default(autoincrement())
-  name      String
-  createdAt DateTime @default(now())
+  id               Int               @id @default(autoincrement())
+  name             String
+  createdAt        DateTime          @default(now())
+  wardId           Int
 
-  wardId  Int
-  ward    Ward     @relation(fields: [wardId], references: [id])
-  farmers Farmer[]
+  businessPartners BusinessPartner[]
+  farms            Farm[]
+  farmers          Farmer[]
+  ward             Ward              @relation(fields: [wardId], references: [id])
 
   @@unique([wardId, name])
 }
-

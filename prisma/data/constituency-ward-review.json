@@ -1,0 +1,4442 @@
+[
+  {
+    "county": "BARINGO",
+    "constituency": "Baringo Central",
+    "normalizedCounty": "baringo",
+    "normalizedConstituency": "baringo central",
+    "wardCount": 5,
+    "wards": [
+      "Sacho Ward",
+      "Kabarnet Ward",
+      "Tenges Ward",
+      "Ewalel/chapchap Ward",
+      "Kapropita Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "BARINGO",
+    "constituency": "Baringo North",
+    "normalizedCounty": "baringo",
+    "normalizedConstituency": "baringo north",
+    "wardCount": 5,
+    "wards": [
+      "Barwessa Ward",
+      "Kabartonjo Ward",
+      "Saimoi/kipsaraman Ward",
+      "Saimo/soi Ward",
+      "Bartabwa Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "BARINGO",
+    "constituency": "Baringo South",
+    "normalizedCounty": "baringo",
+    "normalizedConstituency": "baringo south",
+    "wardCount": 4,
+    "wards": [
+      "Mukutani Ward",
+      "Marigat Ward",
+      "Iichamus Ward",
+      "Mochongoi Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "BARINGO",
+    "constituency": "Eldama Ravine",
+    "normalizedCounty": "baringo",
+    "normalizedConstituency": "eldama ravine",
+    "wardCount": 6,
+    "wards": [
+      "Lembus Ward",
+      "Lembus kwen Ward",
+      "Ravine Ward",
+      "Mumberes/Maji Mazuri Ward",
+      "Lembus/Perkerra Ward",
+      "Koibatek Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "BARINGO",
+    "constituency": "Mogotio",
+    "normalizedCounty": "baringo",
+    "normalizedConstituency": "mogotio",
+    "wardCount": 3,
+    "wards": [
+      "Mogotio Ward",
+      "Emining Ward",
+      "Kisanana Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "BARINGO",
+    "constituency": "Tiaty",
+    "normalizedCounty": "baringo",
+    "normalizedConstituency": "tiaty",
+    "wardCount": 7,
+    "wards": [
+      "Tirioko Ward",
+      "Kolowa Ward",
+      "Ribkwo Ward",
+      "Silale Ward",
+      "Loiyamorok Ward",
+      "Tangulbei/korossi Ward",
+      "Churo/amaya Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Bomet",
+    "constituency": "Bomet Central",
+    "normalizedCounty": "bomet",
+    "normalizedConstituency": "bomet central",
+    "wardCount": 5,
+    "wards": [
+      "Silibwet Township Ward",
+      "Ndaraweta Ward",
+      "Singorwet Ward",
+      "Chesoen Ward",
+      "Mutarakwa  Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Bomet",
+    "constituency": "Bomet East",
+    "normalizedCounty": "bomet",
+    "normalizedConstituency": "bomet east",
+    "wardCount": 5,
+    "wards": [
+      "Merigi Ward",
+      "Kembu Ward",
+      "Longisa Ward",
+      "Kipreres  Ward",
+      "Chemaner Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Bomet",
+    "constituency": "Chepalungu",
+    "normalizedCounty": "bomet",
+    "normalizedConstituency": "chepalungu",
+    "wardCount": 5,
+    "wards": [
+      "Kong'asis Ward",
+      "Nyangores Ward",
+      "Sigor Ward",
+      "Chebunyo Ward",
+      "Siongiroi Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Bomet",
+    "constituency": "Konoin",
+    "normalizedCounty": "bomet",
+    "normalizedConstituency": "konoin",
+    "wardCount": 5,
+    "wards": [
+      "Kimulot Ward",
+      "Mogogosiek Ward",
+      "Boito Ward",
+      "Embomos Ward",
+      "Chepchabas Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Bomet",
+    "constituency": "Sotik",
+    "normalizedCounty": "bomet",
+    "normalizedConstituency": "sotik",
+    "wardCount": 5,
+    "wards": [
+      "Ndanai/abosi Ward",
+      "Chemagel Ward",
+      "Kipsonoi Ward",
+      "Kapletundo Ward",
+      "Rongena/manaret Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Bungoma",
+    "constituency": "Bumula",
+    "normalizedCounty": "bungoma",
+    "normalizedConstituency": "bumula",
+    "wardCount": 7,
+    "wards": [
+      "Kabula  Ward",
+      "Kimaeti Ward",
+      "Siboti Ward",
+      "South Bukusu Ward",
+      "Bumula Ward",
+      "Khasoko Ward",
+      "West Bukusu Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Bungoma",
+    "constituency": "Kabuchai",
+    "normalizedCounty": "bungoma",
+    "normalizedConstituency": "kabuchai",
+    "wardCount": 4,
+    "wards": [
+      "West Nalondo Ward",
+      "Mukuyuni Ward",
+      "Kabuchai/chwele Ward",
+      "Bwake/luuya Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Bungoma",
+    "constituency": "Kanduyi",
+    "normalizedCounty": "bungoma",
+    "normalizedConstituency": "kanduyi",
+    "wardCount": 8,
+    "wards": [
+      "Bukembe West Ward",
+      "Bukembe East Ward",
+      "Township Ward",
+      "Khalaba Ward",
+      "Musikoma Ward",
+      "East Sang'alo Ward",
+      "Marakaru/tuuti Ward",
+      "West Sang'alo Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Bungoma",
+    "constituency": "Kimilili",
+    "normalizedCounty": "bungoma",
+    "normalizedConstituency": "kimilili",
+    "wardCount": 4,
+    "wards": [
+      "Kibingei Ward",
+      "Kimilili Ward",
+      "Maeni Ward",
+      "Kamukuywa Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Bungoma",
+    "constituency": "Mt Elgon",
+    "normalizedCounty": "bungoma",
+    "normalizedConstituency": "mt elgon",
+    "wardCount": 1,
+    "wards": [
+      "Kakateny Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Bungoma",
+    "constituency": "Mt. Elgon",
+    "normalizedCounty": "bungoma",
+    "normalizedConstituency": "mt. elgon",
+    "wardCount": 5,
+    "wards": [
+      "Cheptais Ward",
+      "Kaptama Ward",
+      "Chesikaki Ward",
+      "Chepyuk Ward",
+      "Elgon Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Bungoma",
+    "constituency": "Sirisia",
+    "normalizedCounty": "bungoma",
+    "normalizedConstituency": "sirisia",
+    "wardCount": 3,
+    "wards": [
+      "Malakisi/south Kulisiru Ward",
+      "Lwandanyi Ward",
+      "Namwela Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Bungoma",
+    "constituency": "Tongaren",
+    "normalizedCounty": "bungoma",
+    "normalizedConstituency": "tongaren",
+    "wardCount": 6,
+    "wards": [
+      "Mbakalo Ward",
+      "Naitiri/kabuyefwe Ward",
+      "Milima Ward",
+      "Ndalu/ Tabani Ward",
+      "Tongaren Ward",
+      "Soysambu/ Mitua Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Bungoma",
+    "constituency": "Webuye East",
+    "normalizedCounty": "bungoma",
+    "normalizedConstituency": "webuye east",
+    "wardCount": 3,
+    "wards": [
+      "Mihuu Ward",
+      "Ndivisi Ward",
+      "Maraka Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Bungoma",
+    "constituency": "Webuye West",
+    "normalizedCounty": "bungoma",
+    "normalizedConstituency": "webuye west",
+    "wardCount": 4,
+    "wards": [
+      "Bokoli Ward",
+      "Misikhu Ward",
+      "Sitikho Ward",
+      "Matulo Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Busia",
+    "constituency": "Budalangi",
+    "normalizedCounty": "busia",
+    "normalizedConstituency": "budalangi",
+    "wardCount": 4,
+    "wards": [
+      "Bunyala Central Ward",
+      "Bunyala North Ward",
+      "Bunyala West Ward",
+      "Bunyala South Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Busia",
+    "constituency": "Butula",
+    "normalizedCounty": "busia",
+    "normalizedConstituency": "butula",
+    "wardCount": 6,
+    "wards": [
+      "Marachi West Ward",
+      "Marachi East Ward",
+      "Marachi North Ward",
+      "Elugulu Ward",
+      "Kingandole Ward",
+      "Marachi Central Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Busia",
+    "constituency": "Funyula",
+    "normalizedCounty": "busia",
+    "normalizedConstituency": "funyula",
+    "wardCount": 4,
+    "wards": [
+      "Namboboto Nambuku Ward",
+      "Nangina Ward",
+      "Ageng'a Nanguba Ward",
+      "Bwiri Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Busia",
+    "constituency": "Matayos",
+    "normalizedCounty": "busia",
+    "normalizedConstituency": "matayos",
+    "wardCount": 5,
+    "wards": [
+      "Bukhayo West Ward",
+      "Matayos South Ward",
+      "Busibwabo Ward",
+      "Burumba Ward",
+      "Mayenje Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Busia",
+    "constituency": "Nambale",
+    "normalizedCounty": "busia",
+    "normalizedConstituency": "nambale",
+    "wardCount": 4,
+    "wards": [
+      "Nambale Township Ward",
+      "Bukhayo North Walatsi Ward",
+      "Bukhayo East Ward",
+      "Bukhayo Central Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Busia",
+    "constituency": "Teso North",
+    "normalizedCounty": "busia",
+    "normalizedConstituency": "teso north",
+    "wardCount": 6,
+    "wards": [
+      "Malaba Central Ward",
+      "Malaba North Ward",
+      "Ang'urai South Ward",
+      "Ang'urai North Ward",
+      "Ang'urai East Ward",
+      "Malaba South Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Busia",
+    "constituency": "Teso South",
+    "normalizedCounty": "busia",
+    "normalizedConstituency": "teso south",
+    "wardCount": 6,
+    "wards": [
+      "Ang'orom Ward",
+      "Chakol South Ward",
+      "Chakol North Ward",
+      "Amukura West Ward",
+      "Amukura East Ward",
+      "Amukura Central Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "ELGEYO-MARAKWET",
+    "constituency": "Keiyo North",
+    "normalizedCounty": "elgeyo marakwet",
+    "normalizedConstituency": "keiyo north",
+    "wardCount": 4,
+    "wards": [
+      "Kamariny Ward",
+      "Emsoo Ward",
+      "Tambach Ward",
+      "Kapchemutwa Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "ELGEYO-MARAKWET",
+    "constituency": "Keiyo South",
+    "normalizedCounty": "elgeyo marakwet",
+    "normalizedConstituency": "keiyo south",
+    "wardCount": 6,
+    "wards": [
+      "Soy North Ward",
+      "Soy South Ward",
+      "Kabiemit Ward",
+      "Kaptarakwa Ward",
+      "Chepkorio Ward",
+      "Metkei Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "ELGEYO-MARAKWET",
+    "constituency": "Marakwet East",
+    "normalizedCounty": "elgeyo marakwet",
+    "normalizedConstituency": "marakwet east",
+    "wardCount": 4,
+    "wards": [
+      "Kapyego Ward",
+      "Sambirir Ward",
+      "Endo Ward",
+      "Embobut/Embulot Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "ELGEYO-MARAKWET",
+    "constituency": "Marakwet West",
+    "normalizedCounty": "elgeyo marakwet",
+    "normalizedConstituency": "marakwet west",
+    "wardCount": 6,
+    "wards": [
+      "Lelan Ward",
+      "Sengwer Ward",
+      "Cherangany  Ward",
+      "Moiben Kuserwo Ward",
+      "Kapsowar Ward",
+      "Arror Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "EMBU",
+    "constituency": "Manyatta",
+    "normalizedCounty": "embu",
+    "normalizedConstituency": "manyatta",
+    "wardCount": 6,
+    "wards": [
+      "Ruguru-Ngandori Ward",
+      "Kithimu Ward",
+      "Nginda Ward",
+      "Mbeti north Ward",
+      "Kirimari Ward",
+      "Gaturi south Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "EMBU",
+    "constituency": "Mbeere North",
+    "normalizedCounty": "embu",
+    "normalizedConstituency": "mbeere north",
+    "wardCount": 3,
+    "wards": [
+      "Muminji Ward",
+      "Evurore Ward",
+      "Nthawa Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "EMBU",
+    "constituency": "Mbeere South",
+    "normalizedCounty": "embu",
+    "normalizedConstituency": "mbeere south",
+    "wardCount": 5,
+    "wards": [
+      "Mwea Ward",
+      "Makima Ward",
+      "Mbeti south Ward",
+      "Mavuria Ward",
+      "Kiambere Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "EMBU",
+    "constituency": "Runyenjes",
+    "normalizedCounty": "embu",
+    "normalizedConstituency": "runyenjes",
+    "wardCount": 6,
+    "wards": [
+      "Gaturi north Ward",
+      "Kaagari South Ward",
+      "Central ward",
+      "Kaagari North Ward",
+      "Kyeni north Ward",
+      "Kyeni south Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "GARISSA",
+    "constituency": "Balambala",
+    "normalizedCounty": "garissa",
+    "normalizedConstituency": "balambala",
+    "wardCount": 5,
+    "wards": [
+      "Balambala Ward",
+      "Danyere Ward",
+      "Jarajara Ward",
+      "Saka Ward",
+      "Sankuri Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "GARISSA",
+    "constituency": "Dadaab",
+    "normalizedCounty": "garissa",
+    "normalizedConstituency": "dadaab",
+    "wardCount": 6,
+    "wards": [
+      "Dertu Ward",
+      "Dadaab Ward",
+      "LABISGALE Ward",
+      "Damajale Ward",
+      "Liboi Ward",
+      "Abakaile Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "GARISSA",
+    "constituency": "Fafi",
+    "normalizedCounty": "garissa",
+    "normalizedConstituency": "fafi",
+    "wardCount": 5,
+    "wards": [
+      "Nanighi Ward",
+      "Jarajila Ward",
+      "Fafi Ward",
+      "Bura Ward",
+      "Dekaharia Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "GARISSA",
+    "constituency": "Garissa Township",
+    "normalizedCounty": "garissa",
+    "normalizedConstituency": "garissa township",
+    "wardCount": 4,
+    "wards": [
+      "Township Ward",
+      "Waberi Ward",
+      "Iftin Ward",
+      "Galbet Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "GARISSA",
+    "constituency": "Ijara",
+    "normalizedCounty": "garissa",
+    "normalizedConstituency": "ijara",
+    "wardCount": 4,
+    "wards": [
+      "Hulugho Ward",
+      "Sangailu Ward",
+      "Masalani Ward",
+      "Ijara Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "GARISSA",
+    "constituency": "Lagdera",
+    "normalizedCounty": "garissa",
+    "normalizedConstituency": "lagdera",
+    "wardCount": 6,
+    "wards": [
+      "Modogashe Ward",
+      "Benane Ward",
+      "Goreale Ward",
+      "Maalimin Ward",
+      "Sabena Ward",
+      "Baraki Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Homa Bay",
+    "constituency": "Homa Bay Town",
+    "normalizedCounty": "homa bay",
+    "normalizedConstituency": "homa bay town",
+    "wardCount": 4,
+    "wards": [
+      "Homa Bay Central Ward",
+      "Homa Bay Arujo Ward",
+      "Homa Bay East Ward",
+      "Homa Bay West Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Homa Bay",
+    "constituency": "Kabondo Kasipul",
+    "normalizedCounty": "homa bay",
+    "normalizedConstituency": "kabondo kasipul",
+    "wardCount": 4,
+    "wards": [
+      "Kabondo East Ward",
+      "Kabondo West Ward",
+      "Kokwanyo/kakelo Ward",
+      "Kojwach Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Homa Bay",
+    "constituency": "Karachuonyo",
+    "normalizedCounty": "homa bay",
+    "normalizedConstituency": "karachuonyo",
+    "wardCount": 7,
+    "wards": [
+      "West Karachuonyo Ward",
+      "North Karachuonyo Ward",
+      "Central Ward",
+      "Kanyaluo Ward",
+      "Kibiri Ward",
+      "Wang'chieng Ward",
+      "Kendu Bay Town Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Homa Bay",
+    "constituency": "Kasipul",
+    "normalizedCounty": "homa bay",
+    "normalizedConstituency": "kasipul",
+    "wardCount": 5,
+    "wards": [
+      "West Kasipul Ward",
+      "South Kasipul Ward",
+      "Central Kasipul Ward",
+      "East Kamagak Ward",
+      "West Kamagak Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Homa Bay",
+    "constituency": "Mbita",
+    "normalizedCounty": "homa bay",
+    "normalizedConstituency": "mbita",
+    "wardCount": 5,
+    "wards": [
+      "Mfangano Island Ward",
+      "Rusinga Island Ward",
+      "Kasgunga Ward",
+      "Gembe Ward",
+      "Lambwe Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Homa Bay",
+    "constituency": "Ndhiwa",
+    "normalizedCounty": "homa bay",
+    "normalizedConstituency": "ndhiwa",
+    "wardCount": 7,
+    "wards": [
+      "Kwabwai Ward",
+      "Kanyadoto Ward",
+      "Kanyikela Ward",
+      "Kabouch North Ward",
+      "Kabuoch South/pala Ward",
+      "Kanyamwa Kosewe Ward",
+      "Kanyamwa Kologi Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Homa Bay",
+    "constituency": "Rangwe",
+    "normalizedCounty": "homa bay",
+    "normalizedConstituency": "rangwe",
+    "wardCount": 4,
+    "wards": [
+      "Kagan Ward",
+      "Kochia Ward",
+      "West Gem Ward",
+      "East Gem Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Homa Bay",
+    "constituency": "Suba",
+    "normalizedCounty": "homa bay",
+    "normalizedConstituency": "suba",
+    "wardCount": 4,
+    "wards": [
+      "Gwassi South Ward",
+      "Gwassi North Ward",
+      "Kaksingiri West Ward",
+      "Ruma-kaksingiri East Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "ISIOLO",
+    "constituency": "Isiolo North",
+    "normalizedCounty": "isiolo",
+    "normalizedConstituency": "isiolo north",
+    "wardCount": 7,
+    "wards": [
+      "WABERA",
+      "BULA PESA",
+      "CHARI",
+      "CHERAB",
+      "NGARE MARA",
+      "BURAT",
+      "OLDONYIRO"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "ISIOLO",
+    "constituency": "Isiolo South",
+    "normalizedCounty": "isiolo",
+    "normalizedConstituency": "isiolo south",
+    "wardCount": 3,
+    "wards": [
+      "GARBATULLA",
+      "KINNA",
+      "SERICHO"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "KAJIADO",
+    "constituency": "Kajiado Central",
+    "normalizedCounty": "kajiado",
+    "normalizedConstituency": "kajiado central",
+    "wardCount": 5,
+    "wards": [
+      "Purko Ward",
+      "Ildamat Ward",
+      "Dalalekutuk Ward",
+      "Matapato north Ward",
+      "Matapato south Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "KAJIADO",
+    "constituency": "Kajiado East",
+    "normalizedCounty": "kajiado",
+    "normalizedConstituency": "kajiado east",
+    "wardCount": 5,
+    "wards": [
+      "Kaputiei north Ward",
+      "Kitengela Ward",
+      "Oloosirkon/sholinke Ward",
+      "Kenyawa-poka Ward",
+      "Imaroro Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "KAJIADO",
+    "constituency": "Kajiado North",
+    "normalizedCounty": "kajiado",
+    "normalizedConstituency": "kajiado north",
+    "wardCount": 5,
+    "wards": [
+      "Olkeri Ward",
+      "Ongata rongai Ward",
+      "Nkaimurunya Ward",
+      "Oloolua Ward",
+      "Ngong Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "KAJIADO",
+    "constituency": "Kajiado South",
+    "normalizedCounty": "kajiado",
+    "normalizedConstituency": "kajiado south",
+    "wardCount": 5,
+    "wards": [
+      "Kimana Ward",
+      "Entonet/lenkism Ward",
+      "Imbrikani/eselelnkei Ward",
+      "Kuku Ward",
+      "Rombo Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "KAJIADO",
+    "constituency": "Kajiado West",
+    "normalizedCounty": "kajiado",
+    "normalizedConstituency": "kajiado west",
+    "wardCount": 5,
+    "wards": [
+      "Keekonyokie Ward",
+      "Iloodokilani Ward",
+      "Magadi Ward",
+      "Ewuaso oonkidong'i Ward",
+      "Mosiro Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Kakamega",
+    "constituency": "Butere",
+    "normalizedCounty": "kakamega",
+    "normalizedConstituency": "butere",
+    "wardCount": 5,
+    "wards": [
+      "Marama West Ward",
+      "Marama Central Ward",
+      "Marenyo-shianda Ward",
+      "Marama North Ward",
+      "Marama South Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Kakamega",
+    "constituency": "Ikolomani",
+    "normalizedCounty": "kakamega",
+    "normalizedConstituency": "ikolomani",
+    "wardCount": 4,
+    "wards": [
+      "Idakho South Ward",
+      "Idakho East Ward",
+      "Idakho North Ward",
+      "Idakho Central Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Kakamega",
+    "constituency": "Khwisero",
+    "normalizedCounty": "kakamega",
+    "normalizedConstituency": "khwisero",
+    "wardCount": 4,
+    "wards": [
+      "Kisa North Ward",
+      "Kisa East Ward",
+      "Kisa West Ward",
+      "Kisa Central Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Kakamega",
+    "constituency": "Likuyani",
+    "normalizedCounty": "kakamega",
+    "normalizedConstituency": "likuyani",
+    "wardCount": 5,
+    "wards": [
+      "Likuyani Ward",
+      "Sango Ward",
+      "Kongoni Ward",
+      "Nzoia Ward",
+      "Sinoko Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Kakamega",
+    "constituency": "Lugari",
+    "normalizedCounty": "kakamega",
+    "normalizedConstituency": "lugari",
+    "wardCount": 6,
+    "wards": [
+      "Mautuma Ward",
+      "Lugari Ward",
+      "Lumakanda Ward",
+      "Chekalini Ward",
+      "Chevaywa Ward",
+      "Lwandeti Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Kakamega",
+    "constituency": "Lurambi",
+    "normalizedCounty": "kakamega",
+    "normalizedConstituency": "lurambi",
+    "wardCount": 6,
+    "wards": [
+      "Butsotso East Ward",
+      "Butsotso South  Ward",
+      "Butsotso Central Ward",
+      "Sheywe Ward",
+      "Mahiakalo Ward",
+      "Shirere Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Kakamega",
+    "constituency": "Malava",
+    "normalizedCounty": "kakamega",
+    "normalizedConstituency": "malava",
+    "wardCount": 7,
+    "wards": [
+      "West Kabras Ward",
+      "Chemuche Ward",
+      "East Kabras Ward",
+      "Butali Chegulo Ward",
+      "Manda-shivanga Ward",
+      "Shirungu-mugai Ward",
+      "South Kabras Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Kakamega",
+    "constituency": "Matungu",
+    "normalizedCounty": "kakamega",
+    "normalizedConstituency": "matungu",
+    "wardCount": 5,
+    "wards": [
+      "Koyonzo Ward",
+      "Kholera Ward",
+      "Khalaba Ward",
+      "Mayoni Ward",
+      "Namamali Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Kakamega",
+    "constituency": "Mumias East",
+    "normalizedCounty": "kakamega",
+    "normalizedConstituency": "mumias east",
+    "wardCount": 3,
+    "wards": [
+      "Lusheya Lubinu Ward",
+      "Malaha Isongo Makunga Ward",
+      "East Wanga Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Kakamega",
+    "constituency": "Mumias West",
+    "normalizedCounty": "kakamega",
+    "normalizedConstituency": "mumias west",
+    "wardCount": 4,
+    "wards": [
+      "Mumias Central Ward",
+      "Mumias North Ward",
+      "Etenje Ward",
+      "Musanda Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Kakamega",
+    "constituency": "Navakholo",
+    "normalizedCounty": "kakamega",
+    "normalizedConstituency": "navakholo",
+    "wardCount": 5,
+    "wards": [
+      "Ingoste-matiha Ward",
+      "Shinoyi-shikomari-esumeiya Ward",
+      "Bunyala West Ward",
+      "Bunyala East Ward",
+      "Bunyala Central Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Kakamega",
+    "constituency": "Shinyalu",
+    "normalizedCounty": "kakamega",
+    "normalizedConstituency": "shinyalu",
+    "wardCount": 6,
+    "wards": [
+      "Isukha North Ward",
+      "Murhanda Ward",
+      "Isukha Central Ward",
+      "Isukha South Ward",
+      "Isukha East Ward",
+      "Isukha West Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "KERICHO",
+    "constituency": "Ainamoi",
+    "normalizedCounty": "kericho",
+    "normalizedConstituency": "ainamoi",
+    "wardCount": 7,
+    "wards": [
+      "BELGUT",
+      "Kapsoit Ward",
+      "Ainamoi Ward",
+      "Kapkugerwet Ward",
+      "Kipchebor Ward",
+      "Kipchimchim Ward",
+      "Kapsaos Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "KERICHO",
+    "constituency": "Belgut",
+    "normalizedCounty": "kericho",
+    "normalizedConstituency": "belgut",
+    "wardCount": 4,
+    "wards": [
+      "Chaik Ward",
+      "Waldai Ward",
+      "Kabianga Ward",
+      "Cheptororiet/seretut Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "KERICHO",
+    "constituency": "Bureti",
+    "normalizedCounty": "kericho",
+    "normalizedConstituency": "bureti",
+    "wardCount": 7,
+    "wards": [
+      "Kisiara Ward",
+      "Tebesonik Ward",
+      "Cheboin Ward",
+      "Chemosot Ward",
+      "Litein Ward",
+      "Cheplanget Ward",
+      "Kapkatet Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "KERICHO",
+    "constituency": "Kipkelion East",
+    "normalizedCounty": "kericho",
+    "normalizedConstituency": "kipkelion east",
+    "wardCount": 4,
+    "wards": [
+      "Kedowa/kimugul Ward",
+      "Chepseon Ward",
+      "Tendeno/sorget Ward",
+      "Londiani Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "KERICHO",
+    "constituency": "Kipkelion West",
+    "normalizedCounty": "kericho",
+    "normalizedConstituency": "kipkelion west",
+    "wardCount": 4,
+    "wards": [
+      "Chilchila Ward",
+      "Kunyak Ward",
+      "Kamasian Ward",
+      "Kipkelion Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "KERICHO",
+    "constituency": "Sigowet/Soin",
+    "normalizedCounty": "kericho",
+    "normalizedConstituency": "sigowet soin",
+    "wardCount": 4,
+    "wards": [
+      "Sigowet Ward",
+      "Kaplelartet Ward",
+      "Soliat Ward",
+      "Soin Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Kiambu",
+    "constituency": "Gatundu North",
+    "normalizedCounty": "kiambu",
+    "normalizedConstituency": "gatundu north",
+    "wardCount": 4,
+    "wards": [
+      "Gituamba Ward",
+      "Githobokoni Ward",
+      "Chania Ward",
+      "Mang'u Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Kiambu",
+    "constituency": "Gatundu South",
+    "normalizedCounty": "kiambu",
+    "normalizedConstituency": "gatundu south",
+    "wardCount": 4,
+    "wards": [
+      "Kiamwangi Ward",
+      "Kiganjo Ward",
+      "Ndarugu Ward",
+      "Ngenda Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Kiambu",
+    "constituency": "Githunguri",
+    "normalizedCounty": "kiambu",
+    "normalizedConstituency": "githunguri",
+    "wardCount": 5,
+    "wards": [
+      "Githiga Ward",
+      "Ikinu Ward",
+      "Ngewa Ward",
+      "Komothai Ward",
+      "Githunguri Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Kiambu",
+    "constituency": "Juja",
+    "normalizedCounty": "kiambu",
+    "normalizedConstituency": "juja",
+    "wardCount": 5,
+    "wards": [
+      "Murera Ward",
+      "Theta Ward",
+      "Juja Ward",
+      "Witeithie Ward",
+      "Kalimoni Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Kiambu",
+    "constituency": "Kabete",
+    "normalizedCounty": "kiambu",
+    "normalizedConstituency": "kabete",
+    "wardCount": 5,
+    "wards": [
+      "Gitaru",
+      "Muguga",
+      "Nyadhuna Ward",
+      "Kabete Ward",
+      "Uthiru Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Kiambu",
+    "constituency": "Kiambaa",
+    "normalizedCounty": "kiambu",
+    "normalizedConstituency": "kiambaa",
+    "wardCount": 5,
+    "wards": [
+      "Cianda Ward",
+      "Karuri Ward",
+      "Ndenderu Ward",
+      "Muchatha Ward",
+      "Kihara Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Kiambu",
+    "constituency": "Kiambu",
+    "normalizedCounty": "kiambu",
+    "normalizedConstituency": "kiambu",
+    "wardCount": 4,
+    "wards": [
+      "Ting'ang'a Ward",
+      "Ndumberi Ward",
+      "Riabai Ward",
+      "Kiambu Township Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Kiambu",
+    "constituency": "Kikuyu",
+    "normalizedCounty": "kiambu",
+    "normalizedConstituency": "kikuyu",
+    "wardCount": 5,
+    "wards": [
+      "Karai",
+      "Nachu Ward",
+      "Sigona Ward",
+      "Kikuyu Ward",
+      "Kinoo"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Kiambu",
+    "constituency": "Lari",
+    "normalizedCounty": "kiambu",
+    "normalizedConstituency": "lari",
+    "wardCount": 5,
+    "wards": [
+      "Kinale Ward",
+      "Nyanduma Ward",
+      "Kamburu Ward",
+      "Lari/kirenga Ward",
+      "Kijabe Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Kiambu",
+    "constituency": "Limuru",
+    "normalizedCounty": "kiambu",
+    "normalizedConstituency": "limuru",
+    "wardCount": 5,
+    "wards": [
+      "Bibirioni Ward",
+      "Limuru Central Ward",
+      "Ndeiya Ward",
+      "Limuru East Ward",
+      "Ngecha Tigoni Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Kiambu",
+    "constituency": "Ruiru",
+    "normalizedCounty": "kiambu",
+    "normalizedConstituency": "ruiru",
+    "wardCount": 8,
+    "wards": [
+      "Gitothua",
+      "Gatongora Ward",
+      "Kahawa Wendani Ward",
+      "Biashara Ward",
+      "Kahawa/sukari Ward",
+      "Kiuu Ward",
+      "Mwiki Ward",
+      "Mwihoko Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Kiambu",
+    "constituency": "Thika Town",
+    "normalizedCounty": "kiambu",
+    "normalizedConstituency": "thika town",
+    "wardCount": 5,
+    "wards": [
+      "Thika Township Ward",
+      "Kamenu Ward",
+      "Hospital Ward",
+      "Gatuanyaga Ward",
+      "Ngoliba Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Kilifi",
+    "constituency": "Ganze",
+    "normalizedCounty": "kilifi",
+    "normalizedConstituency": "ganze",
+    "wardCount": 4,
+    "wards": [
+      "Bamba Ward",
+      "Jaribuni Ward",
+      "Ganze Ward",
+      "Sokoke Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Kilifi",
+    "constituency": "Kaloleni",
+    "normalizedCounty": "kilifi",
+    "normalizedConstituency": "kaloleni",
+    "wardCount": 4,
+    "wards": [
+      "Mariakani Ward",
+      "Kayafungo Ward",
+      "Kaloleni Ward",
+      "Mwanamwinga Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Kilifi",
+    "constituency": "Kilifi North",
+    "normalizedCounty": "kilifi",
+    "normalizedConstituency": "kilifi north",
+    "wardCount": 7,
+    "wards": [
+      "Mnarani Ward",
+      "Sokoni Ward",
+      "Dabaso Ward",
+      "Watamu Ward",
+      "Kibarani Ward",
+      "Matsangoni Ward",
+      "Tezo Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Kilifi",
+    "constituency": "Kilifi South",
+    "normalizedCounty": "kilifi",
+    "normalizedConstituency": "kilifi south",
+    "wardCount": 5,
+    "wards": [
+      "Junju Ward",
+      "Mwarakaya Ward",
+      "Chasimba Ward",
+      "Mtepeni Ward",
+      "Shimo La Tewa Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Kilifi",
+    "constituency": "Magarini",
+    "normalizedCounty": "kilifi",
+    "normalizedConstituency": "magarini",
+    "wardCount": 6,
+    "wards": [
+      "Marafa Ward",
+      "Magarini Ward",
+      "Gongoni Ward",
+      "Adu Ward",
+      "Garashi Ward",
+      "Sabaki Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Kilifi",
+    "constituency": "Malindi",
+    "normalizedCounty": "kilifi",
+    "normalizedConstituency": "malindi",
+    "wardCount": 5,
+    "wards": [
+      "Jilore Ward",
+      "Kakuyuni Ward",
+      "Shella Ward",
+      "Ganda Ward",
+      "Malindi Town Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Kilifi",
+    "constituency": "Rabai",
+    "normalizedCounty": "kilifi",
+    "normalizedConstituency": "rabai",
+    "wardCount": 4,
+    "wards": [
+      "Mwawesa Ward",
+      "Rurumaward",
+      "Kambe/ribe Ward",
+      "Rabai/kisurutini Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "KIRINYAGA",
+    "constituency": "Gichugu",
+    "normalizedCounty": "kirinyaga",
+    "normalizedConstituency": "gichugu",
+    "wardCount": 5,
+    "wards": [
+      "Kabare Ward",
+      "Baragwi Ward",
+      "Njukiine Ward",
+      "Ngariama Ward",
+      "Karumandi Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "KIRINYAGA",
+    "constituency": "Kirinyaga Central",
+    "normalizedCounty": "kirinyaga",
+    "normalizedConstituency": "kirinyaga central",
+    "wardCount": 4,
+    "wards": [
+      "Mutira Ward",
+      "Kanyekini Ward",
+      "Kerugoya Ward",
+      "Inoi Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "KIRINYAGA",
+    "constituency": "Mwea",
+    "normalizedCounty": "kirinyaga",
+    "normalizedConstituency": "mwea",
+    "wardCount": 8,
+    "wards": [
+      "Mutithi Ward",
+      "Kangai Ward",
+      "Thiba Ward",
+      "Wamumu Ward",
+      "Nyangati Ward",
+      "Murinduko Ward",
+      "Gathigiriri Ward",
+      "Tebere Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "KIRINYAGA",
+    "constituency": "Ndia",
+    "normalizedCounty": "kirinyaga",
+    "normalizedConstituency": "ndia",
+    "wardCount": 3,
+    "wards": [
+      "Mukure Ward",
+      "Kiine Ward",
+      "Kariti Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Kisii",
+    "constituency": "Bobasi",
+    "normalizedCounty": "kisii",
+    "normalizedConstituency": "bobasi",
+    "wardCount": 8,
+    "wards": [
+      "Masige West Ward",
+      "Masige East Ward",
+      "Basi Central Ward",
+      "Nyacheki Ward",
+      "Bassi Bogetaorio Ward",
+      "Bobasi Chache Ward",
+      "Sameta Mokwerero Ward",
+      "Bobasi Boitangare Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Kisii",
+    "constituency": "Bomachoge Borabu",
+    "normalizedCounty": "kisii",
+    "normalizedConstituency": "bomachoge borabu",
+    "wardCount": 4,
+    "wards": [
+      "BOMBABA BORABU",
+      "Bokimonge Ward",
+      "Magenche Ward",
+      "BOOCHI BORABU"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Kisii",
+    "constituency": "Bomachoge Chache",
+    "normalizedCounty": "kisii",
+    "normalizedConstituency": "bomachoge chache",
+    "wardCount": 3,
+    "wards": [
+      "Majoge Basi Ward",
+      "Boochi Tendere Ward",
+      "Bosoti Sengera Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Kisii",
+    "constituency": "Bonchari",
+    "normalizedCounty": "kisii",
+    "normalizedConstituency": "bonchari",
+    "wardCount": 4,
+    "wards": [
+      "Bomariba Ward",
+      "Bogiakumu Ward",
+      "Bomorenda Ward",
+      "Riana Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Kisii",
+    "constituency": "Kitutu Chache North",
+    "normalizedCounty": "kisii",
+    "normalizedConstituency": "kitutu chache north",
+    "wardCount": 4,
+    "wards": [
+      "Sensi Ward",
+      "Monyerero Ward",
+      "Marani Ward",
+      "Kegogi Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Kisii",
+    "constituency": "Kitutu Chache South",
+    "normalizedCounty": "kisii",
+    "normalizedConstituency": "kitutu chache south",
+    "wardCount": 4,
+    "wards": [
+      "Nyakoe Ward",
+      "Bogusero Ward",
+      "Bogeka Ward",
+      "Nyatieko Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Kisii",
+    "constituency": "Nyaribari Chache",
+    "normalizedCounty": "kisii",
+    "normalizedConstituency": "nyaribari chache",
+    "wardCount": 7,
+    "wards": [
+      "Kisii Central Ward",
+      "Bobaracho Ward",
+      "Kisii Central Ward",
+      "Keumbu Ward",
+      "Kiogoro Ward",
+      "Birongo Ward",
+      "Ibeno Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Kisii",
+    "constituency": "Nyaribari Masaba",
+    "normalizedCounty": "kisii",
+    "normalizedConstituency": "nyaribari masaba",
+    "wardCount": 5,
+    "wards": [
+      "Ichuni Ward",
+      "Nyamasibi Ward",
+      "Masimba Ward",
+      "Gesusu Ward",
+      "Kiamokama Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Kisii",
+    "constituency": "South Mugirango",
+    "normalizedCounty": "kisii",
+    "normalizedConstituency": "south mugirango",
+    "wardCount": 6,
+    "wards": [
+      "Tabaka Ward",
+      "Boikanga Ward",
+      "Bogetenga Ward",
+      "Borabu Chitago Ward",
+      "Moticho Ward",
+      "Getenga Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Kisumu",
+    "constituency": "Kisumu Central",
+    "normalizedCounty": "kisumu",
+    "normalizedConstituency": "kisumu central",
+    "wardCount": 6,
+    "wards": [
+      "Shauri Moyo Kaloleni Ward",
+      "Market Milimani Ward",
+      "Kondele Ward",
+      "Nyalenda B Ward",
+      "Railways Ward",
+      "Migosi Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Kisumu",
+    "constituency": "Kisumu East",
+    "normalizedCounty": "kisumu",
+    "normalizedConstituency": "kisumu east",
+    "wardCount": 5,
+    "wards": [
+      "Manyatta B Ward",
+      "Nyalenda A Ward",
+      "Kajulu Ward",
+      "Kolwa East Ward",
+      "Kolwa Central Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Kisumu",
+    "constituency": "Kisumu West",
+    "normalizedCounty": "kisumu",
+    "normalizedConstituency": "kisumu west",
+    "wardCount": 5,
+    "wards": [
+      "South West Kisumu Ward",
+      "Central Kisumu Ward",
+      "North Kisumu Ward",
+      "West Kisumu Ward",
+      "North West Kisumu Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Kisumu",
+    "constituency": "Muhoroni",
+    "normalizedCounty": "kisumu",
+    "normalizedConstituency": "muhoroni",
+    "wardCount": 5,
+    "wards": [
+      "Miwani Ward",
+      "Ombeyi Ward",
+      "Masogo/nyang'oma Ward",
+      "Chemelil Ward",
+      "Muhoroni Koru Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Kisumu",
+    "constituency": "Nyakach",
+    "normalizedCounty": "kisumu",
+    "normalizedConstituency": "nyakach",
+    "wardCount": 5,
+    "wards": [
+      "South West Nyakach Ward",
+      "North Nyakach Ward",
+      "Central Nyakach Ward",
+      "West Nyakach Ward",
+      "South East Nyakach Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Kisumu",
+    "constituency": "Nyando",
+    "normalizedCounty": "kisumu",
+    "normalizedConstituency": "nyando",
+    "wardCount": 5,
+    "wards": [
+      "East Kano/wawidhi Ward",
+      "Kabonyo Kanyagwal",
+      "Kobura Ward",
+      "Awasi/onjiko Ward",
+      "Ahero Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Kisumu",
+    "constituency": "Seme",
+    "normalizedCounty": "kisumu",
+    "normalizedConstituency": "seme",
+    "wardCount": 4,
+    "wards": [
+      "West Seme Ward",
+      "Central Seme Ward",
+      "East Seme Ward",
+      "North Seme Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "KITUI",
+    "constituency": "Kitui Central",
+    "normalizedCounty": "kitui",
+    "normalizedConstituency": "kitui central",
+    "wardCount": 5,
+    "wards": [
+      "Miambani Ward",
+      "Township Ward",
+      "Kyangwithya west Ward",
+      "Mulango Ward",
+      "Kyangwithya east Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "KITUI",
+    "constituency": "Kitui East",
+    "normalizedCounty": "kitui",
+    "normalizedConstituency": "kitui east",
+    "wardCount": 6,
+    "wards": [
+      "Nzambani Ward",
+      "Zombe/mwitika Ward",
+      "Voo/kyamatu Ward",
+      "Endau/malalani Ward",
+      "Mutitu/kaliku Ward",
+      "Chuluni Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "KITUI",
+    "constituency": "Kitui Rural",
+    "normalizedCounty": "kitui",
+    "normalizedConstituency": "kitui rural",
+    "wardCount": 4,
+    "wards": [
+      "Kwavonza/yatta Ward",
+      "Kanyangi Ward",
+      "Mbitini Ward",
+      "Kisasi Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "KITUI",
+    "constituency": "Kitui South",
+    "normalizedCounty": "kitui",
+    "normalizedConstituency": "kitui south",
+    "wardCount": 6,
+    "wards": [
+      "Ikutha Ward",
+      "Athi Ward",
+      "Ikanga/kyatune Ward",
+      "Mutomo Ward",
+      "Mutha Ward",
+      "Kanziko Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "KITUI",
+    "constituency": "Kitui West",
+    "normalizedCounty": "kitui",
+    "normalizedConstituency": "kitui west",
+    "wardCount": 4,
+    "wards": [
+      "Mutongoni Ward",
+      "Kauwi Ward",
+      "Matinyani Ward",
+      "Kwamutonga/kithumula Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "KITUI",
+    "constituency": "Mwingi Central",
+    "normalizedCounty": "kitui",
+    "normalizedConstituency": "mwingi central",
+    "wardCount": 6,
+    "wards": [
+      "Central Ward",
+      "Kivou Ward",
+      "Nguni Ward",
+      "Nuu Ward",
+      "Mui Ward",
+      "Waita Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "KITUI",
+    "constituency": "Mwingi North",
+    "normalizedCounty": "kitui",
+    "normalizedConstituency": "mwingi north",
+    "wardCount": 5,
+    "wards": [
+      "Mumoni Ward",
+      "Tseikuru Ward",
+      "Tharaka Ward",
+      "Ngomeni Ward",
+      "Kyuso Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "KITUI",
+    "constituency": "Mwingi West",
+    "normalizedCounty": "kitui",
+    "normalizedConstituency": "mwingi west",
+    "wardCount": 4,
+    "wards": [
+      "Kyome/thaana Ward",
+      "Nguutani Ward",
+      "Migwani Ward",
+      "Kiomo/kyethani Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Kwale",
+    "constituency": "Kinango",
+    "normalizedCounty": "kwale",
+    "normalizedConstituency": "kinango",
+    "wardCount": 7,
+    "wards": [
+      "Ndavaya Ward",
+      "Puma Ward",
+      "Kinango Ward",
+      "Mackinon Road Ward",
+      "Chengoni/samburu Ward",
+      "Mwavumbo Ward",
+      "Kasemeni Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Kwale",
+    "constituency": "Lunga Lunga",
+    "normalizedCounty": "kwale",
+    "normalizedConstituency": "lunga lunga",
+    "wardCount": 1,
+    "wards": [
+      "Pongwe Kikoneni Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Kwale",
+    "constituency": "Lungalunga",
+    "normalizedCounty": "kwale",
+    "normalizedConstituency": "lungalunga",
+    "wardCount": 3,
+    "wards": [
+      "Dzombo Ward",
+      "Mwereni Ward",
+      "Vanga Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Kwale",
+    "constituency": "Matuga",
+    "normalizedCounty": "kwale",
+    "normalizedConstituency": "matuga",
+    "wardCount": 5,
+    "wards": [
+      "Tsimba Golini Ward",
+      "Waa Ngombeni Ward",
+      "Tiwi Ward",
+      "Kubo South Ward",
+      "Mkongani Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Kwale",
+    "constituency": "Msambweni",
+    "normalizedCounty": "kwale",
+    "normalizedConstituency": "msambweni",
+    "wardCount": 4,
+    "wards": [
+      "Ukunda Ward",
+      "Kinondo Ward",
+      "Ramisi Ward",
+      "Gombato Bongwe Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "LAIKIPIA",
+    "constituency": "Githunguri",
+    "normalizedCounty": "laikipia",
+    "normalizedConstituency": "githunguri",
+    "wardCount": 1,
+    "wards": [
+      "Githiga Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "LAIKIPIA",
+    "constituency": "Laikipia East",
+    "normalizedCounty": "laikipia",
+    "normalizedConstituency": "laikipia east",
+    "wardCount": 5,
+    "wards": [
+      "Ngobit Ward",
+      "Tigithi Ward",
+      "Thingithu Ward",
+      "Nanyuki Ward",
+      "Umande Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "LAIKIPIA",
+    "constituency": "Laikipia North",
+    "normalizedCounty": "laikipia",
+    "normalizedConstituency": "laikipia north",
+    "wardCount": 4,
+    "wards": [
+      "Sosian Ward",
+      "Segera Ward",
+      "Mugogodo West Ward",
+      "Mugogodo East Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "LAIKIPIA",
+    "constituency": "Laikipia West",
+    "normalizedCounty": "laikipia",
+    "normalizedConstituency": "laikipia west",
+    "wardCount": 5,
+    "wards": [
+      "Marmanet Ward",
+      "Igwamiti Ward",
+      "Salama Ward",
+      "Ol-Moran Ward",
+      "Rumuruti Township Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "LAMU",
+    "constituency": "Lamu East",
+    "normalizedCounty": "lamu",
+    "normalizedConstituency": "lamu east",
+    "wardCount": 3,
+    "wards": [
+      "FAZA",
+      "KIUNGA",
+      "BASUBA"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "LAMU",
+    "constituency": "Lamu West",
+    "normalizedCounty": "lamu",
+    "normalizedConstituency": "lamu west",
+    "wardCount": 7,
+    "wards": [
+      "SHELLA",
+      "MKOMAMI",
+      "HINDI",
+      "HONGWE",
+      "MKUNUMBI",
+      "BAHARI",
+      "WITU"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Machakos",
+    "constituency": "Kangundo",
+    "normalizedCounty": "machakos",
+    "normalizedConstituency": "kangundo",
+    "wardCount": 4,
+    "wards": [
+      "Kangundo North Ward",
+      "Kangundo Central Ward",
+      "Kangundo East Ward",
+      "Kangundo West Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Machakos",
+    "constituency": "Kathiani",
+    "normalizedCounty": "machakos",
+    "normalizedConstituency": "kathiani",
+    "wardCount": 4,
+    "wards": [
+      "Mitamboni Ward",
+      "Kathiani Central Ward",
+      "Upper Kaewa-iveti Ward",
+      "Lower Kaewa-kaani Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Machakos",
+    "constituency": "Machakos Town",
+    "normalizedCounty": "machakos",
+    "normalizedConstituency": "machakos town",
+    "wardCount": 7,
+    "wards": [
+      "Kalama Ward",
+      "Mua Ward",
+      "Mutituni Ward",
+      "Township Ward",
+      "Mumbuni North Ward",
+      "Muvuti-kiima-kimwe Ward",
+      "Kola Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Machakos",
+    "constituency": "Masinga",
+    "normalizedCounty": "machakos",
+    "normalizedConstituency": "masinga",
+    "wardCount": 5,
+    "wards": [
+      "Kivaa Ward",
+      "Masinga Central Ward",
+      "Ekalakala Ward",
+      "Muthesya Ward",
+      "Mananja Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Machakos",
+    "constituency": "Matungulu",
+    "normalizedCounty": "machakos",
+    "normalizedConstituency": "matungulu",
+    "wardCount": 5,
+    "wards": [
+      "Tala Ward",
+      "Matungulu North Ward",
+      "Matungulu East Ward",
+      "Matungulu West Ward",
+      "Kyeleni Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Machakos",
+    "constituency": "Mavoko",
+    "normalizedCounty": "machakos",
+    "normalizedConstituency": "mavoko",
+    "wardCount": 4,
+    "wards": [
+      "Mathatani Ward",
+      "Syokimau-mulolongo Ward",
+      "Athi River Ward",
+      "Kinanie Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Machakos",
+    "constituency": "Mwala",
+    "normalizedCounty": "machakos",
+    "normalizedConstituency": "mwala",
+    "wardCount": 6,
+    "wards": [
+      "Mbiuni Ward",
+      "Makutano-mwala Ward",
+      "Masii Ward",
+      "Muthetheni Ward",
+      "Wamunyu Ward",
+      "Kibauni Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Machakos",
+    "constituency": "Yatta",
+    "normalizedCounty": "machakos",
+    "normalizedConstituency": "yatta",
+    "wardCount": 5,
+    "wards": [
+      "Ndalani Ward",
+      "Matuu Ward",
+      "Kithimani Ward",
+      "Ikombe Ward",
+      "Katangi Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "MAKUENI",
+    "constituency": "Kaiti",
+    "normalizedCounty": "makueni",
+    "normalizedConstituency": "kaiti",
+    "wardCount": 4,
+    "wards": [
+      "Ukia ward",
+      "Kee ward",
+      "Kilungu ward",
+      "Ilima ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "MAKUENI",
+    "constituency": "Kibwezi East",
+    "normalizedCounty": "makueni",
+    "normalizedConstituency": "kibwezi east",
+    "wardCount": 4,
+    "wards": [
+      "Masongaleni Ward",
+      "Mtito Andei Ward",
+      "Thange Ward",
+      "Ivingoni/Nzambani Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "MAKUENI",
+    "constituency": "Kibwezi West",
+    "normalizedCounty": "makueni",
+    "normalizedConstituency": "kibwezi west",
+    "wardCount": 6,
+    "wards": [
+      "Makindu Ward",
+      "Nguumo Ward",
+      "Kikumbulyu North Ward",
+      "Kikumbulyu South Ward",
+      "Nguu/Masumba Ward",
+      "Emali/Mulala Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "MAKUENI",
+    "constituency": "Kilome",
+    "normalizedCounty": "makueni",
+    "normalizedConstituency": "kilome",
+    "wardCount": 3,
+    "wards": [
+      "Kasikeu Ward",
+      "Mukaa Ward",
+      "Kiima Kiu/Kalanzoni Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "MAKUENI",
+    "constituency": "Makueni",
+    "normalizedCounty": "makueni",
+    "normalizedConstituency": "makueni",
+    "wardCount": 7,
+    "wards": [
+      "Wote Ward",
+      "Muvau/Kikumini Ward",
+      "Mavindini Ward",
+      "Kitise/Kithuki Ward",
+      "Kathonzweni Ward",
+      "Nzaui/Kilili/Kalamba Ward",
+      "Mbitini Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "MAKUENI",
+    "constituency": "Mbooni",
+    "normalizedCounty": "makueni",
+    "normalizedConstituency": "mbooni",
+    "wardCount": 6,
+    "wards": [
+      "Tulimani Ward",
+      "Mbooni Ward",
+      "Kithungo/Kitundu Ward",
+      "Kiteta-Kisau Ward",
+      "Waia/Kako Ward",
+      "Kalawa/ Kathulumbi Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "MANDERA",
+    "constituency": "Banissa",
+    "normalizedCounty": "mandera",
+    "normalizedConstituency": "banissa",
+    "wardCount": 5,
+    "wards": [
+      "BANISSA",
+      "DERKHALE",
+      "GUBA",
+      "MALKAMARI",
+      "KILIWAHERI"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "MANDERA",
+    "constituency": "Lafey",
+    "normalizedCounty": "mandera",
+    "normalizedConstituency": "lafey",
+    "wardCount": 5,
+    "wards": [
+      "LIBEHIA",
+      "FINO",
+      "LAFEY",
+      "WARANKARA",
+      "ALANGO GOF"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "MANDERA",
+    "constituency": "Mandera East",
+    "normalizedCounty": "mandera",
+    "normalizedConstituency": "mandera east",
+    "wardCount": 5,
+    "wards": [
+      "ARABIA",
+      "BULLA MPYA",
+      "KHALALIO",
+      "NEBOI",
+      "TOWNSHIP"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "MANDERA",
+    "constituency": "Mandera North",
+    "normalizedCounty": "mandera",
+    "normalizedConstituency": "mandera north",
+    "wardCount": 5,
+    "wards": [
+      "MAROTHILE",
+      "RHAMU",
+      "RHAMU DIMTU",
+      "ASHABITO",
+      "GUTICHA"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "MANDERA",
+    "constituency": "Mandera South",
+    "normalizedCounty": "mandera",
+    "normalizedConstituency": "mandera south",
+    "wardCount": 4,
+    "wards": [
+      "KOTULO",
+      "ELWAK SOUTH",
+      "SHAMBIR FATUMA",
+      "ELWAK NORTH"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "MANDERA",
+    "constituency": "Mandera West",
+    "normalizedCounty": "mandera",
+    "normalizedConstituency": "mandera west",
+    "wardCount": 5,
+    "wards": [
+      "TAKABA SOUTH",
+      "TAKABA",
+      "LAGHSURE",
+      "DANDU",
+      "GITHER"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "MANDERA",
+    "constituency": "Tarbaj",
+    "normalizedCounty": "mandera",
+    "normalizedConstituency": "tarbaj",
+    "wardCount": 1,
+    "wards": [
+      "WARGADUD"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "MARSABIT",
+    "constituency": "Laisamis",
+    "normalizedCounty": "marsabit",
+    "normalizedConstituency": "laisamis",
+    "wardCount": 5,
+    "wards": [
+      "LAISAMIS",
+      "LOIYANGALANI",
+      "KARGI/SOUTH HORR",
+      "KORR/NGURUNIT",
+      "LOGOLOGO"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "MARSABIT",
+    "constituency": "Moyale",
+    "normalizedCounty": "marsabit",
+    "normalizedConstituency": "moyale",
+    "wardCount": 7,
+    "wards": [
+      "BUTIYE",
+      "SOLOLO",
+      "HEILLU/MANYATTA",
+      "GOLBO",
+      "MOYALE TOWNSHIP",
+      "URAN",
+      "OBBU"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "MARSABIT",
+    "constituency": "North Horr",
+    "normalizedCounty": "marsabit",
+    "normalizedConstituency": "north horr",
+    "wardCount": 5,
+    "wards": [
+      "NORTH HORR",
+      "ILLERET",
+      "DUKANA",
+      "MAIKONA",
+      "TURBI"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "MARSABIT",
+    "constituency": "Saku",
+    "normalizedCounty": "marsabit",
+    "normalizedConstituency": "saku",
+    "wardCount": 3,
+    "wards": [
+      "SAGANTE/JALDESA",
+      "KARARE",
+      "MARSABIT CENTRAL"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "MERU",
+    "constituency": "Buuri",
+    "normalizedCounty": "meru",
+    "normalizedConstituency": "buuri",
+    "wardCount": 5,
+    "wards": [
+      "Timau Ward",
+      "Kisima Ward",
+      "Kiirua Naari Ward",
+      "Ruiru Rwawera Ward",
+      "Kibirichia Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "MERU",
+    "constituency": "Central Imenti",
+    "normalizedCounty": "meru",
+    "normalizedConstituency": "central imenti",
+    "wardCount": 3,
+    "wards": [
+      "Abothuguchi central Ward",
+      "Abothuguchi west Ward",
+      "Kiagu Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "MERU",
+    "constituency": "Igembe Central",
+    "normalizedCounty": "meru",
+    "normalizedConstituency": "igembe central",
+    "wardCount": 5,
+    "wards": [
+      "Akirang'ondu Ward",
+      "Athiru ruujine Ward",
+      "Kiengu/Igembe East ward",
+      "Njia Ward",
+      "Kangeta Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "MERU",
+    "constituency": "Igembe North",
+    "normalizedCounty": "meru",
+    "normalizedConstituency": "igembe north",
+    "wardCount": 5,
+    "wards": [
+      "Antuambui Ward",
+      "Ntunene Ward",
+      "Antubetwe kiongo Ward",
+      "Naathu Ward",
+      "Amwathi Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "MERU",
+    "constituency": "Igembe South",
+    "normalizedCounty": "meru",
+    "normalizedConstituency": "igembe south",
+    "wardCount": 5,
+    "wards": [
+      "Maua Ward",
+      "Kiegoi/antubochiu Ward",
+      "Athiru gaiti Ward",
+      "Akachiu Ward",
+      "Kanuni Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "MERU",
+    "constituency": "Imenti Central",
+    "normalizedCounty": "meru",
+    "normalizedConstituency": "imenti central",
+    "wardCount": 1,
+    "wards": [
+      "Mwangathia Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "MERU",
+    "constituency": "North Imenti",
+    "normalizedCounty": "meru",
+    "normalizedConstituency": "north imenti",
+    "wardCount": 5,
+    "wards": [
+      "Municipality Ward",
+      "Ntima east Ward",
+      "Ntima west Ward",
+      "Nyaki west Ward",
+      "Nyaki east Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "MERU",
+    "constituency": "South Imenti",
+    "normalizedCounty": "meru",
+    "normalizedConstituency": "south imenti",
+    "wardCount": 6,
+    "wards": [
+      "Mitunguu Ward",
+      "Igoji east Ward",
+      "Igoji west Ward",
+      "Abogeta east Ward",
+      "Abogeta west Ward",
+      "Nkuene Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "MERU",
+    "constituency": "Tigania East",
+    "normalizedCounty": "meru",
+    "normalizedConstituency": "tigania east",
+    "wardCount": 5,
+    "wards": [
+      "Thangatha Ward",
+      "Mikinduri Ward",
+      "Kiguchwa Ward",
+      "Muthara Ward",
+      "Karama Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "MERU",
+    "constituency": "Tigania West",
+    "normalizedCounty": "meru",
+    "normalizedConstituency": "tigania west",
+    "wardCount": 5,
+    "wards": [
+      "Athwana Ward",
+      "Akithii Ward",
+      "Kianjai Ward",
+      "Nkomo Ward",
+      "Mbeu Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Migori",
+    "constituency": "Awendo",
+    "normalizedCounty": "migori",
+    "normalizedConstituency": "awendo",
+    "wardCount": 4,
+    "wards": [
+      "North Sakwa Ward",
+      "South Sakwa Ward",
+      "West Sakwa Ward",
+      "Central Sakwa Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Migori",
+    "constituency": "Kuria East",
+    "normalizedCounty": "migori",
+    "normalizedConstituency": "kuria east",
+    "wardCount": 5,
+    "wards": [
+      "Ntimaru West Ward",
+      "Gokeharaka/getambwega Ward",
+      "Ntimaru East Ward",
+      "Nyabasi East Ward",
+      "Nyabasi West Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Migori",
+    "constituency": "Kuria West",
+    "normalizedCounty": "migori",
+    "normalizedConstituency": "kuria west",
+    "wardCount": 7,
+    "wards": [
+      "Masaba Ward",
+      "Bukira East Ward",
+      "Bukira Central/ikerege Ward",
+      "Isibania Ward",
+      "Mokerero Ward",
+      "Tagare Ward",
+      "Nyamosense/komosoko Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Migori",
+    "constituency": "Nyatike",
+    "normalizedCounty": "migori",
+    "normalizedConstituency": "nyatike",
+    "wardCount": 7,
+    "wards": [
+      "Kachieng' Ward",
+      "Kanyasa Ward",
+      "North Kadem Ward",
+      "Macalder/kanyarwanda Ward",
+      "Kaler Ward",
+      "Got Kachola Ward",
+      "Muhuru Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Migori",
+    "constituency": "Rongo",
+    "normalizedCounty": "migori",
+    "normalizedConstituency": "rongo",
+    "wardCount": 4,
+    "wards": [
+      "North Kamagambo Ward",
+      "Central Kamagambo Ward",
+      "South Kamagambo Ward",
+      "East Kamagambo Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Migori",
+    "constituency": "Suna East",
+    "normalizedCounty": "migori",
+    "normalizedConstituency": "suna east",
+    "wardCount": 4,
+    "wards": [
+      "God Jope  Ward",
+      "Suna Central Ward",
+      "Kakrao Ward",
+      "Kwa Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Migori",
+    "constituency": "Suna West",
+    "normalizedCounty": "migori",
+    "normalizedConstituency": "suna west",
+    "wardCount": 4,
+    "wards": [
+      "Wiga Ward",
+      "Waseweta Ii Ward",
+      "Ragana-oruba Ward",
+      "Wasimbete Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Migori",
+    "constituency": "Uriri",
+    "normalizedCounty": "migori",
+    "normalizedConstituency": "uriri",
+    "wardCount": 5,
+    "wards": [
+      "West Kanyamkago Ward",
+      "North  Kanyamkago Ward",
+      "Central Kanyamkago Ward",
+      "South Kanyamkago Ward",
+      "East Kanyamkago Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Mombasa",
+    "constituency": "Changamwe",
+    "normalizedCounty": "mombasa",
+    "normalizedConstituency": "changamwe",
+    "wardCount": 5,
+    "wards": [
+      "Kipevu Ward",
+      "Airport Ward",
+      "Changamwe Ward",
+      "Chaani Ward",
+      "Port Reitz Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Mombasa",
+    "constituency": "Jomvu",
+    "normalizedCounty": "mombasa",
+    "normalizedConstituency": "jomvu",
+    "wardCount": 3,
+    "wards": [
+      "Jomvu Kuu Ward",
+      "Miritini Ward",
+      "Mikindani Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Mombasa",
+    "constituency": "Kisauni",
+    "normalizedCounty": "mombasa",
+    "normalizedConstituency": "kisauni",
+    "wardCount": 7,
+    "wards": [
+      "Mjambere Ward",
+      "Magogoni Ward",
+      "Junda Ward",
+      "Bamburi Ward",
+      "Mwakirunge Ward",
+      "Mtopanga Ward",
+      "Shanzu Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Mombasa",
+    "constituency": "Likoni",
+    "normalizedCounty": "mombasa",
+    "normalizedConstituency": "likoni",
+    "wardCount": 5,
+    "wards": [
+      "Shika Adabu Ward",
+      "Mtongwe Ward",
+      "Bofu Ward",
+      "Likoni Ward",
+      "Timbwani Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Mombasa",
+    "constituency": "Mvita",
+    "normalizedCounty": "mombasa",
+    "normalizedConstituency": "mvita",
+    "wardCount": 5,
+    "wards": [
+      "Tudor Ward",
+      "Makadara Ward-mji Wa Kale Ward",
+      "Tononoka Ward",
+      "Ganjoni Ward-shimanzi Ward",
+      "Majengo Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Mombasa",
+    "constituency": "Nyali",
+    "normalizedCounty": "mombasa",
+    "normalizedConstituency": "nyali",
+    "wardCount": 5,
+    "wards": [
+      "Frere Town Ward",
+      "Kongowea Ward",
+      "Kadzandani Ward",
+      "Ziwa La Ng'ombe Ward",
+      "Mkomani Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Muranga",
+    "constituency": "Gatanga",
+    "normalizedCounty": "muranga",
+    "normalizedConstituency": "gatanga",
+    "wardCount": 6,
+    "wards": [
+      "Ithanga Ward",
+      "Kakuzi/mitubiri Ward",
+      "Mugumo-ini Ward",
+      "Kihumbu-ini Ward",
+      "Gatanga Ward",
+      "Kariara Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Muranga",
+    "constituency": "Kandara",
+    "normalizedCounty": "muranga",
+    "normalizedConstituency": "kandara",
+    "wardCount": 8,
+    "wards": [
+      "Kamahuhu Ward",
+      "Nginda Ward",
+      "Ng'araria Ward",
+      "Muruka Ward",
+      "Kagundu-ini Ward",
+      "Gaichanjiru Ward",
+      "Ithiru Ward",
+      "Ruchu Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Muranga",
+    "constituency": "Kangema",
+    "normalizedCounty": "muranga",
+    "normalizedConstituency": "kangema",
+    "wardCount": 3,
+    "wards": [
+      "Kanyenya-ini Ward",
+      "Muguru Ward",
+      "Rwathia Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Muranga",
+    "constituency": "Kigumo",
+    "normalizedCounty": "muranga",
+    "normalizedConstituency": "kigumo",
+    "wardCount": 5,
+    "wards": [
+      "Kahumbu Ward",
+      "Muthithi Ward",
+      "Kigumo Ward",
+      "Kangari Ward",
+      "Kinyona Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Muranga",
+    "constituency": "Kiharu",
+    "normalizedCounty": "muranga",
+    "normalizedConstituency": "kiharu",
+    "wardCount": 6,
+    "wards": [
+      "Wangu Ward",
+      "Mugoiri Ward",
+      "Mbiri Ward",
+      "Township Ward",
+      "Murarandia Ward",
+      "Gaturi Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Muranga",
+    "constituency": "Maragwa",
+    "normalizedCounty": "muranga",
+    "normalizedConstituency": "maragwa",
+    "wardCount": 4,
+    "wards": [
+      "Kimorori/wempa Ward",
+      "Makuyu Ward",
+      "Kambiti Ward",
+      "Ichagaki Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Muranga",
+    "constituency": "Mathioya",
+    "normalizedCounty": "muranga",
+    "normalizedConstituency": "mathioya",
+    "wardCount": 3,
+    "wards": [
+      "Kiru Ward",
+      "Kamacharia Ward",
+      "Gitugi Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Nairobi",
+    "constituency": "Dagoretti North",
+    "normalizedCounty": "nairobi",
+    "normalizedConstituency": "dagoretti north",
+    "wardCount": 5,
+    "wards": [
+      "Kilimani Ward",
+      "Kileleshwa Ward",
+      "Kawangware Ward",
+      "Kabiro Ward",
+      "Gatina Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Nairobi",
+    "constituency": "Dagoretti South",
+    "normalizedCounty": "nairobi",
+    "normalizedConstituency": "dagoretti south",
+    "wardCount": 5,
+    "wards": [
+      "Mutu-ini Ward",
+      "Ngando Ward",
+      "Riruta Ward",
+      "Uthiru/ruthimitu Ward",
+      "Waithaka Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Nairobi",
+    "constituency": "Embakasi Central",
+    "normalizedCounty": "nairobi",
+    "normalizedConstituency": "embakasi central",
+    "wardCount": 5,
+    "wards": [
+      "Kayole North Ward",
+      "Kayole Central Ward",
+      "Kayole South Ward",
+      "Komarock Ward",
+      "Matopeni/spring Valley Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Nairobi",
+    "constituency": "Embakasi East",
+    "normalizedCounty": "nairobi",
+    "normalizedConstituency": "embakasi east",
+    "wardCount": 5,
+    "wards": [
+      "Lower Savanna Ward",
+      "Embakasi Ward",
+      "Utawala Ward",
+      "Mihango Ward",
+      "Upper Savanna Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Nairobi",
+    "constituency": "Embakasi North",
+    "normalizedCounty": "nairobi",
+    "normalizedConstituency": "embakasi north",
+    "wardCount": 5,
+    "wards": [
+      "Dandora Area Iv Ward",
+      "Kariobangi North Ward",
+      "Dandora Area I Ward",
+      "Dandora Area Ii Ward",
+      "Dandora Area Iii Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Nairobi",
+    "constituency": "Embakasi South",
+    "normalizedCounty": "nairobi",
+    "normalizedConstituency": "embakasi south",
+    "wardCount": 5,
+    "wards": [
+      "Imara Daima Ward",
+      "Pipeline Ward",
+      "Kwa Njenga Ward",
+      "Kwa Reuben Ward",
+      "Kware Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Nairobi",
+    "constituency": "Embakasi West",
+    "normalizedCounty": "nairobi",
+    "normalizedConstituency": "embakasi west",
+    "wardCount": 4,
+    "wards": [
+      "Umoja I Ward",
+      "Umoja Ii Ward",
+      "Mowlem Ward",
+      "Kariobangi South Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Nairobi",
+    "constituency": "Kamukunji",
+    "normalizedCounty": "nairobi",
+    "normalizedConstituency": "kamukunji",
+    "wardCount": 5,
+    "wards": [
+      "Eastleigh South Ward",
+      "Eastleigh North Ward",
+      "California Ward",
+      "Pumwani Ward",
+      "Airbase Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Nairobi",
+    "constituency": "Kasarani",
+    "normalizedCounty": "nairobi",
+    "normalizedConstituency": "kasarani",
+    "wardCount": 5,
+    "wards": [
+      "Mwiki Ward",
+      "Kasarani Ward",
+      "Clay City",
+      "Njiru Ward",
+      "Ruai Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Nairobi",
+    "constituency": "Kibra",
+    "normalizedCounty": "nairobi",
+    "normalizedConstituency": "kibra",
+    "wardCount": 5,
+    "wards": [
+      "Woodley/kenyatta Golf Course Ward",
+      "Laini Saba Ward",
+      "Lindi Ward",
+      "Makina Ward",
+      "Sarang'ombe Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Nairobi",
+    "constituency": "Langata",
+    "normalizedCounty": "nairobi",
+    "normalizedConstituency": "langata",
+    "wardCount": 5,
+    "wards": [
+      "Karen Ward",
+      "Nairobi West Ward",
+      "Mugumo-ini Ward",
+      "South C Ward",
+      "Nyayo Highrise Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Nairobi",
+    "constituency": "Makadara",
+    "normalizedCounty": "nairobi",
+    "normalizedConstituency": "makadara",
+    "wardCount": 4,
+    "wards": [
+      "Viwandani Ward",
+      "Harambee Ward",
+      "Makongeni Ward",
+      "Maringo/hamza Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Nairobi",
+    "constituency": "Mathare",
+    "normalizedCounty": "nairobi",
+    "normalizedConstituency": "mathare",
+    "wardCount": 6,
+    "wards": [
+      "Huruma Ward",
+      "Hospital Ward",
+      "Mabatini Ward",
+      "Ngei Ward",
+      "Mlango Kubwa",
+      "Kiamaiko Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Nairobi",
+    "constituency": "Roysambu",
+    "normalizedCounty": "nairobi",
+    "normalizedConstituency": "roysambu",
+    "wardCount": 5,
+    "wards": [
+      "Zimmerman Ward",
+      "Roysambu Ward",
+      "Githurai Ward",
+      "Kahawa West",
+      "Kahawa"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Nairobi",
+    "constituency": "Ruaraka",
+    "normalizedCounty": "nairobi",
+    "normalizedConstituency": "ruaraka",
+    "wardCount": 5,
+    "wards": [
+      "Mathare North Ward",
+      "Lucky Summer Ward",
+      "Korogocho Ward",
+      "Babandogo",
+      "Utalii Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Nairobi",
+    "constituency": "Starehe",
+    "normalizedCounty": "nairobi",
+    "normalizedConstituency": "starehe",
+    "wardCount": 6,
+    "wards": [
+      "Landimawe Ward",
+      "Nairobi South Ward",
+      "Nairobi Central Ward",
+      "Ngara Ward Ward",
+      "Pangani Ward",
+      "Ziwani/kariokor"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Nairobi",
+    "constituency": "Westlands",
+    "normalizedCounty": "nairobi",
+    "normalizedConstituency": "westlands",
+    "wardCount": 5,
+    "wards": [
+      "Parklands/highridge Ward",
+      "Karura Ward",
+      "Kangemi Ward",
+      "Mountain View Ward",
+      "Kitisuru Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Nakuru",
+    "constituency": "Bahati",
+    "normalizedCounty": "nakuru",
+    "normalizedConstituency": "bahati",
+    "wardCount": 5,
+    "wards": [
+      "Dundori Ward",
+      "Kabatini Ward",
+      "Kiamaina Ward",
+      "Lanet/umoja Ward",
+      "Bahati Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Nakuru",
+    "constituency": "Gilgil",
+    "normalizedCounty": "nakuru",
+    "normalizedConstituency": "gilgil",
+    "wardCount": 5,
+    "wards": [
+      "Gilgil Ward",
+      "Elementaita Ward",
+      "Mbaruk/eburu Ward",
+      "Malewa West Ward",
+      "Murindat Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Nakuru",
+    "constituency": "Kuresoi North",
+    "normalizedCounty": "nakuru",
+    "normalizedConstituency": "kuresoi north",
+    "wardCount": 4,
+    "wards": [
+      "Kiptororo Ward",
+      "Nyota Ward",
+      "Sirikwa Ward",
+      "Kamara Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Nakuru",
+    "constituency": "Kuresoi South",
+    "normalizedCounty": "nakuru",
+    "normalizedConstituency": "kuresoi south",
+    "wardCount": 4,
+    "wards": [
+      "Amalo Ward",
+      "Keringet Ward",
+      "Kiptagich Ward",
+      "Tinet Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Nakuru",
+    "constituency": "Molo",
+    "normalizedCounty": "nakuru",
+    "normalizedConstituency": "molo",
+    "wardCount": 4,
+    "wards": [
+      "Elburgon Ward",
+      "Mariashoni Ward",
+      "Turi Ward",
+      "Molo Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Nakuru",
+    "constituency": "Naivasha",
+    "normalizedCounty": "nakuru",
+    "normalizedConstituency": "naivasha",
+    "wardCount": 8,
+    "wards": [
+      "Biashara Ward",
+      "Hells Gate Ward",
+      "Lake View Ward",
+      "Mai Mahiu Ward",
+      "Maeilla Ward",
+      "Olkaria Ward",
+      "Naivasha East Ward",
+      "Viwandani Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Nakuru",
+    "constituency": "Nakuru Town East",
+    "normalizedCounty": "nakuru",
+    "normalizedConstituency": "nakuru town east",
+    "wardCount": 5,
+    "wards": [
+      "Biashara Ward",
+      "Kivumbini Ward",
+      "Flamingo Ward",
+      "Menengai Ward",
+      "Nakuru East Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Nakuru",
+    "constituency": "Nakuru Town West",
+    "normalizedCounty": "nakuru",
+    "normalizedConstituency": "nakuru town west",
+    "wardCount": 6,
+    "wards": [
+      "Kaptembwo Ward",
+      "Kapkures Ward",
+      "Rhoda Ward",
+      "Shaabab Ward",
+      "Barut Ward",
+      "London Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Nakuru",
+    "constituency": "Njoro",
+    "normalizedCounty": "nakuru",
+    "normalizedConstituency": "njoro",
+    "wardCount": 6,
+    "wards": [
+      "Njoro Ward",
+      "Mau Narok Ward",
+      "Mauche Ward",
+      "Kihingo Ward",
+      "Nessuit Ward",
+      "Lare Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Nakuru",
+    "constituency": "Rongai",
+    "normalizedCounty": "nakuru",
+    "normalizedConstituency": "rongai",
+    "wardCount": 5,
+    "wards": [
+      "Menengai West Ward",
+      "Visoi Ward",
+      "Soin Ward",
+      "Mosop Ward",
+      "Solai Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Nakuru",
+    "constituency": "Subukia",
+    "normalizedCounty": "nakuru",
+    "normalizedConstituency": "subukia",
+    "wardCount": 3,
+    "wards": [
+      "Subukia Ward",
+      "Waseges Ward",
+      "Kabazi Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "NANDI",
+    "constituency": "Aldai",
+    "normalizedCounty": "nandi",
+    "normalizedConstituency": "aldai",
+    "wardCount": 6,
+    "wards": [
+      "Kemeloi-maraba Ward",
+      "Kobujoi Ward",
+      "Kaptumo/kaboi Ward",
+      "Koyo/ndurio Ward",
+      "Kabwareng Ward",
+      "Terik Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "NANDI",
+    "constituency": "Chesumei",
+    "normalizedCounty": "nandi",
+    "normalizedConstituency": "chesumei",
+    "wardCount": 5,
+    "wards": [
+      "Lelmoko/ngechek Ward",
+      "Chemundu/kapng'etunyi Ward",
+      "Kosirai Ward",
+      "Kaptel/kamoiywo Ward",
+      "Kiptuiya Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "NANDI",
+    "constituency": "Emgwen",
+    "normalizedCounty": "nandi",
+    "normalizedConstituency": "emgwen",
+    "wardCount": 4,
+    "wards": [
+      "Chepkumia Ward",
+      "Kapsabet Ward",
+      "Kilibwoni Ward",
+      "Kapkangani Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "NANDI",
+    "constituency": "Mosop",
+    "normalizedCounty": "nandi",
+    "normalizedConstituency": "mosop",
+    "wardCount": 7,
+    "wards": [
+      "Ndalat Ward",
+      "Sangalo/kebulonik Ward",
+      "Chepterwai Ward",
+      "Kipkaren Ward",
+      "Kurgung/surungai Ward",
+      "Kabiyet Ward",
+      "Kabisaga Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "NANDI",
+    "constituency": "Nandi Hills",
+    "normalizedCounty": "nandi",
+    "normalizedConstituency": "nandi hills",
+    "wardCount": 4,
+    "wards": [
+      "Nandi hills Ward",
+      "Chepkunyuk Ward",
+      "Ol'lessos Ward",
+      "Kapchorua Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "NANDI",
+    "constituency": "Tinderet",
+    "normalizedCounty": "nandi",
+    "normalizedConstituency": "tinderet",
+    "wardCount": 4,
+    "wards": [
+      "Songhor/Soba Ward",
+      "Tinderet Ward",
+      "Chemelil/chemase Ward",
+      "Kapsimotwo Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Narok",
+    "constituency": "Emurua Dikirr",
+    "normalizedCounty": "narok",
+    "normalizedConstituency": "emurua dikirr",
+    "wardCount": 3,
+    "wards": [
+      "Ololmasani Ward",
+      "Mogondo Ward",
+      "Kapsasian Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Narok",
+    "constituency": "Kilgoris",
+    "normalizedCounty": "narok",
+    "normalizedConstituency": "kilgoris",
+    "wardCount": 6,
+    "wards": [
+      "Kilgoris Central  Ward",
+      "Keyian Ward",
+      "Angata Barikoi Ward",
+      "Shankoe Ward",
+      "Kimintet Ward",
+      "Lolgorian Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Narok",
+    "constituency": "Narok East",
+    "normalizedCounty": "narok",
+    "normalizedConstituency": "narok east",
+    "wardCount": 4,
+    "wards": [
+      "Mosiro Ward",
+      "Ildamat Ward",
+      "Keekonyokie Ward",
+      "Suswa Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Narok",
+    "constituency": "Narok North",
+    "normalizedCounty": "narok",
+    "normalizedConstituency": "narok north",
+    "wardCount": 6,
+    "wards": [
+      "Olorropil Ward",
+      "Melili Ward",
+      "Olposimoru Ward",
+      "Olokurto Ward",
+      "Narok Town Ward",
+      "Nkareta Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Narok",
+    "constituency": "Narok South",
+    "normalizedCounty": "narok",
+    "normalizedConstituency": "narok south",
+    "wardCount": 6,
+    "wards": [
+      "Maji Moto/naroosura Ward",
+      "Ololulung'a Ward",
+      "Melelo Ward",
+      "Loita Ward",
+      "Sogoo Ward",
+      "Sagamian Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Narok",
+    "constituency": "Narok West",
+    "normalizedCounty": "narok",
+    "normalizedConstituency": "narok west",
+    "wardCount": 4,
+    "wards": [
+      "Ilmotiook Ward",
+      "Mara Ward",
+      "Siana Ward",
+      "Naikarra Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Narok",
+    "constituency": "Trans Mara East",
+    "normalizedCounty": "narok",
+    "normalizedConstituency": "trans mara east",
+    "wardCount": 1,
+    "wards": [
+      "Iikerin Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Nyamira",
+    "constituency": "Borabu",
+    "normalizedCounty": "nyamira",
+    "normalizedConstituency": "borabu",
+    "wardCount": 4,
+    "wards": [
+      "Mekenene Ward",
+      "Kiabonyoru Ward",
+      "Nyansiongo Ward",
+      "Esise Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Nyamira",
+    "constituency": "Kitutu Masaba",
+    "normalizedCounty": "nyamira",
+    "normalizedConstituency": "kitutu masaba",
+    "wardCount": 5,
+    "wards": [
+      "Rigoma Ward",
+      "Gachuba Ward",
+      "Magombo Ward",
+      "Manga Ward",
+      "Gesima Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Nyamira",
+    "constituency": "Kitutu Masaba North",
+    "normalizedCounty": "nyamira",
+    "normalizedConstituency": "kitutu masaba north",
+    "wardCount": 1,
+    "wards": [
+      "Kamera Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Nyamira",
+    "constituency": "North Mugirango",
+    "normalizedCounty": "nyamira",
+    "normalizedConstituency": "north mugirango",
+    "wardCount": 5,
+    "wards": [
+      "Itibo Ward",
+      "Bomwagamo Ward",
+      "Bokeira Ward",
+      "Magwagwa Ward",
+      "Ekerenyo Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Nyamira",
+    "constituency": "West Mugirango",
+    "normalizedCounty": "nyamira",
+    "normalizedConstituency": "west mugirango",
+    "wardCount": 5,
+    "wards": [
+      "Nyamaiya Ward",
+      "Bogichora Ward",
+      "Bosamaro Ward",
+      "Bonyamatuta Ward",
+      "Township Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "NYANDARUA",
+    "constituency": "Kinangop",
+    "normalizedCounty": "nyandarua",
+    "normalizedConstituency": "kinangop",
+    "wardCount": 8,
+    "wards": [
+      "Engineer Ward",
+      "Gathara Ward",
+      "North kinangop Ward",
+      "Murungaru Ward",
+      "Njabani/kiburu Ward",
+      "Nyakio Ward",
+      "Githabai Ward",
+      "Magumu Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "NYANDARUA",
+    "constituency": "Kipipiri",
+    "normalizedCounty": "nyandarua",
+    "normalizedConstituency": "kipipiri",
+    "wardCount": 4,
+    "wards": [
+      "Githioro Ward",
+      "Wanjohi Ward",
+      "Kipipiri Ward",
+      "Geta Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "NYANDARUA",
+    "constituency": "Ndaragwa",
+    "normalizedCounty": "nyandarua",
+    "normalizedConstituency": "ndaragwa",
+    "wardCount": 4,
+    "wards": [
+      "Leshau/pondo Ward",
+      "Kiritta Ward",
+      "Central Ward",
+      "Shamata Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "NYANDARUA",
+    "constituency": "Ol Jorok",
+    "normalizedCounty": "nyandarua",
+    "normalizedConstituency": "ol jorok",
+    "wardCount": 4,
+    "wards": [
+      "Charagita Ward",
+      "Gathanji Ward",
+      "Gatimu Ward",
+      "Weru Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "NYANDARUA",
+    "constituency": "Ol Kalou",
+    "normalizedCounty": "nyandarua",
+    "normalizedConstituency": "ol kalou",
+    "wardCount": 5,
+    "wards": [
+      "Kanjuiri range Ward",
+      "Rurii Ward",
+      "Karau Ward",
+      "Mirangine Ward",
+      "Kaimbaga Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "NYERI",
+    "constituency": "Kieni",
+    "normalizedCounty": "nyeri",
+    "normalizedConstituency": "kieni",
+    "wardCount": 8,
+    "wards": [
+      "Mweiga Ward",
+      "Naromoru/kiamathaga Ward",
+      "Mwiyogo/endarasha Ward",
+      "Mugunda Ward",
+      "Gatarakwa Ward",
+      "Thegu river Ward",
+      "Kabaru Ward",
+      "Gakawa Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "NYERI",
+    "constituency": "Mathira",
+    "normalizedCounty": "nyeri",
+    "normalizedConstituency": "mathira",
+    "wardCount": 6,
+    "wards": [
+      "Karatina town Ward",
+      "Iriaini Ward",
+      "Konyu Ward",
+      "Kirimukuyu Ward",
+      "Ruguru Ward",
+      "Magutu Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "NYERI",
+    "constituency": "Mukurweini",
+    "normalizedCounty": "nyeri",
+    "normalizedConstituency": "mukurweini",
+    "wardCount": 4,
+    "wards": [
+      "Gikondi Ward",
+      "Rugi Ward",
+      "Mukurwe-ini west Ward",
+      "Mukurwe-ini central Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "NYERI",
+    "constituency": "Nyeri Town",
+    "normalizedCounty": "nyeri",
+    "normalizedConstituency": "nyeri town",
+    "wardCount": 5,
+    "wards": [
+      "Kiganjo/mathari Ward",
+      "Rware Ward",
+      "Gatitu/muruguru Ward",
+      "RURING'U / Karia Ward",
+      "Kamakwa/mukaro Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "NYERI",
+    "constituency": "Othaya",
+    "normalizedCounty": "nyeri",
+    "normalizedConstituency": "othaya",
+    "wardCount": 4,
+    "wards": [
+      "Iria-ini Ward",
+      "Chinga Ward",
+      "Karima Ward",
+      "Mahiga Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "NYERI",
+    "constituency": "Tetu",
+    "normalizedCounty": "nyeri",
+    "normalizedConstituency": "tetu",
+    "wardCount": 3,
+    "wards": [
+      "Dedan kimathi Ward",
+      "Wamagana Ward",
+      "Aguthi-gaaki Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "SAMBURU",
+    "constituency": "Samburu East",
+    "normalizedCounty": "samburu",
+    "normalizedConstituency": "samburu east",
+    "wardCount": 6,
+    "wards": [
+      "Porro Ward",
+      "Angata nayokie Ward",
+      "Waso Ward",
+      "Wamba west Ward",
+      "Wamba east Ward",
+      "Wamba north Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "SAMBURU",
+    "constituency": "Samburu North",
+    "normalizedCounty": "samburu",
+    "normalizedConstituency": "samburu north",
+    "wardCount": 5,
+    "wards": [
+      "El-barta Ward",
+      "Nachola Ward",
+      "Ndoto Ward",
+      "Nyiro Ward",
+      "Baawa Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "SAMBURU",
+    "constituency": "Samburu West",
+    "normalizedCounty": "samburu",
+    "normalizedConstituency": "samburu west",
+    "wardCount": 4,
+    "wards": [
+      "Maralal Ward",
+      "Loosuk Ward",
+      "Suguta Marmar Ward",
+      "Lodokejek Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Siaya",
+    "constituency": "Alego Usonga",
+    "normalizedCounty": "siaya",
+    "normalizedConstituency": "alego usonga",
+    "wardCount": 6,
+    "wards": [
+      "Usonga Ward",
+      "West Alego Ward",
+      "Central Alego Ward",
+      "Siaya Township Ward",
+      "North Alego Ward",
+      "South East Alego Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Siaya",
+    "constituency": "Bondo",
+    "normalizedCounty": "siaya",
+    "normalizedConstituency": "bondo",
+    "wardCount": 6,
+    "wards": [
+      "West Yimbo Ward",
+      "Central Sakwa Ward",
+      "South Sakwa Ward",
+      "Yimbo East Ward",
+      "West Sakwa Ward",
+      "North Sakwa Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Siaya",
+    "constituency": "Gem",
+    "normalizedCounty": "siaya",
+    "normalizedConstituency": "gem",
+    "wardCount": 6,
+    "wards": [
+      "North Gem Ward",
+      "West Gem Ward",
+      "Central Gem Ward",
+      "Yala Township Ward",
+      "East Gem Ward",
+      "South Gem Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Siaya",
+    "constituency": "Rarieda",
+    "normalizedCounty": "siaya",
+    "normalizedConstituency": "rarieda",
+    "wardCount": 5,
+    "wards": [
+      "North Uyoma Ward",
+      "South Uyoma Ward",
+      "West Uyoma Ward",
+      "East Asembo Ward",
+      "West Asembo Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Siaya",
+    "constituency": "Ugenya",
+    "normalizedCounty": "siaya",
+    "normalizedConstituency": "ugenya",
+    "wardCount": 4,
+    "wards": [
+      "West Ugenya Ward",
+      "Ukwala Ward",
+      "North Ugenya Ward",
+      "East Ugenya Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Siaya",
+    "constituency": "Ugunja",
+    "normalizedCounty": "siaya",
+    "normalizedConstituency": "ugunja",
+    "wardCount": 3,
+    "wards": [
+      "Sidindi Ward",
+      "Sigomere Ward",
+      "Ugunja Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "TAITA TAVETA",
+    "constituency": "Mwatate",
+    "normalizedCounty": "taita taveta",
+    "normalizedConstituency": "mwatate",
+    "wardCount": 5,
+    "wards": [
+      "Bura Ward",
+      "Ronge Ward",
+      "Mwatate Ward",
+      "Wusi/kishamba Ward",
+      "Chawia Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "TAITA TAVETA",
+    "constituency": "Taveta",
+    "normalizedCounty": "taita taveta",
+    "normalizedConstituency": "taveta",
+    "wardCount": 5,
+    "wards": [
+      "Chala Ward",
+      "Mata Ward",
+      "Bomani Ward",
+      "Mboghoni Ward",
+      "Mahoo Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "TAITA TAVETA",
+    "constituency": "Voi",
+    "normalizedCounty": "taita taveta",
+    "normalizedConstituency": "voi",
+    "wardCount": 6,
+    "wards": [
+      "Kasigau Ward",
+      "Mbololo Ward",
+      "Sagala Ward",
+      "Marungu Ward",
+      "Ngolia Ward",
+      "Kaloleni  Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "TAITA TAVETA",
+    "constituency": "Wundanyi",
+    "normalizedCounty": "taita taveta",
+    "normalizedConstituency": "wundanyi",
+    "wardCount": 4,
+    "wards": [
+      "Wundanyi/mbale Ward",
+      "Wumingu/kishushe Ward",
+      "Mwanda/mgange Ward",
+      "Werugha Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "TANA RIVER",
+    "constituency": "Bura",
+    "normalizedCounty": "tana river",
+    "normalizedConstituency": "bura",
+    "wardCount": 5,
+    "wards": [
+      "Bangale Ward",
+      "Sala Ward",
+      "Hirimani Ward",
+      "Chewele Ward",
+      "Madogo Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "TANA RIVER",
+    "constituency": "Galole",
+    "normalizedCounty": "tana river",
+    "normalizedConstituency": "galole",
+    "wardCount": 4,
+    "wards": [
+      "Chewani Ward",
+      "Kinakomba Ward",
+      "Mikinduni Ward",
+      "Wayu Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "TANA RIVER",
+    "constituency": "Garsen",
+    "normalizedCounty": "tana river",
+    "normalizedConstituency": "garsen",
+    "wardCount": 6,
+    "wards": [
+      "Kipini east Ward",
+      "Garsen south Ward",
+      "Kipini west Ward",
+      "Garsen central Ward",
+      "Garsen west Ward",
+      "Garsen north Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "THARAKA-NITHI",
+    "constituency": "Chuka/Igambang'ombe",
+    "normalizedCounty": "tharaka nithi",
+    "normalizedConstituency": "chuka igambangombe",
+    "wardCount": 5,
+    "wards": [
+      "Igambang`ombe Ward",
+      "Mariani Ward",
+      "Karingani Ward",
+      "Magumoni Ward",
+      "Mugwe Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "THARAKA-NITHI",
+    "constituency": "Maara",
+    "normalizedCounty": "tharaka nithi",
+    "normalizedConstituency": "maara",
+    "wardCount": 5,
+    "wards": [
+      "Mitheru Ward",
+      "Muthambi Ward",
+      "Mwimbi Ward",
+      "Ganga Ward",
+      "Chogoria Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "THARAKA-NITHI",
+    "constituency": "Tharaka",
+    "normalizedCounty": "tharaka nithi",
+    "normalizedConstituency": "tharaka",
+    "wardCount": 5,
+    "wards": [
+      "Gatunga Ward",
+      "Mukothima Ward",
+      "Nkondi Ward",
+      "Chiakagira Ward",
+      "Marimanti Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "TRANS NZOIA",
+    "constituency": "Cherangany",
+    "normalizedCounty": "trans nzoia",
+    "normalizedConstituency": "cherangany",
+    "wardCount": 7,
+    "wards": [
+      "Makutano Ward",
+      "Kaplamai Ward",
+      "Motosiet Ward",
+      "Cherangany/suwerwa Ward",
+      "Chepsiro/kiptoror Ward",
+      "Sinyerere Ward",
+      "Sitatunga Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "TRANS NZOIA",
+    "constituency": "Endebess",
+    "normalizedCounty": "trans nzoia",
+    "normalizedConstituency": "endebess",
+    "wardCount": 3,
+    "wards": [
+      "Chepchoina Ward",
+      "Endebess Ward",
+      "Matumbei Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "TRANS NZOIA",
+    "constituency": "Kiminini",
+    "normalizedCounty": "trans nzoia",
+    "normalizedConstituency": "kiminini",
+    "wardCount": 6,
+    "wards": [
+      "Kiminini Ward",
+      "Waitaluk Ward",
+      "Sirende Ward",
+      "Nabiswa Ward",
+      "Hospital Ward",
+      "Sikhendu Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "TRANS NZOIA",
+    "constituency": "Kwanza",
+    "normalizedCounty": "trans nzoia",
+    "normalizedConstituency": "kwanza",
+    "wardCount": 4,
+    "wards": [
+      "Kapomboi Ward",
+      "Kwanza Ward",
+      "Keiyo Ward",
+      "Bidii Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "TRANS NZOIA",
+    "constituency": "Saboti",
+    "normalizedCounty": "trans nzoia",
+    "normalizedConstituency": "saboti",
+    "wardCount": 5,
+    "wards": [
+      "Kinyoro Ward",
+      "Matisi Ward",
+      "Tuwani Ward",
+      "Saboti Ward",
+      "Machewa Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "TURKANA",
+    "constituency": "Loima",
+    "normalizedCounty": "turkana",
+    "normalizedConstituency": "loima",
+    "wardCount": 4,
+    "wards": [
+      "Turkwel Ward",
+      "Lokiriama/Lorengippi Ward",
+      "Kotaruk/Lobei Ward",
+      "Loima Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "TURKANA",
+    "constituency": "Turkana Central",
+    "normalizedCounty": "turkana",
+    "normalizedConstituency": "turkana central",
+    "wardCount": 5,
+    "wards": [
+      "Kerio Delta Ward",
+      "KANG'ATOTHA Ward",
+      "Kalokol Ward",
+      "Lodwar Township Ward",
+      "Kanamkemer Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "TURKANA",
+    "constituency": "Turkana East",
+    "normalizedCounty": "turkana",
+    "normalizedConstituency": "turkana east",
+    "wardCount": 3,
+    "wards": [
+      "Kapedo/napeitom Ward",
+      "Katilia Ward",
+      "Lokori/kochodin Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "TURKANA",
+    "constituency": "Turkana North",
+    "normalizedCounty": "turkana",
+    "normalizedConstituency": "turkana north",
+    "wardCount": 6,
+    "wards": [
+      "Nakalale Ward",
+      "Kaeris Ward",
+      "Lakezone Ward",
+      "Lapur Ward",
+      "Kaaleng/kaikor Ward",
+      "Kibish Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "TURKANA",
+    "constituency": "Turkana South",
+    "normalizedCounty": "turkana",
+    "normalizedConstituency": "turkana south",
+    "wardCount": 5,
+    "wards": [
+      "Kaputir Ward",
+      "Lobokat Ward",
+      "Kalapata Ward",
+      "Lokichar Ward",
+      "Katilu Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "TURKANA",
+    "constituency": "Turkana West",
+    "normalizedCounty": "turkana",
+    "normalizedConstituency": "turkana west",
+    "wardCount": 7,
+    "wards": [
+      "Lopur Ward",
+      "Letea Ward",
+      "Songot Ward",
+      "Lokichoggio Ward",
+      "Kakuma Ward",
+      "Kalobeyei Ward",
+      "Nanaam Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Uasin Gishu",
+    "constituency": "Ainabkoi",
+    "normalizedCounty": "uasin gishu",
+    "normalizedConstituency": "ainabkoi",
+    "wardCount": 3,
+    "wards": [
+      "Kapsoya Ward",
+      "Kaptagat Ward",
+      "Ainabkoi/olare Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Uasin Gishu",
+    "constituency": "Kapseret",
+    "normalizedCounty": "uasin gishu",
+    "normalizedConstituency": "kapseret",
+    "wardCount": 5,
+    "wards": [
+      "Simat/ Kapseret Ward",
+      "Kipkenyo Ward",
+      "Megun Ward",
+      "Ngeria Ward",
+      "Langas Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Uasin Gishu",
+    "constituency": "Kesses",
+    "normalizedCounty": "uasin gishu",
+    "normalizedConstituency": "kesses",
+    "wardCount": 4,
+    "wards": [
+      "Racecourse Ward",
+      "Cheptiret/kipchamo Ward",
+      "Tulwet/chiyat Ward",
+      "Tarakwa Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Uasin Gishu",
+    "constituency": "Moiben",
+    "normalizedCounty": "uasin gishu",
+    "normalizedConstituency": "moiben",
+    "wardCount": 5,
+    "wards": [
+      "Tembelio Ward",
+      "Sergoit Ward",
+      "Karuna/meibeki Ward",
+      "Moiben Ward",
+      "Kimumu Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Uasin Gishu",
+    "constituency": "Soy",
+    "normalizedCounty": "uasin gishu",
+    "normalizedConstituency": "soy",
+    "wardCount": 7,
+    "wards": [
+      "Moi's Bridge Ward",
+      "Kapkures Ward",
+      "Ziwa Ward",
+      "Soy Ward",
+      "Kuinet/kapsuswa Ward",
+      "Segeroi/barsombe Ward",
+      "Kipsomba Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Uasin Gishu",
+    "constituency": "Turbo",
+    "normalizedCounty": "uasin gishu",
+    "normalizedConstituency": "turbo",
+    "wardCount": 6,
+    "wards": [
+      "Ngenyilel Ward",
+      "Tapsagoi Ward",
+      "Kamagut Ward",
+      "Kiplombe Ward",
+      "Kapsaos Ward",
+      "Huruma Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Vihiga",
+    "constituency": "Emuhaya",
+    "normalizedCounty": "vihiga",
+    "normalizedConstituency": "emuhaya",
+    "wardCount": 3,
+    "wards": [
+      "North East Bunyore Ward",
+      "Central Bunyore Ward",
+      "West Bunyore Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Vihiga",
+    "constituency": "Hamisi",
+    "normalizedCounty": "vihiga",
+    "normalizedConstituency": "hamisi",
+    "wardCount": 7,
+    "wards": [
+      "Shiru Ward",
+      "Gisambai Ward",
+      "Muhudu Ward",
+      "Tambua Ward",
+      "Jepkoyai Ward",
+      "Banja Ward",
+      "Shamakhokho Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Vihiga",
+    "constituency": "Luanda",
+    "normalizedCounty": "vihiga",
+    "normalizedConstituency": "luanda",
+    "wardCount": 5,
+    "wards": [
+      "Luanda South Ward",
+      "Luanda Township Ward",
+      "Wemilabi Ward",
+      "Mwibona Ward",
+      "Emabungo Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Vihiga",
+    "constituency": "Sabatia",
+    "normalizedCounty": "vihiga",
+    "normalizedConstituency": "sabatia",
+    "wardCount": 6,
+    "wards": [
+      "Chavakali Ward",
+      "Busali Ward",
+      "Lyaduywa/izava Ward",
+      "West Sabatia Ward",
+      "North Maragoli Ward",
+      "Wodanga Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "Vihiga",
+    "constituency": "Vihiga",
+    "normalizedCounty": "vihiga",
+    "normalizedConstituency": "vihiga",
+    "wardCount": 4,
+    "wards": [
+      "South Maragoli Ward",
+      "Lugaga-wamuluma Ward",
+      "Central Maragoli Ward",
+      "Mungoma Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "WAJIR",
+    "constituency": "Eldas",
+    "normalizedCounty": "wajir",
+    "normalizedConstituency": "eldas",
+    "wardCount": 4,
+    "wards": [
+      "Elnur/tula tula Ward",
+      "Eldas Ward",
+      "Della Ward",
+      "Lakoley south/basir Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "WAJIR",
+    "constituency": "Tarbaj",
+    "normalizedCounty": "wajir",
+    "normalizedConstituency": "tarbaj",
+    "wardCount": 4,
+    "wards": [
+      "Elben Ward",
+      "Sarman Ward",
+      "Tarbaj Ward",
+      "Wargadud Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "WAJIR",
+    "constituency": "Wajir East",
+    "normalizedCounty": "wajir",
+    "normalizedConstituency": "wajir east",
+    "wardCount": 4,
+    "wards": [
+      "Khorof/Harar Ward",
+      "Wagberi Ward",
+      "Township Ward",
+      "Barwaqo Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "WAJIR",
+    "constituency": "Wajir North",
+    "normalizedCounty": "wajir",
+    "normalizedConstituency": "wajir north",
+    "wardCount": 7,
+    "wards": [
+      "Malkagufu Ward",
+      "Batalu Ward",
+      "Godoma Ward",
+      "Bute Ward",
+      "Korondile Ward",
+      "Gurar Ward",
+      "Danaba Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "WAJIR",
+    "constituency": "Wajir South",
+    "normalizedCounty": "wajir",
+    "normalizedConstituency": "wajir south",
+    "wardCount": 7,
+    "wards": [
+      "Benane Ward",
+      "Burder Ward",
+      "Ibrahim ure Ward",
+      "Dadaja bulla Ward",
+      "Habasswein Ward",
+      "Lagboghoi south Ward",
+      "Diif Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "WAJIR",
+    "constituency": "Wajir West",
+    "normalizedCounty": "wajir",
+    "normalizedConstituency": "wajir west",
+    "wardCount": 4,
+    "wards": [
+      "Hadado Athibohol Ward",
+      "Arbajahan Ward",
+      "ADEMASAJIDE Ward",
+      "Ganyure Wagalla Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "WEST POKOT",
+    "constituency": "Kacheliba",
+    "normalizedCounty": "west pokot",
+    "normalizedConstituency": "kacheliba",
+    "wardCount": 5,
+    "wards": [
+      "Suam Ward",
+      "Kodich Ward",
+      "Kasei Ward",
+      "Kiwawa Ward",
+      "Alale Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "WEST POKOT",
+    "constituency": "Kapenguria",
+    "normalizedCounty": "west pokot",
+    "normalizedConstituency": "kapenguria",
+    "wardCount": 6,
+    "wards": [
+      "Riwo Ward",
+      "Kapenguria Ward",
+      "Mnagei Ward",
+      "Siyoi Ward",
+      "Endugh Ward",
+      "Sook Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "WEST POKOT",
+    "constituency": "Pokot Central",
+    "normalizedCounty": "west pokot",
+    "normalizedConstituency": "pokot central",
+    "wardCount": 1,
+    "wards": [
+      "Wei wei Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "WEST POKOT",
+    "constituency": "Pokot North",
+    "normalizedCounty": "west pokot",
+    "normalizedConstituency": "pokot north",
+    "wardCount": 1,
+    "wards": [
+      "Kapchok Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "WEST POKOT",
+    "constituency": "Pokot South",
+    "normalizedCounty": "west pokot",
+    "normalizedConstituency": "pokot south",
+    "wardCount": 4,
+    "wards": [
+      "Chepareria Ward",
+      "Batei Ward",
+      "Lelan Ward",
+      "Tapach Ward"
+    ],
+    "status": "READY"
+  },
+  {
+    "county": "WEST POKOT",
+    "constituency": "Sigor",
+    "normalizedCounty": "west pokot",
+    "normalizedConstituency": "sigor",
+    "wardCount": 3,
+    "wards": [
+      "Sekerr Ward",
+      "Masool Ward",
+      "Lomut Ward"
+    ],
+    "status": "READY"
+  }
+]

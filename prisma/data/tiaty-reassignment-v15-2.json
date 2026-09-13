@@ -1,0 +1,26 @@
+{
+  "generatedAt": "2026-09-11T08:38:28.432Z",
+  "mode": "CONTROLLED_TIATY_WARD_REASSIGNMENT",
+  "status": "PASS",
+  "sourceSubCountyId": 463,
+  "sourceSubCountyName": "Tiaty West Sub County",
+  "targetSubCountyId": 757,
+  "targetSubCountyName": "Tiaty East",
+  "countyId": 90,
+  "affectedSourceGids": [
+    781,
+    782,
+    783,
+    784,
+    785,
+    786,
+    787
+  ],
+  "affectedWardCount": 7,
+  "sourceWardCountAfter": 0,
+  "targetWardCountAfter": 7,
+  "totalWardCountAfter": 1450,
+  "uniqueSourceGidsAfter": 1450,
+  "immutableFieldsPreserved": true,
+  "transactionVerified": true
+}

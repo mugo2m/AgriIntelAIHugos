@@ -7,8 +7,7 @@ model Supplier {
 
   businessPartnerId Int @unique
 
-  businessPartner BusinessPartner
-    @relation(fields: [businessPartnerId], references: [id])
+  businessPartner BusinessPartner @relation(fields: [businessPartnerId], references: [id])
 
   name String
 
@@ -35,8 +34,7 @@ model Customer {
 
   businessPartnerId Int @unique
 
-  businessPartner BusinessPartner
-    @relation(fields: [businessPartnerId], references: [id])
+  businessPartner BusinessPartner @relation(fields: [businessPartnerId], references: [id])
 
   customerType CustomerType
 
@@ -261,27 +259,39 @@ model InsuranceClaim {
 }
 
 model Buyer {
-
   id Int @id @default(autoincrement())
 
   buyerName String
-
   buyerType BuyerType
 
-  county String?
-
+  county  String?
   country String?
 
   phone String?
-
   email String?
 
+  countryId Int?
+  countryRef Country? @relation("CountryBuyers", fields: [countryId], references: [id])
+
+  countyId Int?
+  countyRef County? @relation("CountyBuyers", fields: [countyId], references: [id])
+
+  farmId Int?
+  farm Farm? @relation("FarmBuyers", fields: [farmId], references: [id])
+
+  businessPartnerId Int?
+  businessPartner BusinessPartner? @relation(fields: [businessPartnerId], references: [id])
+
   transactions CommodityTransaction[]
+  incomes Income[]
 
   createdAt DateTime @default(now())
-
   updatedAt DateTime @updatedAt
 
+  @@index([countryId])
+  @@index([countyId])
+  @@index([farmId])
+  @@index([businessPartnerId])
 }
 
 model BusinessPartner {

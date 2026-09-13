@@ -1,0 +1,5643 @@
+{
+  "auditType": "AUTHORITATIVE_ORPHAN_SUBCOUNTY_VALIDATION",
+  "readOnly": true,
+  "database": "agriintel_ai_hugos",
+  "generatedAt": "2026-09-09T13:49:41.254Z",
+  "totalSubCounties": 404,
+  "orphanCandidates": 102,
+  "safeDeleteCandidates": 101,
+  "possibleDuplicateMerges": 1,
+  "reviewRequired": 0,
+  "keep": 0,
+  "formalForeignKeys": [
+    {
+      "constraintName": "BusinessPartner_subCountyId_fkey",
+      "tableName": "BusinessPartner",
+      "columnName": "subCountyId",
+      "referencedTable": "SubCounty",
+      "referencedColumn": "id",
+      "deleteAction": "SET NULL"
+    },
+    {
+      "constraintName": "CommodityTransaction_destinationSubCountyId_fkey",
+      "tableName": "CommodityTransaction",
+      "columnName": "destinationSubCountyId",
+      "referencedTable": "SubCounty",
+      "referencedColumn": "id",
+      "deleteAction": "SET NULL"
+    },
+    {
+      "constraintName": "CommodityTransaction_sourceSubCountyId_fkey",
+      "tableName": "CommodityTransaction",
+      "columnName": "sourceSubCountyId",
+      "referencedTable": "SubCounty",
+      "referencedColumn": "id",
+      "deleteAction": "SET NULL"
+    },
+    {
+      "constraintName": "Farm_subCountyId_fkey",
+      "tableName": "Farm",
+      "columnName": "subCountyId",
+      "referencedTable": "SubCounty",
+      "referencedColumn": "id",
+      "deleteAction": "SET NULL"
+    },
+    {
+      "constraintName": "Farmer_subCountyId_fkey",
+      "tableName": "Farmer",
+      "columnName": "subCountyId",
+      "referencedTable": "SubCounty",
+      "referencedColumn": "id",
+      "deleteAction": "RESTRICT"
+    },
+    {
+      "constraintName": "Ward_subCountyId_fkey",
+      "tableName": "Ward",
+      "columnName": "subCountyId",
+      "referencedTable": "SubCounty",
+      "referencedColumn": "id",
+      "deleteAction": "SET NULL"
+    }
+  ],
+  "normalizedDuplicateGroups": [
+    {
+      "key": "68:mwingicentral",
+      "records": [
+        {
+          "id": 345,
+          "name": "Mwingi Central Sub- County",
+          "countyId": 68,
+          "countyName": "Kitui"
+        },
+        {
+          "id": 1016,
+          "name": "Mwingi Central",
+          "countyId": 68,
+          "countyName": "Kitui"
+        }
+      ]
+    }
+  ],
+  "results": [
+    {
+      "id": 566,
+      "name": "Samburu",
+      "countyId": 84,
+      "countyName": "Kwale",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 567,
+      "name": "Chonyi",
+      "countyId": 73,
+      "countyName": "Kilifi",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 570,
+      "name": "Kauma",
+      "countyId": 73,
+      "countyName": "Kilifi",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 576,
+      "name": "Tana Delta",
+      "countyId": 57,
+      "countyName": "Tana River",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 577,
+      "name": "Tana North",
+      "countyId": 57,
+      "countyName": "Tana River",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 578,
+      "name": "Tana River",
+      "countyId": 57,
+      "countyName": "Tana River",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 582,
+      "name": "Taita",
+      "countyId": 59,
+      "countyName": "Taita Taveta",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 592,
+      "name": "Buna",
+      "countyId": 61,
+      "countyName": "Wajir",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 594,
+      "name": "Habaswein",
+      "countyId": 61,
+      "countyName": "Wajir",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 602,
+      "name": "Kotulo",
+      "countyId": 63,
+      "countyName": "Mandera",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 604,
+      "name": "Mandera Central",
+      "countyId": 63,
+      "countyName": "Mandera",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 607,
+      "name": "Loiyangalani",
+      "countyId": 64,
+      "countyName": "Marsabit",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 608,
+      "name": "Marsabit Central",
+      "countyId": 64,
+      "countyName": "Marsabit",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 609,
+      "name": "Marsabit North",
+      "countyId": 64,
+      "countyName": "Marsabit",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 610,
+      "name": "Marsabit South",
+      "countyId": 64,
+      "countyName": "Marsabit",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 613,
+      "name": "Sololo",
+      "countyId": 64,
+      "countyName": "Marsabit",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 617,
+      "name": "Buuri East",
+      "countyId": 65,
+      "countyName": "Meru",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 618,
+      "name": "Buuri West",
+      "countyId": 65,
+      "countyName": "Meru",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 624,
+      "name": "Meru Central",
+      "countyId": 65,
+      "countyName": "Meru",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 625,
+      "name": "Tigania Central",
+      "countyId": 65,
+      "countyName": "Meru",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 629,
+      "name": "Maara",
+      "countyId": 66,
+      "countyName": "Tharaka Nithi",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 630,
+      "name": "Meru South",
+      "countyId": 66,
+      "countyName": "Tharaka Nithi",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 633,
+      "name": "Embu East",
+      "countyId": 89,
+      "countyName": "Embu",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 634,
+      "name": "Embu North",
+      "countyId": 89,
+      "countyName": "Embu",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 635,
+      "name": "Embu West",
+      "countyId": 89,
+      "countyName": "Embu",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 638,
+      "name": "Ikutha",
+      "countyId": 68,
+      "countyName": "Kitui",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 639,
+      "name": "Katulani",
+      "countyId": 68,
+      "countyName": "Kitui",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 640,
+      "name": "Kisasi",
+      "countyId": 68,
+      "countyName": "Kitui",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 643,
+      "name": "Kyuso",
+      "countyId": 68,
+      "countyName": "Kitui",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 644,
+      "name": "Lower Yatta",
+      "countyId": 68,
+      "countyName": "Kitui",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 645,
+      "name": "Matinyani",
+      "countyId": 68,
+      "countyName": "Kitui",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 646,
+      "name": "Migwani",
+      "countyId": 68,
+      "countyName": "Kitui",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 647,
+      "name": "Mumoni",
+      "countyId": 68,
+      "countyName": "Kitui",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 648,
+      "name": "Mutitu",
+      "countyId": 68,
+      "countyName": "Kitui",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 649,
+      "name": "Mutitu North",
+      "countyId": 68,
+      "countyName": "Kitui",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 650,
+      "name": "Mutomo",
+      "countyId": 68,
+      "countyName": "Kitui",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 652,
+      "name": "Mwingi East",
+      "countyId": 68,
+      "countyName": "Kitui",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 653,
+      "name": "Nzambani",
+      "countyId": 68,
+      "countyName": "Kitui",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 654,
+      "name": "Thagicu",
+      "countyId": 68,
+      "countyName": "Kitui",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 655,
+      "name": "Tseikuru",
+      "countyId": 68,
+      "countyName": "Kitui",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 657,
+      "name": "Kalama",
+      "countyId": 50,
+      "countyName": "Machakos",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 675,
+      "name": "Nyandarua South",
+      "countyId": 67,
+      "countyName": "Nyandarua",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 676,
+      "name": "Mirangine",
+      "countyId": 67,
+      "countyName": "Nyandarua",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 678,
+      "name": "Nyandarua Central",
+      "countyId": 67,
+      "countyName": "Nyandarua",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 679,
+      "name": "Nyandarua West",
+      "countyId": 67,
+      "countyName": "Nyandarua",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 680,
+      "name": "Nyandarua North",
+      "countyId": 67,
+      "countyName": "Nyandarua",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 692,
+      "name": "Mwea East",
+      "countyId": 75,
+      "countyName": "Kirinyaga",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 693,
+      "name": "Mwea West",
+      "countyId": 75,
+      "countyName": "Kirinyaga",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 694,
+      "name": "Murang'a East",
+      "countyId": 76,
+      "countyName": "Murang'a",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 697,
+      "name": "Kahuro",
+      "countyId": 76,
+      "countyName": "Murang'a",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 708,
+      "name": "Kiambu",
+      "countyId": 82,
+      "countyName": "Kiambu",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 713,
+      "name": "Thika East",
+      "countyId": 82,
+      "countyName": "Kiambu",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 714,
+      "name": "Thika West",
+      "countyId": 82,
+      "countyName": "Kiambu",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 722,
+      "name": "Kipkomo",
+      "countyId": 71,
+      "countyName": "West Pokot",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 730,
+      "name": "Trans Nzoia West",
+      "countyId": 81,
+      "countyName": "Trans Nzoia",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 731,
+      "name": "Trans Nzoia East",
+      "countyId": 81,
+      "countyName": "Trans Nzoia",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 746,
+      "name": "Nandi Central",
+      "countyId": 88,
+      "countyName": "Nandi",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 748,
+      "name": "Nandi North",
+      "countyId": 88,
+      "countyName": "Nandi",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 749,
+      "name": "Nandi South",
+      "countyId": 88,
+      "countyName": "Nandi",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 759,
+      "name": "Laikipia Central",
+      "countyId": 91,
+      "countyName": "Laikipia",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 763,
+      "name": "Nyahururu",
+      "countyId": 91,
+      "countyName": "Laikipia",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 781,
+      "name": "Isinya",
+      "countyId": 92,
+      "countyName": "Kajiado",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 786,
+      "name": "Mashuuru",
+      "countyId": 92,
+      "countyName": "Kajiado",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 789,
+      "name": "Kericho East",
+      "countyId": 56,
+      "countyName": "Kericho",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 790,
+      "name": "Kipkelion",
+      "countyId": 56,
+      "countyName": "Kericho",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 791,
+      "name": "Londiani",
+      "countyId": 56,
+      "countyName": "Kericho",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 799,
+      "name": "Kakamega Central",
+      "countyId": 54,
+      "countyName": "Kakamega",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 800,
+      "name": "Kakamega East",
+      "countyId": 54,
+      "countyName": "Kakamega",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 801,
+      "name": "Kakamega North",
+      "countyId": 54,
+      "countyName": "Kakamega",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 802,
+      "name": "Kakamega South",
+      "countyId": 54,
+      "countyName": "Kakamega",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 806,
+      "name": "Matete",
+      "countyId": 54,
+      "countyName": "Kakamega",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 817,
+      "name": "Bungoma Central",
+      "countyId": 53,
+      "countyName": "Bungoma",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 818,
+      "name": "Bungoma East",
+      "countyId": 53,
+      "countyName": "Bungoma",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 819,
+      "name": "Bungoma North",
+      "countyId": 53,
+      "countyName": "Bungoma",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 820,
+      "name": "Bungoma South",
+      "countyId": 53,
+      "countyName": "Bungoma",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 823,
+      "name": "Bungoma West",
+      "countyId": 53,
+      "countyName": "Bungoma",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 828,
+      "name": "Busia",
+      "countyId": 62,
+      "countyName": "Busia",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 834,
+      "name": "Siaya",
+      "countyId": 83,
+      "countyName": "Siaya",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 845,
+      "name": "Homa Bay",
+      "countyId": 51,
+      "countyName": "Homa Bay",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 847,
+      "name": "Rachuonyo North",
+      "countyId": 51,
+      "countyName": "Homa Bay",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 848,
+      "name": "Rachuonyo East",
+      "countyId": 51,
+      "countyName": "Homa Bay",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 849,
+      "name": "Rachuonyo South",
+      "countyId": 51,
+      "countyName": "Homa Bay",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 851,
+      "name": "Suba North",
+      "countyId": 51,
+      "countyName": "Homa Bay",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 852,
+      "name": "Suba South",
+      "countyId": 51,
+      "countyName": "Homa Bay",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 861,
+      "name": "Etago",
+      "countyId": 87,
+      "countyName": "Kisii",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 862,
+      "name": "Gucha",
+      "countyId": 87,
+      "countyName": "Kisii",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 863,
+      "name": "Gucha South",
+      "countyId": 87,
+      "countyName": "Kisii",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 864,
+      "name": "Kenyenya",
+      "countyId": 87,
+      "countyName": "Kisii",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 865,
+      "name": "Kisii Central",
+      "countyId": 87,
+      "countyName": "Kisii",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 866,
+      "name": "Kisii South",
+      "countyId": 87,
+      "countyName": "Kisii",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 867,
+      "name": "Kitutu Central",
+      "countyId": 87,
+      "countyName": "Kisii",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 868,
+      "name": "Marani",
+      "countyId": 87,
+      "countyName": "Kisii",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 869,
+      "name": "Masaba South",
+      "countyId": 87,
+      "countyName": "Kisii",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 870,
+      "name": "Nyamache",
+      "countyId": 87,
+      "countyName": "Kisii",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 871,
+      "name": "Sameta",
+      "countyId": 87,
+      "countyName": "Kisii",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 876,
+      "name": "Nyamira South",
+      "countyId": 94,
+      "countyName": "Nyamira",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 877,
+      "name": "Dagoretti",
+      "countyId": 79,
+      "countyName": "Nairobi City",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 878,
+      "name": "Embakasi",
+      "countyId": 79,
+      "countyName": "Nairobi City",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 885,
+      "name": "Njiru",
+      "countyId": 79,
+      "countyName": "Nairobi City",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 966,
+      "name": "Banisa",
+      "countyId": 63,
+      "countyName": "Mandera",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    },
+    {
+      "id": 1016,
+      "name": "Mwingi Central",
+      "countyId": 68,
+      "countyName": "Kitui",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [
+        345
+      ],
+      "normalizedDuplicateNames": [
+        "Mwingi Central Sub- County"
+      ],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": true,
+      "classification": "POSSIBLE_DUPLICATE_MERGE",
+      "reasons": [
+        "Normalized duplicate exists in same county: 345"
+      ]
+    },
+    {
+      "id": 1157,
+      "name": "Soin Sigowet",
+      "countyId": 56,
+      "countyName": "Kericho",
+      "wardCount": 0,
+      "farmerCount": 0,
+      "farmCount": 0,
+      "businessPartnerCount": 0,
+      "commoditySourceCount": 0,
+      "commodityDestinationCount": 0,
+      "formalForeignKeyReferences": [
+        {
+          "tableName": "BusinessPartner",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "destinationSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "CommodityTransaction",
+          "columnName": "sourceSubCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farm",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Farmer",
+          "columnName": "subCountyId",
+          "count": 0
+        },
+        {
+          "tableName": "Ward",
+          "columnName": "subCountyId",
+          "count": 0
+        }
+      ],
+      "normalizedDuplicateIds": [],
+      "normalizedDuplicateNames": [],
+      "countyValid": true,
+      "hasAnyDependency": false,
+      "hasFormalForeignKeyReference": false,
+      "hasNormalizedDuplicate": false,
+      "classification": "SAFE_DELETE_CANDIDATE",
+      "reasons": [
+        "No Ward, Farmer, Farm, BusinessPartner, CommodityTransaction or formal FK references found."
+      ]
+    }
+  ],
+  "globalWardIntegrity": {
+    "totalWards": 1450,
+    "invalidOrNullSubCountyReferences": 0,
+    "wardCountyMismatches": 0
+  },
+  "kibwezi666": {
+    "exists": false
+  },
+  "makueni": {
+    "subCounties": [
+      {
+        "id": 358,
+        "name": "Mbooni  Sub County",
+        "wardCount": 6
+      },
+      {
+        "id": 359,
+        "name": "Kilome Sub County",
+        "wardCount": 3
+      },
+      {
+        "id": 360,
+        "name": "Kaiti  Sub County",
+        "wardCount": 4
+      },
+      {
+        "id": 361,
+        "name": "Makueni  Sub County",
+        "wardCount": 7
+      },
+      {
+        "id": 362,
+        "name": "Kibwezi West  Sub County",
+        "wardCount": 6
+      },
+      {
+        "id": 401,
+        "name": "Kibwezi East  Sub County",
+        "wardCount": 4
+      }
+    ]
+  },
+  "databaseChanges": {
+    "insert": 0,
+    "update": 0,
+    "delete": 0,
+    "schemaChanges": 0
+  }
+}

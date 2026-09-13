@@ -1,0 +1,1982 @@
+[
+  {
+    "code": "0101",
+    "countyCode": "001",
+    "name": "Changamwe",
+    "headquarters": null
+  },
+  {
+    "code": "0102",
+    "countyCode": "001",
+    "name": "Jomvu",
+    "headquarters": null
+  },
+  {
+    "code": "0103",
+    "countyCode": "001",
+    "name": "Kisauni",
+    "headquarters": null
+  },
+  {
+    "code": "0104",
+    "countyCode": "001",
+    "name": "Likoni",
+    "headquarters": null
+  },
+  {
+    "code": "0105",
+    "countyCode": "001",
+    "name": "Mvita",
+    "headquarters": null
+  },
+  {
+    "code": "0106",
+    "countyCode": "001",
+    "name": "Nyali",
+    "headquarters": null
+  },
+  {
+    "code": "0201",
+    "countyCode": "002",
+    "name": "Kinango",
+    "headquarters": null
+  },
+  {
+    "code": "0202",
+    "countyCode": "002",
+    "name": "Lunga Lunga",
+    "headquarters": null
+  },
+  {
+    "code": "0203",
+    "countyCode": "002",
+    "name": "Matuga",
+    "headquarters": null
+  },
+  {
+    "code": "0204",
+    "countyCode": "002",
+    "name": "Msambweni",
+    "headquarters": null
+  },
+  {
+    "code": "0205",
+    "countyCode": "002",
+    "name": "Samburu",
+    "headquarters": null
+  },
+  {
+    "code": "0301",
+    "countyCode": "003",
+    "name": "Chonyi",
+    "headquarters": null
+  },
+  {
+    "code": "0302",
+    "countyCode": "003",
+    "name": "Ganze",
+    "headquarters": null
+  },
+  {
+    "code": "0303",
+    "countyCode": "003",
+    "name": "Kaloleni",
+    "headquarters": null
+  },
+  {
+    "code": "0304",
+    "countyCode": "003",
+    "name": "Kauma",
+    "headquarters": null
+  },
+  {
+    "code": "0305",
+    "countyCode": "003",
+    "name": "Kilifi North",
+    "headquarters": null
+  },
+  {
+    "code": "0306",
+    "countyCode": "003",
+    "name": "Kilifi South",
+    "headquarters": null
+  },
+  {
+    "code": "0307",
+    "countyCode": "003",
+    "name": "Magarini",
+    "headquarters": null
+  },
+  {
+    "code": "0308",
+    "countyCode": "003",
+    "name": "Malindi",
+    "headquarters": null
+  },
+  {
+    "code": "0309",
+    "countyCode": "003",
+    "name": "Rabai",
+    "headquarters": null
+  },
+  {
+    "code": "0401",
+    "countyCode": "004",
+    "name": "Tana Delta",
+    "headquarters": null
+  },
+  {
+    "code": "0402",
+    "countyCode": "004",
+    "name": "Tana North",
+    "headquarters": null
+  },
+  {
+    "code": "0403",
+    "countyCode": "004",
+    "name": "Tana River",
+    "headquarters": null
+  },
+  {
+    "code": "0501",
+    "countyCode": "005",
+    "name": "Lamu East",
+    "headquarters": null
+  },
+  {
+    "code": "0502",
+    "countyCode": "005",
+    "name": "Lamu West",
+    "headquarters": null
+  },
+  {
+    "code": "0601",
+    "countyCode": "006",
+    "name": "Mwatate",
+    "headquarters": null
+  },
+  {
+    "code": "0602",
+    "countyCode": "006",
+    "name": "Taita",
+    "headquarters": null
+  },
+  {
+    "code": "0603",
+    "countyCode": "006",
+    "name": "Taveta",
+    "headquarters": null
+  },
+  {
+    "code": "0604",
+    "countyCode": "006",
+    "name": "Voi",
+    "headquarters": null
+  },
+  {
+    "code": "0701",
+    "countyCode": "007",
+    "name": "Balambala",
+    "headquarters": null
+  },
+  {
+    "code": "0702",
+    "countyCode": "007",
+    "name": "Dadaab",
+    "headquarters": null
+  },
+  {
+    "code": "0703",
+    "countyCode": "007",
+    "name": "Fafi",
+    "headquarters": null
+  },
+  {
+    "code": "0704",
+    "countyCode": "007",
+    "name": "Garissa",
+    "headquarters": null
+  },
+  {
+    "code": "0705",
+    "countyCode": "007",
+    "name": "Hulugho",
+    "headquarters": null
+  },
+  {
+    "code": "0706",
+    "countyCode": "007",
+    "name": "Ijara",
+    "headquarters": null
+  },
+  {
+    "code": "0707",
+    "countyCode": "007",
+    "name": "Lagdera",
+    "headquarters": null
+  },
+  {
+    "code": "0801",
+    "countyCode": "008",
+    "name": "Buna",
+    "headquarters": null
+  },
+  {
+    "code": "0802",
+    "countyCode": "008",
+    "name": "Eldas",
+    "headquarters": null
+  },
+  {
+    "code": "0803",
+    "countyCode": "008",
+    "name": "Habaswein",
+    "headquarters": null
+  },
+  {
+    "code": "0804",
+    "countyCode": "008",
+    "name": "Tarbaj",
+    "headquarters": null
+  },
+  {
+    "code": "0805",
+    "countyCode": "008",
+    "name": "Wajir East",
+    "headquarters": null
+  },
+  {
+    "code": "0806",
+    "countyCode": "008",
+    "name": "Wajir North",
+    "headquarters": null
+  },
+  {
+    "code": "0807",
+    "countyCode": "008",
+    "name": "Wajir South",
+    "headquarters": null
+  },
+  {
+    "code": "0808",
+    "countyCode": "008",
+    "name": "Wajir West",
+    "headquarters": null
+  },
+  {
+    "code": "0901",
+    "countyCode": "009",
+    "name": "Mandera West",
+    "headquarters": null
+  },
+  {
+    "code": "0902",
+    "countyCode": "009",
+    "name": "Banisa",
+    "headquarters": null
+  },
+  {
+    "code": "0903",
+    "countyCode": "009",
+    "name": "Kotulo",
+    "headquarters": null
+  },
+  {
+    "code": "0904",
+    "countyCode": "009",
+    "name": "Lafey",
+    "headquarters": null
+  },
+  {
+    "code": "0905",
+    "countyCode": "009",
+    "name": "Mandera Central",
+    "headquarters": null
+  },
+  {
+    "code": "0906",
+    "countyCode": "009",
+    "name": "Mandera East",
+    "headquarters": null
+  },
+  {
+    "code": "0907",
+    "countyCode": "009",
+    "name": "Mandera North",
+    "headquarters": null
+  },
+  {
+    "code": "1001",
+    "countyCode": "010",
+    "name": "Loiyangalani",
+    "headquarters": null
+  },
+  {
+    "code": "1002",
+    "countyCode": "010",
+    "name": "Marsabit Central",
+    "headquarters": null
+  },
+  {
+    "code": "1003",
+    "countyCode": "010",
+    "name": "Marsabit North",
+    "headquarters": null
+  },
+  {
+    "code": "1004",
+    "countyCode": "010",
+    "name": "Marsabit South",
+    "headquarters": null
+  },
+  {
+    "code": "1005",
+    "countyCode": "010",
+    "name": "Moyale",
+    "headquarters": null
+  },
+  {
+    "code": "1006",
+    "countyCode": "010",
+    "name": "North Horr",
+    "headquarters": null
+  },
+  {
+    "code": "1007",
+    "countyCode": "010",
+    "name": "Sololo",
+    "headquarters": null
+  },
+  {
+    "code": "1101",
+    "countyCode": "011",
+    "name": "Garbatulla",
+    "headquarters": null
+  },
+  {
+    "code": "1102",
+    "countyCode": "011",
+    "name": "Isiolo",
+    "headquarters": null
+  },
+  {
+    "code": "1103",
+    "countyCode": "011",
+    "name": "Merti",
+    "headquarters": null
+  },
+  {
+    "code": "1201",
+    "countyCode": "012",
+    "name": "Buuri East",
+    "headquarters": null
+  },
+  {
+    "code": "1202",
+    "countyCode": "012",
+    "name": "Buuri West",
+    "headquarters": null
+  },
+  {
+    "code": "1203",
+    "countyCode": "012",
+    "name": "Igembe Central",
+    "headquarters": null
+  },
+  {
+    "code": "1204",
+    "countyCode": "012",
+    "name": "Igembe North",
+    "headquarters": null
+  },
+  {
+    "code": "1205",
+    "countyCode": "012",
+    "name": "Igembe South",
+    "headquarters": null
+  },
+  {
+    "code": "1206",
+    "countyCode": "012",
+    "name": "Imenti North",
+    "headquarters": null
+  },
+  {
+    "code": "1207",
+    "countyCode": "012",
+    "name": "Imenti South",
+    "headquarters": null
+  },
+  {
+    "code": "1208",
+    "countyCode": "012",
+    "name": "Meru Central",
+    "headquarters": null
+  },
+  {
+    "code": "1209",
+    "countyCode": "012",
+    "name": "Tigania Central",
+    "headquarters": null
+  },
+  {
+    "code": "1210",
+    "countyCode": "012",
+    "name": "Tigania East",
+    "headquarters": null
+  },
+  {
+    "code": "1211",
+    "countyCode": "012",
+    "name": "Tigania West",
+    "headquarters": null
+  },
+  {
+    "code": "1301",
+    "countyCode": "013",
+    "name": "Igambang'ombe",
+    "headquarters": null
+  },
+  {
+    "code": "1302",
+    "countyCode": "013",
+    "name": "Maara",
+    "headquarters": null
+  },
+  {
+    "code": "1303",
+    "countyCode": "013",
+    "name": "Meru South",
+    "headquarters": null
+  },
+  {
+    "code": "1304",
+    "countyCode": "013",
+    "name": "Tharaka North",
+    "headquarters": null
+  },
+  {
+    "code": "1305",
+    "countyCode": "013",
+    "name": "Tharaka South",
+    "headquarters": null
+  },
+  {
+    "code": "1401",
+    "countyCode": "014",
+    "name": "Embu East",
+    "headquarters": null
+  },
+  {
+    "code": "1402",
+    "countyCode": "014",
+    "name": "Embu North",
+    "headquarters": null
+  },
+  {
+    "code": "1403",
+    "countyCode": "014",
+    "name": "Embu West",
+    "headquarters": null
+  },
+  {
+    "code": "1404",
+    "countyCode": "014",
+    "name": "Mbeere South",
+    "headquarters": null
+  },
+  {
+    "code": "1405",
+    "countyCode": "014",
+    "name": "Mbeere North",
+    "headquarters": null
+  },
+  {
+    "code": "1501",
+    "countyCode": "015",
+    "name": "Ikutha",
+    "headquarters": null
+  },
+  {
+    "code": "1502",
+    "countyCode": "015",
+    "name": "Katulani",
+    "headquarters": null
+  },
+  {
+    "code": "1503",
+    "countyCode": "015",
+    "name": "Kisasi",
+    "headquarters": null
+  },
+  {
+    "code": "1504",
+    "countyCode": "015",
+    "name": "Kitui Central",
+    "headquarters": null
+  },
+  {
+    "code": "1505",
+    "countyCode": "015",
+    "name": "Kitui West",
+    "headquarters": null
+  },
+  {
+    "code": "1506",
+    "countyCode": "015",
+    "name": "Kyuso",
+    "headquarters": null
+  },
+  {
+    "code": "1507",
+    "countyCode": "015",
+    "name": "Lower Yatta",
+    "headquarters": null
+  },
+  {
+    "code": "1508",
+    "countyCode": "015",
+    "name": "Matinyani",
+    "headquarters": null
+  },
+  {
+    "code": "1509",
+    "countyCode": "015",
+    "name": "Migwani",
+    "headquarters": null
+  },
+  {
+    "code": "1510",
+    "countyCode": "015",
+    "name": "Mumoni",
+    "headquarters": null
+  },
+  {
+    "code": "1511",
+    "countyCode": "015",
+    "name": "Mutitu",
+    "headquarters": null
+  },
+  {
+    "code": "1512",
+    "countyCode": "015",
+    "name": "Mutitu North",
+    "headquarters": null
+  },
+  {
+    "code": "1513",
+    "countyCode": "015",
+    "name": "Mutomo",
+    "headquarters": null
+  },
+  {
+    "code": "1514",
+    "countyCode": "015",
+    "name": "Mwingi Central",
+    "headquarters": null
+  },
+  {
+    "code": "1515",
+    "countyCode": "015",
+    "name": "Mwingi East",
+    "headquarters": null
+  },
+  {
+    "code": "1516",
+    "countyCode": "015",
+    "name": "Nzambani",
+    "headquarters": null
+  },
+  {
+    "code": "1517",
+    "countyCode": "015",
+    "name": "Thagicu",
+    "headquarters": null
+  },
+  {
+    "code": "1518",
+    "countyCode": "015",
+    "name": "Tseikuru",
+    "headquarters": null
+  },
+  {
+    "code": "1601",
+    "countyCode": "016",
+    "name": "Athi River",
+    "headquarters": null
+  },
+  {
+    "code": "1602",
+    "countyCode": "016",
+    "name": "Kalama",
+    "headquarters": null
+  },
+  {
+    "code": "1603",
+    "countyCode": "016",
+    "name": "Kangundo",
+    "headquarters": null
+  },
+  {
+    "code": "1604",
+    "countyCode": "016",
+    "name": "Kathiani",
+    "headquarters": null
+  },
+  {
+    "code": "1605",
+    "countyCode": "016",
+    "name": "Machakos",
+    "headquarters": null
+  },
+  {
+    "code": "1606",
+    "countyCode": "016",
+    "name": "Masinga",
+    "headquarters": null
+  },
+  {
+    "code": "1607",
+    "countyCode": "016",
+    "name": "Matungulu",
+    "headquarters": null
+  },
+  {
+    "code": "1608",
+    "countyCode": "016",
+    "name": "Mwala",
+    "headquarters": null
+  },
+  {
+    "code": "1609",
+    "countyCode": "016",
+    "name": "Yatta",
+    "headquarters": null
+  },
+  {
+    "code": "1701",
+    "countyCode": "017",
+    "name": "Kathonzweni",
+    "headquarters": null
+  },
+  {
+    "code": "1702",
+    "countyCode": "017",
+    "name": "Kibwezi",
+    "headquarters": null
+  },
+  {
+    "code": "1703",
+    "countyCode": "017",
+    "name": "Kilungu",
+    "headquarters": null
+  },
+  {
+    "code": "1704",
+    "countyCode": "017",
+    "name": "Makindu",
+    "headquarters": null
+  },
+  {
+    "code": "1705",
+    "countyCode": "017",
+    "name": "Makueni",
+    "headquarters": null
+  },
+  {
+    "code": "1706",
+    "countyCode": "017",
+    "name": "Mbooni East",
+    "headquarters": null
+  },
+  {
+    "code": "1707",
+    "countyCode": "017",
+    "name": "Mbooni West",
+    "headquarters": null
+  },
+  {
+    "code": "1708",
+    "countyCode": "017",
+    "name": "Mukaa",
+    "headquarters": null
+  },
+  {
+    "code": "1709",
+    "countyCode": "017",
+    "name": "Nzaui",
+    "headquarters": null
+  },
+  {
+    "code": "1801",
+    "countyCode": "018",
+    "name": "Kinangop",
+    "headquarters": null
+  },
+  {
+    "code": "1802",
+    "countyCode": "018",
+    "name": "Nyandarua South",
+    "headquarters": null
+  },
+  {
+    "code": "1803",
+    "countyCode": "018",
+    "name": "Mirangine",
+    "headquarters": null
+  },
+  {
+    "code": "1804",
+    "countyCode": "018",
+    "name": "Kipipiri",
+    "headquarters": null
+  },
+  {
+    "code": "1805",
+    "countyCode": "018",
+    "name": "Nyandarua Central",
+    "headquarters": null
+  },
+  {
+    "code": "1806",
+    "countyCode": "018",
+    "name": "Nyandarua West",
+    "headquarters": null
+  },
+  {
+    "code": "1807",
+    "countyCode": "018",
+    "name": "Nyandarua North",
+    "headquarters": null
+  },
+  {
+    "code": "1901",
+    "countyCode": "019",
+    "name": "Tetu",
+    "headquarters": null
+  },
+  {
+    "code": "1902",
+    "countyCode": "019",
+    "name": "Kieni East",
+    "headquarters": null
+  },
+  {
+    "code": "1903",
+    "countyCode": "019",
+    "name": "Kieni West",
+    "headquarters": null
+  },
+  {
+    "code": "1904",
+    "countyCode": "019",
+    "name": "Mathira East",
+    "headquarters": null
+  },
+  {
+    "code": "1905",
+    "countyCode": "019",
+    "name": "Mathira West",
+    "headquarters": null
+  },
+  {
+    "code": "1906",
+    "countyCode": "019",
+    "name": "Nyeri South",
+    "headquarters": null
+  },
+  {
+    "code": "1907",
+    "countyCode": "019",
+    "name": "Mukurwe-ini",
+    "headquarters": null
+  },
+  {
+    "code": "1908",
+    "countyCode": "019",
+    "name": "Nyeri Central",
+    "headquarters": null
+  },
+  {
+    "code": "2001",
+    "countyCode": "020",
+    "name": "Kirinyaga Central",
+    "headquarters": null
+  },
+  {
+    "code": "2002",
+    "countyCode": "020",
+    "name": "Kirinyaga East",
+    "headquarters": null
+  },
+  {
+    "code": "2003",
+    "countyCode": "020",
+    "name": "Kirinyaga West",
+    "headquarters": null
+  },
+  {
+    "code": "2004",
+    "countyCode": "020",
+    "name": "Mwea East",
+    "headquarters": null
+  },
+  {
+    "code": "2005",
+    "countyCode": "020",
+    "name": "Mwea West",
+    "headquarters": null
+  },
+  {
+    "code": "2101",
+    "countyCode": "021",
+    "name": "Murang'a East",
+    "headquarters": null
+  },
+  {
+    "code": "2102",
+    "countyCode": "021",
+    "name": "Kangema",
+    "headquarters": null
+  },
+  {
+    "code": "2103",
+    "countyCode": "021",
+    "name": "Mathioya",
+    "headquarters": null
+  },
+  {
+    "code": "2104",
+    "countyCode": "021",
+    "name": "Kahuro",
+    "headquarters": null
+  },
+  {
+    "code": "2105",
+    "countyCode": "021",
+    "name": "Murang'a South",
+    "headquarters": null
+  },
+  {
+    "code": "2106",
+    "countyCode": "021",
+    "name": "Gatanga",
+    "headquarters": null
+  },
+  {
+    "code": "2107",
+    "countyCode": "021",
+    "name": "Kigumo",
+    "headquarters": null
+  },
+  {
+    "code": "2108",
+    "countyCode": "021",
+    "name": "Kandara",
+    "headquarters": null
+  },
+  {
+    "code": "2201",
+    "countyCode": "022",
+    "name": "Gatundu North",
+    "headquarters": null
+  },
+  {
+    "code": "2202",
+    "countyCode": "022",
+    "name": "Gatundu South",
+    "headquarters": null
+  },
+  {
+    "code": "2203",
+    "countyCode": "022",
+    "name": "Githunguri",
+    "headquarters": null
+  },
+  {
+    "code": "2204",
+    "countyCode": "022",
+    "name": "Juja",
+    "headquarters": null
+  },
+  {
+    "code": "2205",
+    "countyCode": "022",
+    "name": "Kabete",
+    "headquarters": null
+  },
+  {
+    "code": "2206",
+    "countyCode": "022",
+    "name": "Kiambaa",
+    "headquarters": null
+  },
+  {
+    "code": "2207",
+    "countyCode": "022",
+    "name": "Kiambu",
+    "headquarters": null
+  },
+  {
+    "code": "2208",
+    "countyCode": "022",
+    "name": "Kikuyu",
+    "headquarters": null
+  },
+  {
+    "code": "2209",
+    "countyCode": "022",
+    "name": "Lari",
+    "headquarters": null
+  },
+  {
+    "code": "2210",
+    "countyCode": "022",
+    "name": "Limuru",
+    "headquarters": null
+  },
+  {
+    "code": "2211",
+    "countyCode": "022",
+    "name": "Ruiru",
+    "headquarters": null
+  },
+  {
+    "code": "2212",
+    "countyCode": "022",
+    "name": "Thika East",
+    "headquarters": null
+  },
+  {
+    "code": "2213",
+    "countyCode": "022",
+    "name": "Thika West",
+    "headquarters": null
+  },
+  {
+    "code": "2301",
+    "countyCode": "023",
+    "name": "Kibish",
+    "headquarters": null
+  },
+  {
+    "code": "2302",
+    "countyCode": "023",
+    "name": "Loima",
+    "headquarters": null
+  },
+  {
+    "code": "2303",
+    "countyCode": "023",
+    "name": "Turkana Central",
+    "headquarters": null
+  },
+  {
+    "code": "2304",
+    "countyCode": "023",
+    "name": "Turkana East",
+    "headquarters": null
+  },
+  {
+    "code": "2305",
+    "countyCode": "023",
+    "name": "Turkana North",
+    "headquarters": null
+  },
+  {
+    "code": "2306",
+    "countyCode": "023",
+    "name": "Turkana South",
+    "headquarters": null
+  },
+  {
+    "code": "2307",
+    "countyCode": "023",
+    "name": "Turkana West",
+    "headquarters": null
+  },
+  {
+    "code": "2401",
+    "countyCode": "024",
+    "name": "Kipkomo",
+    "headquarters": null
+  },
+  {
+    "code": "2402",
+    "countyCode": "024",
+    "name": "Pokot Central",
+    "headquarters": null
+  },
+  {
+    "code": "2403",
+    "countyCode": "024",
+    "name": "Pokot North",
+    "headquarters": null
+  },
+  {
+    "code": "2404",
+    "countyCode": "024",
+    "name": "Pokot South",
+    "headquarters": null
+  },
+  {
+    "code": "2405",
+    "countyCode": "024",
+    "name": "West Pokot",
+    "headquarters": null
+  },
+  {
+    "code": "2501",
+    "countyCode": "025",
+    "name": "Samburu Central",
+    "headquarters": null
+  },
+  {
+    "code": "2502",
+    "countyCode": "025",
+    "name": "Samburu East",
+    "headquarters": null
+  },
+  {
+    "code": "2503",
+    "countyCode": "025",
+    "name": "Samburu North",
+    "headquarters": null
+  },
+  {
+    "code": "2601",
+    "countyCode": "026",
+    "name": "Trans Nzoia West",
+    "headquarters": null
+  },
+  {
+    "code": "2602",
+    "countyCode": "026",
+    "name": "Trans Nzoia East",
+    "headquarters": null
+  },
+  {
+    "code": "2603",
+    "countyCode": "026",
+    "name": "Kwanza",
+    "headquarters": null
+  },
+  {
+    "code": "2604",
+    "countyCode": "026",
+    "name": "Endebess",
+    "headquarters": null
+  },
+  {
+    "code": "2605",
+    "countyCode": "026",
+    "name": "Kiminini",
+    "headquarters": null
+  },
+  {
+    "code": "2701",
+    "countyCode": "027",
+    "name": "Ainabkoi",
+    "headquarters": null
+  },
+  {
+    "code": "2702",
+    "countyCode": "027",
+    "name": "Kapseret",
+    "headquarters": null
+  },
+  {
+    "code": "2703",
+    "countyCode": "027",
+    "name": "Kesses",
+    "headquarters": null
+  },
+  {
+    "code": "2704",
+    "countyCode": "027",
+    "name": "Moiben",
+    "headquarters": null
+  },
+  {
+    "code": "2705",
+    "countyCode": "027",
+    "name": "Soy",
+    "headquarters": null
+  },
+  {
+    "code": "2706",
+    "countyCode": "027",
+    "name": "Turbo",
+    "headquarters": null
+  },
+  {
+    "code": "2801",
+    "countyCode": "028",
+    "name": "Keiyo North",
+    "headquarters": null
+  },
+  {
+    "code": "2802",
+    "countyCode": "028",
+    "name": "Keiyo South",
+    "headquarters": null
+  },
+  {
+    "code": "2803",
+    "countyCode": "028",
+    "name": "Marakwet East",
+    "headquarters": null
+  },
+  {
+    "code": "2804",
+    "countyCode": "028",
+    "name": "Marakwet West",
+    "headquarters": null
+  },
+  {
+    "code": "2901",
+    "countyCode": "029",
+    "name": "Chesumei",
+    "headquarters": null
+  },
+  {
+    "code": "2902",
+    "countyCode": "029",
+    "name": "Nandi Central",
+    "headquarters": null
+  },
+  {
+    "code": "2903",
+    "countyCode": "029",
+    "name": "Nandi East",
+    "headquarters": null
+  },
+  {
+    "code": "2904",
+    "countyCode": "029",
+    "name": "Nandi North",
+    "headquarters": null
+  },
+  {
+    "code": "2905",
+    "countyCode": "029",
+    "name": "Nandi South",
+    "headquarters": null
+  },
+  {
+    "code": "2906",
+    "countyCode": "029",
+    "name": "Tinderet",
+    "headquarters": null
+  },
+  {
+    "code": "3001",
+    "countyCode": "030",
+    "name": "Baringo Central",
+    "headquarters": null
+  },
+  {
+    "code": "3002",
+    "countyCode": "030",
+    "name": "Baringo North",
+    "headquarters": null
+  },
+  {
+    "code": "3003",
+    "countyCode": "030",
+    "name": "East Pokot",
+    "headquarters": null
+  },
+  {
+    "code": "3004",
+    "countyCode": "030",
+    "name": "Koibatek",
+    "headquarters": null
+  },
+  {
+    "code": "3005",
+    "countyCode": "030",
+    "name": "Marigat",
+    "headquarters": null
+  },
+  {
+    "code": "3006",
+    "countyCode": "030",
+    "name": "Mogotio",
+    "headquarters": null
+  },
+  {
+    "code": "3007",
+    "countyCode": "030",
+    "name": "Tiaty East",
+    "headquarters": null
+  },
+  {
+    "code": "3008",
+    "countyCode": "030",
+    "name": "Lake Baringo",
+    "headquarters": null
+  },
+  {
+    "code": "3101",
+    "countyCode": "031",
+    "name": "Laikipia Central",
+    "headquarters": null
+  },
+  {
+    "code": "3102",
+    "countyCode": "031",
+    "name": "Laikipia East",
+    "headquarters": null
+  },
+  {
+    "code": "3103",
+    "countyCode": "031",
+    "name": "Laikipia North",
+    "headquarters": null
+  },
+  {
+    "code": "3104",
+    "countyCode": "031",
+    "name": "Laikipia West",
+    "headquarters": null
+  },
+  {
+    "code": "3105",
+    "countyCode": "031",
+    "name": "Nyahururu",
+    "headquarters": null
+  },
+  {
+    "code": "3201",
+    "countyCode": "032",
+    "name": "Gilgil",
+    "headquarters": null
+  },
+  {
+    "code": "3202",
+    "countyCode": "032",
+    "name": "Kuresoi North",
+    "headquarters": null
+  },
+  {
+    "code": "3203",
+    "countyCode": "032",
+    "name": "Kuresoi South",
+    "headquarters": null
+  },
+  {
+    "code": "3204",
+    "countyCode": "032",
+    "name": "Molo",
+    "headquarters": null
+  },
+  {
+    "code": "3205",
+    "countyCode": "032",
+    "name": "Naivasha",
+    "headquarters": null
+  },
+  {
+    "code": "3206",
+    "countyCode": "032",
+    "name": "Nakuru East",
+    "headquarters": null
+  },
+  {
+    "code": "3207",
+    "countyCode": "032",
+    "name": "Nakuru North",
+    "headquarters": null
+  },
+  {
+    "code": "3208",
+    "countyCode": "032",
+    "name": "Nakuru West",
+    "headquarters": null
+  },
+  {
+    "code": "3209",
+    "countyCode": "032",
+    "name": "Njoro",
+    "headquarters": null
+  },
+  {
+    "code": "3210",
+    "countyCode": "032",
+    "name": "Rongai",
+    "headquarters": null
+  },
+  {
+    "code": "3211",
+    "countyCode": "032",
+    "name": "Subukia",
+    "headquarters": null
+  },
+  {
+    "code": "3301",
+    "countyCode": "033",
+    "name": "Narok East",
+    "headquarters": null
+  },
+  {
+    "code": "3302",
+    "countyCode": "033",
+    "name": "Narok North",
+    "headquarters": null
+  },
+  {
+    "code": "3303",
+    "countyCode": "033",
+    "name": "Narok South",
+    "headquarters": null
+  },
+  {
+    "code": "3304",
+    "countyCode": "033",
+    "name": "Narok West",
+    "headquarters": null
+  },
+  {
+    "code": "3305",
+    "countyCode": "033",
+    "name": "Trans Mara East",
+    "headquarters": null
+  },
+  {
+    "code": "3306",
+    "countyCode": "033",
+    "name": "Trans Mara West",
+    "headquarters": null
+  },
+  {
+    "code": "3401",
+    "countyCode": "034",
+    "name": "Isinya",
+    "headquarters": null
+  },
+  {
+    "code": "3402",
+    "countyCode": "034",
+    "name": "Kajiado Central",
+    "headquarters": null
+  },
+  {
+    "code": "3403",
+    "countyCode": "034",
+    "name": "Kajiado North",
+    "headquarters": null
+  },
+  {
+    "code": "3404",
+    "countyCode": "034",
+    "name": "Kajiado West",
+    "headquarters": null
+  },
+  {
+    "code": "3405",
+    "countyCode": "034",
+    "name": "Loitokitok",
+    "headquarters": null
+  },
+  {
+    "code": "3406",
+    "countyCode": "034",
+    "name": "Mashuuru",
+    "headquarters": null
+  },
+  {
+    "code": "3501",
+    "countyCode": "035",
+    "name": "Belgut",
+    "headquarters": null
+  },
+  {
+    "code": "3502",
+    "countyCode": "035",
+    "name": "Bureti",
+    "headquarters": null
+  },
+  {
+    "code": "3503",
+    "countyCode": "035",
+    "name": "Kericho East",
+    "headquarters": null
+  },
+  {
+    "code": "3504",
+    "countyCode": "035",
+    "name": "Kipkelion",
+    "headquarters": null
+  },
+  {
+    "code": "3505",
+    "countyCode": "035",
+    "name": "Londiani",
+    "headquarters": null
+  },
+  {
+    "code": "3506",
+    "countyCode": "035",
+    "name": "Soin Sigowet",
+    "headquarters": null
+  },
+  {
+    "code": "3601",
+    "countyCode": "036",
+    "name": "Bomet East",
+    "headquarters": null
+  },
+  {
+    "code": "3602",
+    "countyCode": "036",
+    "name": "Chepalungu",
+    "headquarters": null
+  },
+  {
+    "code": "3603",
+    "countyCode": "036",
+    "name": "Konoin",
+    "headquarters": null
+  },
+  {
+    "code": "3604",
+    "countyCode": "036",
+    "name": "Sotik",
+    "headquarters": null
+  },
+  {
+    "code": "3605",
+    "countyCode": "036",
+    "name": "Bomet Central",
+    "headquarters": null
+  },
+  {
+    "code": "3701",
+    "countyCode": "037",
+    "name": "Butere",
+    "headquarters": null
+  },
+  {
+    "code": "3702",
+    "countyCode": "037",
+    "name": "Kakamega Central",
+    "headquarters": null
+  },
+  {
+    "code": "3703",
+    "countyCode": "037",
+    "name": "Kakamega East",
+    "headquarters": null
+  },
+  {
+    "code": "3704",
+    "countyCode": "037",
+    "name": "Kakamega North",
+    "headquarters": null
+  },
+  {
+    "code": "3705",
+    "countyCode": "037",
+    "name": "Kakamega South",
+    "headquarters": null
+  },
+  {
+    "code": "3706",
+    "countyCode": "037",
+    "name": "Khwisero",
+    "headquarters": null
+  },
+  {
+    "code": "3707",
+    "countyCode": "037",
+    "name": "Likuyani",
+    "headquarters": null
+  },
+  {
+    "code": "3708",
+    "countyCode": "037",
+    "name": "Lugari",
+    "headquarters": null
+  },
+  {
+    "code": "3709",
+    "countyCode": "037",
+    "name": "Matete",
+    "headquarters": null
+  },
+  {
+    "code": "3710",
+    "countyCode": "037",
+    "name": "Matungu",
+    "headquarters": null
+  },
+  {
+    "code": "3711",
+    "countyCode": "037",
+    "name": "Mumias East",
+    "headquarters": null
+  },
+  {
+    "code": "3712",
+    "countyCode": "037",
+    "name": "Mumias West",
+    "headquarters": null
+  },
+  {
+    "code": "3713",
+    "countyCode": "037",
+    "name": "Navakholo",
+    "headquarters": null
+  },
+  {
+    "code": "3801",
+    "countyCode": "038",
+    "name": "Emuhaya",
+    "headquarters": null
+  },
+  {
+    "code": "3802",
+    "countyCode": "038",
+    "name": "Vihiga",
+    "headquarters": null
+  },
+  {
+    "code": "3803",
+    "countyCode": "038",
+    "name": "Sabatia",
+    "headquarters": null
+  },
+  {
+    "code": "3804",
+    "countyCode": "038",
+    "name": "Luanda",
+    "headquarters": null
+  },
+  {
+    "code": "3805",
+    "countyCode": "038",
+    "name": "Hamisi",
+    "headquarters": null
+  },
+  {
+    "code": "3901",
+    "countyCode": "039",
+    "name": "Bumula",
+    "headquarters": null
+  },
+  {
+    "code": "3902",
+    "countyCode": "039",
+    "name": "Bungoma Central",
+    "headquarters": null
+  },
+  {
+    "code": "3903",
+    "countyCode": "039",
+    "name": "Bungoma East",
+    "headquarters": null
+  },
+  {
+    "code": "3904",
+    "countyCode": "039",
+    "name": "Bungoma North",
+    "headquarters": null
+  },
+  {
+    "code": "3905",
+    "countyCode": "039",
+    "name": "Bungoma South",
+    "headquarters": null
+  },
+  {
+    "code": "3906",
+    "countyCode": "039",
+    "name": "Cheptais",
+    "headquarters": null
+  },
+  {
+    "code": "3907",
+    "countyCode": "039",
+    "name": "Kimilili",
+    "headquarters": null
+  },
+  {
+    "code": "3909",
+    "countyCode": "039",
+    "name": "Bungoma West",
+    "headquarters": null
+  },
+  {
+    "code": "3910",
+    "countyCode": "039",
+    "name": "Tongaren",
+    "headquarters": null
+  },
+  {
+    "code": "3911",
+    "countyCode": "039",
+    "name": "Webuye West",
+    "headquarters": null
+  },
+  {
+    "code": "3912",
+    "countyCode": "039",
+    "name": "Mt Elgon Forest",
+    "headquarters": null
+  },
+  {
+    "code": "4001",
+    "countyCode": "040",
+    "name": "Bunyala",
+    "headquarters": null
+  },
+  {
+    "code": "4002",
+    "countyCode": "040",
+    "name": "Busia",
+    "headquarters": null
+  },
+  {
+    "code": "4003",
+    "countyCode": "040",
+    "name": "Butula",
+    "headquarters": null
+  },
+  {
+    "code": "4004",
+    "countyCode": "040",
+    "name": "Nambale",
+    "headquarters": null
+  },
+  {
+    "code": "4005",
+    "countyCode": "040",
+    "name": "Samia",
+    "headquarters": null
+  },
+  {
+    "code": "4006",
+    "countyCode": "040",
+    "name": "Teso North",
+    "headquarters": null
+  },
+  {
+    "code": "4007",
+    "countyCode": "040",
+    "name": "Teso South",
+    "headquarters": null
+  },
+  {
+    "code": "4101",
+    "countyCode": "041",
+    "name": "Siaya",
+    "headquarters": null
+  },
+  {
+    "code": "4102",
+    "countyCode": "041",
+    "name": "Gem",
+    "headquarters": null
+  },
+  {
+    "code": "4103",
+    "countyCode": "041",
+    "name": "Ugenya",
+    "headquarters": null
+  },
+  {
+    "code": "4104",
+    "countyCode": "041",
+    "name": "Ugunja",
+    "headquarters": null
+  },
+  {
+    "code": "4105",
+    "countyCode": "041",
+    "name": "Bondo",
+    "headquarters": null
+  },
+  {
+    "code": "4106",
+    "countyCode": "041",
+    "name": "Rarieda",
+    "headquarters": null
+  },
+  {
+    "code": "4201",
+    "countyCode": "042",
+    "name": "Kisumu East",
+    "headquarters": null
+  },
+  {
+    "code": "4202",
+    "countyCode": "042",
+    "name": "Kisumu Central",
+    "headquarters": null
+  },
+  {
+    "code": "4203",
+    "countyCode": "042",
+    "name": "Kisumu West",
+    "headquarters": null
+  },
+  {
+    "code": "4204",
+    "countyCode": "042",
+    "name": "Seme",
+    "headquarters": null
+  },
+  {
+    "code": "4205",
+    "countyCode": "042",
+    "name": "Muhoroni",
+    "headquarters": null
+  },
+  {
+    "code": "4301",
+    "countyCode": "043",
+    "name": "Homa Bay",
+    "headquarters": null
+  },
+  {
+    "code": "4302",
+    "countyCode": "043",
+    "name": "Ndhiwa",
+    "headquarters": null
+  },
+  {
+    "code": "4303",
+    "countyCode": "043",
+    "name": "Rachuonyo North",
+    "headquarters": null
+  },
+  {
+    "code": "4304",
+    "countyCode": "043",
+    "name": "Rachuonyo East",
+    "headquarters": null
+  },
+  {
+    "code": "4305",
+    "countyCode": "043",
+    "name": "Rachuonyo South",
+    "headquarters": null
+  },
+  {
+    "code": "4306",
+    "countyCode": "043",
+    "name": "Rangwe",
+    "headquarters": null
+  },
+  {
+    "code": "4307",
+    "countyCode": "043",
+    "name": "Suba North",
+    "headquarters": null
+  },
+  {
+    "code": "4308",
+    "countyCode": "043",
+    "name": "Suba South",
+    "headquarters": null
+  },
+  {
+    "code": "4401",
+    "countyCode": "044",
+    "name": "Awendo",
+    "headquarters": null
+  },
+  {
+    "code": "4402",
+    "countyCode": "044",
+    "name": "Kuria East",
+    "headquarters": null
+  },
+  {
+    "code": "4403",
+    "countyCode": "044",
+    "name": "Kuria West",
+    "headquarters": null
+  },
+  {
+    "code": "4404",
+    "countyCode": "044",
+    "name": "Nyatike",
+    "headquarters": null
+  },
+  {
+    "code": "4405",
+    "countyCode": "044",
+    "name": "Rongo",
+    "headquarters": null
+  },
+  {
+    "code": "4406",
+    "countyCode": "044",
+    "name": "Suna East",
+    "headquarters": null
+  },
+  {
+    "code": "4407",
+    "countyCode": "044",
+    "name": "Suna West",
+    "headquarters": null
+  },
+  {
+    "code": "4408",
+    "countyCode": "044",
+    "name": "Uriri",
+    "headquarters": null
+  },
+  {
+    "code": "4501",
+    "countyCode": "045",
+    "name": "Etago",
+    "headquarters": null
+  },
+  {
+    "code": "4502",
+    "countyCode": "045",
+    "name": "Gucha",
+    "headquarters": null
+  },
+  {
+    "code": "4503",
+    "countyCode": "045",
+    "name": "Gucha South",
+    "headquarters": null
+  },
+  {
+    "code": "4504",
+    "countyCode": "045",
+    "name": "Kenyenya",
+    "headquarters": null
+  },
+  {
+    "code": "4505",
+    "countyCode": "045",
+    "name": "Kisii Central",
+    "headquarters": null
+  },
+  {
+    "code": "4506",
+    "countyCode": "045",
+    "name": "Kisii South",
+    "headquarters": null
+  },
+  {
+    "code": "4507",
+    "countyCode": "045",
+    "name": "Kitutu Central",
+    "headquarters": null
+  },
+  {
+    "code": "4508",
+    "countyCode": "045",
+    "name": "Marani",
+    "headquarters": null
+  },
+  {
+    "code": "4509",
+    "countyCode": "045",
+    "name": "Masaba South",
+    "headquarters": null
+  },
+  {
+    "code": "4510",
+    "countyCode": "045",
+    "name": "Nyamache",
+    "headquarters": null
+  },
+  {
+    "code": "4511",
+    "countyCode": "045",
+    "name": "Sameta",
+    "headquarters": null
+  },
+  {
+    "code": "4601",
+    "countyCode": "046",
+    "name": "Borabu",
+    "headquarters": null
+  },
+  {
+    "code": "4602",
+    "countyCode": "046",
+    "name": "Manga",
+    "headquarters": null
+  },
+  {
+    "code": "4603",
+    "countyCode": "046",
+    "name": "Masaba North",
+    "headquarters": null
+  },
+  {
+    "code": "4604",
+    "countyCode": "046",
+    "name": "Nyamira North",
+    "headquarters": null
+  },
+  {
+    "code": "4605",
+    "countyCode": "046",
+    "name": "Nyamira South",
+    "headquarters": null
+  },
+  {
+    "code": "4701",
+    "countyCode": "047",
+    "name": "Dagoretti",
+    "headquarters": null
+  },
+  {
+    "code": "4702",
+    "countyCode": "047",
+    "name": "Embakasi",
+    "headquarters": null
+  },
+  {
+    "code": "4703",
+    "countyCode": "047",
+    "name": "Kamukunji",
+    "headquarters": null
+  },
+  {
+    "code": "4704",
+    "countyCode": "047",
+    "name": "Kasarani",
+    "headquarters": null
+  },
+  {
+    "code": "4705",
+    "countyCode": "047",
+    "name": "Kibra",
+    "headquarters": null
+  },
+  {
+    "code": "4706",
+    "countyCode": "047",
+    "name": "Lang'ata",
+    "headquarters": null
+  },
+  {
+    "code": "4707",
+    "countyCode": "047",
+    "name": "Makadara",
+    "headquarters": null
+  },
+  {
+    "code": "4708",
+    "countyCode": "047",
+    "name": "Mathare",
+    "headquarters": null
+  },
+  {
+    "code": "4709",
+    "countyCode": "047",
+    "name": "Njiru",
+    "headquarters": null
+  }
+]

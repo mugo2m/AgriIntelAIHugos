@@ -1,0 +1,4 @@
+countyName,countyId,oldSubCountyId,oldSubCountyName,targetSubCountyId,targetSubCountyName,expectedWardCount,actualWardCount,expectedGids,actualGids,deletedOldIdPresent,targetPresent,status
+Nyeri,69,376,Mukurweini Sub County,1382,Mukurwe-ini,4,4,487|488|489|490,487|488|489|490,false,true,PASS
+Narok,80,411,Transmara West Sub County,1475,Trans Mara West,6,6,2158|2159|2160|2161|2162|2163,2158|2159|2160|2161|2162|2163,false,true,PASS
+Narok,80,515,Transmara East Sub County,1474,Trans Mara East,4,4,2164|2165|2166|2167,2164|2165|2166|2167,false,true,PASS
